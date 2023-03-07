@@ -1,4 +1,6 @@
 import './bootstrap';
+import NProgress from 'nprogress';
+import 'nprogress/nprogress.css';
 
 // Inicializa NProgress
 NProgress.configure({
@@ -13,12 +15,12 @@ NProgress.configure({
 
 // Muestra la barra de carga en cada cambio de página
 window.addEventListener('beforeunload', function() {
-    NProgress.start();
-    NProgress.set(0.4);
-    NProgress.inc();
+    NProgress.start(); // Inicia la barra de carga
+    NProgress.set(0.4); // Establece el porcentaje de la barra de carga
+    NProgress.inc(); // Incrementa el porcentaje de la barra de carga
 });
 
 // Oculta la barra de carga después de que la página se ha cargado completamente
 window.addEventListener('load', function() {
-    NProgress.done();
+    NProgress.done(); // Oculta la barra de carga
 });
