@@ -46847,7 +46847,7 @@ body,
   }
   [data-kt-app-header-stacked=true] .app-header {
     flex-direction: column;
-    height: calc(var(--bs-app-header-primary-height) + var(--bs-app-header-secondary-height, 0px) + var(--bs-app-header-tertiary-height, 0px));
+    height: calc(var(--bs-app-header-primary-height) + var(--bs-app-header-tertiary-height, 0px));
   }
   [data-kt-app-header-sticky=on] .app-header {
     position: fixed;

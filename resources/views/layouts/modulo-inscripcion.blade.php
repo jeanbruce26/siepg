@@ -52,7 +52,7 @@
 			<!--begin::Page-->
 			<div class="app-page flex-column flex-column-fluid" id="kt_app_page">
 				<!--begin::Header-->
-				<div id="kt_app_header" class="app-header">
+				<div id="kt_app_header" class="app-header border-bottom shadow-none">
 					<!--begin::Header primary-->
 					<div class="app-header-primary" data-kt-sticky="true" data-kt-sticky-name="app-header-primary-sticky" data-kt-sticky-offset="{default: 'false', lg: '300px'}">
 						<!--begin::Header primary container-->
@@ -99,34 +99,32 @@
 						<!--end::Header primary container-->
 					</div>
 					<!--end::Header primary-->
-					<!--begin::Header secondary-->
-					<div class="app-header-secondary">
-						<!--begin::Header secondary container-->
-						<div class="app-container container-xxl">
-							<div class="py-7">
-                                <h1>
-                                    Escuela de Posgrado de la Universidad Nacional de Ucayali
-                                </h1>
-                            </div>
-						</div>
-						<!--end::Header secondary container-->
-					</div>
-					<!--end::Header secondary-->
 				</div>
 				<!--end::Header-->
 				<!--begin::Wrapper-->
 				<div class="app-wrapper flex-column flex-row-fluid" id="kt_app_wrapper">
+                    <div class="border-bottom shadow-sm">
+                        <div class="container-xxl px-10 py-7">
+                            <div class="d-flex flex-column align-items-center">
+                                <h1 class="text-center">
+                                    Escuela de Posgrado de la Universidad Nacional de Ucayali
+                                </h1>
+                                <span class="fw-bolder fs-3">
+                                    Proceso de Admisión 2024 - I
+                                </span>
+                            </div>
+                        </div>
+                    </div>
 					<!--begin::Wrapper container-->
 					<div class="app-container container-xxl d-flex flex-row flex-column-fluid">
 						<!--begin::Main-->
 						<div class="app-main flex-column flex-row-fluid" id="kt_app_main">
-							<!--begin::Content wrapper-->
 							<div class="d-flex flex-column flex-column-fluid">
 								<!--begin::Content-->
 								<div id="kt_app_content" class="app-content flex-column-fluid">
 									<!--begin::Row-->
 									<div class="row g-5 gx-xl-10">
-                                        <div class="col-xl-12">
+                                        {{-- <div class="col-xl-12">
                                             <div class="card shadow-sm">
                                                 <div class="px-6 py-5">
                                                     <span class="fw-bolder fs-3">
@@ -134,9 +132,9 @@
                                                     </span>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> --}}
                                         <div class="col-xl-12">
-                                            <div class="card shadow-sm" style="background-color: #fffed3">
+                                            <div class="card shadow-sm" style="background-color: #ffffeb">
                                                 <div class="px-6 py-5">
                                                     <span class="fw-bolder fs-4">
                                                         Estimado/a postulante:
@@ -145,16 +143,42 @@
                                                         <ul class="fs-6">
                                                             <li class="mb-3">
                                                                 Si usted realizó el pago por concepto de inscripción, deberá habilitar su comprobante de pago o voucher,
-                                                                <a href="#" target="_blank" class="fw-bold text-dark">
-                                                                    INGRESANDO AQUÍ (Paso 1).
-                                                                </a>
+                                                                <strong>dando click en el botón "REGISTRAR PAGO"</strong> ubicado en la parte inferior.
                                                                 Una vez que haya habilitado su voucher, podrá continuar con el proceso de inscripción mediante esta plataforma.
                                                             </li>
                                                             <li class="mb-3">
-                                                                Una vez que finalice el proceso de inscripción, se generará su ficha de inscripción.
+                                                                Una vez que finalice el proceso, se generará su ficha de inscripción correspondiente.
                                                             </li>
                                                             <li class="mb-3">
                                                                 Cualquier incidencia o consulta, puede comunicarse a <strong>admision_posgrado@unu.edu.pe</strong>
+                                                            </li>
+                                                        </ul>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-12">
+                                            <div class="card shadow-sm" style="background-color: #f1fcf0">
+                                                <div class="px-6 py-5">
+                                                    <span class="fw-bolder fs-4">
+                                                        Recomendación antes de comenzar su inscripción:
+                                                    </span>
+                                                    <p>
+                                                        <ul class="fs-6">
+                                                            <li class="mb-3">
+                                                                Puedes realizar tu inscripción al día siguiente de haber realizado tu pago.
+                                                            </li>
+                                                            <li class="mb-3">
+                                                                <strong>Ten a mano tu Documento de Identidad.</strong> <br>
+                                                                La información solicitada debe ser escrita tal cual este en el.
+                                                            </li>
+                                                            <li class="mb-3">
+                                                                <strong>Proporciona datos fidedignos (auténticos).</strong> <br>
+                                                                Recuerda que la información que proporciones sera derivada a la <strong>Oficina Central de Admisión</strong>
+                                                            </li>
+                                                            <li class="mb-3">
+                                                                <strong>Se muy cuidadoso al completar cada información solicidad por el Sistema de Inscripción.</strong> <br>
+                                                                Ya que, la información proporcionada tiene caracter de <strong>Declaración Jurada.</strong>
                                                             </li>
                                                         </ul>
                                                     </p>
