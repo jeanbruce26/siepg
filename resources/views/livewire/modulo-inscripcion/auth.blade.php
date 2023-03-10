@@ -1,0 +1,227 @@
+<div class="py-10">
+    <div class="row g-5 gx-xl-10">
+        <div class="col-md-8">
+            <div class="row g-5 gx-xl-10">
+                <div class="col-md-12">
+                    <div class="card shadow-sm" style="background-color: #ffffeb">
+                        <div class="px-6 py-5">
+                            <span class="fw-bolder fs-4">
+                                Estimado/a postulante:
+                            </span>
+                            <p>
+                                <ul class="fs-6">
+                                    <li class="mb-3">
+                                        Si usted realizó el pago por concepto de inscripción, deberá habilitar su comprobante de pago o voucher,
+                                        <strong>dando click en el botón "REGISTRAR PAGO"</strong> ubicado en la parte inferior.
+                                        Una vez que haya habilitado su voucher, podrá continuar con el proceso de inscripción mediante esta plataforma.
+                                    </li>
+                                    <li class="mb-3">
+                                        Una vez que finalice el proceso, se generará su ficha de inscripción correspondiente.
+                                    </li>
+                                    <li class="mb-3">
+                                        Cualquier incidencia o consulta, puede comunicarse a <strong>admision_posgrado@unu.edu.pe</strong>
+                                    </li>
+                                </ul>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="card shadow-sm" style="background-color: #f1fcf0">
+                        <div class="px-6 py-5">
+                            <span class="fw-bolder fs-4">
+                                Recomendación antes de comenzar su inscripción:
+                            </span>
+                            <p>
+                                <ul class="fs-6">
+                                    <li class="mb-3">
+                                        Puedes realizar tu inscripción al día siguiente de haber realizado tu pago.
+                                    </li>
+                                    <li class="mb-3">
+                                        <strong>Ten a mano tu Documento de Identidad.</strong> <br>
+                                        La información solicitada debe ser escrita tal cual este en el.
+                                    </li>
+                                    <li class="mb-3">
+                                        <strong>Proporciona datos fidedignos (auténticos).</strong> <br>
+                                        Recuerda que la información que proporciones sera derivada a la <strong>Oficina Central de Admisión</strong>
+                                    </li>
+                                    <li class="mb-3">
+                                        <strong>Se muy cuidadoso al completar cada información solicidad por el Sistema de Inscripción.</strong> <br>
+                                        Ya que, la información proporcionada tiene caracter de <strong>Declaración Jurada.</strong>
+                                    </li>
+                                </ul>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="card shadow-sm" style="background-color: #f4fdfd">
+                        <div class="px-6 py-5">
+                            <span class="fw-bolder fs-4">
+                                Requisitos para realizar su inscripción:
+                            </span>
+                            {{-- <p>
+                                <ul class="fs-6">
+                                    @foreach ($expedientes as $item)
+                                    <li class="mb-3">
+                                        <strong>{{$item->tipo_doc}} {{$item->complemento}} @if($item->expediente_tipo == 1) (para Maestria). @elseif ($item->expediente_tipo == 2) (para Doctorado). @endif</strong>
+                                    </li>
+                                    @endforeach
+                                    <li class="mb-3">
+                                        <strong>Todo formato subido a la plataforma, deberá ser en PDF.</strong>
+                                    </li>
+                                </ul>
+                            </p> --}}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="text-center mt-3">
+                        <a href="#modal_registro_pago" wire:click="cargar_registro_pago" class="btn btn-success hover-scale w-100" data-bs-toggle="modal" data-bs-target="#modal_registro_pago">
+                            REGISTRAR PAGO
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 g-5">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card shadow-sm">
+                        <div class="px-6 py-5">
+                            <div class="text-center d-flex flex-column">
+                                <span class="fw-bolder fs-2 my-3">
+                                    Iniciar Inscripción
+                                </span>
+                                <span class="fw-bolder fs-6 my-3 text-muted">
+                                    Rellene los siguientes campos para iniciar su inscripción.
+                                </span>
+                            </div>
+                            <div class="my-5">
+                                <form autocomplete="off" wire:submit.prevent="iniciar_inscripcion">
+                                    <div class="mb-5">
+                                        <label for="documento_identidad" class="required form-label">
+                                            Documento de Identidad
+                                        </label>
+                                        <input type="number" wire:model.defer="documento_identidad_inscripcion" class="form-control @if($errors->has('documento_identidad_inscripcion')) is-invalid @else is-valid @endif" placeholder="12345678" id="documento_identidad"/>
+                                        @error('documento_identidad_inscripcion')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                    <div class="mb-5">
+                                        <label for="numero_operacion" class="required form-label">
+                                            Numero de Operación
+                                        </label>
+                                        <input type="number" wire:model.defer="numero_operacion_inscripcion" class="form-control @if($errors->has('numero_operacion_inscripcion')) is-invalid @else is-valid @endif" placeholder="6543" id="numero_operacion"/>
+                                        @error('numero_operacion_inscripcion')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                    <div class="mt-10">
+                                        <button type="submit" class="btn btn-primary w-100">
+                                            Iniciar Inscripción
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- modal registro pago --}}
+    <div wire:ignore.self class="modal fade" tabindex="-1" id="modal_registro_pago">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">
+                        Registro de Pago
+                    </h3>
+                    <!--begin::Close-->
+                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close" wire:click="limpiar_registro_pago">
+                        <i class="bi bi-x fs-1"></i>
+                    </div>
+                    <!--end::Close-->
+                </div>
+                <div class="modal-body">
+                    <form autocomplete="off">
+                        <div class="mb-5">
+                            <label for="documento_identidad" class="required form-label">
+                                Documento de Identidad
+                            </label>
+                            <input type="number" wire:model="documento_identidad" class="form-control @error('documento_identidad') is-invalid @enderror" placeholder="12345678" id="documento_identidad"/>
+                            @error('documento_identidad')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="mb-5">
+                            <label for="numero_operacion" class="required form-label">
+                                Numero de Operación
+                            </label>
+                            <input type="number" wire:model="numero_operacion" class="form-control @error('numero_operacion') is-invalid @enderror" placeholder="6543" id="numero_operacion"/>
+                            @error('numero_operacion')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="mb-5">
+                            <label for="monto_operacion" class="required form-label">
+                                Monto de Operación
+                            </label>
+                            <input type="number" wire:model="monto_operacion" class="form-control @error('monto_operacion') is-invalid @enderror" placeholder="00.00" id="monto_operacion"/>
+                            <span class="form-text text-muted mt-2 fst-italic">
+                                Nota: Omitir los ceros a la izquierda. Ejemplo: 00001265, debe ser ingresado como 1265. <br>
+                            </span>
+                            @error('monto_operacion')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="mb-5">
+                            <label for="fecha_pago" class="required form-label">
+                                Fecha de Pago
+                            </label>
+                            <input type="date" wire:model="fecha_pago" class="form-control @error('fecha_pago') is-invalid @enderror" id="fecha_pago" max="{{ date('Y-m-d') }}" />
+                            @error('fecha_pago')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="mb-5">
+                            <label for="canal_pago" class="required form-label">
+                                Canal de Pago
+                            </label>
+                            <select class="form-select @error('canal_pago') is-invalid @enderror" wire:model="canal_pago" aria-label="Select example" id="canal_pago">
+                                <option>Seleccione una opción</option>
+                                @foreach ($canales_pagos as $item)
+                                <option value="{{ $item->canal_pago_id }}">Pago realizado en {{ $item->descripcion }}</option>
+                                @endforeach
+                            </select>
+                            @error('canal_pago')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="mb-5">
+                            <label for="voucher" class="required form-label">
+                                Voucher
+                            </label>
+                            <input type="file" wire:model="voucher" class="form-control @error('voucher') is-invalid @enderror" id="upload{{ $iteration }}" accept="image/jpeg, image/png, image/jpg, application/pdf" />
+                            <span class="form-text text-muted mt-2 fst-italic">
+                                Nota: El voucher debe ser en formato PDF o JPG, JPEG, PNG y no debe superar los 2MB. <br>
+                            </span>
+                            @error('voucher')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal" wire:click="limpiar_registro_pago">
+                        Cerrar
+                    </button>
+                    <button type="button" wire:click="registrar_pago" class="btn btn-primary">
+                        Registrar Pago
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
