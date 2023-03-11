@@ -3,20 +3,20 @@
 <div class="border-bottom shadow-sm" style="background: white">
     <div class="container-xxl px-10 py-7">
         <div class="d-flex justify-content-around align-items-center">
-            <div>
+            {{-- <div>
                 <img src="{{ asset('assets/media/logos/logo-pg.png') }}" alt="Logo" height="70" />
-            </div>
+            </div> --}}
             <div class="d-flex flex-column align-items-center">
-                <h1 class="text-center">
+                <h1 class="text-center" style="font-size: 2.3rem; font-weight: 700;">
                     Escuela de Posgrado de la Universidad Nacional de Ucayali
                 </h1>
-                <span class="fw-bolder fs-3 text-center">
+                <span class="fw-bolder fs-1 text-center">
                     Proceso de {{ $admision }}
                 </span>
             </div>
-            <div>
+            {{-- <div>
                 <img src="{{ asset('assets/media/logos/logo-unu.png') }}" alt="Logo" height="70" />
-            </div>
+            </div> --}}
         </div>
     </div>
 </div>
@@ -29,7 +29,7 @@
                 <!--begin::Content-->
                 <div id="kt_app_content" class="app-content flex-column-fluid">
                     <!--begin::Row-->
-                    @livewire('modulo-inscripcion.auth')
+                    @livewire('modulo-inscripcion.auth', ['admision_year' => $admision_year])
                     <!--end::Row-->
                 </div>
                 <!--end::Content-->
@@ -40,4 +40,23 @@
     </div>
 </div>
 <!--end::Wrapper container-->
+@endsection
+@section('scripts')
+<script>
+    window.addEventListener('modal_registro_pago', event => {
+        $('#modal_registro_pago').modal(event.detail.action);
+    })
+    window.addEventListener('registro_pago', event => {
+        Swal.fire({
+            title: event.detail.title,
+            text: event.detail.text,
+            icon: event.detail.icon,
+            buttonsStyling: false,
+            confirmButtonText: event.detail.confirmButtonText,
+            customClass: {
+                confirmButton: "btn btn-"+event.detail.color,
+            }
+        });
+    })
+</script>
 @endsection
