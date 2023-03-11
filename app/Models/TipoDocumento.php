@@ -18,6 +18,7 @@ class TipoDocumento extends Model
 
     public $timestamps = false;
 
+    // Persona
     public function persona()
     {
         return $this->hasMany(Persona::class, 'tipo_doc_cod_tipo');

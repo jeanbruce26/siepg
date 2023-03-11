@@ -18,6 +18,7 @@ class EstadoCivil extends Model
 
     public $timestamps = false;
 
+    // Persona
     public function persona()
     {
         return $this->hasMany(Persona::class, 'est_civil_cod_est');

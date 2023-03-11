@@ -38,31 +38,37 @@ class Persona extends Model
 
     public $timestamps = false;
 
+    // Inscripcion
     public function inscripcion(){
         return $this->hasMany(Inscripcion::class,
         'persona_idpersona','idpersona');
     }
 
+    // TipoDocumento
     public function tipo_documento(){
         return $this->belongsTo(TipoDocumento::class,
         'tipo_doc_cod_tipo','id_tipo_doc');
     }
 
+    // EstadoCivil
     public function estado_civil(){
         return $this->belongsTo(EstadoCivil::class,
         'est_civil_cod_est','cod_est');
     }
 
+    // Universidad
     public function universidad(){
         return $this->belongsTo(Universidad::class,
         'univer_cod_uni','cod_uni');
     }
 
+    // Discapacidad
     public function discapacidad(){
         return $this->belongsTo(Discapacidad::class,
         'discapacidad_cod_disc','cod_disc');
     }
 
+    // GradoAcademico
     public function grado_academico(){
         return $this->belongsTo(GradoAcademico::class,
         'id_grado_academico','id_grado_academico');

@@ -20,6 +20,7 @@ class Universidad extends Model
 
     public $timestamps = false;
 
+    // Persona
     public function persona()
     {
         return $this->hasMany(Persona::class, 'univer_cod_uni');

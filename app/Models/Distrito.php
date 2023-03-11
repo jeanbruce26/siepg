@@ -20,11 +20,13 @@ class Distrito extends Model
 
     public $timestamps = false;
 
+    // Provincia
     public function provincia()
     {
         return $this->belongsTo(Provincia::class, 'id_provincia');
     }
 
+    // UbigeoPersona
     public function ubigeo_persona()
     {
         return $this->hasMany(UbigeoPersona::class, 'id_distrito');

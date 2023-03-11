@@ -18,6 +18,7 @@ class Discapacidad extends Model
 
     public $timestamps = false;
 
+    // Persona
     public function persona()
     {
         return $this->hasMany(Persona::class, 'discapacidad_cod_disc');

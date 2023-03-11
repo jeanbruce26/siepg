@@ -19,6 +19,7 @@ class Sede extends Model
 
     public $timestamps = false;
 
+    // Programa
     public function programa()
     {
         return $this->hasMany(Programa::class, 'id_sede');

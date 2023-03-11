@@ -21,16 +21,19 @@ class UbigeoPersona extends Model
 
     public $timestamps = false;
 
+    // Tipo Ubigeo
     public function tipo_ubigeo(){
         return $this->belongsTo(TipoUbigeo::class,
         'tipo_ubigeo_cod_tipo','cod_tipo');
     }
 
+    // Persona
     public function persona(){
         return $this->belongsTo(Persona::class,
         'persona_idpersona','idpersona');
     }
 
+    // Distrito
     public function distrito(){
         return $this->belongsTo(Distrito::class,
         'id_distrito','id');

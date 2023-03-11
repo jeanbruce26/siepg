@@ -19,6 +19,7 @@ class GradoAcademico extends Model
 
     public $timestamps = false;
 
+    // Persona
     public function persona()
     {
         return $this->hasMany(Persona::class, 'id_grado_academico');

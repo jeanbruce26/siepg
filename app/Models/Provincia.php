@@ -20,11 +20,13 @@ class Provincia extends Model
 
     public $timestamps = false;
 
+    // Departamento
     public function departamento()
     {
         return $this->belongsTo(Departamento::class, 'id_departamento');
     }
 
+    // Distrito
     public function distrito()
     {
         return $this->hasMany(Distrito::class, 'id_provincia');

@@ -18,6 +18,7 @@ class TipoUbigeo extends Model
 
     public $timestamps = false;
 
+    // Ubigeo Persona
     public function ubigeo_persona()
     {
         return $this->hasMany(UbigeoPersona::class, 'tipo_ubigeo_cod_tipo');
