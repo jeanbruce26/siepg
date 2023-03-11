@@ -119,7 +119,7 @@
                 </div>
             </div>
             {{-- botones --}}
-            <div class="d-flex justify-content-between mt-5">
+            <div class="d-flex justify-content-between mt-8">
                 <div></div>
                 <button type="button" class="btn btn-primary hover-elevate-down" style="width: 150px" wire:click.prevent="paso_2()">
                     Siguiente
@@ -272,7 +272,7 @@
                     </div>
                 </div>
             </div>
-            <div class="card shadow-sm mt-5">
+            <div class="card shadow-sm mt-10">
                 <div class="card-header">
                     <h3 class="card-title fw-bold fs-2">
                         Información de Dirección y Lugar de Nacimiento
@@ -408,7 +408,7 @@
                     </div>
                 </div>
             </div>
-            <div class="card shadow-sm mt-5">
+            <div class="card shadow-sm mt-10">
                 <div class="card-header">
                     <h3 class="card-title fw-bold fs-2">
                         Información de Grado Académico, Universidad y Experiencia Laboral
@@ -486,7 +486,7 @@
                 </div>
             </div>
             {{-- botones --}}
-            <div class="d-flex justify-content-between mt-5">
+            <div class="d-flex justify-content-between mt-8">
                 <button type="button" class="btn btn-secondary hover-elevate-down" style="width: 150px" wire:click.prevent="paso_1()">
                     Regresar
                 </button>
@@ -497,79 +497,86 @@
         @endif
         {{-- formulario paso 3 --}}
         @if ($paso === 3)
+            {{-- alerta --}}
+            <div class="alert bg-light-danger border border-danger d-flex align-items-center gap-2 p-5 mb-8 mt-3">
+                <span class="svg-icon svg-icon-2hx svg-icon-danger me-3">
+                    <div class="form-check form-check-custom form-check-danger">
+                        <input class="form-check-input" type="checkbox" wire:model="check_expediente" />
+                    </div>
+                </span>
+                <div class="d-flex flex-column">
+                    <h4 class="mb-1 text-dark">
+                        ¡Importante! - La casilla debe ser marcada sólo si no se cumple con el requisito de constancia de registro de la SUNEDU.
+                    </h4>
+                    <span class="fw-mediun">
+                        En caso de no disponer de mi constancia de registro de la SUNEDU, presentaré un documento que acredite que se encuentra en trámite (resolución de grado, grado academico, entre otros).
+                    </span>
+                </div>
+            </div>
             <div class="card shadow-sm mt-5">
                 <div class="card-header">
-                    <h3 class="card-title fw-bold">
-                        Ingreso de Expediente - PASO -> {{ $paso }}
+                    <h3 class="card-title fw-bold fs-2">
+                        Ingreso de Expedientes
                     </h3>
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="mb-5">
-                                <label for="sede" class="required form-label">
-                                    Sede
-                                </label>
-                                <select wire:model="sede" class="form-select @error('sede') is-invalid @enderror" id="sede">
-                                    <option>Seleccione la sede</option>
-                                    <option value="1">PUCALLPA</option>
-                                    <option value="2">OTRO LUGAR</option>
-                                </select>
-                                @error('sede')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
+                    <div class="alert bg-light-danger d-flex flex-column flex-sm-row p-5 mb-8">
+                        <div class="d-flex flex-column pe-0 pe-sm-10">
+                            <span class="fw-bold">
+                                Todos los documentos deben ser en formato <strong>PDF</strong>. (cualquier otro formato de archivo no es aceptado/compatible)
+                            </span>
                         </div>
-                        <div class="col-md-4">
-                            <div class="mb-5">
-                                <label for="programa" class="required form-label">
-                                    Programa
-                                </label>
-                                <select wire:model="programa" class="form-select @error('programa') is-invalid @enderror" id="programa">
-                                    <option>Seleccione el programa</option>
-                                    <option value="1">Maestria</option>
-                                    <option value="2">Doctorado</option>
-                                </select>
-                                @error('programa')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-5">
-                                <label for="subprograma" class="required form-label">
-                                    Subprograma
-                                </label>
-                                <select wire:model="subprograma" class="form-select @error('subprograma') is-invalid @enderror" id="subprograma">
-                                    <option>Seleccione el subprograma</option>
-                                    <option value="1">Maestria</option>
-                                    <option value="2">Doctorado</option>
-                                </select>
-                                @error('subprograma')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-5">
-                                <label for="mencion" class="required form-label">
-                                    Mención
-                                </label>
-                                <select wire:model="mencion" class="form-select @error('mencion') is-invalid @enderror" id="mencion">
-                                    <option>Seleccione la mencion</option>
-                                    <option value="1">Maestria</option>
-                                    <option value="2">Doctorado</option>
-                                </select>
-                                @error('mencion')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table mb-0 align-middle table-rounded table-hover border gy-5 gs-5 gx-5">
+                            <thead>
+                                <tr class="fw-semibold fs-6 text-gray-800 border-bottom border-gray-200">
+                                    <th colspan="3" class="fw-bold fs-4">Documentos</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        Nombre de expediente 1
+                                    </td>
+                                    <td align="center" class="col-md-2">
+                                        <span class="badge badge-primary">Enviado</span>
+                                    </td>
+                                    <td align="center" class="col-md-2">
+                                        <a href="#" class="btn btn-primary btn-sm">Subir</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Nombre de expediente 2
+                                    </td>
+                                    <td align="center" class="col-md-2">
+                                        <span class="badge badge-danger">No enviado</span>
+                                    </td>
+                                    <td align="center" class="col-md-2">
+                                        <a href="#" class="btn btn-primary btn-sm">Subir</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
+            {{-- declaracion jurada --}}
+            <div class="alert bg-light-secondary border border-secondary d-flex align-items-center gap-2 p-5 mb-8 mt-8">
+                <span class="svg-icon svg-icon-2hx svg-icon-secondary me-3">
+                    <div class="form-check form-check-custom form-check-secondary">
+                        <input class="form-check-input" type="checkbox" wire:model="declaracion_jurada" />
+                    </div>
+                </span>
+                <div class="d-flex flex-column">
+                    <span class="fw-bold fs-5">
+                        DECLARO BAJO JURAMENTO QUE LOS DOCUMENTOS PRESENTADOS Y LOS DATOS CONSIGNADOS EN EL PRESENTE PROCESO DE ADMISIÓN SON FIDEDIGNOS
+                    </span>
+                </div>
+            </div>
             {{-- botones --}}
-            <div class="d-flex justify-content-between mt-5">
+            <div class="d-flex justify-content-between mt-8">
                 <button type="button" class="btn btn-secondary hover-elevate-down" style="width: 150px" wire:click.prevent="paso_2()">
                     Regresar
                 </button>
