@@ -5,23 +5,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Universidad extends Model
+class Discapacidad extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = "cod_uni";
-    protected $table = 'univer';
+    protected $primaryKey = "cod_disc";
+    protected $table = 'discapacidad';
     protected $fillable = [
-        'cod_uni',
-        'universidad',
-        'depart',
-        'tipo_gesti',
+        'cod_disc',
+        'discapacidad'
     ];
 
     public $timestamps = false;
 
     public function persona()
     {
-        return $this->hasMany(Persona::class, 'univer_cod_uni');
+        return $this->hasMany(Persona::class, 'discapacidad_cod_disc');
     }
 }

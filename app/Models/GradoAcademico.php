@@ -5,23 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Universidad extends Model
+class GradoAcademico extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = "cod_uni";
-    protected $table = 'univer';
+    protected $primaryKey = "id_grado_academico";
+
+    protected $table = 'grado_academico';
     protected $fillable = [
-        'cod_uni',
-        'universidad',
-        'depart',
-        'tipo_gesti',
+        'id_grado_academico',
+        'nom_grado',
     ];
 
     public $timestamps = false;
 
     public function persona()
     {
-        return $this->hasMany(Persona::class, 'univer_cod_uni');
+        return $this->hasMany(Persona::class, 'id_grado_academico');
     }
 }
