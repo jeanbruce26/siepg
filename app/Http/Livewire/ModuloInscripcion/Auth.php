@@ -4,6 +4,9 @@ namespace App\Http\Livewire\ModuloInscripcion;
 
 use App\Models\Admision;
 use App\Models\CanalPago;
+use App\Models\ConceptoPago;
+use App\Models\Inscripcion;
+use App\Models\InscripcionPago;
 use App\Models\Pago;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -64,7 +67,8 @@ class Auth extends Component
 
         // validar si el numero de operacion ya existe
         $pago = Pago::where('nro_operacion', $this->numero_operacion)->first();
-        if ($pago) {
+        if ($pago)
+        {
             if($pago->dni == $this->documento_identidad && $pago->fecha_pago == $this->fecha_pago){
                 // emitir evento para mostrar mensaje de alerta
                 $this->dispatchBrowserEvent('registro_pago', [
@@ -98,6 +102,21 @@ class Auth extends Component
             }
         }
 
+        // validar si el monto ingresado es igual al monto por concepto de inscripción
+        $concepto_pago_monto = ConceptoPago::where('concepto_id', 1)->first()->monto;
+        if($this->monto_operacion != $concepto_pago_monto)
+        {
+            // emitir evento para mostrar mensaje de alerta
+            $this->dispatchBrowserEvent('registro_pago', [
+                'title' => '¡Error!',
+                'text' => 'El monto ingresado no es igual al monto por concepto de inscripción',
+                'icon' => 'error',
+                'confirmButtonText' => 'Cerrar',
+                'color' => 'danger'
+            ]);
+            return redirect()->back();
+        }
+
         // guardar datos en la base de datos de pago
         $pago = new Pago();
         $pago->dni = $this->documento_identidad;
@@ -107,8 +126,9 @@ class Auth extends Component
         $pago->estado = 1;
         $pago->canal_pago_id = $this->canal_pago;
         $pago->verificacion_pago = 1;
-        if($this->voucher){
-            $path = $this->documento_identidad . '/' . $this->admision_year . '/' . 'voucher/';
+        if($this->voucher)
+        {
+            $path = 'files/' . $this->documento_identidad . '/' . $this->admision_year . '/' . 'voucher/';
             $filename = 'voucher-pago' . $this->voucher->getClientOriginalExtension();
             $nombre_db = $path.$filename;
             $data = $this->voucher;
@@ -117,10 +137,41 @@ class Auth extends Component
         }
         $pago->save();
 
+        //  obtener el ultimo codigo de inscripcion
+        $ultimo_codifo_inscripcion = Inscripcion::orderBy('inscripcion_codigo','DESC')->first();
+        if($ultimo_codifo_inscripcion == null)
+        {
+            $codigo_inscripcion = 'IN0001';
+        }else
+        {
+            $codigo_inscripcion = $ultimo_codifo_inscripcion->inscripcion_codigo;
+            $codigo_inscripcion = substr($codigo_inscripcion, 2, 6);
+            $codigo_inscripcion = intval($codigo_inscripcion) + 1;
+            $codigo_inscripcion = str_pad($codigo_inscripcion, 4, "0", STR_PAD_LEFT);
+            $codigo_inscripcion = 'IN'.$codigo_inscripcion;
+        }
+
+        // crear la inscripcion
+        $inscripcion = new Inscripcion();
+        $inscripcion->inscripcion_codigo = $codigo_inscripcion;
+        $inscripcion->estado = 'activo';
+        $inscripcion->admision_cod_admi = Admision::where('estado', 1)->first()->cod_admi;
+        $inscripcion->save();
+
+        // asigar el pago creado a la tabla de inscripcion pago
+        $inscripcion_pago = new InscripcionPago();
+        $inscripcion_pago->pago_id = $pago->pago_id;
+        $inscripcion_pago->inscripcion_id = $inscripcion->id_inscripcion;
+        $inscripcion_pago->concepto_pago_id = 1;
+        $inscripcion_pago->save();
+
         // cerrar modal de registro de pago
         $this->dispatchBrowserEvent('modal_registro_pago', [
             'action' => 'hide'
         ]);
+
+        // limpiar formulario de registro de pago
+        $this->limpiar_registro_pago();
 
         // emitir evento para mostrar mensaje de alerta de registro de pago
         $this->dispatchBrowserEvent('registro_pago', [
@@ -164,7 +215,10 @@ class Auth extends Component
             return redirect()->back();
         }else{
             if($pago->estado == 1){
+                // iniciar sesion con el pago ingresado
                 auth('inscripcion')->login($pago);
+
+                // redireccionar a la ruta de registro de inscripcion
                 return redirect()->route('inscripcion.registro');
             }else{
                 // emitir evento para mostrar mensaje de alerta

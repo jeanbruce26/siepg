@@ -1,10 +1,12 @@
-<div class="py-10">
+<div class="">
     <div class="row g-5 gx-xl-10">
         <div class="col-md-8">
             <div class="row g-5 gx-xl-10">
                 <div class="col-md-12">
-                    <div class="card shadow-sm" style="background-color: #fdfdf4">
-                        <div class="px-6 py-5">
+                    {{-- <div class="card shadow-sm" style="background-color: #fdfdf4"> --}}
+                    {{-- <div class="card shadow-sm"> --}}
+                    <div class="card shadow-sm bg-opacity-25 bg-info">
+                        <div class="px-7 py-6">
                             <span class="fw-bolder fs-4">
                                 Estimado/a postulante:
                             </span>
@@ -33,8 +35,10 @@
                     </div>
                 </div>
                 <div class="col-md-12">
-                    <div class="card shadow-sm" style="background-color: #eff8ee">
-                        <div class="px-6 py-5">
+                    {{-- <div class="card shadow-sm" style="background-color: #eff8ee"> --}}
+                    {{-- <div class="card shadow-sm"> --}}
+                    <div class="card shadow-sm bg-opacity-25 bg-warning">
+                        <div class="px-7 py-6">
                             <span class="fw-bolder fs-4">
                                 Recomendación antes de comenzar su inscripción:
                             </span>
@@ -70,7 +74,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="card shadow-sm">
-                        <div class="px-6 py-5">
+                        <div class="px-7 py-6">
                             <div class="text-center d-flex flex-column">
                                 <span class="fw-bolder fs-2 my-3">
                                     Iniciar Inscripción

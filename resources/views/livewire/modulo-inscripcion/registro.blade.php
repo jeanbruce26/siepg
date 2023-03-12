@@ -62,8 +62,9 @@
                                 </label>
                                 <select wire:model="sede" class="form-select @error('sede') is-invalid @enderror" id="sede">
                                     <option>Seleccione la sede</option>
-                                    <option value="1">PUCALLPA</option>
-                                    <option value="2">OTRO LUGAR</option>
+                                    @foreach ($sede_array as $item)
+                                    <option value="{{ $item->cod_sede }}">{{ $item->sede }}</option>
+                                    @endforeach
                                 </select>
                                 @error('sede')
                                     <span class="text-danger">{{ $message }}</span>
@@ -77,8 +78,9 @@
                                 </label>
                                 <select wire:model="programa" class="form-select @error('programa') is-invalid @enderror" id="programa">
                                     <option>Seleccione el programa</option>
-                                    <option value="1">Maestria</option>
-                                    <option value="2">Doctorado</option>
+                                    @foreach ($programa_array as $item)
+                                    <option value="{{ $item->id_programa }}">{{ $item->descripcion_programa }}</option>
+                                    @endforeach
                                 </select>
                                 @error('programa')
                                     <span class="text-danger">{{ $message }}</span>
@@ -88,33 +90,45 @@
                         <div class="col-md-4">
                             <div class="mb-5">
                                 <label for="subprograma" class="required form-label">
-                                    Subprograma
+                                    @if ($programa_nombre)
+                                        {{ $programa_nombre }}
+                                    @else
+                                        ---
+                                    @endif
                                 </label>
                                 <select wire:model="subprograma" class="form-select @error('subprograma') is-invalid @enderror" id="subprograma">
                                     <option>Seleccione el subprograma</option>
-                                    <option value="1">Maestria</option>
-                                    <option value="2">Doctorado</option>
+                                    @foreach ($subprograma_array as $item)
+                                    <option value="{{ $item->id_subprograma }}">{{ $item->subprograma }}</option>
+                                    @endforeach
                                 </select>
                                 @error('subprograma')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="mb-5">
-                                <label for="mencion" class="required form-label">
-                                    Mención
-                                </label>
-                                <select wire:model="mencion" class="form-select @error('mencion') is-invalid @enderror" id="mencion">
-                                    <option>Seleccione la mencion</option>
-                                    <option value="1">Maestria</option>
-                                    <option value="2">Doctorado</option>
-                                </select>
-                                @error('mencion')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
+                        @if ($subprograma)
+                            @if ($mencion_array->count() >= 1)
+                                @if ($mencion_mostrar == 0)
+                                <div class="col-md-4">
+                                    <div class="mb-5">
+                                        <label for="mencion" class="required form-label">
+                                            Mención
+                                        </label>
+                                        <select wire:model="mencion" class="form-select @error('mencion') is-invalid @enderror" id="mencion">
+                                            <option>Seleccione la mencion</option>
+                                            @foreach ($mencion_array as $item)
+                                            <option value="{{ $item->id_mencion }}">{{ $item->mencion }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('mencion')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                                @endif
+                            @endif
+                        @endif
                     </div>
                 </div>
             </div>
@@ -187,8 +201,8 @@
                                 </label>
                                 <select wire:model="genero" class="form-select @error('genero') is-invalid @enderror" id="genero">
                                     <option>Seleccione el genero</option>
-                                    <option value="1">Masculino</option>
-                                    <option value="2">Femenino</option>
+                                    <option value="MASCULINO">MASCULINO</option>
+                                    <option value="FEMENINO">FEMENINO</option>
                                 </select>
                                 @error('genero')
                                     <span class="text-danger">{{ $message }}</span>
@@ -201,9 +215,10 @@
                                     Estado Civil
                                 </label>
                                 <select wire:model="estado_civil" class="form-select @error('genero') is-invalid @enderror" id="estado_civil">
-                                    <option>Seleccione el genero</option>
-                                    <option value="1">Masculino</option>
-                                    <option value="2">Femenino</option>
+                                    <option>Seleccione el estado civil</option>
+                                    @foreach ($estado_civil_array as $item)
+                                    <option value="{{ $item->cod_est }}">{{ $item->est_civil }}</option>
+                                    @endforeach
                                 </select>
                                 @error('estado_civil')
                                     <span class="text-danger">{{ $message }}</span>
@@ -216,9 +231,10 @@
                                     Discapacidad
                                 </label>
                                 <select wire:model="discapacidad" class="form-select @error('discapacidad') is-invalid @enderror" id="discapacidad">
-                                    <option>Seleccione el genero</option>
-                                    <option value="1">Masculino</option>
-                                    <option value="2">Femenino</option>
+                                    <option>Seleccione la discapacidad</option>
+                                    @foreach ($tipo_discapacidad_array as $item)
+                                    <option value="{{ $item->cod_disc }}">{{ $item->discapacidad }}</option>
+                                    @endforeach
                                 </select>
                                 @error('discapacidad')
                                     <span class="text-danger">{{ $message }}</span>
@@ -292,10 +308,9 @@
                                 </label>
                                 <select wire:model="departamento_direccion" class="form-select @error('departamento_direccion') is-invalid @enderror" id="departamento_direccion">
                                     <option>Seleccione el departamento</option>
-                                    {{-- @foreach ($departamentos as $departamento)
-                                        <option value="{{ $departamento->id }}">{{ $departamento->nombre }}</option>
-                                    @endforeach --}}
-                                    <option value="1">Ucayali</option>
+                                    @foreach ($departamento_direccion_array as $item)
+                                    <option value="{{ $item->id }}">{{ $item->departamento }}</option>
+                                    @endforeach
                                 </select>
                                 @error('departamento_direccion')
                                     <span class="text-danger">{{ $message }}</span>
@@ -309,10 +324,11 @@
                                 </label>
                                 <select wire:model="provincia_direccion" class="form-select @error('provincia_direccion') is-invalid @enderror" id="provincia_direccion">
                                     <option>Seleccione la provincia</option>
-                                    {{-- @foreach ($departamentos as $departamento)
-                                        <option value="{{ $departamento->id }}">{{ $departamento->nombre }}</option>
-                                    @endforeach --}}
-                                    <option value="1">Ucayali</option>
+                                    @if ($departamento_direccion)
+                                    @foreach ($provincia_direccion_array as $item)
+                                    <option value="{{ $item->id }}">{{ $item->provincia }}</option>
+                                    @endforeach
+                                    @endif
                                 </select>
                                 @error('provincia_direccion')
                                     <span class="text-danger">{{ $message }}</span>
@@ -326,10 +342,11 @@
                                 </label>
                                 <select wire:model="distrito_direccion" class="form-select @error('distrito_direccion') is-invalid @enderror" id="distrito_direccion">
                                     <option>Seleccione el distrito</option>
-                                    {{-- @foreach ($departamentos as $departamento)
-                                        <option value="{{ $departamento->id }}">{{ $departamento->nombre }}</option>
-                                    @endforeach --}}
-                                    <option value="1">Ucayali</option>
+                                    @if ($provincia_direccion)
+                                    @foreach ($distrito_direccion_array as $item)
+                                    <option value="{{$item->id}}">{{$item->distrito}}</option>
+                                    @endforeach
+                                    @endif
                                 </select>
                                 @error('distrito_direccion')
                                     <span class="text-danger">{{ $message }}</span>
@@ -361,10 +378,9 @@
                                 </label>
                                 <select wire:model="departamento_nacimiento" class="form-select @error('departamento_nacimiento') is-invalid @enderror" id="departamento_nacimiento">
                                     <option>Seleccione el departamento</option>
-                                    {{-- @foreach ($departamentos as $departamento)
-                                        <option value="{{ $departamento->id }}">{{ $departamento->nombre }}</option>
-                                    @endforeach --}}
-                                    <option value="1">Ucayali</option>
+                                    @foreach ($departamento_nacimiento_array as $item)
+                                    <option value="{{$item->id}}" {{ $item->id == old('departamento_nacimiento') ? 'selected' : '' }}>{{$item->departamento}}</option>
+                                    @endforeach
                                 </select>
                                 @error('departamento_nacimiento')
                                     <span class="text-danger">{{ $message }}</span>
@@ -378,10 +394,11 @@
                                 </label>
                                 <select wire:model="provincia_nacimiento" class="form-select @error('provincia_nacimiento') is-invalid @enderror" id="provincia_nacimiento">
                                     <option>Seleccione la provincia</option>
-                                    {{-- @foreach ($departamentos as $departamento)
-                                        <option value="{{ $departamento->id }}">{{ $departamento->nombre }}</option>
-                                    @endforeach --}}
-                                    <option value="1">Ucayali</option>
+                                    @if ($departamento_nacimiento)
+                                    @foreach ($provincia_nacimiento_array as $item)
+                                    <option value="{{$item->id}}" {{ $item->id == old('provincia_nacimiento') ? 'selected' : '' }}>{{$item->provincia}}</option>
+                                    @endforeach
+                                    @endif
                                 </select>
                                 @error('provincia_nacimiento')
                                     <span class="text-danger">{{ $message }}</span>
@@ -395,16 +412,32 @@
                                 </label>
                                 <select wire:model="distrito_nacimiento" class="form-select @error('distrito_nacimiento') is-invalid @enderror" id="distrito_nacimiento">
                                     <option>Seleccione el distrito</option>
-                                    {{-- @foreach ($departamentos as $departamento)
-                                        <option value="{{ $departamento->id }}">{{ $departamento->nombre }}</option>
-                                    @endforeach --}}
-                                    <option value="1">Ucayali</option>
+                                    @if ($provincia_nacimiento)
+                                    @foreach ($distrito_nacimiento_array as $item)
+                                    <option value="{{$item->id}}" {{ $item->id == old('distrito_nacimiento') ? 'selected' : '' }}>{{$item->distrito}}</option>
+                                    @endforeach
+                                    @endif
                                 </select>
                                 @error('distrito_nacimiento')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
+                        @if ($distrito_nacimiento)
+                            @if ($distrito_nacimiento == 1893)
+                            <div class="col-md-12">
+                                <div class="mb-5">
+                                    <label for="pais" class="required form-label">
+                                        Pais de Nacimiento
+                                    </label>
+                                    <input type="text" wire:model="pais" class="form-control @error('pais') is-invalid @enderror" id="pais" placeholder="Ingrese su pais de nacimiento">
+                                    @error('pais')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                            @endif
+                        @endif
                     </div>
                 </div>
             </div>
@@ -423,10 +456,9 @@
                                 </label>
                                 <select wire:model="grado_academico" class="form-select @error('grado_academico') is-invalid @enderror" id="grado_academico">
                                     <option>Seleccione el grado académico</option>
-                                    {{-- @foreach ($departamentos as $departamento)
-                                        <option value="{{ $departamento->id }}">{{ $departamento->nombre }}</option>
-                                    @endforeach --}}
-                                    <option value="1">Ucayali</option>
+                                    @foreach ($grado_academico_array as $item)
+                                        <option value="{{ $item->id_grado_academico }}">{{ $item->nom_grado }}</option>
+                                    @endforeach
                                 </select>
                                 @error('grado_academico')
                                     <span class="text-danger">{{ $message }}</span>
@@ -462,7 +494,7 @@
                                 </label>
                                 <select wire:model="universidad" class="form-select @error('universidad') is-invalid @enderror" id="universidad" data-control="select2" data-placeholder="Seleccione su universidad" data-allow-clear="true">
                                     <option></option>
-                                    @foreach ($universidades as $item)
+                                    @foreach ($universidad_array as $item)
                                         <option value="{{ $item->cod_uni }}">{{ $item->universidad }}</option>
                                     @endforeach
                                 </select>
@@ -499,20 +531,21 @@
         @if ($paso === 3)
             {{-- alerta --}}
             <div class="alert bg-light-danger border border-danger d-flex align-items-center gap-2 p-5 mb-8 mt-3">
-                <span class="svg-icon svg-icon-2hx svg-icon-danger me-3">
-                    <div class="form-check form-check-custom form-check-danger">
+                <span class="svg-icon svg-icon-2hx svg-icon-primary me-3">
+                    <div class="form-check form-check-custom form-check-primary">
                         <input class="form-check-input" type="checkbox" wire:model="check_expediente" />
                     </div>
                 </span>
                 <div class="d-flex flex-column">
                     <h4 class="mb-1 text-dark">
-                        ¡Importante! - La casilla debe ser marcada sólo si no se cumple con el requisito de constancia de registro de la SUNEDU.
+                        ¡Importante! - La casilla debe ser marcada sólo si no cumple con el requisito de constancia de registro de la SUNEDU.
                     </h4>
                     <span class="fw-mediun">
                         En caso de no disponer de mi constancia de registro de la SUNEDU, presentaré un documento que acredite que se encuentra en trámite (resolución de grado, grado academico, entre otros).
                     </span>
                 </div>
             </div>
+            {{-- expedientes --}}
             <div class="card shadow-sm mt-5">
                 <div class="card-header">
                     <h3 class="card-title fw-bold fs-2">
@@ -535,28 +568,36 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @if ($expediente_array)
+                                    @foreach ($expediente_array as $item)
+                                    @php
+                                        $exped_inscripcion = App\Models\ExpedienteInscripcion::where('expediente_cod_exp', $item->cod_exp)->where('id_inscripcion', $id_inscripcion)->first();
+                                    @endphp
+                                    <tr>
+                                        <td>
+                                            {{ $item->tipo_doc }} @if ($item->requerido == 1) <span class="text-danger" style="font-size: 0.9rem">(Obligatorio)</span> @endif
+                                        </td>
+                                        <td align="center" class="col-md-2">
+                                            @if ($exped_inscripcion)
+                                            <span class="badge badge-primary">Enviado</span>
+                                            @else
+                                            <span class="badge badge-danger">No enviado</span>
+                                            @endif
+                                        </td>
+                                        <td align="center" class="col-md-2">
+                                            <a href="#modal_registro_expediente" wire:click="cargar_modal_expediente({{ $item->cod_exp }})" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal_registro_expediente">
+                                                Subir
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                @else
                                 <tr>
-                                    <td>
-                                        Nombre de expediente 1
-                                    </td>
-                                    <td align="center" class="col-md-2">
-                                        <span class="badge badge-primary">Enviado</span>
-                                    </td>
-                                    <td align="center" class="col-md-2">
-                                        <a href="#" class="btn btn-primary btn-sm">Subir</a>
+                                    <td colspan="3">
+                                        <div class="text-center fw-bold text-muted">Seleccione su programa para ver sus expedientes requeridos.</div>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td>
-                                        Nombre de expediente 2
-                                    </td>
-                                    <td align="center" class="col-md-2">
-                                        <span class="badge badge-danger">No enviado</span>
-                                    </td>
-                                    <td align="center" class="col-md-2">
-                                        <a href="#" class="btn btn-primary btn-sm">Subir</a>
-                                    </td>
-                                </tr>
+                                @endif
                             </tbody>
                         </table>
                     </div>
@@ -566,11 +607,11 @@
             <div class="alert bg-light-secondary border border-secondary d-flex align-items-center gap-2 p-5 mb-8 mt-8">
                 <span class="svg-icon svg-icon-2hx svg-icon-secondary me-3">
                     <div class="form-check form-check-custom form-check-secondary">
-                        <input class="form-check-input" type="checkbox" wire:model="declaracion_jurada" />
+                        <input class="form-check-input @error('declaracion_jurada') is-invalid @enderror" type="checkbox" wire:model="declaracion_jurada" />
                     </div>
                 </span>
                 <div class="d-flex flex-column">
-                    <span class="fw-bold fs-5">
+                    <span class="fw-bold fs-5 @error('declaracion_jurada') text-danger @enderror" wire:click="declaracion_jurada" style="cursor: pointer;">
                         DECLARO BAJO JURAMENTO QUE LOS DOCUMENTOS PRESENTADOS Y LOS DATOS CONSIGNADOS EN EL PRESENTE PROCESO DE ADMISIÓN SON FIDEDIGNOS
                     </span>
                 </div>
@@ -580,12 +621,56 @@
                 <button type="button" class="btn btn-secondary hover-elevate-down" style="width: 150px" wire:click.prevent="paso_2()">
                     Regresar
                 </button>
-                <button type="submit" class="btn btn-primary hover-elevate-down" style="width: 150px">
+                <button type="button" wire:click.prevent="registrar_inscripcion()" class="btn btn-primary hover-elevate-down" style="width: 150px">
                     Registrar
                 </button>
             </div>
         @endif
     </form>
+    {{-- modal subida de expediente --}}
+    <div wire:ignore.self class="modal fade" tabindex="-1" id="modal_registro_expediente">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">
+                        Subir Expediente
+                    </h3>
+                    <!--begin::Close-->
+                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close" wire:click="limpiar_registro_pago">
+                        <i class="bi bi-x fs-1"></i>
+                    </div>
+                    <!--end::Close-->
+                </div>
+                <div class="modal-body">
+                    <form autocomplete="off">
+                        <div class="mb-5">
+                            <label for="expediente" class="required form-label">
+                                {{ $expediente_nombre }}
+                            </label>
+                            <input type="file" wire:model="expediente" class="form-control mb-3 @error('expediente') is-invalid @enderror" id="upload{{ $iteration }}" accept=".pdf" />
+                            <span class="form-text text-muted fst-italic">
+                                Nota: El expediente debe ser en formato PDF con un maximo de 10MB. <br>
+                            </span>
+                            @error('expediente')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal" wire:click="limpiar_modal_expediente">
+                        Cerrar
+                    </button>
+                    <button type="button" wire:click="registrar_expediente" wire:loading.remove wire:target="registrar_expediente" class="btn btn-primary" @if($expediente == null) disabled @endif>
+                        Registrar Expediente
+                    </button>
+                    <button wire:loading wire:target="registrar_expediente" class="btn btn-primary" type="button" disabled>
+                        <i class="fas fa-spinner fa-spin"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 @push('scripts')

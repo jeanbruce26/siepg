@@ -1,5 +1,6 @@
 <html lang="es" >
-<head><base href=""/>
+<head data-turbolinks-track="reload">
+    <base href=""/>
     <title>
         {{ config('app.name', 'Registro - Escuela de Posgrado - UNU') }}
     </title>
@@ -151,19 +152,17 @@
                         </div>
                     </div>
                 </div>
-                <div class="app-wrapper flex-column flex-row-fluid" id="kt_app_wrapper">
-                    <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
-
+                <div class="app-wrapper flex-column bg-opacity-15 bg-primary h-100" id="kt_app_wrapper">
+                    <div class="app-main flex-column flex-row-fluid mb-15" id="kt_app_main">
                         @yield('content')
-
-                        <div id="kt_app_footer" class="app-footer">
-                            <div class="app-container container-xxl d-flex flex-column flex-md-row flex-center flex-md-stack py-3">
-                                <div class="text-dark order-2 order-md-1">
-                                    <span class="text-muted fw-semibold me-1">{{ date('Y') }}&copy;</span>
-                                    <a href="#" class="text-gray-800 text-hover-primary">
-                                        Escuela de Posgrado
-                                    </a>
-                                </div>
+                    </div>
+                    <div id="kt_app_footer" class="app-footer fixed-bottom">
+                        <div class="app-container container-xxl d-flex flex-column flex-md-row flex-center flex-md-stack py-3">
+                            <div class="text-dark order-2 order-md-1">
+                                <span class="text-muted fw-semibold me-1">{{ date('Y') }}&copy;</span>
+                                <a href="#" class="text-gray-800 text-hover-primary">
+                                    Escuela de Posgrado
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -210,10 +209,10 @@
         <script src="{{ asset('assets/js/custom/widgets.js') }}"></script>
         <script src="{{ asset('assets/js/custom/apps/chat/chat.js') }}"></script>
         <!--end::Custom Javascript-->
-        <script type="module">
+        {{-- <script type="module">
         import hotwiredTurbo from 'https://cdn.skypack.dev/@hotwired/turbo';
         </script>
-        <script src="https://cdn.jsdelivr.net/gh/livewire/turbolinks@v0.1.x/dist/livewire-turbolinks.js" data-turbolinks-eval="false" data-turbo-eval="false"></script>
+        <script src="https://cdn.jsdelivr.net/gh/livewire/turbolinks@v0.1.x/dist/livewire-turbolinks.js" data-turbolinks-eval="false" data-turbo-eval="false"></script> --}}
         @stack('scripts')
         @yield('scripts')
         <!-- LIVEWIRE SCRIPTS -->

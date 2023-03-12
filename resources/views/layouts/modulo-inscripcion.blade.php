@@ -1,5 +1,6 @@
 <html lang="es" >
-<head><base href=""/>
+<head data-turbolinks-track="reload">
+    <base href=""/>
     <title>
         {{ config('app.name', 'Registro - Escuela de Posgrado - UNU') }}
     </title>
@@ -151,6 +152,7 @@
                                     </div>
                                     <!--end::Menu-->
                                 </div>
+                                @auth('inscripcion')
                                 <div class="app-navbar-item ms-1 ms-md-3" id="kt_header_user_menu_toggle">
                                     <div class="app-navbar-item ms-3" id="kt_header_user_menu_toggle">
                                         <a href="{{ route('inscripcion.logout') }}" class="btn btn-danger" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -162,6 +164,7 @@
                                         </form>
                                     </div>
                                 </div>
+                                @endauth
                             </div>
                         </div>
                     </div>
@@ -225,10 +228,10 @@
         <script src="{{ asset('assets/js/custom/widgets.js') }}"></script>
         <script src="{{ asset('assets/js/custom/apps/chat/chat.js') }}"></script>
         <!--end::Custom Javascript-->
-        <script type="module">
+        {{-- <script type="module">
         import hotwiredTurbo from 'https://cdn.skypack.dev/@hotwired/turbo';
         </script>
-        <script src="https://cdn.jsdelivr.net/gh/livewire/turbolinks@v0.1.x/dist/livewire-turbolinks.js" data-turbolinks-eval="false" data-turbo-eval="false"></script>
+        <script src="https://cdn.jsdelivr.net/gh/livewire/turbolinks@v0.1.x/dist/livewire-turbolinks.js" data-turbolinks-eval="false" data-turbo-eval="false"></script> --}}
         @stack('scripts')
         @yield('scripts')
         <!-- LIVEWIRE SCRIPTS -->
