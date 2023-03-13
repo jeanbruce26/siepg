@@ -32,7 +32,7 @@
         Swal.fire({
             title: 'Espere un momento, estamos generando su ficha de inscripción',
             showConfirmButton: false,
-            timer: 20000,
+            timer: 30000,
             timerProgressBar: true,
             allowOutsideClick: false,
             allowEscapeKey: false,

@@ -51,7 +51,7 @@
                 <div id="kt_app_header" class="app-header">
                     <div class="app-container container-xxl d-flex align-items-stretch justify-content-between" id="kt_app_header_container">
                         <div class="d-flex align-items-center flex-grow-1 flex-lg-grow-0 me-lg-15">
-                            <a href="#">
+                            <a href="{{ route('inscripcion.auth') }}">
                                 <img alt="Logo" src="{{ asset('assets/media/logos/logo-largo-dark.png') }}" height="45" class="app-sidebar-logo-default" />
                             </a>
                         </div>
