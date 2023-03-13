@@ -25,6 +25,7 @@ use App\Models\Sede;
 use App\Models\Subprograma;
 use App\Models\UbigeoPersona;
 use App\Models\Universidad;
+use App\Models\UsuarioEstudiante;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\File;
@@ -701,11 +702,19 @@ class Registro extends Component
         $pago->estado = 2;
         $pago->save();
 
+        // Registrar datos de usuario del estudiante
+        $usuario_estudiante = new UsuarioEstudiante();
+        $usuario_estudiante->usuario_estudiante = $this->documento;
+        $usuario_estudiante->usuario_estudiante_password = $inscripcion->inscripcion_codigo;
+        $usuario_estudiante->usuario_estudiante_created_at = now();
+        $usuario_estudiante->usuario_estudiante_estado = 1;
+        $usuario_estudiante->save();
+
         // alerta de cuenta regresiva
         $this->dispatchBrowserEvent('alerta_final_registro');
 
-        // cerrar sesion
-        auth('inscripcion')->logout();
+        // // cerrar sesion
+        // auth('inscripcion')->logout();
 
         // redireccionar a la pagina final
         return redirect()->route('inscripcion.pdf-email', ['id' => $this->id_inscripcion]);
