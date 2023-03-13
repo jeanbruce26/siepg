@@ -15,8 +15,15 @@ class Gracias extends Component
         $this->inscripcion = Inscripcion::find($this->id_inscripcion);
     }
 
+    public function descargar_pdf(Inscripcion $inscripcion)
+    {
+    // dd(response()->download($inscripcion->inscripcion));
+        return response()->download($inscripcion->inscripcion);
+    }
+
     public function render()
     {
+        // $this->descargar_pdf($this->inscripcion);
         return view('livewire.modulo-inscripcion.gracias');
     }
 }

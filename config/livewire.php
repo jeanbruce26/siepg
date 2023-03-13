@@ -155,6 +155,6 @@ return [
 
     'render_on_redirect' => false,
 
-    'full_page_reset' => true,
+    // 'full_page_reset' => true,
 
 ];

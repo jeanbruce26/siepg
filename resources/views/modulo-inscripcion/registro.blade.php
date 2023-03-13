@@ -27,5 +27,28 @@
             }
         });
     })
+    window.addEventListener('alerta_final_registro', event => {
+        let timerInterval;
+        Swal.fire({
+            title: 'Espere un momento, estamos generando su ficha de inscripción',
+            showConfirmButton: false,
+            timer: 20000,
+            timerProgressBar: true,
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            allowEnterKey: false,
+            padding: '2em 2em 3em 2em',
+            didOpen: () => {
+            Swal.showLoading()
+            const b = Swal.getHtmlContainer().querySelector('b')
+            timerInterval = setInterval(() => {
+                b.textContent = Swal.getTimerLeft()
+            }, 100)
+            },
+            willClose: () => {
+            clearInterval(timerInterval)
+            }
+        })
+    });
 </script>
 @endsection

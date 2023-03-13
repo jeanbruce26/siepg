@@ -15,7 +15,7 @@
         </span>
         <div class="d-flex flex-column">
             <h4 class="mb-0">
-                Su ficha de inscripción ha sido descargado y enviado a su correo electrónico.
+                Su ficha de inscripción ha sido enviado a su correo electrónico y se encuentra disponible para descargarlo en el botón de la parte inferior.
             </h4>
         </div>
     </div>
@@ -90,10 +90,14 @@
         </div>
     </div>
     {{-- boton --}}
-    <div class="d-flex justify-content-start">
+    <div class="d-flex justify-content-between">
         <a href="{{ route('inscripcion.auth') }}" class="btn btn-secondary">
             <i class="fa-sharp fa-solid fa-arrow-left"></i>
             Volver al inicio
         </a>
+        <button wire:click="descargar_pdf({{ $id_inscripcion }})" class="btn btn-primary hover-scale">
+            <i class="fa-sharp fa-solid fa-download"></i>
+            Descargar ficha de inscripción
+        </button>
     </div>
 </div>

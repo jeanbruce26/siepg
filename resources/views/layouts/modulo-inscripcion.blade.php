@@ -1,5 +1,6 @@
 <html lang="es" >
-<head data-turbolinks-track="reload">
+{{-- <head data-turbolinks-track="reload"> --}}
+<head>
     <base href=""/>
     <title>
         {{ config('app.name', 'Registro - Escuela de Posgrado - UNU') }}
