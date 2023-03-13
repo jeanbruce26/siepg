@@ -216,7 +216,7 @@
                     <button type="button" class="btn btn-light" data-bs-dismiss="modal" wire:click="limpiar_registro_pago">
                         Cerrar
                     </button>
-                    <button type="button" wire:click="registrar_pago" class="btn btn-primary">
+                    <button type="button" wire:click="registrar_pago" class="btn btn-primary" @if ($voucher == null) disabled @endif>
                         Registrar Pago
                     </button>
                 </div>
