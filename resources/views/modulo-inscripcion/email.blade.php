@@ -347,13 +347,13 @@ a {text-decoration: none;}
                                                                         Muchas gracias por inscribirse.<br><br></p>
                                                                     <p
                                                                         style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:24px;color:#333333;font-size:16px">
-                                                                        Estimado/a [Nombre del destinatario],<br><br>
+                                                                        Estimado/a {{ $nombre }},<br><br>
                                                                     </p>
                                                                     <p
                                                                         style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:24px;color:#333333;font-size:16px">
                                                                         Es un placer informarle que hemos recibido con
                                                                         éxito su registro de inscripción para el Proceso
-                                                                        de&nbsp;&nbsp;[admision]. Su interés en nuestro
+                                                                        de {{ $admision }}. Su interés en nuestro
                                                                         programa es muy apreciado y esperamos brindarle
                                                                         una experiencia educativa valiosa.<br><br></p>
                                                                     <p

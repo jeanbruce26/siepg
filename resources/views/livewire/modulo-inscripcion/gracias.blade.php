@@ -81,7 +81,7 @@
                                 :
                             </td>
                             <td class="col-md-9">
-                                Nombre
+                                {{ $inscripcion->persona->email }}
                             </td>
                         </tr>
                     </tbody>

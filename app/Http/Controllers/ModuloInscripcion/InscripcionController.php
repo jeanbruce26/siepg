@@ -112,8 +112,8 @@ class InscripcionController extends Controller
 
         // enviar ficha de inscripcion por correo
         $detalle = [
-            'nombre' => $persona->nombre_completo,
-            'admision' => $admision,
+            'nombre' => ucwords(strtolower($persona->nombre_completo)),
+            'admision' => ucwords(strtolower($admision)),
             'email' => $persona->email,
         ];
 
