@@ -15,12 +15,23 @@
         </span>
         <div class="d-flex flex-column">
             <h4 class="mb-0">
-                Su ficha de inscripción ha sido enviado a su correo electrónico y se encuentra disponible para descargarlo en el botón de la parte inferior.
+                Su ficha de inscripción ha sido enviado a su correo electrónico y se encuentra disponible para descargarlo a continuación.
             </h4>
         </div>
     </div>
+    {{-- boton --}}
+    <div class="d-flex justify-content-between">
+        <a href="{{ route('inscripcion.auth') }}" class="btn btn-secondary">
+            <i class="fa-sharp fa-solid fa-arrow-left"></i>
+            Volver al inicio
+        </a>
+        <button wire:click="descargar_pdf({{ $id_inscripcion }})" class="btn btn-primary hover-scale">
+            <i class="fa-sharp fa-solid fa-download"></i>
+            Descargar ficha de inscripción
+        </button>
+    </div>
     {{-- informacion --}}
-    <div class="my-5">
+    {{-- <div class="my-5">
         <div class="card shadow-sm">
             <div class="card-body">
                 <table class="table mb-0">
@@ -88,16 +99,9 @@
                 </table>
             </div>
         </div>
-    </div>
-    {{-- boton --}}
-    <div class="d-flex justify-content-between">
-        <a href="{{ route('inscripcion.auth') }}" class="btn btn-secondary">
-            <i class="fa-sharp fa-solid fa-arrow-left"></i>
-            Volver al inicio
-        </a>
-        <button wire:click="descargar_pdf({{ $id_inscripcion }})" class="btn btn-primary hover-scale">
-            <i class="fa-sharp fa-solid fa-download"></i>
-            Descargar ficha de inscripción
-        </button>
+    </div> --}}
+    {{-- pdf --}}
+    <div class="my-5">
+        <embed src="{{ asset($inscripcion->inscripcion) }}" class="rounded" type="application/pdf" width="100%" height="700px" />
     </div>
 </div>
