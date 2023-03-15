@@ -101,7 +101,7 @@ class InscripcionController extends Controller
         ];
 
         $nombre_pdf = 'ficha-inscripcion-' . Str::slug($persona->nombre_completo, '-') . '.pdf';
-        $path = 'files/' . $persona->num_doc . '/' . $admision_year . '/' . 'expedientes/';
+        $path = 'Posgrado/' . $admision. '/' . $persona->num_doc . '/' . 'Expedientes' . '/';
         $pdf = PDF::loadView('modulo-inscripcion.ficha-inscripcion', $data)->save(public_path($path.$nombre_pdf));
         $pdf2 = PDF::loadView('modulo-inscripcion.ficha-inscripcion', $data);
         $pdf_email = $pdf2->output();

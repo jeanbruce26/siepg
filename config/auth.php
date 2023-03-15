@@ -45,6 +45,11 @@ return [
             'driver' => 'session',
             'provider' => 'inscripcion',
         ],
+
+        'plataforma' => [
+            'driver' => 'session',
+            'provider' => 'plataforma',
+        ],
     ],
 
     /*
@@ -78,6 +83,11 @@ return [
         'inscripcion' => [
             'driver' => 'eloquent',
             'model' => App\Models\Pago::class,
+        ],
+
+        'plataforma' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\UsuarioEstudiante::class,
         ],
     ],
 

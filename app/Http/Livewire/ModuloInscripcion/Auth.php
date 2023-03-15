@@ -128,7 +128,8 @@ class Auth extends Component
         $pago->verificacion_pago = 1;
         if($this->voucher)
         {
-            $path = 'files/' . $this->documento_identidad . '/' . $this->admision_year . '/' . 'voucher/';
+            $admision = Admision::where('estado', 1)->first()->admision;
+            $path = 'Posgrado/' . $admision . '/' . $this->documento_identidad . '/' . 'Voucher/';
             $filename = 'voucher-pago' . $this->voucher->getClientOriginalExtension();
             $nombre_db = $path.$filename;
             $data = $this->voucher;

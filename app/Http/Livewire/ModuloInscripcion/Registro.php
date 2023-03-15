@@ -393,11 +393,11 @@ class Registro extends Component
         $numero_documento = auth('inscripcion')->user()->dni;
 
         // obtenemos el año de admision
-        $admision_year = Admision::where('estado',1)->first()->admision_year;
+        $admision = Admision::where('estado',1)->first()->admision;
 
         if($this->expediente != null)
         {
-            $path = 'files/' . $numero_documento . '/' . $admision_year. '/' . 'expedientes' . '/';
+            $path = 'Posgrado/' . $admision. '/' . $numero_documento . '/' . 'Expedientes' . '/';
             $filename = $expediente_model->exp_nombre.".pdf";
             $nombreDB = $path.$filename;
             $this->expediente->storeAs($path, $filename, 'files_publico');
@@ -445,18 +445,6 @@ class Registro extends Component
 
         // limpiar modal de registro de expediente
         $this->limpiar_modal_expediente();
-    }
-
-    public function declaracion_jurada()
-    {
-        if($this->declaracion_jurada == false)
-        {
-            $this->declaracion_jurada = true;
-        }
-        else
-        {
-            $this->declaracion_jurada = false;
-        }
     }
 
     public function updatedDeclaracionJurada($declaracion_jurada)

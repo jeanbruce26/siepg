@@ -65,5 +65,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'auth.inscripcion' => \App\Http\Middleware\AuthInscripcion::class,
         'auth.inscripcion.redirect.sesion' => \App\Http\Middleware\AuthInscripcionRedirectSesion::class,
+        'auth.plataforma' => \App\Http\Middleware\AuthPlataforma::class,
+        'auth.plataforma.redirect.sesion' => \App\Http\Middleware\AuthPlataformaRedirectSesion::class,
     ];
 }

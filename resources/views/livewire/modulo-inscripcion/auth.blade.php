@@ -89,7 +89,7 @@
                                         <label for="documento_identidad" class="required form-label">
                                             Documento de Identidad
                                         </label>
-                                        <input type="number" wire:model="documento_identidad_inscripcion" class="form-control @error('documento_identidad_inscripcion') is-invalid @enderror" placeholder="12345678" id="documento_identidad"/>
+                                        <input type="text" wire:model="documento_identidad_inscripcion" class="form-control @error('documento_identidad_inscripcion') is-invalid @enderror" placeholder="12345678" id="documento_identidad"/>
                                         @error('documento_identidad_inscripcion')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
@@ -98,7 +98,7 @@
                                         <label for="numero_operacion" class="required form-label">
                                             Numero de Operación
                                         </label>
-                                        <input type="number" wire:model="numero_operacion_inscripcion" class="form-control @error('numero_operacion_inscripcion') is-invalid @enderror" placeholder="6543" id="numero_operacion"/>
+                                        <input type="text" wire:model="numero_operacion_inscripcion" class="form-control @error('numero_operacion_inscripcion') is-invalid @enderror" placeholder="6543" id="numero_operacion"/>
                                         @error('numero_operacion_inscripcion')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror

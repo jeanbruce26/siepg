@@ -605,15 +605,11 @@
             </div>
             {{-- declaracion jurada --}}
             <div class="alert bg-light-secondary border border-secondary d-flex align-items-center gap-2 p-5 mb-8 mt-8">
-                <span class="svg-icon svg-icon-2hx svg-icon-secondary me-3">
-                    <div class="form-check form-check-custom form-check-secondary">
-                        <input class="form-check-input @error('declaracion_jurada') is-invalid @enderror" type="checkbox" wire:model="declaracion_jurada" />
-                    </div>
-                </span>
-                <div class="d-flex flex-column">
-                    <span class="fw-bold fs-5 @error('declaracion_jurada') text-danger @enderror" wire:click="declaracion_jurada" style="cursor: pointer;">
+                <div class="form-check form-check-custom form-check-solid">
+                    <input class="form-check-input @error('declaracion_jurada') is-invalid @enderror" type="checkbox" wire:model="declaracion_jurada" id="declaracion_jurada"/>
+                    <label class="fw-bold fs-5 @error('declaracion_jurada') text-danger @enderror ms-5" for="declaracion_jurada">
                         DECLARO BAJO JURAMENTO QUE LOS DOCUMENTOS PRESENTADOS Y LOS DATOS CONSIGNADOS EN EL PRESENTE PROCESO DE ADMISIÓN SON FIDEDIGNOS
-                    </span>
+                    </label>
                 </div>
             </div>
             {{-- botones --}}
