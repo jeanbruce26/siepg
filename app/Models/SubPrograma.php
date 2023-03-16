@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class SubPrograma extends Model
+class Subprograma extends Model
 {
     use HasFactory;
 
@@ -21,7 +21,7 @@ class SubPrograma extends Model
     ];
 
     public $timestamps = false;
-    
+
     // Programa
     public function programa(){
         return $this->belongsTo(Programa::class,
@@ -29,8 +29,14 @@ class SubPrograma extends Model
     }
 
     // Facultad
-    public function facultad(){
+    public function Facultad(){
         return $this->belongsTo(Facultad::class,
         'facultad_id','facultad_id');
+    }
+
+    // Mencion
+    public function mencion(){
+        return $this->hasMany(Mencion::class,
+        'id_subprograma','id_subprograma');
     }
 }

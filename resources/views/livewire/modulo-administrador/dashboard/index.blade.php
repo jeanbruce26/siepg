@@ -1,38 +1,90 @@
 <div>
-    <div class="row">
-        <div class="col-xxl-4 col-xl-6 col-lg-6 col-md-12 col-sm-12">
-            <div class="card px-4 py-3" style="height: 140px">
-                <div class="pt-2 pb-2">
-                    <span class="card-title mb-1 fs-3 fw-bold" style="color: rgb(71, 71, 71)">Ingreso Total</span>
+
+    <div class="row gy-5 g-xl-10">
+        <!--begin::Col-->
+        <div class="col-sm-6 col-xl-4 mb-xl-10">
+            <!--begin::Card widget 2-->
+            <div class="card">
+                <!--begin::Body-->
+                <div class="card-body d-flex align-items-start flex-column">
+                    <!--begin::Icon-->
+                    <div class="m-0">
+                        <span class="card-title mb-1 fs-1 fw-bold"">Ingreso Total</span>
+                    </div>
+                    <!--end::Icon-->
+                    <!--begin::Section-->
+                    <div class="d-flex flex-column mt-5">
+                        <!--begin::Number-->
+                        <span class="fs-1 fw-bold">S/. {{ number_format($ingreso_total, 2, ',', ' ') }}</span>
+                        <!--end::Number-->
+                    </div>
+                    <!--end::Section-->
                 </div>
-                <div class="pt-2 pb-2">
-                    <span class="fs-2 fw-semibold" style="color: rgb(63, 63, 63)">S/. {{ number_format($ingreso_total, 2, ',', ' ') }} </span>
-                </div>
+                <!--end::Body-->
             </div>
+            <!--end::Card widget 2-->
         </div>
-        <div class="col-xxl-4 col-xl-6 col-lg-6 col-md-12 col-sm-12">
-            <div class="card px-4 py-3" style="height: 140px">
-                <div class="pt-2 pb-2">
-                    <span class="card-title mb-1 fs-3 fw-bold" style="color: rgb(71, 71, 71)">Ingreso por Inscripciones</span>
+        <!--end::Col-->
+        <!--begin::Col-->
+        <div class="col-sm-6 col-xl-4 mb-xl-10">
+            <!--begin::Card widget 2-->
+            <div class="card">
+                <!--begin::Body-->
+                <div class="card-body d-flex align-items-start flex-column">
+                    <!--begin::Icon-->
+                    <div class="m-0">
+                        <span class="card-title mb-1 fs-1 fw-bold">Ingreso por Inscripciones</span>
+                    </div>
+                    <!--end::Icon-->
+                    <!--begin::Section-->
+                    <div class="d-flex flex-column mt-5">
+                        <!--begin::Number-->
+                        <span class="fs-1 fw-bold">S/. {{ number_format($ingreso_inscripcion, 2, ',', ' ') }}</span>
+                        <!--end::Number-->
+                    </div>
+                    <!--end::Section-->
                 </div>
-                <div class="pt-2 pb-2">
-                    <span class="fs-2 fw-semibold" style="color: rgb(63, 63, 63)">S/. {{ number_format($ingreso_inscripcion, 2, ',', ' ') }}</span>
-                </div>
+                <!--end::Body-->
             </div>
+            <!--end::Card widget 2-->
         </div>
-        <div class="col-xxl-4 col-xl-6 col-lg-6 col-md-12 col-sm-12">
-            <div class="card px-4 py-3" style="height: 140px">
-                <div class="pt-2 pb-2">
-                    <span class="card-title mb-1 fs-3 fw-bold" style="color: rgb(71, 71, 71)">Ingreso por Constancia</span>
+        <!--end::Col-->
+        <!--begin::Col-->
+        <div class="col-sm-6 col-xl-4 mb-xl-10">
+            <!--begin::Card widget 2-->
+            <div class="card">
+                <!--begin::Body-->
+                <div class="card-body d-flex align-items-start flex-column">
+                    <!--begin::Icon-->
+                    <div class="m-0">
+                        <!--begin::Svg Icon | path: icons/duotune/graphs/gra001.svg-->
+                        <span class="svg-icon svg-icon-2hx svg-icon-gray-600">
+                            <span class="card-title mb-1 fs-3 fw-bold" style="color: rgb(71, 71, 71)">Ingreso por Constancia</span>
+                        </span>
+                        <!--end::Svg Icon-->
+                    </div>
+                    <!--end::Icon-->
+                    <!--begin::Section-->
+                    <div class="d-flex flex-column my-7">
+                        <!--begin::Number-->
+                        <span class="fs-2 fw-semibold" style="color: rgb(63, 63, 63)">S/. {{ number_format($ingreso_constancia, 2, ',', ' ') }}</span>
+                        <!--end::Number-->
+                        <!--begin::Follower-->
+                        {{-- <div class="m-0">
+                            <span class="fw-semibold fs-6 text-gray-400">Ingreso en Soles</span>
+                        </div> --}}
+                        <!--end::Follower-->
+                    </div>
+                    <!--end::Section-->
                 </div>
-                <div class="pt-2 pb-2">
-                    <span class="fs-2 fw-semibold" style="color: rgb(63, 63, 63)">S/. {{ number_format($ingreso_constancia, 2, ',', ' ') }}</span>
-                </div>
+                <!--end::Body-->
             </div>
+            <!--end::Card widget 2-->
         </div>
+        <!--end::Col-->
     </div>
     
-    <div class="card mt-6">
+    <div class="card card-maestria">
         <div class="card-header">
             <h5 class="card-title mb-0 ms-2 text-uppercase">Reporte de Inscritos por Programa en Mastría</h5>
         </div>
@@ -79,7 +131,7 @@
         </div>
     </div>
     
-    <div class="card mt-6">
+    <div class="card mt-10">
         <div class="card-header">
             <h5 class="card-title mb-0 ms-2 text-uppercase">Reporte de Inscritos por Programa de Doctorado</h5>
         </div>

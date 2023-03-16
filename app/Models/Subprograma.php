@@ -29,10 +29,10 @@ class Subprograma extends Model
     }
 
     // Facultad
-    // public function Facultad(){
-    //     return $this->belongsTo(Facultad::class,
-    //     'facultad_id','facultad_id');
-    // }
+    public function Facultad(){
+        return $this->belongsTo(Facultad::class,
+        'facultad_id','facultad_id');
+    }
 
     // Mencion
     public function mencion(){
