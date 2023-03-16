@@ -19,4 +19,10 @@ class Plan extends Model
     ];
 
     public $timestamps = false;
+
+    // Mencion
+    public function mencion(){
+        return $this->hasMany(Mencion::class,
+        'id_plan','id_plan');
+    }
 }

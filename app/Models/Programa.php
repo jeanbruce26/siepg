@@ -19,8 +19,14 @@ class Programa extends Model
 
     public $timestamps = false;
 
+    // Sede
     public function sede(){
         return $this->belongsTo(Sede::class,
         'id_sede','cod_sede');
+    }
+    // Subprograma
+    public function subprograma(){
+        return $this->hasMany(Subprograma::class,
+        'id_programa','id_programa');
     }
 }

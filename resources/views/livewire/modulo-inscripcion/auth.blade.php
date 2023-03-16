@@ -1,10 +1,12 @@
-<div class="py-10">
+<div class="">
     <div class="row g-5 gx-xl-10">
         <div class="col-md-8">
             <div class="row g-5 gx-xl-10">
                 <div class="col-md-12">
-                    <div class="card shadow-sm" style="background-color: #ffffeb">
-                        <div class="px-6 py-5">
+                    {{-- <div class="card shadow-sm" style="background-color: #fdfdf4"> --}}
+                    {{-- <div class="card shadow-sm"> --}}
+                    <div class="card shadow-sm bg-opacity-25 bg-info">
+                        <div class="px-7 py-6">
                             <span class="fw-bolder fs-4">
                                 Estimado/a postulante:
                             </span>
@@ -21,33 +23,38 @@
                                     <li class="mb-3">
                                         Cualquier incidencia o consulta, puede comunicarse a <strong>admision_posgrado@unu.edu.pe</strong>
                                     </li>
+                                    <li class="mb-3">
+                                        <strong>Proporciona datos fidedignos (auténticos).</strong> Recuerda que la información que proporciones sera derivada a la Oficina Central de Admisión
+                                    </li>
+                                    <li class="mb-3">
+                                        <strong>Se muy cuidadoso al completar cada información solicidad por el Sistema de Inscripción.</strong> Ya que, la información proporcionada tiene caracter de Declaración Jurada.
+                                    </li>
                                 </ul>
                             </p>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-12">
-                    <div class="card shadow-sm" style="background-color: #f1fcf0">
-                        <div class="px-6 py-5">
+                    {{-- <div class="card shadow-sm" style="background-color: #eff8ee"> --}}
+                    {{-- <div class="card shadow-sm"> --}}
+                    <div class="card shadow-sm bg-opacity-25 bg-warning">
+                        <div class="px-7 py-6">
                             <span class="fw-bolder fs-4">
                                 Recomendación antes de comenzar su inscripción:
                             </span>
                             <p>
                                 <ul class="fs-6">
                                     <li class="mb-3">
-                                        Puedes realizar tu inscripción al día siguiente de haber realizado tu pago.
+                                        Fotocopia ampliada de DNI. En casos de postulantes extranjeros. Fotocopia legalizada de carnet de extranjería.
                                     </li>
                                     <li class="mb-3">
-                                        <strong>Ten a mano tu Documento de Identidad.</strong> <br>
-                                        La información solicitada debe ser escrita tal cual este en el.
+                                        Constancia en línea otorgado por la SUNEDU del maximo grado Académico.
                                     </li>
                                     <li class="mb-3">
-                                        <strong>Proporciona datos fidedignos (auténticos).</strong> <br>
-                                        Recuerda que la información que proporciones sera derivada a la <strong>Oficina Central de Admisión</strong>
+                                        Curriculum Vitae DOCUMENTADO. Ultimos 5 años.
                                     </li>
                                     <li class="mb-3">
-                                        <strong>Se muy cuidadoso al completar cada información solicidad por el Sistema de Inscripción.</strong> <br>
-                                        Ya que, la información proporcionada tiene caracter de <strong>Declaración Jurada.</strong>
+                                        Tema tentativo del Proyecto de tesis (solo para postulantes al Doctorado).
                                     </li>
                                 </ul>
                             </p>
@@ -55,29 +62,8 @@
                     </div>
                 </div>
                 <div class="col-md-12">
-                    <div class="card shadow-sm" style="background-color: #f4fdfd">
-                        <div class="px-6 py-5">
-                            <span class="fw-bolder fs-4">
-                                Requisitos para realizar su inscripción:
-                            </span>
-                            {{-- <p>
-                                <ul class="fs-6">
-                                    @foreach ($expedientes as $item)
-                                    <li class="mb-3">
-                                        <strong>{{$item->tipo_doc}} {{$item->complemento}} @if($item->expediente_tipo == 1) (para Maestria). @elseif ($item->expediente_tipo == 2) (para Doctorado). @endif</strong>
-                                    </li>
-                                    @endforeach
-                                    <li class="mb-3">
-                                        <strong>Todo formato subido a la plataforma, deberá ser en PDF.</strong>
-                                    </li>
-                                </ul>
-                            </p> --}}
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-12">
                     <div class="text-center mt-3">
-                        <a href="#modal_registro_pago" wire:click="cargar_registro_pago" class="btn btn-success hover-scale w-100" data-bs-toggle="modal" data-bs-target="#modal_registro_pago">
+                        <a href="#modal_registro_pago" wire:click="cargar_registro_pago" class="btn btn-success hover-scale w-50" data-bs-toggle="modal" data-bs-target="#modal_registro_pago">
                             REGISTRAR PAGO
                         </a>
                     </div>
@@ -88,7 +74,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="card shadow-sm">
-                        <div class="px-6 py-5">
+                        <div class="px-7 py-6">
                             <div class="text-center d-flex flex-column">
                                 <span class="fw-bolder fs-2 my-3">
                                     Iniciar Inscripción
@@ -103,7 +89,7 @@
                                         <label for="documento_identidad" class="required form-label">
                                             Documento de Identidad
                                         </label>
-                                        <input type="number" wire:model.defer="documento_identidad_inscripcion" class="form-control @if($errors->has('documento_identidad_inscripcion')) is-invalid @else is-valid @endif" placeholder="12345678" id="documento_identidad"/>
+                                        <input type="text" wire:model="documento_identidad_inscripcion" class="form-control @error('documento_identidad_inscripcion') is-invalid @enderror" placeholder="12345678" id="documento_identidad"/>
                                         @error('documento_identidad_inscripcion')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
@@ -112,12 +98,25 @@
                                         <label for="numero_operacion" class="required form-label">
                                             Numero de Operación
                                         </label>
-                                        <input type="number" wire:model.defer="numero_operacion_inscripcion" class="form-control @if($errors->has('numero_operacion_inscripcion')) is-invalid @else is-valid @endif" placeholder="6543" id="numero_operacion"/>
+                                        <input type="text" wire:model="numero_operacion_inscripcion" class="form-control @error('numero_operacion_inscripcion') is-invalid @enderror" placeholder="6543" id="numero_operacion"/>
                                         @error('numero_operacion_inscripcion')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
-                                    <div class="mt-10">
+                                    @if (session()->has('message'))
+                                        <div class="mt-5">
+                                            <!--begin::Alert-->
+                                            <div class="alert alert-danger d-flex align-items-center p-5">
+                                                <!--begin::Content-->
+                                                <span class="fw-bold text-center">
+                                                    {{ session('message') }}
+                                                </span>
+                                                <!--end::Content-->
+                                            </div>
+                                            <!--end::Alert-->
+                                        </div>
+                                    @endif
+                                    <div class="mt-5">
                                         <button type="submit" class="btn btn-primary w-100">
                                             Iniciar Inscripción
                                         </button>
@@ -203,9 +202,9 @@
                             <label for="voucher" class="required form-label">
                                 Voucher
                             </label>
-                            <input type="file" wire:model="voucher" class="form-control @error('voucher') is-invalid @enderror" id="upload{{ $iteration }}" accept="image/jpeg, image/png, image/jpg, application/pdf" />
+                            <input type="file" wire:model="voucher" class="form-control @error('voucher') is-invalid @enderror" id="upload{{ $iteration }}" accept="image/jpeg, image/png, image/jpg" />
                             <span class="form-text text-muted mt-2 fst-italic">
-                                Nota: El voucher debe ser en formato PDF o JPG, JPEG, PNG y no debe superar los 2MB. <br>
+                                Nota: El voucher debe ser imagen en formato JPG, JPEG, PNG y no debe superar los 2MB. <br>
                             </span>
                             @error('voucher')
                                 <span class="text-danger">{{ $message }}</span>
@@ -217,7 +216,7 @@
                     <button type="button" class="btn btn-light" data-bs-dismiss="modal" wire:click="limpiar_registro_pago">
                         Cerrar
                     </button>
-                    <button type="button" wire:click="registrar_pago" class="btn btn-primary">
+                    <button type="button" wire:click="registrar_pago" class="btn btn-primary" @if ($voucher == null) disabled @endif>
                         Registrar Pago
                     </button>
                 </div>

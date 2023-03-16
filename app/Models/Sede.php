@@ -16,6 +16,12 @@ class Sede extends Model
         'sede',
         'sede_estado'
     ];
-    
+
     public $timestamps = false;
+
+    // Programa
+    public function programa()
+    {
+        return $this->hasMany(Programa::class, 'id_sede');
+    }
 }
