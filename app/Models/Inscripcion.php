@@ -32,16 +32,16 @@ class Inscripcion extends Model
     // }
 
     // Admision
-    // public function admision(){
-    //     return $this->belongsTo(Admision::class,
-    //     'admision_cod_admi','cod_admi');
-    // }
+    public function admision(){
+        return $this->belongsTo(Admision::class,
+        'admision_cod_admi','cod_admi');
+    }
 
-    // Mencion
-    // public function mencion(){
-    //     return $this->belongsTo(Mencion::class,
-    //     'id_mencion','id_mencion');
-    // }
+    //Mencion
+    public function mencion(){
+        return $this->belongsTo(Mencion::class,
+        'id_mencion','id_mencion');
+    }
 
     // Inscripcion Pago
     public function inscripcion_pago(){
