@@ -39,7 +39,7 @@
 			<!--begin::Actions-->
 			<div class="d-flex align-items-center gap-2 gap-lg-3">
 				<!--begin::Primary button-->
-				<a href="#" class="btn btn-success btn-sm fw-bold">Create</a>
+				<a href="#" class="btn btn-primary btn-sm">Exportar PDF</a>
 				<!--end::Primary button-->
 			</div>
 			<!--end::Actions-->

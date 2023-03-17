@@ -4,7 +4,7 @@
         <!--begin::Col-->
         <div class="col-sm-6 col-xl-4 mb-xl-10">
             <!--begin::Card widget 2-->
-            <div class="card">
+            <div class="card shadow-sm">
                 <!--begin::Body-->
                 <div class="card-body d-flex align-items-start flex-column">
                     <!--begin::Icon-->
@@ -28,7 +28,7 @@
         <!--begin::Col-->
         <div class="col-sm-6 col-xl-4 mb-xl-10">
             <!--begin::Card widget 2-->
-            <div class="card">
+            <div class="card shadow-sm">
                 <!--begin::Body-->
                 <div class="card-body d-flex align-items-start flex-column">
                     <!--begin::Icon-->
@@ -52,28 +52,19 @@
         <!--begin::Col-->
         <div class="col-sm-6 col-xl-4 mb-xl-10">
             <!--begin::Card widget 2-->
-            <div class="card">
+            <div class="card shadow-sm">
                 <!--begin::Body-->
                 <div class="card-body d-flex align-items-start flex-column">
                     <!--begin::Icon-->
                     <div class="m-0">
-                        <!--begin::Svg Icon | path: icons/duotune/graphs/gra001.svg-->
-                        <span class="svg-icon svg-icon-2hx svg-icon-gray-600">
-                            <span class="card-title mb-1 fs-3 fw-bold" style="color: rgb(71, 71, 71)">Ingreso por Constancia</span>
-                        </span>
-                        <!--end::Svg Icon-->
+                        <span class="card-title mb-1 fs-1 fw-bold"">Ingreso por Constancia</span>
                     </div>
                     <!--end::Icon-->
                     <!--begin::Section-->
-                    <div class="d-flex flex-column my-7">
+                    <div class="d-flex flex-column mt-5">
                         <!--begin::Number-->
-                        <span class="fs-2 fw-semibold" style="color: rgb(63, 63, 63)">S/. {{ number_format($ingreso_constancia, 2, ',', ' ') }}</span>
+                        <span class="fs-1 fw-bold"">S/. {{ number_format($ingreso_constancia, 2, ',', ' ') }}</span>
                         <!--end::Number-->
-                        <!--begin::Follower-->
-                        {{-- <div class="m-0">
-                            <span class="fw-semibold fs-6 text-gray-400">Ingreso en Soles</span>
-                        </div> --}}
-                        <!--end::Follower-->
                     </div>
                     <!--end::Section-->
                 </div>
@@ -84,14 +75,14 @@
         <!--end::Col-->
     </div>
     
-    <div class="card card-maestria">
+    <div class="card card-maestria shadow-sm">
         <div class="card-header">
             <h5 class="card-title mb-0 ms-2 text-uppercase">Reporte de Inscritos por Programa en Mastría</h5>
         </div>
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-hover table-rounded border gy-4 gs-4 mb-0">
-                    <thead class="" style="background-color: #d9ffe3">
+                    <thead class="thead-primary">
                         <tr align="center" class="fw-bold">
                             <th scope="col" class="col-md-1">NRO</th>
                             <th scope="col" class="col-md-9">PROGRAMA</th>
@@ -131,7 +122,7 @@
         </div>
     </div>
     
-    <div class="card mt-10">
+    <div class="card mt-10 shadow-sm">
         <div class="card-header">
             <h5 class="card-title mb-0 ms-2 text-uppercase">Reporte de Inscritos por Programa de Doctorado</h5>
         </div>
