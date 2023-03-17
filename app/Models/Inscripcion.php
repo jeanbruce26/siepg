@@ -36,7 +36,6 @@ class Inscripcion extends Model
         return $this->belongsTo(Admision::class,
         'admision_cod_admi','cod_admi');
     }
-
     // Mencion
     public function mencion(){
         return $this->belongsTo(Mencion::class,

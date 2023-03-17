@@ -24,7 +24,6 @@ class Programa extends Model
         return $this->belongsTo(Sede::class,
         'id_sede','cod_sede');
     }
-
     // Subprograma
     public function subprograma(){
         return $this->hasMany(Subprograma::class,

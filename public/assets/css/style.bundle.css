@@ -49588,3 +49588,9 @@ body,
     color: #ffffff !important;
   }
 }
+
+@media (max-width: 1200px) {
+  .card-maestria{
+    margin-top:  2.5rem;
+  }
+}

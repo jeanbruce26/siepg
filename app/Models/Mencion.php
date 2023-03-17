@@ -22,19 +22,18 @@ class Mencion extends Model
     ];
 
     public $timestamps = false;
+    
 
     // Subprograma
     public function subprograma(){
         return $this->belongsTo(SubPrograma::class,
         'id_subprograma','id_subprograma');
     }
-
     // Plan
     public function plan(){
         return $this->belongsTo(Plan::class,
         'id_plan','id_plan');
     }
-
     // Inscripcion
     public function inscripcion(){
         return $this->hasMany(Inscripcion::class,
