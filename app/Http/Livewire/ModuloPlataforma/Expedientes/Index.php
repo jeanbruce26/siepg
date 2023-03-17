@@ -113,12 +113,14 @@ class Index extends Component
             'expediente' => 'required|file|max:10240|mimetypes:application/octet-stream,application/pdf,application/x-pdf,application/x-download,application/force-download', // validamos el expediente
         ]); // validamos los campos
 
+        $expediente_nombre = Expediente::find($this->expediente_id)->exp_nombre; // obtenemos el nombre del expediente
+
         if($this->modo == 'crear')
         {
             if($this->expediente != null)
             {
                 $path = 'Posgrado/' . $this->admision->admision . '/' . $this->inscripcion->persona->num_doc . '/' . 'Expedientes/'; // asignamos el valor del path a la variable path
-                $nombre = $this->expediente_nombre . '.pdf'; // asignamos el valor del nombre del expediente a la variable nombre
+                $nombre = $expediente_nombre . '.pdf'; // asignamos el valor del nombre del expediente a la variable nombre
                 $nombreDB = $path . $nombre; // asignamos el valor del nombre del expediente para la base de datos a la variable nombreDB
                 $this->expediente->storeAs($path, $nombre, 'files_publico'); // almacenamos el expediente en el servidor
 
@@ -155,7 +157,7 @@ class Index extends Component
             if($this->expediente != null)
             {
                 $path = 'Posgrado/' . $this->admision->admision . '/' . $this->inscripcion->persona->num_doc . '/' . 'Expedientes/'; // asignamos el valor del path a la variable path
-                $nombre = $this->expediente_nombre . '.pdf'; // asignamos el valor del nombre del expediente a la variable nombre
+                $nombre = $expediente_nombre . '.pdf'; // asignamos el valor del nombre del expediente a la variable nombre
                 $nombreDB = $path . $nombre; // asignamos el valor del nombre del expediente para la base de datos a la variable nombreDB
                 $this->expediente->storeAs($path, $nombre, 'files_publico'); // almacenamos el expediente en el servidor
 
