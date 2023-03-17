@@ -48,4 +48,10 @@ class Inscripcion extends Model
         return $this->hasMany(InscripcionPago::class,
         'inscripcion_id','id_inscripcion');
     }
+
+    // Inscripcion Expediente
+    public function expediente_inscripcion(){
+        return $this->hasMany(ExpedienteInscripcion::class,
+        'id_inscripcion','id_inscripcion');
+    }
 }

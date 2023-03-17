@@ -21,4 +21,9 @@ class PlataformaController extends Controller
     {
         return view('modulo-plataforma.perfil.index');
     }
+
+    public function expediente()
+    {
+        return view('modulo-plataforma.expedientes.index');
+    }
 }

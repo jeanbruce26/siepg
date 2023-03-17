@@ -195,15 +195,16 @@ class Auth extends Component
         // obtener fecha de fin de admision para sumarle 2 dias y cerrar el proceso de admision
         $admision = Admision::where('estado',1)->first();
         $valor = '+ 1 day';
-        $fecha_final_admision = date('d/m/Y',strtotime($admision->fecha_fin.$valor));
+        $fecha_final_admision = date('Y-m-d',strtotime($admision->fecha_fin.$valor));
 
         // buscar en la base de datos el pago ingresado
         $pago = Pago::where('dni', $this->documento_identidad_inscripcion)
             ->where('nro_operacion', $this->numero_operacion_inscripcion)
             ->first();
-
+            
         // validar si la fecha de fin de admision es menor o igual a la fecha actual
-        if($fecha_final_admision < date('d/m/Y', strtotime(today()))){
+        if($fecha_final_admision < today())
+        {
             // emitir evento para mostrar mensaje de alerta
             session()->flash('message', 'Proceso de Admisión cerrado');
             return redirect()->back();

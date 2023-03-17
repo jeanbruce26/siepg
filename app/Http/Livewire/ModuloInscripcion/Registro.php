@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\ModuloInscripcion;
 
+use App\Jobs\ProcessRegistroFichaInscripcion;
 use App\Mail\EmailFichaInscripcion;
 use App\Models\Admision;
 use App\Models\Departamento;
@@ -691,12 +692,22 @@ class Registro extends Component
         $pago->save();
 
         // Registrar datos de usuario del estudiante
-        $usuario_estudiante = new UsuarioEstudiante();
-        $usuario_estudiante->usuario_estudiante = $this->documento;
-        $usuario_estudiante->usuario_estudiante_password = $inscripcion->inscripcion_codigo;
-        $usuario_estudiante->usuario_estudiante_created_at = now();
-        $usuario_estudiante->usuario_estudiante_estado = 1;
-        $usuario_estudiante->save();
+        $usuario_estudiante = UsuarioEstudiante::where('usuario_estudiante',$this->documento)->first();
+        if($usuario_estudiante === null)
+        {
+            $usuario_estudiante = new UsuarioEstudiante();
+            $usuario_estudiante->usuario_estudiante = $this->documento;
+            $usuario_estudiante->usuario_estudiante_password = $inscripcion->inscripcion_codigo;
+            $usuario_estudiante->usuario_estudiante_created_at = now();
+            $usuario_estudiante->usuario_estudiante_estado = 1;
+            $usuario_estudiante->save();
+        }
+        else
+        {
+            // falta mostrar mensaje de que el usuario ya existe y de que se le actualizo la contraseña
+            $usuario_estudiante->usuario_estudiante_password = $inscripcion->inscripcion_codigo;
+            $usuario_estudiante->save();
+        }
 
         // alerta de cuenta regresiva
         $this->dispatchBrowserEvent('alerta_final_registro');

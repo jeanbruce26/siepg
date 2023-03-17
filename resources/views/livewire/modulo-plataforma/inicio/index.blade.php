@@ -44,7 +44,7 @@
                 <h4 class="card-title mb-5 text-center">
                     Expedientes
                 </h4>
-                <a href="" type="button" class="btn btn-info">
+                <a href="{{ route('plataforma.expediente') }}" type="button" class="btn btn-info">
                     Ver detalle
                 </a>
             </div>

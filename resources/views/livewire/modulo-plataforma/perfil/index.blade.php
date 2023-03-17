@@ -50,7 +50,7 @@
             </div>
         </div>
     </div>
-    {{-- modal registro pago --}}
+    {{-- modal perfil --}}
     <div wire:ignore.self class="modal fade" tabindex="-1" id="modal_perfil">
         <div class="modal-dialog">
             <div class="modal-content">
