@@ -73,4 +73,10 @@ class Persona extends Model
         return $this->belongsTo(GradoAcademico::class,
         'id_grado_academico','id_grado_academico');
     }
+
+    // Admitidos
+    public function admitidos(){
+        return $this->hasMany(Admitidos::class,
+        'persona_id','idpersona');
+    }
 }

@@ -18,4 +18,10 @@ class Facultad extends Model
     ];
 
     public $timestamps = false;
+
+    // SubPrograma
+    public function subprograma()
+    {
+        return $this->hasMany(SubPrograma::class, 'facultad_id');
+    }
 }
