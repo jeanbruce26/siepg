@@ -1,4 +1,5 @@
 @extends('layouts.modulo-plataforma')
+@section('title', 'Expedientes - Plataforma Escuela de Posgrado')
 @section('content')
 @livewire('modulo-plataforma.expedientes.index')
 @endsection

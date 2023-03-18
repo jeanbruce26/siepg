@@ -1,7 +1,6 @@
 import './bootstrap';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
-// import Turbolinks from 'turbolinks'
 
 // Inicializa NProgress
 NProgress.configure({
@@ -25,11 +24,3 @@ window.addEventListener('beforeunload', function() {
 window.addEventListener('load', function() {
     NProgress.done(); // Oculta la barra de carga
 });
-
-// // Inicializa Turbolinks
-// Turbolinks.start()
-
-// // reescanear el DOM para que Livewire pueda escuchar los eventos
-// window.addEventListener("turbolinks:load", () => {
-//     Livewire.restart();
-// });
