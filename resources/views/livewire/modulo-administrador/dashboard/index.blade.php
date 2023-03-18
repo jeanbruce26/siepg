@@ -74,7 +74,7 @@
         </div>
         <!--end::Col-->
     </div>
-    
+
     <div class="card card-maestria shadow-sm">
         <div class="card-header">
             <h5 class="card-title mb-0 ms-2 text-uppercase">Reporte de Inscritos por Programa en Mastría</h5>
@@ -82,7 +82,7 @@
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-hover table-rounded border gy-4 gs-4 mb-0">
-                    <thead class="thead-primary">
+                    <thead class="bg-light-success">
                         <tr align="center" class="fw-bold">
                             <th scope="col" class="col-md-1">NRO</th>
                             <th scope="col" class="col-md-9">PROGRAMA</th>
@@ -112,7 +112,7 @@
                         @endif
                     </tbody>
                     <tfoot>
-                        <tr class="table-light" align="center">
+                        <tr class="bg-light-secondary" align="center">
                             <td colspan="2" class="text-end fw-bold fs-6">TOTAL</td>
                             <td class="fw-bold fs-5">{{ $programas_maestria->sum('cantidad_mencion') }}</td>
                         </tr>
@@ -121,7 +121,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="card mt-10 shadow-sm">
         <div class="card-header">
             <h5 class="card-title mb-0 ms-2 text-uppercase">Reporte de Inscritos por Programa de Doctorado</h5>
@@ -129,7 +129,7 @@
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-hover table-rounded border gy-4 gs-4 mb-0">
-                    <thead class="" style="background-color: #dcedff">
+                    <thead class="bg-light-primary">
                         <tr align="center" class="fw-bold">
                             <th scope="col" class="col-md-1">NRO</th>
                             <th scope="col" class="col-md-9">PROGRAMA</th>
@@ -159,7 +159,7 @@
                         @endif
                     </tbody>
                     <tfoot>
-                        <tr class="table-light" align="center">
+                        <tr class="bg-light-secondary" align="center">
                             <td colspan="2" class="text-end fw-bold fs-6">TOTAL</td>
                             <td class="fw-bold fs-5">{{ $programas_doctorado->sum('cantidad_mencion') }}</td>
                         </tr>
