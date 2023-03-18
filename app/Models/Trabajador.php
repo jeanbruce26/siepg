@@ -10,8 +10,8 @@ class Trabajador extends Model
     use HasFactory;
 
     protected $primaryKey = "trabajador_id";
+
     protected $table = 'trabajador';
-    
     protected $fillable = [
         'trabajador_id',
         'trabajador_nombres',
@@ -25,16 +25,4 @@ class Trabajador extends Model
     ];
 
     public $timestamps = false;
-
-    // Trabajador Tipo Trabajador
-    public function trabajador_tipo_trabajador(){
-        return $this->hasOne(TrabajadorTipoTrabajador::class,
-        'trabajador_id','trabajador_id');
-    }
-
-    // Administrativo
-    public function administrativo(){
-        return $this->hasOne(Administrativo::class,
-        'trabajador_id','trabajador_id');
-    }
 }
