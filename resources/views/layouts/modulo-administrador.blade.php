@@ -417,7 +417,7 @@
 								</div>
 								<!--end:Menu item-->
 								<!--begin:Menu item-->
-								<div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->is('administrador/usuario') || request()->is('administrador/trabajador') ? 'show' : ''}}">
+								<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
 									<!--begin:Menu link-->
 									<span class="menu-link">
 										<span class="menu-icon">
@@ -432,7 +432,7 @@
 											</span>
 											<!--end::Svg Icon-->
 										</span>
-										<span class="menu-title">Gestión de Usuarios</span>
+										<span class="menu-title">Usuarios</span>
 										<span class="menu-arrow"></span>
 									</span>
 									<!--end:Menu link-->
@@ -441,7 +441,7 @@
 										<!--begin:Menu item-->
 										<div class="menu-item">
 											<!--begin:Menu link-->
-											<a class="menu-link {{ request()->is('administrador/usuario') ? 'active' : '' }}" href="{{ route('administrador.usuario') }}">
+											<a class="menu-link" href="../../demo1/dist/widgets/tables.html">
 												<span class="menu-bullet">
 													<span class="bullet bullet-dot"></span>
 												</span>
@@ -453,7 +453,7 @@
 										<!--begin:Menu item-->
 										<div class="menu-item">
 											<!--begin:Menu link-->
-											<a class="menu-link {{ request()->is('administrador/trabajador') ? 'active' : '' }}" href="{{ route('administrador.trabajador') }}">
+											<a class="menu-link" href="../../demo1/dist/widgets/feeds.html">
 												<span class="menu-bullet">
 													<span class="bullet bullet-dot"></span>
 												</span>
