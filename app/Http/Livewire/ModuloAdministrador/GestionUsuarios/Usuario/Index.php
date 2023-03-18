@@ -3,7 +3,7 @@
 namespace App\Http\Livewire\ModuloAdministrador\GestionUsuarios\Usuario;
 
 use App\Models\HistorialAdministrativo;
-use App\Models\UsuarioTrabajador;
+use App\Models\Usuario;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -11,7 +11,7 @@ use Livewire\WithPagination;
 class Index extends Component
 {
     use WithPagination;
-    
+
     protected $paginationTheme = 'bootstrap';
     protected $queryString = [
         'search' => ['except' => '']
@@ -48,7 +48,7 @@ class Index extends Component
     public function limpiar()
     {
         $this->resetErrorBag();
-        $this->reset('username','correo','password');
+        $this->reset('username', 'correo', 'password');
         $this->modo = 1;
     }
 
@@ -57,30 +57,30 @@ class Index extends Component
         $this->dispatchBrowserEvent('alertaConfirmacionUsuario', ['id' => $id]);
     }
 
-    public function cambiarEstado(UsuarioTrabajador $usuario)
+    public function cambiarEstado(Usuario $usuario)
     {
-        if($usuario->usuario_estado == 1 || $usuario->usuario_estado == 2){
+        if ($usuario->usuario_estado == 1 || $usuario->usuario_estado == 2) {
             $usuario->usuario_estado = 0;
-        }else if($usuario->usuario_estado == 0){
-            if($usuario->trabajador_tipo_trabajador_id){
+        } else if ($usuario->usuario_estado == 0) {
+            if ($usuario->trabajador_tipo_trabajador_id) {
                 $usuario->usuario_estado = 2;
-            }else{
+            } else {
                 $usuario->usuario_estado = 1;
             }
         }
 
         $usuario->save();
 
-        $this->dispatchBrowserEvent('notificacionUsuario', ['message' =>'Estado de Usuario actualizado satisfactoriamente.', 'color' => '#2eb867']);
-        $this->subirHistorial($usuario->usuario_id,'Actualizacion de estado usuario','usuario');
+        $this->dispatchBrowserEvent('notificacionUsuario', ['message' => 'Estado de Usuario actualizado satisfactoriamente.', 'color' => '#2eb867']);
+        $this->subirHistorial($usuario->usuario_id, 'Actualizacion de estado usuario', 'usuario');
     }
 
-    public function cargarUsuario(UsuarioTrabajador $usuario)
+    public function cargarUsuario(Usuario $usuario)
     {
         $this->modo = 2;
         $this->titulo = 'ACTUALIZAR USUARIO - CORREO: '  . $usuario->correo;
         $this->usuario_id = $usuario->usuario_id;
-        
+
         $this->username = $usuario->usuario_nombre;
         $this->correo = $usuario->usuario_correo;
     }
@@ -93,35 +93,35 @@ class Index extends Component
                 'correo' => 'required|email|unique:usuario,usuario_correo',
                 'password' => 'required'
             ]);
-    
-            $usuario = UsuarioTrabajador::create([
+
+            $usuario = Usuario::create([
                 "usuario_nombre" => $this->username,
                 "usuario_correo" => $this->correo,
                 "usuario_contraseña" => Hash::make($this->password),
                 "usuario_estado" => 1,
             ]);
 
-            $this->subirHistorial($usuario->usuario_id,'Creacion de usuario','usuario');
-    
-            $this->dispatchBrowserEvent('notificacionUsuario', ['message' =>'Usuario agregado satisfactoriamente.', 'color' => '#2eb867']);
-        }else{
+            $this->subirHistorial($usuario->usuario_id, 'Creacion de usuario', 'usuario');
+
+            $this->dispatchBrowserEvent('notificacionUsuario', ['message' => 'Usuario agregado satisfactoriamente.', 'color' => '#2eb867']);
+        } else {
             $this->validate([
                 'username' => "required|unique:usuario,usuario_nombre,{$this->usuario_id},usuario_id",
                 'correo' => "required|email|unique:usuario,usuario_correo,{$this->usuario_id},usuario_id",
                 'password' => 'nullable'
             ]);
 
-            $usuario = UsuarioTrabajador::find($this->usuario_id);
+            $usuario = Usuario::find($this->usuario_id);
             $usuario->usuario_nombre = $this->username;
             $usuario->usuario_correo = $this->correo;
-            if($this->password){
+            if ($this->password) {
                 $usuario->usuario_contraseña = Hash::make($this->password);
             }
             $usuario->save();
-            
-            $this->subirHistorial($usuario->usuario_id,'Actualizacion de usuario','usuario');
 
-            $this->dispatchBrowserEvent('notificacionUsuario', ['message' =>'Usuario '.$this->username.' actualizado satisfactoriamente.', 'color' => '#2eb867']);
+            $this->subirHistorial($usuario->usuario_id, 'Actualizacion de usuario', 'usuario');
+
+            $this->dispatchBrowserEvent('notificacionUsuario', ['message' => 'Usuario ' . $this->username . ' actualizado satisfactoriamente.', 'color' => '#2eb867']);
         }
 
         $this->dispatchBrowserEvent('modalUsuario');
@@ -145,11 +145,11 @@ class Index extends Component
 
     public function render()
     {
-        $usuarios = UsuarioTrabajador::where('usuario_nombre','LIKE',"%{$this->search}%")
-                ->orWhere('usuario_correo','LIKE',"%{$this->search}%")
-                ->orWhere('usuario_id','LIKE',"%{$this->search}%")
-                ->orderBy('usuario_id','DESC')
-                ->paginate(50);
+        $usuarios = Usuario::where('usuario_nombre', 'LIKE', "%{$this->search}%")
+            ->orWhere('usuario_correo', 'LIKE', "%{$this->search}%")
+            ->orWhere('usuario_id', 'LIKE', "%{$this->search}%")
+            ->orderBy('usuario_id', 'DESC')
+            ->paginate(50);
 
         return view('livewire.modulo-administrador.gestion-usuarios.usuario.index', [
             'usuarios' => $usuarios
