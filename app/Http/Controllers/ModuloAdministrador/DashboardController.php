@@ -8,11 +8,6 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    public function auth()
-    {
-        return view('modulo-administrador.auth.login');
-    }
-
     public function dashboard()
     {
         return view('modulo-administrador.dashboard.index');

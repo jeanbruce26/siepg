@@ -24,8 +24,6 @@ class ProcessRegistroFichaInscripcion implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $detalle;
-    protected $pdf_email;
     protected $inscripcion;
 
     /**
@@ -90,14 +88,14 @@ class ProcessRegistroFichaInscripcion implements ShouldQueue
         ];
 
         $nombre_pdf = 'ficha-inscripcion-' . Str::slug($persona->nombre_completo, '-') . '.pdf';
-        // $path = 'Posgrado/' . $admision. '/' . $persona->num_doc . '/' . 'Expedientes' . '/';
-        // $pdf = PDF::loadView('modulo-inscripcion.ficha-inscripcion', $data)->save(public_path($path . $nombre_pdf));
+        $path = 'Posgrado/' . $admision. '/' . $persona->num_doc . '/' . 'Expedientes' . '/';
+        $pdf = PDF::loadView('modulo-inscripcion.ficha-inscripcion', $data)->save(public_path($path . $nombre_pdf));
         $pdf2 = PDF::loadView('modulo-inscripcion.ficha-inscripcion', $data);
         $pdf_email = $pdf2->output();
 
-        // $inscripcion = Inscripcion::find($id);
-        // $inscripcion->inscripcion = $path . $nombre_pdf;
-        // $inscripcion->save();
+        $inscripcion = Inscripcion::find($id);
+        $inscripcion->inscripcion = $path . $nombre_pdf;
+        $inscripcion->save();
 
         // enviar ficha de inscripcion por correo
         $detalle = [

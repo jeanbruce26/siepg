@@ -50,11 +50,6 @@ return [
             'driver' => 'session',
             'provider' => 'plataforma',
         ],
-
-        'usuario' => [
-            'driver' => 'session',
-            'provider' => 'usuario',
-        ],
     ],
 
     /*
@@ -93,11 +88,6 @@ return [
         'plataforma' => [
             'driver' => 'eloquent',
             'model' => App\Models\UsuarioEstudiante::class,
-        ],
-
-        'usuario' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Usuario::class,
         ],
     ],
 
