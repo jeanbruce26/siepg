@@ -385,13 +385,6 @@
 	<script src="{{ asset('assets/js/custom/utilities/modals/users-search.js') }}"></script>
 	<!--end::Custom Javascript-->
 
-	<!--begin::Turbolink-->
-	<script type="module">
-	import hotwiredTurbo from 'https://cdn.skypack.dev/@hotwired/turbo';
-	</script>
-	<script src="https://cdn.jsdelivr.net/gh/livewire/turbolinks@v0.1.x/dist/livewire-turbolinks.js" data-turbolinks-eval="false" data-turbo-eval="false"></script>
-	<!--end::Turbolink-->
-
 	<!-- LIVEWIRE SCRIPTS -->
 	@livewireScripts
 	<!--end::Javascript-->

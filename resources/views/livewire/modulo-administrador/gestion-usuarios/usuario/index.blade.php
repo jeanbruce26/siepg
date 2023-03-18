@@ -1,8 +1,8 @@
 <div>
 
-    <div class="card shadow-sm">
+    <div class="card card-maestria shadow-sm">
         <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center mb-2">
+            <div class="d-flex justify-content-between align-items-center mb-5">
                 <div class="d-flex justify-content-between align-items-center gap-4">
                 </div>
                 <div class="w-25">
@@ -10,16 +10,13 @@
                         placeholder="Buscar...">
                 </div>
             </div>
-
             <div class="table-responsive">
                 <table class="table table-hover table-rounded border gy-4 gs-4 mb-0">
-                    <thead class="thead-primary">
+                    <thead class="bg-light-success">
                         <tr align="center" class="fw-bold">
                             <th scope="col" class="col-md-1">ID</th>
-                            <th scope="col" class="col-md-3">Username</th>
-                            <th scope="col" class="col-md-5">Correo</th>
-                            <th scope="col" class="col-md-2">Estado</th>
-                            <th scope="col" class="col-md-1">Acciones</th>
+                            <th scope="col" class="col-md-9">Username</th>
+                            <th scope="col" class="col-md-2">CANTIDAD</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -45,7 +42,7 @@
                         @endif --}}
                     </tbody>
                     <tfoot>
-                        {{-- <tr class="table-light" align="center">
+                        {{-- <tr class="bg-light-secondary" align="center">
                             <td colspan="2" class="text-end fw-bold fs-6">TOTAL</td>
                             <td class="fw-bold fs-5">{{ $programas_maestria->sum('cantidad_mencion') }}</td>
                         </tr> --}}
