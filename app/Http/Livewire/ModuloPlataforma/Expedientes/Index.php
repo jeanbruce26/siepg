@@ -53,6 +53,18 @@ class Index extends Component
 
     public function aplicar_filtro()
     {
+        if ($this->filtro_proceso == null)
+        { // si el filtro de proceso esta vacio
+            // alerta de error
+            $this->dispatchBrowserEvent('alerta-expedientes', [
+                'title' => '¡Error!',
+                'text' => 'Debe seleccionar un proceso de admisión.',
+                'icon' => 'error',
+                'confirmButtonText' => 'Aceptar',
+                'color' => 'danger'
+            ]);
+            return back();
+        }
         $persona = Persona::where('num_doc', auth('plataforma')->user()->usuario_estudiante)->first(); // obtenemos la persona
         $this->inscripcion = Inscripcion::join('persona', 'persona.idpersona', '=', 'inscripcion.persona_idpersona')
                             ->where('persona.num_doc', $persona->num_doc)->where('admision_cod_admi', $this->filtro_proceso)->first(); // obtenemos la inscripcion
