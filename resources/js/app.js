@@ -1,6 +1,7 @@
 import './bootstrap';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
+import 'animate.css';
 
 // Inicializa NProgress
 NProgress.configure({

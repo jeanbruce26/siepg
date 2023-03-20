@@ -9,7 +9,7 @@
             </span>
             <div class="d-flex flex-column">
                 <span class="fw-bold">
-                    Fue admitido en la {{ ucwords(strtolower($admision->admision)) }}
+                    Fue admitido en la {{ ucwords(strtolower($inscripcion_admision->admision)) }}
                 </span>
             </div>
         </div>
@@ -22,7 +22,7 @@
                 </span>
                 <div class="d-flex flex-column">
                     <span class="fw-bold">
-                        No fuiste admitido en la {{ ucwords(strtolower($admision->admision)) }}
+                        No fuiste admitido en la {{ ucwords(strtolower($inscripcion_admision->admision)) }}
                     </span>
                 </div>
             </div>

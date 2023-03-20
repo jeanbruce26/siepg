@@ -45,7 +45,7 @@ class Index extends Component
         // $this->admisiones = Admision::orderBy('cod_admi', 'desc')->get(); // obtenemos todas las admisiones
         $persona = Persona::where('num_doc', auth('plataforma')->user()->usuario_estudiante)->first(); // obtenemos la persona
         $this->inscripcion = Inscripcion::where('persona_idpersona', $persona->idpersona)->orderBy('id_inscripcion', 'desc')->first(); // obtenemos la inscripcion
-        $this->admisiones = Inscripcion::where('persona_idpersona', $persona->idpersona)->orderBy('id_inscripcion', 'desc')->get(); // obtenemos todas las inscripciones de la persona
+        $this->admisiones = Inscripcion::where('persona_idpersona', $persona->idpersona)->groupBy('admision_cod_admi')->orderBy('id_inscripcion', 'desc')->get(); // obtenemos todas las inscripciones de la persona
         $this->id_inscripcion = $this->inscripcion->id_inscripcion; // asignamos el valor de la inscripcion a la variable id_inscripcion
         $this->expedientes = $this->inscripcion->expediente_inscripcion; // obtenemos los expedientes de la inscripcion
         $this->expedientes_model = Expediente::where('expediente_tipo', 0)->orWhere('expediente_tipo', $this->inscripcion->tipo_programa)->get(); // obtenemos los expedientes segun tipo de programa
