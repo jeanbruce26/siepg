@@ -46,7 +46,6 @@ class Index extends Component
 
     public function guardar_encuesta()
     {
-        // dd($this->encuesta);
         // validamos los campos del formulario
         if($this->encuesta == null)
         {

@@ -26,4 +26,9 @@ class PlataformaController extends Controller
     {
         return view('modulo-plataforma.expedientes.index');
     }
+
+    public function pago()
+    {
+        return view('modulo-plataforma.pagos.index');
+    }
 }

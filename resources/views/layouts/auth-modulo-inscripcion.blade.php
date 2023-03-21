@@ -153,7 +153,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="app-wrapper flex-column bg-opacity-15 bg-primary h-100" id="kt_app_wrapper">
+                <div class="app-wrapper flex-column bg-light-primary h-100" id="kt_app_wrapper">
                     <div class="app-main flex-column flex-row-fluid mb-15" id="kt_app_main">
                         @yield('content')
                     </div>

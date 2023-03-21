@@ -60,8 +60,8 @@
                                 <label for="sede" class="required form-label">
                                     Sede
                                 </label>
-                                <select wire:model="sede" class="form-select @error('sede') is-invalid @enderror" id="sede">
-                                    <option>Seleccione la sede</option>
+                                <select wire:model="sede" class="form-select @error('sede') is-invalid @enderror" id="sede" data-control="select2" data-placeholder="Seleccione su sede" data-allow-clear="true">
+                                    <option></option>
                                     @foreach ($sede_array as $item)
                                     <option value="{{ $item->cod_sede }}">{{ $item->sede }}</option>
                                     @endforeach
@@ -76,8 +76,8 @@
                                 <label for="programa" class="required form-label">
                                     Programa
                                 </label>
-                                <select wire:model="programa" class="form-select @error('programa') is-invalid @enderror" id="programa">
-                                    <option>Seleccione el programa</option>
+                                <select wire:model="programa" class="form-select @error('programa') is-invalid @enderror" id="programa" data-control="select2" data-placeholder="Seleccione su programa" data-allow-clear="true">
+                                    <option></option>
                                     @foreach ($programa_array as $item)
                                     <option value="{{ $item->id_programa }}">{{ $item->descripcion_programa }}</option>
                                     @endforeach
@@ -96,8 +96,8 @@
                                         ---
                                     @endif
                                 </label>
-                                <select wire:model="subprograma" class="form-select @error('subprograma') is-invalid @enderror" id="subprograma">
-                                    <option>Seleccione el subprograma</option>
+                                <select wire:model="subprograma" class="form-select @error('subprograma') is-invalid @enderror" id="subprograma" data-control="select2" data-placeholder="Seleccione @if($programa_nombre) su {{ $programa_nombre }} @endif" data-allow-clear="true">
+                                    <option></option>
                                     @foreach ($subprograma_array as $item)
                                     <option value="{{ $item->id_subprograma }}">{{ $item->subprograma }}</option>
                                     @endforeach
@@ -115,8 +115,8 @@
                                         <label for="mencion" class="required form-label">
                                             Mención
                                         </label>
-                                        <select wire:model="mencion" class="form-select @error('mencion') is-invalid @enderror" id="mencion">
-                                            <option>Seleccione la mencion</option>
+                                        <select wire:model="mencion" class="form-select @error('mencion') is-invalid @enderror" id="mencion" data-control="select2" data-placeholder="Seleccione su mencion" data-allow-clear="true">
+                                            <option></option>
                                             @foreach ($mencion_array as $item)
                                             <option value="{{ $item->id_mencion }}">{{ $item->mencion }}</option>
                                             @endforeach
@@ -707,6 +707,170 @@
                 });
                 $('#universidad').on('change', function(){
                     @this.set('universidad', this.value);
+                });
+            });
+        });
+        // sede select2
+        $(document).ready(function () {
+            $('#sede').select2({
+                placeholder: 'Seleccione',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                minimumResultsForSearch: Infinity,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando..";
+                    }
+                }
+            });
+            $('#sede').on('change', function(){
+                @this.set('sede', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#sede').select2({
+                    placeholder: 'Seleccione',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    minimumResultsForSearch: Infinity,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando..";
+                        }
+                    }
+                });
+                $('#sede').on('change', function(){
+                    @this.set('sede', this.value);
+                });
+            });
+        });
+        // programa select2
+        $(document).ready(function () {
+            $('#programa').select2({
+                placeholder: 'Seleccione',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                minimumResultsForSearch: Infinity,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando..";
+                    }
+                }
+            });
+            $('#programa').on('change', function(){
+                @this.set('programa', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#programa').select2({
+                    placeholder: 'Seleccione',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    minimumResultsForSearch: Infinity,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando..";
+                        }
+                    }
+                });
+                $('#programa').on('change', function(){
+                    @this.set('programa', this.value);
+                });
+            });
+        });
+        // subprograma select2
+        $(document).ready(function () {
+            $('#subprograma').select2({
+                placeholder: 'Seleccione',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                minimumResultsForSearch: Infinity,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando..";
+                    }
+                }
+            });
+            $('#subprograma').on('change', function(){
+                @this.set('subprograma', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#subprograma').select2({
+                    placeholder: 'Seleccione',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    minimumResultsForSearch: Infinity,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando..";
+                        }
+                    }
+                });
+                $('#subprograma').on('change', function(){
+                    @this.set('subprograma', this.value);
+                });
+            });
+        });
+        // mencion select2
+        $(document).ready(function () {
+            $('#mencion').select2({
+                placeholder: 'Seleccione',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                minimumResultsForSearch: Infinity,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando..";
+                    }
+                }
+            });
+            $('#mencion').on('change', function(){
+                @this.set('mencion', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#mencion').select2({
+                    placeholder: 'Seleccione',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    minimumResultsForSearch: Infinity,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando..";
+                        }
+                    }
+                });
+                $('#mencion').on('change', function(){
+                    @this.set('mencion', this.value);
                 });
             });
         });

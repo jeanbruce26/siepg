@@ -67,6 +67,7 @@ class Kernel extends HttpKernel
         'auth.inscripcion.redirect.sesion' => \App\Http\Middleware\AuthInscripcionRedirectSesion::class,
         'auth.plataforma' => \App\Http\Middleware\AuthPlataforma::class,
         'auth.plataforma.redirect.sesion' => \App\Http\Middleware\AuthPlataformaRedirectSesion::class,
+        'verificar.usuario.admitido' => \App\Http\Middleware\VerificationAdmitidoPlataformaPagos::class,
         'auth.usuario' => \App\Http\Middleware\AuthUsuario::class,
         'auth.usuario.redirect.sesion' => \App\Http\Middleware\AuthUsuarioRedirectSesion::class,
     ];
