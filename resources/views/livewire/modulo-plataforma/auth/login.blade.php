@@ -42,10 +42,13 @@
                     </div>
                 @endif
                 <div class="mt-5">
-                    <button type="submit" class="btn btn-primary w-100">
+                    <button type="submit" class="btn btn-primary w-100" wire:loading.attr="disabled">
+                        <div wire:loading.remove wire:target="ingresar_plataforma">
                             Ingresar
-                        {{-- <span class="indicator-progress">Espere un momento...
-                        <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span> --}}
+                        </div>
+                        <div wire:loading wire:target="ingresar_plataforma">
+                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                        </div>
                     </button>
                 </div>
             </form>

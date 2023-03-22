@@ -34,7 +34,7 @@
                             <div class="mb-10">
                                 <label class="form-label fw-semibold">Proceso de Admisión:</label>
                                 <div>
-                                    <select class="form-select" wire:model="filtro_proceso">
+                                    <select class="form-select" wire:model="filtro_proceso" id="filtro_proceso"  data-control="select2" data-placeholder="Seleccione" data-hide-search="true">
                                         $@foreach ($admisiones as $item)
                                         <option value="{{ $item->admision->cod_admi }}">{{ $item->admision->admision }}</option>
                                         @endforeach
@@ -241,3 +241,48 @@
         </div>
     </div>
 </div>
+@push('scripts')
+    <script>
+        // filtro_proceso select2
+        $(document).ready(function () {
+            $('#filtro_proceso').select2({
+                placeholder: 'Seleccione',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                minimumResultsForSearch: Infinity,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando..";
+                    }
+                }
+            });
+            $('#filtro_proceso').on('change', function(){
+                @this.set('filtro_proceso', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#filtro_proceso').select2({
+                    placeholder: 'Seleccione',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    minimumResultsForSearch: Infinity,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando..";
+                        }
+                    }
+                });
+                $('#filtro_proceso').on('change', function(){
+                    @this.set('filtro_proceso', this.value);
+                });
+            });
+        });
+    </script>
+@endpush

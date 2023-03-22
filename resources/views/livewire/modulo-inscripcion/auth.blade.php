@@ -3,9 +3,7 @@
         <div class="col-md-8">
             <div class="row g-5 gx-xl-10">
                 <div class="col-md-12">
-                    {{-- <div class="card shadow-sm" style="background-color: #fdfdf4"> --}}
-                    {{-- <div class="card shadow-sm"> --}}
-                    <div class="card shadow-sm bg-opacity-25 bg-info">
+                    <div class="card shadow-sm bg-light-success">
                         <div class="px-7 py-6">
                             <span class="fw-bolder fs-4">
                                 Estimado/a postulante:
@@ -35,9 +33,7 @@
                     </div>
                 </div>
                 <div class="col-md-12">
-                    {{-- <div class="card shadow-sm" style="background-color: #eff8ee"> --}}
-                    {{-- <div class="card shadow-sm"> --}}
-                    <div class="card shadow-sm bg-opacity-25 bg-warning">
+                    <div class="card shadow-sm bg-light-warning">
                         <div class="px-7 py-6">
                             <span class="fw-bolder fs-4">
                                 Recomendación antes de comenzar su inscripción:
@@ -117,8 +113,13 @@
                                         </div>
                                     @endif
                                     <div class="mt-5">
-                                        <button type="submit" class="btn btn-primary w-100">
-                                            Iniciar Inscripción
+                                        <button type="submit" class="btn btn-primary w-100" wire:loading.attr="disabled" wire:target="iniciar_inscripcion">
+                                            <div wire:loading.remove wire:target="iniciar_inscripcion">
+                                                Iniciar Inscripción
+                                            </div>
+                                            <div wire:loading wire:target="iniciar_inscripcion" class="py-1">
+                                                <span class="spinner-border spinner-border-sm align-middle"></span>
+                                            </div>
                                         </button>
                                     </div>
                                 </form>
@@ -131,7 +132,7 @@
     </div>
     {{-- modal registro pago --}}
     <div wire:ignore.self class="modal fade" tabindex="-1" id="modal_registro_pago">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h3 class="modal-title">
@@ -144,8 +145,8 @@
                     <!--end::Close-->
                 </div>
                 <div class="modal-body">
-                    <form autocomplete="off">
-                        <div class="mb-5">
+                    <form autocomplete="off" class="row g-5">
+                        <div class="col-md-6">
                             <label for="documento_identidad" class="required form-label">
                                 Documento de Identidad
                             </label>
@@ -154,28 +155,28 @@
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
-                        <div class="mb-5">
+                        <div class="col-md-6">
                             <label for="numero_operacion" class="required form-label">
                                 Numero de Operación
                             </label>
                             <input type="number" wire:model="numero_operacion" class="form-control @error('numero_operacion') is-invalid @enderror" placeholder="6543" id="numero_operacion"/>
+                            <span class="form-text text-muted mt-2 fst-italic">
+                                Nota: Omitir los ceros a la izquierda. Ejemplo: 00001265, debe ser ingresado como 1265. <br>
+                            </span>
                             @error('numero_operacion')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
-                        <div class="mb-5">
+                        <div class="col-md-6">
                             <label for="monto_operacion" class="required form-label">
                                 Monto de Operación
                             </label>
                             <input type="number" wire:model="monto_operacion" class="form-control @error('monto_operacion') is-invalid @enderror" placeholder="00.00" id="monto_operacion"/>
-                            <span class="form-text text-muted mt-2 fst-italic">
-                                Nota: Omitir los ceros a la izquierda. Ejemplo: 00001265, debe ser ingresado como 1265. <br>
-                            </span>
                             @error('monto_operacion')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
-                        <div class="mb-5">
+                        <div class="col-md-6">
                             <label for="fecha_pago" class="required form-label">
                                 Fecha de Pago
                             </label>
@@ -184,12 +185,12 @@
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
-                        <div class="mb-5">
+                        <div class="col-md-12">
                             <label for="canal_pago" class="required form-label">
                                 Canal de Pago
                             </label>
-                            <select class="form-select @error('canal_pago') is-invalid @enderror" wire:model="canal_pago" aria-label="Select example" id="canal_pago">
-                                <option>Seleccione una opción</option>
+                            <select class="form-select @error('canal_pago') is-invalid @enderror" wire:model="canal_pago" id="canal_pago" data-control="select2" data-placeholder="Seleccione su canal de pago" data-allow-clear="true" data-dropdown-parent="#modal_registro_pago">
+                                <option></option>
                                 @foreach ($canales_pagos as $item)
                                 <option value="{{ $item->canal_pago_id }}">Pago realizado en {{ $item->descripcion }}</option>
                                 @endforeach
@@ -198,7 +199,7 @@
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
-                        <div class="mb-5">
+                        <div class="col-md-12">
                             <label for="voucher" class="required form-label">
                                 Voucher
                             </label>
@@ -216,11 +217,61 @@
                     <button type="button" class="btn btn-light" data-bs-dismiss="modal" wire:click="limpiar_registro_pago">
                         Cerrar
                     </button>
-                    <button type="button" wire:click="registrar_pago" class="btn btn-primary" @if ($voucher == null) disabled @endif>
-                        Registrar Pago
+                    <button type="button" wire:click="registrar_pago" class="btn btn-primary" style="width: 150px" @if ($voucher == null) disabled @endif wire:loading.attr="disabled" wire:target="registrar_pago">
+                        <div wire:loading.remove wire:target="registrar_pago">
+                            Registrar Pago
+                        </div>
+                        <div wire:loading wire:target="registrar_pago">
+                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                        </div>
                     </button>
                 </div>
             </div>
         </div>
     </div>
 </div>
+@push('scripts')
+    <script>
+        // canal_pago select2
+        $(document).ready(function () {
+            $('#canal_pago').select2({
+                placeholder: 'Seleccione',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                minimumResultsForSearch: Infinity,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando..";
+                    }
+                }
+            });
+            $('#canal_pago').on('change', function(){
+                @this.set('canal_pago', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#canal_pago').select2({
+                    placeholder: 'Seleccione',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    minimumResultsForSearch: Infinity,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando..";
+                        }
+                    }
+                });
+                $('#canal_pago').on('change', function(){
+                    @this.set('canal_pago', this.value);
+                });
+            });
+        });
+    </script>
+@endpush

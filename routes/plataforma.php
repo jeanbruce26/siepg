@@ -11,3 +11,5 @@ Route::get('/', [PlataformaController::class, 'inicio'])->middleware(['auth.plat
 Route::get('/perfil', [PlataformaController::class, 'perfil'])->middleware(['auth.plataforma'])->name('plataforma.perfil');
 // ruta para ir a los expedientes
 Route::get('/expedientes', [PlataformaController::class, 'expediente'])->middleware(['auth.plataforma'])->name('plataforma.expediente');
+// ruta para ir a los pagos de los estudiantes
+Route::get('/pagos', [PlataformaController::class, 'pago'])->middleware(['auth.plataforma', 'verificar.usuario.admitido'])->name('plataforma.pago');

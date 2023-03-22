@@ -1,14 +1,14 @@
 @extends('layouts.modulo-plataforma')
-@section('title', 'Expedientes - Plataforma Escuela de Posgrado')
+@section('title', 'Pagos - Plataforma Escuela de Posgrado')
 @section('content')
-@livewire('modulo-plataforma.expedientes.index')
+@livewire('modulo-plataforma.pagos.index')
 @endsection
 @section('scripts')
 <script>
-    window.addEventListener('modal_expediente', event => {
-        $('#modal_expediente').modal(event.detail.action);
+    window.addEventListener('modal_pagos', event => {
+        $('#modal_pagos').modal(event.detail.action);
     })
-    window.addEventListener('alerta-expedientes', event => {
+    window.addEventListener('alerta-pagos', event => {
         Swal.fire({
             title: event.detail.title,
             text: event.detail.text,
