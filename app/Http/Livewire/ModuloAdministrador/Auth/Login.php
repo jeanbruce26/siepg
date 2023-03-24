@@ -49,24 +49,25 @@ class Login extends Component
             else
             {
                 // si el usuario esta activo verificamos la contraseña
-                if(Hash::check($this->password, $usuario->usuario_contraseña))
+                if(Hash::check($this->password, $usuario->usuario_password))
                 {
                     // si la contraseña es correcta verificamos si el usuario tiene asiganado un trabajador
-                    if($usuario->trabajador_tipo_trabajador_id)
+                    if($usuario->id_trabajador_tipo_trabajador)
                     {
                         // si tiene un trabajador verificamos si es un administrativo
-                        $tra_tipo_tra = TrabajadorTipoTrabajador::where('trabajador_tipo_trabajador_id', $usuario->trabajador_tipo_trabajador_id)->first();
-                        if($tra_tipo_tra->tipo_trabajador_id == 3)
+                        $tra_tipo_tra = TrabajadorTipoTrabajador::where('id_trabajador_tipo_trabajador', $usuario->id_trabajador_tipo_trabajador)->first();
+
+                        if($tra_tipo_tra->id_tipo_trabajador == 3)
                         {
                             // si es un administrativo verificamos si es de la area de TI
-                            $administrativo = Administrativo::where('trabajador_id',$tra_tipo_tra->trabajador_id)->first();
-                            if($administrativo->area_administrativo->area_id == 3)
+                            $administrativo = Administrativo::where('id_trabajador',$tra_tipo_tra->id_trabajador)->first();
+                            if($administrativo->area_administrativo->id_area_administrativo == 3)
                             {
                                 // si es de la area de TI lo redireccionamos a la vista de administrador
                                 auth('usuario')->login($usuario);
                                 return redirect()->route('administrador.dashboard');
                             }
-                            elseif($administrativo->AreaAdministrativo->area_id == 1)
+                            elseif($administrativo->area_administrativo->id_area_administrativo == 1)
                             {
                                 // si es de la area de contabilidad lo redireccionamos a la vista de contabilidad
                                 // auth('admin')->login($usuario);
@@ -80,14 +81,14 @@ class Login extends Component
                             }
                         }
                         // verificamos si el usuario logueado es un coordinador
-                        if($tra_tipo_tra->tipo_trabajador_id == 2)
+                        if($tra_tipo_tra->id_tipo_trabajador == 2)
                         {
                             // si es un coordinador lo redireccionamos a la vista de coordinador
                             // auth('admin')->login($usuario);
                             // return redirect()->route('coordinador.index');
                         }
                         // verificamos si el usuario logueado es un docente
-                        if($tra_tipo_tra->tipo_trabajador_id == 1)
+                        if($tra_tipo_tra->id_tipo_trabajador == 1)
                         {
                             // si es un docente mostrar un mensaje de error ya que no tiene vista
                             session()->flash('message', 'Usuario docente sin vista');
@@ -110,7 +111,6 @@ class Login extends Component
             }
         }
 
-        dd('hola');
     }
 
     public function render()
