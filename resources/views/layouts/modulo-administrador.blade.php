@@ -386,6 +386,7 @@
 	<!--end::Custom Javascript-->
 
 	<!-- LIVEWIRE SCRIPTS -->
+	@yield('javascript')
 	@livewireScripts
 	<!--end::Javascript-->
 </body>

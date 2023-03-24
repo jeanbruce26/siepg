@@ -36,8 +36,6 @@ class Index extends Component
             'correo' => 'required|email',
             'password' => 'nullable'
         ]);
-
-        dump($this->nombreVariable);
     }
 
     public function modo()
@@ -71,7 +69,14 @@ class Index extends Component
 
         $usuario->save();
 
-        $this->dispatchBrowserEvent('notificacionUsuario', ['message' => 'Estado de Usuario actualizado satisfactoriamente.', 'color' => '#2eb867']);
+        $this->dispatchBrowserEvent('alerta-usuario', [
+            'title' => '¡Estado del Usuario actualizado satisfactoriamente!',
+            'text' => '',
+            'icon' => 'success',
+            'confirmButtonText' => 'Aceptar',
+            'color' => 'success'
+        ]);
+
         $this->subirHistorial($usuario->usuario_id, 'Actualizacion de estado usuario', 'usuario');
     }
 
@@ -103,7 +108,13 @@ class Index extends Component
 
             $this->subirHistorial($usuario->usuario_id, 'Creacion de usuario', 'usuario');
 
-            $this->dispatchBrowserEvent('notificacionUsuario', ['message' => 'Usuario agregado satisfactoriamente.', 'color' => '#2eb867']);
+            $this->dispatchBrowserEvent('alerta-usuario', [
+                'title' => '¡Usuario agregado satisfactoriamente!',
+                'text' => '',
+                'icon' => 'success',
+                'confirmButtonText' => 'Aceptar',
+                'color' => 'success'
+            ]);
         } else {
             $this->validate([
                 'username' => "required|unique:usuario,usuario_nombre,{$this->usuario_id},usuario_id",
@@ -121,7 +132,13 @@ class Index extends Component
 
             $this->subirHistorial($usuario->usuario_id, 'Actualizacion de usuario', 'usuario');
 
-            $this->dispatchBrowserEvent('notificacionUsuario', ['message' => 'Usuario ' . $this->username . ' actualizado satisfactoriamente.', 'color' => '#2eb867']);
+            $this->dispatchBrowserEvent('alerta-usuario', [
+                'title' => '¡Usuario <strong>' . $this->username . '</strong>  actualizado satisfactoriamente!',
+                'text' => '',
+                'icon' => 'success',
+                'confirmButtonText' => 'Aceptar',
+                'color' => 'success'
+            ]);
         }
 
         $this->dispatchBrowserEvent('modalUsuario');
@@ -133,8 +150,8 @@ class Index extends Component
     public function subirHistorial($usuario_id, $descripcion, $tabla)
     {
         HistorialAdministrativo::create([
-            "usuario_id" => auth('admin')->user()->usuario_id,
-            "trabajador_id" => auth('admin')->user()->TrabajadorTipoTrabajador->Trabajador->trabajador_id,
+            "usuario_id" => auth('usuario')->user()->usuario_id,
+            "trabajador_id" => auth('usuario')->user()->trabajador_tipo_trabajador->trabajador->trabajador_id,
             "historial_descripcion" => $descripcion,
             "historial_tabla" => $tabla,
             "historial_usuario_id" => $usuario_id,
