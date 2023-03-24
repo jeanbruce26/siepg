@@ -10,15 +10,15 @@ class UsuarioEstudiante extends Authenticatable
 {
     use HasFactory;
 
-    protected $primaryKey = 'usuario_estudiante_id';
+    protected $primaryKey = 'id_usuario_estudiante';
     protected $table = 'usuario_estudiante';
     protected $fillable = [
-        'usuario_estudiante_id',
+        'id_usuario_estudiante',
         'usuario_estudiante',
         'usuario_estudiante_password',
-        'usuario_estudiante_created_at',
+        'usuario_estudiante_creacion',
         'usuario_estudiante_estado',
-        'usuario_estudiante_perfil',
+        'usuario_estudiante_perfil_url',
     ];
 
     public $timestamps = false;

@@ -13,9 +13,9 @@ class Plan extends Model
     protected $table = 'plan';
     protected $fillable = [
         'id_plan',
-        'codigo',
+        'plan_codigo',
         'plan',
-        'estado'
+        'plan_estado',
     ];
 
     public $timestamps = false;

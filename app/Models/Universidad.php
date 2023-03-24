@@ -9,13 +9,12 @@ class Universidad extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = "cod_uni";
-    protected $table = 'univer';
+    protected $primaryKey = "id_universidad";
+    protected $table = 'universidad';
     protected $fillable = [
-        'cod_uni',
+        'id_universidad',
         'universidad',
-        'depart',
-        'tipo_gesti',
+        'universidad_estado',
     ];
 
     public $timestamps = false;
@@ -23,6 +22,7 @@ class Universidad extends Model
     // Persona
     public function persona()
     {
-        return $this->hasMany(Persona::class, 'univer_cod_uni');
+        return $this->hasMany(Persona::class,
+        'id_universidad', 'id_universidad');
     }
 }

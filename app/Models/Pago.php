@@ -10,29 +10,29 @@ class Pago extends Authenticatable
 {
     use HasFactory;
 
-    protected $primaryKey = "pago_id";
+    protected $primaryKey = "id_pago";
     protected $table = 'pago';
     protected $fillable = [
-        'pago_id',
-        'dni',
-        'nro_operacion',
-        'monto',
-        'fecha_pago',
-        'estado',
-        'canal_pago_id',
-        'verificacion_pago',
-        'voucher'
+        'id_pago',
+        'pago_documento',
+        'pago_operacion',
+        'pago_monto',
+        'pago_fecha',
+        'pago_estado',
+        'pago_verificacion',
+        'pago_voucher_url',
+        'id_canal_pago'
     ];
 
     public $timestamps = false;
 
     public function canal_pago(){
         return $this->belongsTo(CanalPago::class,
-        'canal_pago_id','canal_pago_id');
+        'id_canal_pago','id_canal_pago');
     }
 
-    public function inscripcion_pago(){
-        return $this->hasMany(InscripcionPago::class,
-        'pago_id','pago_id');
+    public function inscripcion(){
+        return $this->hasMany(Inscripcion::class,
+        'id_pago','id_pago');
     }
 }

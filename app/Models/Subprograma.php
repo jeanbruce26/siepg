@@ -13,11 +13,11 @@ class Subprograma extends Model
     protected $table = 'subprograma';
     protected $fillable = [
         'id_subprograma',
-        'cod_subprograma',
+        'subprograma_codigo',
         'subprograma',
+        'subprograma_estado',
         'id_programa',
-        'facultad_id',
-        'estado'
+        'id_facultad'
     ];
 
     public $timestamps = false;
@@ -29,9 +29,9 @@ class Subprograma extends Model
     }
 
     // Facultad
-    public function Facultad(){
+    public function facultad(){
         return $this->belongsTo(Facultad::class,
-        'facultad_id','facultad_id');
+        'id_facultad','id_facultad');
     }
 
     // Mencion
