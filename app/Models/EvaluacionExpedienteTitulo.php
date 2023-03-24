@@ -9,20 +9,19 @@ class EvaluacionExpedienteTitulo extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = "evaluacion_expediente_titulo_id";
+    protected $primaryKey = 'id_evaluacion_expediente_titulo';
     protected $table = 'evaluacion_expediente_titulo';
     protected $fillable = [
-        'evaluacion_expediente_titulo_id',
+        'id_evaluacion_expediente_titulo',
         'evaluacion_expediente_titulo',
-        'evaluacion_expediente_titulo_puntaje_maximo',
-        'tipo_evaluacion_id'
+        'evaluacion_expediente_titulo_puntaje',
+        'id_tipo_evaluacion'
     ];
 
     public $timestamps = false;
 
     // Tipo Evaluacion
     public function tipo_evaluacion(){
-        return $this->belongsTo(TipoEvaluacion::class,
-        'tipo_evaluacion_id','tipo_evaluacion_id');
+        return $this->belongsTo(TipoEvaluacion::class, 'id_tipo_evaluacion', 'id_tipo_evaluacion');
     }
 }

@@ -9,10 +9,10 @@ class Distrito extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = "id";
+    protected $primaryKey = 'id_distrito';
     protected $table = 'distrito';
     protected $fillable = [
-        'id',
+        'id_distrito',
         'distrito',
         'ubigeo',
         'id_provincia',
@@ -23,12 +23,18 @@ class Distrito extends Model
     // Provincia
     public function provincia()
     {
-        return $this->belongsTo(Provincia::class, 'id_provincia');
+        return $this->belongsTo(Provincia::class, 'id_provincia', 'id_provincia');
     }
 
-    // UbigeoPersona
-    public function ubigeo_persona()
+    // Persona direccion
+    public function persona_direccion()
     {
-        return $this->hasMany(UbigeoPersona::class, 'id_distrito');
+        return $this->hasMany(Persona::class, 'id_distrito', 'ubigeo_direccion');
+    }
+
+    // Persona nacimiento
+    public function persona_nacimiento()
+    {
+        return $this->hasMany(Persona::class, 'id_distrito', 'ubigeo_nacimiento');
     }
 }

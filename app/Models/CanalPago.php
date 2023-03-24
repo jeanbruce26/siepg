@@ -9,11 +9,11 @@ class CanalPago extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = "canal_pago_id";
+    protected $primaryKey = 'id_canal_pago';
     protected $table = 'canal_pago';
     protected $fillable = [
-        'canal_pago_id',
-        'descripcion',
+        'id_canal_pago',
+        'canal_pago',
         'canal_pago_estado'
     ];
 
@@ -21,6 +21,6 @@ class CanalPago extends Model
 
     public function pago(){
         return $this->hasMany(Pago::class,
-        'canal_pago_id','canal_pago_id');
+        'id_canal_pago','id_canal_pago');
     }
 }

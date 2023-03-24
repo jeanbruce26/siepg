@@ -9,11 +9,12 @@ class Discapacidad extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = "cod_disc";
+    protected $primaryKey = 'id_discapacidad';
     protected $table = 'discapacidad';
     protected $fillable = [
-        'cod_disc',
-        'discapacidad'
+        'id_discapacidad',
+        'discapacidad',
+        'discapacidad_estado',
     ];
 
     public $timestamps = false;
@@ -21,6 +22,6 @@ class Discapacidad extends Model
     // Persona
     public function persona()
     {
-        return $this->hasMany(Persona::class, 'discapacidad_cod_disc');
+        return $this->hasMany(Persona::class, 'id_discapacidad', 'id_discapacidad');
     }
 }

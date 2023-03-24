@@ -9,11 +9,11 @@ class ExpedienteInscripcionSeguimiento extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'expediente_inscripcion_seguimiento_id';
+    protected $primaryKey = 'id_expediente_inscripcion_seguimiento';
     protected $table = 'expediente_inscripcion_seguimiento';
     protected $fillable = [
-        'expediente_inscripcion_seguimiento_id',
-        'cod_ex_insc',
+        'id_expediente_inscripcion_seguimiento',
+        'id_expediente_inscripcion',
         'tipo_seguimiento',
         'expediente_inscripcion_seguimiento_estado'
     ];
@@ -22,6 +22,6 @@ class ExpedienteInscripcionSeguimiento extends Model
 
     public function expediente_inscripcion()
     {
-        return $this->belongsTo(ExpedienteInscripcion::class, 'cod_ex_insc');
+        return $this->belongsTo(ExpedienteInscripcion::class, 'id_expediente_inscripcion', 'id_expediente_inscripcion');
     }
 }

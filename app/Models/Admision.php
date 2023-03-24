@@ -9,28 +9,28 @@ class Admision extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = "cod_admi";
+    protected $primaryKey = 'id_admision';
     protected $table = 'admision';
     protected $fillable = [
-        'cod_admi',
+        'id_admision',
         'admision',
-        'admision_year',
+        'admision_año',
         'admision_convocatoria',
-        'estado',
-        'fecha_fin',
-        'fecha_evaluacion_expediente_inicio',
-        'fecha_evaluacion_expediente_fin',
-        'fecha_evaluacion_entrevista_inicio',
-        'fecha_evaluacion_entrevista_fin',
-        'fecha_admitidos',
-        'estado_matricula',
-
+        'admision_estado',
+        'admision_fecha_fin_inscripcion',
+        'admision_fecha_inicio_expediente',
+        'admision_fecha_fin_expediente',
+        'admision_fecha_inicio_entrevista',
+        'admision_fecha_fin_entrevista',
+        'admision_fecha_resultados',
+        'admision_fecha_resultados',
+        'admision_fecha_matricula',
     ];
 
     public $timestamps = false;
 
     public function inscripcion(){
         return $this->hasMany(Inscripcion::class,
-        'admision_cod_admi','cod_admi');
+        'id_admision','id_admision');
     }
 }

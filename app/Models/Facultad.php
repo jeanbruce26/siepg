@@ -9,11 +9,12 @@ class Facultad extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = "facultad_id";
+    protected $primaryKey = 'id_facultad';
     protected $table = 'facultad';
     protected $fillable = [
-        'facultad_id',
+        'id_facultad',
         'facultad',
+        'facultad_asignado',
         'facultad_estado',
     ];
 
@@ -22,6 +23,12 @@ class Facultad extends Model
     // SubPrograma
     public function subprograma()
     {
-        return $this->hasMany(SubPrograma::class, 'facultad_id');
+        return $this->hasMany(SubPrograma::class, 'id_facultad', 'id_facultad');
+    }
+
+    // coordinador
+    public function coordinador()
+    {
+        return $this->hasMany(Coordinador::class, 'id_facultad', 'id_facultad');
     }
 }

@@ -9,11 +9,11 @@ class Encuesta extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'encuesta_id';
+    protected $primaryKey = 'id_encuesta';
     protected $table = 'encuesta';
     protected $fillable = [
-        'encuesta_id',
-        'descripcion',
+        'id_encuesta',
+        'encuesta',
         'encuesta_estado',
     ];
 
@@ -22,6 +22,6 @@ class Encuesta extends Model
     // Encuesta Detalle
     public function encuesta_detalle()
     {
-        return $this->hasMany(EncuestaDetalle::class, 'encuesta_id');
+        return $this->hasMany(EncuestaDetalle::class, 'id_encuesta', 'id_encuesta');
     }
 }
