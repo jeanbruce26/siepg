@@ -14,49 +14,44 @@ class Inscripcion extends Model
     protected $fillable = [
         'id_inscripcion',
         'inscripcion_codigo',
-        'persona_idpersona',
-        'estado',
-        'admision_cod_admi',
-        'id_mencion',
-        'inscripcion',
-        'fecha_inscripcion',
-        'tipo_programa'
+        'inscripcion_ficha_url',
+        'inscripcion_fecha',
+        'id_persona',
+        'id_concepto_pago',
+        'id_pago',
+        'id_programa_proceso',
+        'inscripcion_tipo_programa',
     ];
 
     public $timestamps = false;
 
     // Persona
     public function persona(){
-        return $this->belongsTo(Persona::class,
-        'persona_idpersona','idpersona');
+        return $this->belongsTo(Persona::class, 'id_persona','id_persona');
     }
 
-    // Admision
-    public function admision(){
-        return $this->belongsTo(Admision::class,
-        'admision_cod_admi','cod_admi');
-    }
-    // Mencion
-    public function mencion(){
-        return $this->belongsTo(Mencion::class,
-        'id_mencion','id_mencion');
+    // concepto pago
+    public function concepto_pago(){
+        return $this->belongsTo(ConceptoPago::class, 'id_concepto_pago','id_concepto_pago');
     }
 
-    // Inscripcion Pago
-    public function inscripcion_pago(){
-        return $this->hasMany(InscripcionPago::class,
-        'inscripcion_id','id_inscripcion');
+    // pago
+    public function pago(){
+        return $this->belongsTo(Pago::class, 'id_pago','id_pago');
+    }
+
+    // Programa Proceso
+    public function programa_proeso(){
+        return $this->hasMany(ProgramaProceso::class, 'id_programa_proceso','id_programa_proceso');
     }
 
     // Inscripcion Expediente
     public function expediente_inscripcion(){
-        return $this->hasMany(ExpedienteInscripcion::class,
-        'id_inscripcion','id_inscripcion');
+        return $this->hasMany(ExpedienteInscripcion::class, 'id_inscripcion','id_inscripcion');
     }
 
     // Evaluacion
     public function evaluacion(){
-        return $this->hasOne(Evaluacion::class,
-        'inscripcion_id','id_inscripcion');
+        return $this->hasOne(Evaluacion::class, 'id_inscripcion','id_inscripcion');
     }
 }

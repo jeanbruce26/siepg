@@ -9,48 +9,52 @@ class Evaluacion extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = "evaluacion_id";
+    protected $primaryKey = 'id_evaluacion';
     protected $table = 'evaluacion';
     protected $fillable = [
-        'evaluacion_id',
-        'p_expediente',
-        'p_entrevista',
-        'p_investigacion',
-        'p_final',
-        'evaluacion_observacion',
+        'id_evaluacion',
+        'puntaje_expediente',
+        'fecha_expediente',
+        'puntaje_investigacion',
+        'fecha_investigacion',
+        'puntaje_entrevista',
+        'fecha_entrevista',
+        'puntaje_final',
         'evaluacion_estado',
         'evaluacion_estado_admitido',
-        'puntaje_id',
-        'inscripcion_id',
-        'fecha_expediente',
-        'fecha_entrevista',
-        'fecha_investigacion',
-        'tipo_evaluacion_id'
+        'id_inscripcion',
+        'id_tipo_evaluacion',
     ];
 
     public $timestamps = false;
 
-    // Puntaje
-    public function puntaje(){
-        return $this->belongsTo(Puntaje::class,
-        'puntaje_id','puntaje_id');
-    }
-
     // Inscripcion
     public function inscripcion(){
-        return $this->belongsTo(Inscripcion::class,
-        'puntaje_id','puntaje_id');
+        return $this->belongsTo(Inscripcion::class, 'id_inscripcion', 'id_inscripcion');
     }
 
     // Tipo Evaluacion
     public function tipo_evaluacion(){
-        return $this->belongsTo(TipoEvaluacion::class,
-        'tipo_evaluacion_id','tipo_evaluacion_id');
+        return $this->belongsTo(TipoEvaluacion::class, 'id_tipo_evaluacion', 'id_tipo_evaluacion');
     }
 
     // Admitidos
     public function admitidos(){
-        return $this->hasMany(Admitidos::class,
-        'evaluacion_id','evaluacion_id');
+        return $this->hasMany(Admitido::class, 'id_evaluacion', 'id_evaluacion');
+    }
+
+    // evaluacion expediente
+    public function evaluacion_expediente(){
+        return $this->hasMany(EvaluacionExpediente::class, 'id_evaluacion', 'id_evaluacion');
+    }
+
+    // evaluacion investigacion
+    public function evaluacion_investigacion(){
+        return $this->hasMany(EvaluacionInvestigacion::class, 'id_evaluacion', 'id_evaluacion');
+    }
+
+    // evaluacion entrevista
+    public function evaluacion_entrevista(){
+        return $this->hasMany(EvaluacionEntrevista::class, 'id_evaluacion', 'id_evaluacion');
     }
 }

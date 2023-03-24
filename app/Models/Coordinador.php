@@ -9,28 +9,34 @@ class Coordinador extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = "coordinador_id";
 
+    protected $primaryKey = 'id_coordinador';
     protected $table = 'coordinador';
     protected $fillable = [
-        'coordinador_id',
-        'trabajador_id',
-        'facultad_id',
-        'categoria_docente',
+        'id_coordinador',
+        'id_categoria_docente',
         'coordinador_estado',
+        'id_facultad',
+        'id_trabajador',
     ];
 
     public $timestamps = false;
 
-    // Trabajador
-    public function trabajador(){
-        return $this->belongsTo(Trabajador::class,
-        'trabajador_id','trabajador_id');
+    //Categoria Docente
+    public function categoria_docente(){
+        return $this->belongsTo(CategoriaDocente::class,
+        'id_categoria_docente','id_conceid_categoria_docentepto_pago');
     }
 
-    // Facultad
+    //Facultad
     public function facultad(){
         return $this->belongsTo(Facultad::class,
-        'facultad_id','facultad_id');
+        'id_facultad','id_facultad');
+    }
+
+    //Trabajador
+    public function trabajador(){
+        return $this->belongsTo(Trabajador::class,
+        'id_trabajador','id_trabajador');
     }
 }

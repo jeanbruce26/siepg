@@ -9,27 +9,27 @@ class Expediente extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = "cod_exp";
+    protected $primaryKey = 'id_expediente';
     protected $table = 'expediente';
     protected $fillable = [
-        'cod_exp',
-        'tipo_doc',
-        'complemento',
-        'exp_nombre',
-        'requerido',
+        'id_expediente',
+        'expediente',
+        'expediente_completo',
+        'expediente_nombre_file',
+        'expediente_requerido',
         'expediente_tipo',
-        'estado',
+        'expediente_estado',
     ];
 
     public $timestamps = false;
 
     public function expediente_tipo_evaluacion()
     {
-        return $this->hasMany(ExpedienteTipoEvaluacion::class, 'cod_exp');
+        return $this->hasMany(ExpedienteTipoEvaluacion::class, 'id_expediente', 'id_expediente');
     }
 
     public function expediente_tipo_seguimiento()
     {
-        return $this->hasMany(ExpedienteTipoSeguimiento::class, 'cod_exp');
+        return $this->hasMany(ExpedienteTipoSeguimiento::class, 'id_expediente', 'id_expediente');
     }
 }

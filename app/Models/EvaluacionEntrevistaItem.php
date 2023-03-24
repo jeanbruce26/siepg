@@ -9,26 +9,19 @@ class EvaluacionEntrevistaItem extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = "evaluacion_entrevista_item_id";
+    protected $primaryKey = 'id_evaluacion_entrevista_item';
     protected $table = 'evaluacion_entrevista_item';
     protected $fillable = [
-        'evaluacion_entrevista_item_id',
+        'id_evaluacion_entrevista_item',
         'evaluacion_entrevista_item',
         'evaluacion_entrevista_item_puntaje',
-        'tipo_evaluacion_id'
+        'id_tipo_evaluacion',
     ];
 
     public $timestamps = false;
 
-    // Evaluacion Entrevista Titulo
-    public function evaluacion_entrevista_titulo(){
-        return $this->belongsTo(EvaluacionEntrevistaTitulo::class,
-        'evaluacion_entrevista_titulo_id','evaluacion_entrevista_titulo_id');
-    }
-
     // Tipo Evaluacion
     public function tipo_evaluacion(){
-        return $this->belongsTo(TipoEvaluacion::class,
-        'tipo_evaluacion_id','tipo_evaluacion_id');
+        return $this->belongsTo(TipoEvaluacion::class, 'id_tipo_evaluacion', 'id_tipo_evaluacion');
     }
 }

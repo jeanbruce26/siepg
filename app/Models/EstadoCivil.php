@@ -9,11 +9,12 @@ class EstadoCivil extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = "cod_est";
-    protected $table = 'est_civil';
+    protected $primaryKey = 'id_estado_civil';
+    protected $table = 'estado_civil';
     protected $fillable = [
-        'cod_est',
-        'est_civil'
+        'id_estado_civil',
+        'estado_civil',
+        'estado_civil_estado',
     ];
 
     public $timestamps = false;
@@ -21,6 +22,6 @@ class EstadoCivil extends Model
     // Persona
     public function persona()
     {
-        return $this->hasMany(Persona::class, 'est_civil_cod_est');
+        return $this->hasMany(Persona::class, 'id_estado_civil', 'id_estado_civil');
     }
 }

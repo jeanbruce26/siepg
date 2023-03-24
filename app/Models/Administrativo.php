@@ -9,13 +9,13 @@ class Administrativo extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = "administrativo_id";
+    protected $primaryKey = 'id_administrativo';
     protected $table = 'administrativo';
     protected $fillable = [
-        'administrativo_id',
-        'area_id',
-        'trabajador_id',
+        'id_administrativo',
+        'id_area_administrativo',
         'administrativo_estado',
+        'id_trabajador',
     ];
 
     public $timestamps = false;
@@ -23,11 +23,11 @@ class Administrativo extends Model
     // Trabajador
     public function trabajador(){
         return $this->belongsTo(Trabajador::class,
-        'trabajador_id','trabajador_id');
+        'id_trabajador','id_trabajador');
     }
     // Area
     public function area_administrativo(){
         return $this->belongsTo(AreaAdministrativo::class,
-        'area_id','area_id');
+        'id_area_administrativo','id_area_administrativo');
     }
 }

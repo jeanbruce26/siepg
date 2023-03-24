@@ -9,34 +9,25 @@ class Mencion extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = "id_mencion";
+    protected $primaryKey = 'id_mencion';
     protected $table = 'mencion';
     protected $fillable = [
         'id_mencion',
-        'iniciales',
-        'cod_mencion',
+        'mencion_iniciales',
         'mencion',
+        'mencion_estado',
         'id_subprograma',
-        'id_plan',
-        'mencion_estado'
     ];
 
     public $timestamps = false;
-    
 
     // Subprograma
     public function subprograma(){
-        return $this->belongsTo(SubPrograma::class,
-        'id_subprograma','id_subprograma');
+        return $this->belongsTo(SubPrograma::class, 'id_subprograma','id_subprograma');
     }
-    // Plan
-    public function plan(){
-        return $this->belongsTo(Plan::class,
-        'id_plan','id_plan');
-    }
-    // Inscripcion
-    public function inscripcion(){
-        return $this->hasMany(Inscripcion::class,
-        'id_mencion','id_mencion');
+
+    // mencion plan
+    public function mencion_plan(){
+        return $this->hasMany(MencionPlan::class, 'id_mencion', 'id_mencion');
     }
 }

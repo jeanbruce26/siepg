@@ -8,27 +8,25 @@ use Illuminate\Database\Eloquent\Model;
 class EvaluacionEntrevista extends Model
 {
     use HasFactory;
-    protected $primaryKey = "evaluacion_entrevista_id";
+    protected $primaryKey = 'id_evaluacion_entrevista';
 
     protected $table = 'evaluacion_entrevista';
     protected $fillable = [
-        'evaluacion_entrevista_id',
+        'id_evaluacion_entrevista',
         'evaluacion_entrevista_puntaje',
-        'evaluacion_entrevista_item_id',
-        'evaluacion_id',
+        'id_evaluacion_entrevista_item',
+        'id_evaluacion',
     ];
 
     public $timestamps = false;
 
     // Evaluacion Entrevista Item
     public function evaluacion_entrevista_item(){
-        return $this->belongsTo(EvaluacionEntrevistaItem::class,
-        'evaluacion_entrevista_item_id','evaluacion_entrevista_item_id');
+        return $this->belongsTo(EvaluacionEntrevistaItem::class, 'id_evaluacion_entrevista_item', 'id_evaluacion_entrevista_item');
     }
 
     // Evaluacion
     public function evaluacion(){
-        return $this->belongsTo(Evaluacion::class,
-        'evaluacion_id','evaluacion_id');
+        return $this->belongsTo(Evaluacion::class, 'id_evaluacion', 'id_evaluacion');
     }
 }

@@ -9,32 +9,29 @@ class ExpedienteInscripcion extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = "cod_ex_insc";
-    protected $table = 'ex_insc';
+    protected $primaryKey = 'id_expediente_inscripcion';
+    protected $table = 'expediente_inscripcion';
     protected $fillable = [
-        'cod_ex_insc',
-        'nom_exped',
-        'estado',
-        'observacion',
-        'fecha_entre',
-        'expediente_cod_exp',
+        'id_expediente_inscripcion',
+        'expediente_inscripcion_url',
+        'expediente_inscripcion_estado',
+        'expediente_inscripcion_fecha',
+        'id_expediente_admision',
         'id_inscripcion'
     ];
 
     public $timestamps = false;
 
     public function inscripcion(){
-        return $this->belongsTo(Inscripcion::class,
-        'id_inscripcion','id_inscripcion');
+        return $this->belongsTo(Inscripcion::class, 'id_inscripcion','id_inscripcion');
     }
 
-    public function expediente(){
-        return $this->belongsTo(Expediente::class,
-        'expediente_cod_exp','cod_exp');
+    public function expediente_admision(){
+        return $this->belongsTo(ExpedienteAdmision::class, 'id_expediente_admision','id_expediente_admision');
     }
 
     public function expediente_inscripcion_seguimiento()
     {
-        return $this->hasMany(ExpedienteInscripcionSeguimiento::class, 'cod_ex_insc');
+        return $this->hasMany(ExpedienteInscripcionSeguimiento::class, 'id_expediente_inscripcion', 'id_expediente_inscripcion');
     }
 }

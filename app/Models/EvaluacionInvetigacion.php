@@ -9,26 +9,24 @@ class EvaluacionInvetigacion extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = "evaluacion_investigacion_id";
+    protected $primaryKey = 'id_evaluacion_investigacion';
     protected $table = 'evaluacion_investigacion';
     protected $fillable = [
-        'evaluacion_investigacion_id',
+        'id_evaluacion_investigacion',
         'evaluacion_investigacion_puntaje',
-        'evaluacion_investigacion_item_id',
-        'evaluacion_id'
+        'id_evaluacion_investigacion_item',
+        'id_evaluacion'
     ];
 
     public $timestamps = false;
 
     // Evaluacion
     public function evaluacion(){
-        return $this->belongsTo(Evaluacion::class,
-        'evaluacion_id','evaluacion_id');
+        return $this->belongsTo(Evaluacion::class, 'id_evaluacion', 'id_evaluacion');
     }
 
     // Evaluacion Investigacion Item
     public function evaluacion_investigacion_item(){
-        return $this->belongsTo(EvaluacionInvestigacionItem::class,
-        'evaluacion_investigacion_item_id','evaluacion_investigacion_item_id');
+        return $this->belongsTo(EvaluacionInvestigacionItem::class, 'id_evaluacion_investigacion_item', 'id_evaluacion_investigacion_item');
     }
 }

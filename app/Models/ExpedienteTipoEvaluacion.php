@@ -5,17 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ExpedienteTipoSeguimiento extends Model
+class ExpedienteTipoEvaluacion extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'id_expediente_tipo_seguimiento';
-    protected $table = 'expediente_tipo_seguimiento';
+    protected $primaryKey = 'id_expediente_tipo_evaluacion';
+    protected $table = 'expediente_tipo_evaluacion';
     protected $fillable = [
-        'id_expediente_tipo_seguimiento',
+        'id_expediente_tipo_evaluacion',
         'id_expediente',
-        'tipo_seguimiento',
-        'expediente_tipo_seguimiento_estado'
+        'expediente_tipo_evaluacion',
+        'expediente_tipo_evaluacion_estado',
     ];
 
     public $timestamps = false;

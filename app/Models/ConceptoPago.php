@@ -9,19 +9,19 @@ class ConceptoPago extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = "concepto_id";
+    protected $primaryKey = 'id_concepto_pago';
     protected $table = 'concepto_pago';
     protected $fillable = [
-        'concepto_id',
-        'concepto',
-        'monto',
-        'estado',
+        'id_concepto_pago',
+        'concepto_pago',
+        'concepto_pago_monto',
+        'concepto_pago_estado',
     ];
 
     public $timestamps = false;
 
-    public function inscripcion_pago(){
-        return $this->hasMany(InscripcionPago::class,
-        'concepto_pago_id','concepto_id');
+    public function inscripcion(){
+        return $this->hasMany(Inscripcion::class,
+        'id_concepto_pago','id_concepto_pago');
     }
 }

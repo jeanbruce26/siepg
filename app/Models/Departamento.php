@@ -9,10 +9,10 @@ class Departamento extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = "id";
+    protected $primaryKey = 'id_departamento';
     protected $table = 'departamento';
     protected $fillable = [
-        'id',
+        'id_departamento',
         'departamento',
         'ubigeo',
     ];
@@ -22,6 +22,7 @@ class Departamento extends Model
     // Provincia
     public function provincia()
     {
-        return $this->hasMany(Provincia::class, 'id_departamento');
+        return $this->hasMany(Provincia::class,
+        'id_departamento', 'id_departamento');
     }
 }

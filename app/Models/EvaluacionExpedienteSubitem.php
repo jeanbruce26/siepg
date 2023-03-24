@@ -9,12 +9,12 @@ class EvaluacionExpedienteSubitem extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = "evaluacion_expediente_subitem_id";
+    protected $primaryKey = 'id_evaluacion_expediente_subitem';
     protected $table = 'evaluacion_expediente_subitem';
     protected $fillable = [
-        'evaluacion_expediente_subitem_id',
+        'id_evaluacion_expediente_subitem',
         'evaluacion_expediente_subitem',
-        'evaluacion_expediente_item_id',
+        'id_evaluacion_expediente_item',
         'evaluacion_expediente_subitem_puntaje',
     ];
 
@@ -22,7 +22,6 @@ class EvaluacionExpedienteSubitem extends Model
 
     // Evaluacion Expediente Item
     public function evaluacion_expediente_item(){
-        return $this->belongsTo(EvaluacionExpedienteItem::class,
-        'evaluacion_expediente_item_id','evaluacion_expediente_item_id');
+        return $this->belongsTo(EvaluacionExpedienteItem::class, 'id_evaluacion_expediente_item', 'id_evaluacion_expediente_item');
     }
 }

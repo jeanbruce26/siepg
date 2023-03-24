@@ -9,21 +9,21 @@ class EncuestaDetalle extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'encuesta_detalle_id';
+    protected $primaryKey = 'id_encuesta_detalle';
     protected $table = 'encuesta_detalle';
     protected $fillable = [
-        'encuesta_detalle_id',
+        'id_encuesta_detalle',
         'documento',
-        'encuesta_id',
+        'id_encuesta',
         'otros',
         'encuesta_detalle_estado',
     ];
 
     public $timestamps = false;
 
-    // Encuesta Detalle
+    // Encuesta
     public function encuesta()
     {
-        return $this->belongsTo(Encuesta::class, 'encuesta_id');
+        return $this->belongsTo(Encuesta::class, 'id_encuesta', 'id_encuesta');
     }
 }

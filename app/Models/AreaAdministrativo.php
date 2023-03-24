@@ -9,11 +9,12 @@ class AreaAdministrativo extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = "area_id";
+    protected $primaryKey = 'id_area_administrativo';
     protected $table = 'area_administrativo';
     protected $fillable = [
-        'area_id',
-        'area',
+        'id_area_administrativo',
+        'area_administrativo',
+        'area_administrativo_estado'
     ];
 
     public $timestamps = false;
@@ -21,6 +22,6 @@ class AreaAdministrativo extends Model
     // Administrativo
     public function administrativo(){
         return $this->hasMany(Administrativo::class,
-        'area_id','area_id');
+        'id_area_administrativo','id_area_administrativo');
     }
 }
