@@ -66,10 +66,10 @@ class Auth extends Component
         ]);
 
         // validar si el numero de operacion ya existe
-        $pago = Pago::where('nro_operacion', $this->numero_operacion)->first();
+        $pago = Pago::where('pago_operacion', $this->numero_operacion)->first();
         if ($pago)
         {
-            if($pago->dni == $this->documento_identidad && $pago->fecha_pago == $this->fecha_pago){
+            if($pago->pago_documento == $this->documento_identidad && $pago->pago_fecha == $this->fecha_pago){
                 // emitir evento para mostrar mensaje de alerta
                 $this->dispatchBrowserEvent('registro_pago', [
                     'title' => '¡Error!',
@@ -79,7 +79,7 @@ class Auth extends Component
                     'color' => 'danger'
                 ]);
                 return back();
-            }else if ($pago->fecha_pago == $this->fecha_pago) {
+            }else if ($pago->pago_fecha == $this->fecha_pago) {
                 // emitir evento para mostrar mensaje de alerta
                 $this->dispatchBrowserEvent('registro_pago', [
                     'title' => '¡Error!',
@@ -89,7 +89,7 @@ class Auth extends Component
                     'color' => 'danger'
                 ]);
                 return redirect()->back();
-            }else if($pago->dni == $this->documento_identidad){
+            }else if($pago->pago_documento == $this->documento_identidad){
                 // emitir evento para mostrar mensaje de alerta
                 $this->dispatchBrowserEvent('registro_pago', [
                     'title' => '¡Error!',
@@ -103,7 +103,7 @@ class Auth extends Component
         }
 
         // validar si el monto ingresado es igual al monto por concepto de inscripción
-        $concepto_pago_monto = ConceptoPago::where('concepto_id', 1)->first()->monto;
+        $concepto_pago_monto = ConceptoPago::where('id_concepto_pago', 1)->first()->concepto_pago_monto;
         if($this->monto_operacion != $concepto_pago_monto)
         {
             // emitir evento para mostrar mensaje de alerta
@@ -119,23 +119,23 @@ class Auth extends Component
 
         // guardar datos en la base de datos de pago
         $pago = new Pago();
-        $pago->dni = $this->documento_identidad;
-        $pago->nro_operacion = $this->numero_operacion;
-        $pago->monto = $this->monto_operacion;
-        $pago->fecha_pago = $this->fecha_pago;
-        $pago->estado = 1;
-        $pago->canal_pago_id = $this->canal_pago;
-        $pago->verificacion_pago = 1;
+        $pago->pago_documento = $this->documento_identidad;
+        $pago->pago_operacion = $this->numero_operacion;
+        $pago->pago_monto = $this->monto_operacion;
+        $pago->pago_fecha = $this->fecha_pago;
+        $pago->pago_estado = 1;
+        $pago->pago_verificacion = 1;
         if($this->voucher)
         {
-            $admision = Admision::where('estado', 1)->first()->admision;
+            $admision = Admision::where('admision_estado', 1)->first()->admision;
             $path = 'Posgrado/' . $admision . '/' . $this->documento_identidad . '/' . 'Voucher/';
             $filename = 'voucher-pago' . $this->voucher->getClientOriginalExtension();
             $nombre_db = $path.$filename;
             $data = $this->voucher;
             $data->storeAs($path, $filename, 'files_publico');
-            $pago->voucher = $nombre_db;
+            $pago->pago_voucher_url = $nombre_db;
         }
+        $pago->id_canal_pago = $this->canal_pago;
         $pago->save();
 
         //  obtener el ultimo codigo de inscripcion
@@ -155,16 +155,9 @@ class Auth extends Component
         // crear la inscripcion
         $inscripcion = new Inscripcion();
         $inscripcion->inscripcion_codigo = $codigo_inscripcion;
-        $inscripcion->estado = 'activo';
-        $inscripcion->admision_cod_admi = Admision::where('estado', 1)->first()->cod_admi;
+        $inscripcion->id_concepto_pago = 1;
+        $inscripcion->id_pago = $pago->id_pago;
         $inscripcion->save();
-
-        // asigar el pago creado a la tabla de inscripcion pago
-        $inscripcion_pago = new InscripcionPago();
-        $inscripcion_pago->pago_id = $pago->pago_id;
-        $inscripcion_pago->inscripcion_id = $inscripcion->id_inscripcion;
-        $inscripcion_pago->concepto_pago_id = 1;
-        $inscripcion_pago->save();
 
         // cerrar modal de registro de pago
         $this->dispatchBrowserEvent('modal_registro_pago', [
@@ -193,15 +186,15 @@ class Auth extends Component
         ]);
 
         // obtener fecha de fin de admision para sumarle 2 dias y cerrar el proceso de admision
-        $admision = Admision::where('estado',1)->first();
+        $admision = Admision::where('admision_etado',1)->first();
         $valor = '+ 1 day';
-        $fecha_final_admision = date('Y-m-d',strtotime($admision->fecha_fin.$valor));
+        $fecha_final_admision = date('Y-m-d',strtotime($admision->admision_fecha_fin_inscripcion.$valor));
 
         // buscar en la base de datos el pago ingresado
-        $pago = Pago::where('dni', $this->documento_identidad_inscripcion)
-            ->where('nro_operacion', $this->numero_operacion_inscripcion)
+        $pago = Pago::where('pago_documento', $this->documento_identidad_inscripcion)
+            ->where('pago_operacion', $this->numero_operacion_inscripcion)
             ->first();
-            
+
         // validar si la fecha de fin de admision es menor o igual a la fecha actual
         if($fecha_final_admision < today())
         {
@@ -224,7 +217,7 @@ class Auth extends Component
                 return redirect()->route('inscripcion.registro');
             }else{
                 // emitir evento para mostrar mensaje de alerta
-                session()->flash('message', 'El pago ingresado se encuentra anulado');
+                session()->flash('message', 'Inspección de pago ya realizada');
                 return redirect()->back();
             }
         }

@@ -192,7 +192,7 @@
                             <select class="form-select @error('canal_pago') is-invalid @enderror" wire:model="canal_pago" id="canal_pago" data-control="select2" data-placeholder="Seleccione su canal de pago" data-allow-clear="true" data-dropdown-parent="#modal_registro_pago">
                                 <option></option>
                                 @foreach ($canales_pagos as $item)
-                                <option value="{{ $item->canal_pago_id }}">Pago realizado en {{ $item->descripcion }}</option>
+                                <option value="{{ $item->id_canal_pago }}">Pago realizado en {{ $item->canal_pago }}</option>
                                 @endforeach
                             </select>
                             @error('canal_pago')
