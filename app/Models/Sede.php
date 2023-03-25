@@ -9,10 +9,10 @@ class Sede extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = "cod_sede";
+    protected $primaryKey = "id_sede";
     protected $table = 'sede';
     protected $fillable = [
-        'cod_sede',
+        'id_sede',
         'sede',
         'sede_estado'
     ];

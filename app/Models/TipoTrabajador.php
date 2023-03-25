@@ -9,12 +9,13 @@ class TipoTrabajador extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = "tipo_trabajador_id";
+    protected $primaryKey = "id_tipo_trabajador";
     protected $table = 'tipo_trabajador';
     
     protected $fillable = [
-        'tipo_trabajador_id',
+        'id_tipo_trabajador',
         'tipo_trabajador',
+        'tipo_trabajador_estado',
     ];
 
     public $timestamps = false;
@@ -22,6 +23,6 @@ class TipoTrabajador extends Model
     // Trabajador Tipo Trabajador
     public function trabajador_tipo_trabajador(){
         return $this->hasMany(TrabajadorTipoTrabajador::class,
-        'tipo_trabajador_id','tipo_trabajador_id');
+        'id_tipo_trabajador','id_tipo_trabajador');
     }
 }

@@ -9,63 +9,54 @@ class Persona extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = "idpersona";
+    protected $primaryKey = "id_persona";
     protected $table = 'persona';
     protected $fillable = [
-        'idpersona',
-        'num_doc',
-        'apell_pater',
-        'apell_mater',
-        'nombres',
+        'id_persona',
+        'numero_documento',
+        'apellido_paterno',
+        'apellido_materno',
+        'nombre',
         'nombre_completo',
+        'id_genero',
+        'fecha_nacimiento',
         'direccion',
-        'celular1',
-        'celular2',
-        'sexo',
-        'fecha_naci',
-        'email',
-        'email2',
+        'celular',
+        'celular_opcional',
+        'correo',
+        'correo_opcional',
         'año_egreso',
-        'centro_trab',
-        'tipo_doc_cod_tipo',
-        'discapacidad_cod_disc',
-        'est_civil_cod_est',
-        'univer_cod_uni',
+        'especialidad_carrera',
+        'centro_trabajo',
+        'id_tipo_documento',
+        'id_discapacidad',
+        'id_estado_civil',
         'id_grado_academico',
-        'especialidad',
-        'pais_extra',
+        'id_universidad',
+        'ubigeo_direccion',
+        'pais_direccion',
+        'ubigeo_nacimiento',
+        'pais_nacimiento',
     ];
 
     public $timestamps = false;
 
-    // Inscripcion
-    public function inscripcion(){
-        return $this->hasMany(Inscripcion::class,
-        'persona_idpersona','idpersona');
-    }
-
     // TipoDocumento
     public function tipo_documento(){
         return $this->belongsTo(TipoDocumento::class,
-        'tipo_doc_cod_tipo','id_tipo_doc');
-    }
-
-    // EstadoCivil
-    public function estado_civil(){
-        return $this->belongsTo(EstadoCivil::class,
-        'est_civil_cod_est','cod_est');
-    }
-
-    // Universidad
-    public function universidad(){
-        return $this->belongsTo(Universidad::class,
-        'univer_cod_uni','cod_uni');
+        'id_tipo_documento','id_tipo_documento');
     }
 
     // Discapacidad
     public function discapacidad(){
         return $this->belongsTo(Discapacidad::class,
-        'discapacidad_cod_disc','cod_disc');
+        'id_discapacidad','id_discapacidad');
+    }
+
+    // EstadoCivil
+    public function estado_civil(){
+        return $this->belongsTo(EstadoCivil::class,
+        'id_estado_civil','id_estado_civil');
     }
 
     // GradoAcademico
@@ -74,9 +65,33 @@ class Persona extends Model
         'id_grado_academico','id_grado_academico');
     }
 
+    // Universidad
+    public function universidad(){
+        return $this->belongsTo(Universidad::class,
+        'id_universidad','id_universidad');
+    }
+    
+    // Ubigeo Direccion
+    public function ubigeo_direccion(){
+        return $this->belongsTo(Distrito::class,
+        'id_distrito','ubigeo_direccion');
+    }
+    
+    // Ubigeo Nacimiento
+    public function ubigeo_nacimiento(){
+        return $this->belongsTo(Distrito::class,
+        'id_distrito','ubigeo_nacimiento');
+    }
+
+    // Inscripcion
+    public function inscripcion(){
+        return $this->hasMany(Inscripcion::class,
+        'id_persona','id_persona');
+    }
+
     // Admitidos
     public function admitidos(){
         return $this->hasMany(Admitidos::class,
-        'persona_id','idpersona');
+        'id_persona','id_persona');
     }
 }

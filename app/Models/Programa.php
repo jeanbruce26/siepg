@@ -13,7 +13,8 @@ class Programa extends Model
     protected $table = 'programa';
     protected $fillable = [
         'id_programa',
-        'descripcion_programa',
+        'programa',
+        'programa_estado',
         'id_sede',
     ];
 
@@ -22,8 +23,9 @@ class Programa extends Model
     // Sede
     public function sede(){
         return $this->belongsTo(Sede::class,
-        'id_sede','cod_sede');
+        'id_sede','id_sede');
     }
+    
     // Subprograma
     public function subprograma(){
         return $this->hasMany(Subprograma::class,

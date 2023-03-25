@@ -36,7 +36,7 @@
     </script>
 	<div class="d-flex flex-column flex-root app-root" id="kt_app_root">
 		<div class="app-page flex-column flex-column-fluid" id="kt_app_page">
-			<div id="kt_app_header" class="app-header">
+			<div id="kt_app_header" class="app-header bg-light-primary">
 				<div class="app-container container-fluid d-flex align-items-stretch justify-content-between" id="kt_app_header_container">
 					<div class="d-flex align-items-center d-lg-none ms-n3 me-1 me-md-2" title="Show sidebar menu">
 						<div class="btn btn-icon btn-active-color-primary w-35px h-35px"
@@ -323,7 +323,7 @@
 				<!--end::Sidebar-->
 
 				<!--begin::Main-->
-				<div class="app-main flex-column flex-row-fluid" id="kt_app_main">
+				<div class="app-main flex-column flex-row-fluid bg-light-primary" id="kt_app_main">
 					@yield('content')
 				</div>
 				<!--end:::Main-->

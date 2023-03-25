@@ -9,13 +9,13 @@ class TrabajadorTipoTrabajador extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = "trabajador_tipo_trabajador_id";
+    protected $primaryKey = "id_trabajador_tipo_trabajador";
     protected $table = 'trabajador_tipo_trabajador';
 
     protected $fillable = [
-        'trabajador_tipo_trabajador_id',
-        'trabajador_id',
-        'tipo_trabajador_id',
+        'id_trabajador_tipo_trabajador',
+        'id_tipo_trabajador',
+        'id_trabajador',
         'trabajador_tipo_trabajador_estado',
     ];
 
@@ -24,18 +24,18 @@ class TrabajadorTipoTrabajador extends Model
     // Trabajador
     public function trabajador(){
         return $this->belongsTo(Trabajador::class,
-        'trabajador_id','trabajador_id');
+        'id_trabajador','id_trabajador');
     }
 
     // Tipo de Trabajador
     public function tipo_trabajador(){
         return $this->belongsTo(TipoTrabajador::class,
-        'tipo_trabajador_id','tipo_trabajador_id');
+        'id_tipo_trabajador','id_tipo_trabajador');
     }
 
     // Usuario
     public function usuario(){
         return $this->hasOne(Usuario::class,
-        'trabajador_tipo_trabajador_id','trabajador_tipo_trabajador_id');
+        'id_trabajador_tipo_trabajador','id_trabajador_tipo_trabajador');
     }
 }

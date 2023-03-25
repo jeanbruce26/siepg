@@ -10,14 +10,14 @@ class Usuario extends Authenticatable
 {
     use HasFactory;
 
-    protected $primaryKey = 'usuario_id';
+    protected $primaryKey = 'id_usuario';
     protected $table = 'usuario';
     protected $fillable = [
-        'usuario_id',
+        'id_usuario',
         'usuario_nombre',
         'usuario_correo',
-        'usuario_contraseña',
-        'trabajador_tipo_trabajador_id',
+        'usuario_password',
+        'id_trabajador_tipo_trabajador',
         'usuario_estado',
     ];
 
@@ -26,6 +26,6 @@ class Usuario extends Authenticatable
     // Trabajador Tipo Trabajador
     public function trabajador_tipo_trabajador(){
         return $this->belongsTo(TrabajadorTipoTrabajador::class,
-        'trabajador_tipo_trabajador_id','trabajador_tipo_trabajador_id');
+        'id_trabajador_tipo_trabajador','id_trabajador_tipo_trabajador');
     }
 }
