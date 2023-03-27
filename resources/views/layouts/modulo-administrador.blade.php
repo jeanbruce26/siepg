@@ -71,7 +71,7 @@
 							data-kt-swapper-parent="{default: '#kt_app_body', lg: '#kt_app_header_wrapper'}">
                             <div class="menu menu-rounded menu-column menu-lg-row my-5 my-lg-0 align-items-stretch fw-semibold px-2 px-lg-0" id="kt_app_header_menu" data-kt-menu="true">
                                 <div class="menu-item">
-                                    @php $admision = App\Models\Admision::where('estado', 1)->first()->admision; @endphp
+                                    @php $admision = App\Models\Admision::where('admision_estado', 1)->first()->admision; @endphp
                                     <span class="fs-3 fw-bold">
                                         PROCESO DE {{ $admision }}
                                     </span>

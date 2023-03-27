@@ -146,7 +146,7 @@
                                     <td align="center" class="fw-bold fs-5">{{ $loop->iteration }}</td>
                                     <td style="white-space: initial" class="fs-5 text-uppercase">
                                         @if ($item->mencion === null)
-                                            {{ ucwords(strtolower($item->descripcion_programa))  }} en {{ ucwords(strtolower($item->subprograma)) }}
+                                            {{ ucwords(strtolower($item->programa))  }} en {{ ucwords(strtolower($item->subprograma)) }}
                                         @else
                                             Mención en {{ ucwords(strtolower($item->mencion)) }}
                                         @endif
@@ -173,7 +173,7 @@
                 </div>
             </div>
         
-            <div class="card mt-10 shadow-sm">
+            {{-- <div class="card mt-10 shadow-sm">
                 <div class="card-header">
                     <h5 class="card-title mb-0 ms-2 text-uppercase">Reporte de Inscritos por Programa de Doctorado</h5>
                 </div>
@@ -218,7 +218,7 @@
                         </table>
                     </div>
                 </div>
-            </div>
+            </div> --}}
 			<!--end::Row-->
 		</div>
 		<!--end::Content container-->
