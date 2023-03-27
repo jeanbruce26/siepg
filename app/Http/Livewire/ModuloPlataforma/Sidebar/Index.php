@@ -10,12 +10,12 @@ class Index extends Component
 {
     public function render()
     {
-        $persona = Persona::where('num_doc', auth('plataforma')->user()->usuario_estudiante)->first(); // persona del usuario logueado
-        $inscripcion_ultima = Inscripcion::where('persona_idpersona', $persona->idpersona)->orderBy('id_inscripcion', 'desc')->first(); // inscripcion del usuario logueado
+        $persona = Persona::where('numero_documento', auth('plataforma')->user()->usuario_estudiante)->first(); // persona del usuario logueado
+        $inscripcion_ultima = Inscripcion::where('id_persona', $persona->id_persona)->orderBy('id_inscripcion', 'desc')->first(); // inscripcion del usuario logueado
         $evaluacion = $inscripcion_ultima->evaluacion; // evaluacion de la inscripcion del usuario logueado
         if($evaluacion)
         {
-            $admitido = $persona->admitidos->where('evaluacion_id', $evaluacion->evaluacion_id)->first(); // admitido de la inscripcion del usuario logueado
+            $admitido = $persona->admitido->where('id_evaluacion', $evaluacion->id_evaluacion)->first(); // admitido de la inscripcion del usuario logueado
         }
         else
         {

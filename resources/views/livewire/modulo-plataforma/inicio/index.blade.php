@@ -55,15 +55,15 @@
     @endif
     {{-- card de estado de inscripcion puntajes --}}
     <div class="row g-5 mb-5">
-        <div class="col-sm-12 col-md-6 col-lg-6 @if ($inscripcion_ultima->tipo_programa == 1) col-xl-6 @elseif ($inscripcion_ultima->tipo_programa == 2) col-xl-4 @endif">
+        <div class="col-sm-12 col-md-6 col-lg-6 @if ($inscripcion_ultima->inscripcion_tipo_programa == 1) col-xl-6 @elseif ($inscripcion_ultima->inscripcion_tipo_programa == 2) col-xl-4 @endif">
             <div class="card card-body shadow-sm">
                 <span class="fs-1 text-gray-800 text-center py-2" style="font-weight: 700">
                     Evaluación de Expedientes
                 </span>
-                @if ($inscripcion_admision->fecha_admitidos <= today())
+                @if ($inscripcion_admision->admision_fecha_resultados <= today())
                     @if ($evaluacion)
                     <span class="fs-3 text-gray-800 text-center py-2">
-                        Puntaje: <span class="fw-bold fs-2">{{ number_format($evaluacion->p_expediente) }}</span> pts.
+                        Puntaje: <span class="fw-bold fs-2">{{ number_format($evaluacion->puntaje_expediente) }}</span> pts.
                     </span>
                     @else
                     <span class="fs-3 text-center py-2 d-flex align-items-center justify-content-center text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Los resultados se presentará el {{ $admision_fecha_admitidos }}">
@@ -77,7 +77,7 @@
                 @endif
             </div>
         </div>
-        @if ($inscripcion_ultima->tipo_programa == 2)
+        @if ($inscripcion_ultima->inscripcion_tipo_programa == 2)
         <div class="col-sm-12 col-md-6 col-lg-6 col-xl-4">
             <div class="card card-body shadow-sm">
                 <span class="fs-1 text-gray-800 text-center py-2" style="font-weight: 700">
@@ -86,7 +86,7 @@
                 @if ($inscripcion_admision->fecha_admitidos <= today())
                     @if ($evaluacion)
                     <span class="fs-3 text-gray-800 text-center py-2">
-                        Puntaje: <span class="fw-bold fs-2">{{ number_format($evaluacion->p_investigacion) }}</span> pts.
+                        Puntaje: <span class="fw-bold fs-2">{{ number_format($evaluacion->puntaje_investigacion) }}</span> pts.
                     </span>
                     @else
                     <span class="fs-3 text-center py-2 d-flex align-items-center justify-content-center text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Los resultados se presentará el {{ $admision_fecha_admitidos }}">
@@ -101,7 +101,7 @@
             </div>
         </div>
         @endif
-        <div class="col-sm-12 col-md-6 col-lg-6 @if ($inscripcion_ultima->tipo_programa == 1) col-xl-6 @elseif ($inscripcion_ultima->tipo_programa == 2) col-xl-4 @endif">
+        <div class="col-sm-12 col-md-6 col-lg-6 @if ($inscripcion_ultima->inscripcion_tipo_programa == 1) col-xl-6 @elseif ($inscripcion_ultima->inscripcion_tipo_programa == 2) col-xl-4 @endif">
             <div class="card card-body shadow-sm">
                 <span class="fs-1 text-gray-800 text-center py-2" style="font-weight: 700">
                     Evaluación de Entrevista
@@ -109,7 +109,7 @@
                 @if ($inscripcion_admision->fecha_admitidos <= today())
                     @if ($evaluacion)
                     <span class="fs-3 text-gray-800 text-center py-2">
-                        Puntaje: <span class="fw-bold fs-2">{{ number_format($evaluacion->p_entrevista) }}</span> pts.
+                        Puntaje: <span class="fw-bold fs-2">{{ number_format($evaluacion->puntaje_entrevista) }}</span> pts.
                     </span>
                     @else
                     <span class="fs-3 text-center py-2 d-flex align-items-center justify-content-center text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Los resultados se presentará el {{ $admision_fecha_admitidos }}">
@@ -134,7 +134,7 @@
                 <h4 class="card-title mb-5 text-center">
                     Ficha de Inscripción
                 </h4>
-                <a target="_blank" href="{{ asset($inscripcion_ultima->inscripcion) }}" class="btn btn-info">
+                <a target="_blank" href="{{ asset($inscripcion_ultima->inscripcion_ficha_url) }}" class="btn btn-info">
                     Descargar
                 </a>
             </div>
@@ -187,15 +187,15 @@
                         </h4>
                         <div class="mt-5 text-center">
                             <span class="fs-5 fw-bold">
-                                ¿Cómo se enteró de este proceso de admisión? <i class="las la-info-circle fs-3 text-primary ms-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Puede seleccionar mas de una encuesta"></i>
+                                ¿Cómo se enteró de este proceso de admisión? <i class="las la-info-circle fs-3 text-primary ms-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Puede seleccionar mas de una opción"></i>
                             </span>
                         </div>
                         <div class="mt-5 mb-5 mx-5 px-5">
                             @foreach ($encuestas as $item)
                             <div class="form-check mb-2">
-                                <input class="form-check-input" type="checkbox" value="{{ $item->encuesta_id }}" id="{{ $item->encuesta_id }}" wire:model="encuesta" wire:key="{{ $item->encuesta_id }}">
-                                <label class="fs-5" for="{{ $item->encuesta_id }}" wire:key="{{ $item->encuesta_id }}">
-                                    {{ $item->descripcion }}
+                                <input class="form-check-input" type="checkbox" value="{{ $item->id_encuesta }}" id="{{ $item->id_encuesta }}" wire:model="encuesta" wire:key="{{ $item->id_encuesta }}">
+                                <label class="fs-5" for="{{ $item->id_encuesta }}" wire:key="{{ $item->id_encuesta }}">
+                                    {{ $item->encuesta }}
                                 </label>
                             </div>
                             @endforeach

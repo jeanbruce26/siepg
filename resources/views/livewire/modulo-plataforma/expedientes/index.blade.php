@@ -36,7 +36,7 @@
                                 <div>
                                     <select class="form-select" wire:model="filtro_proceso" id="filtro_proceso"  data-control="select2" data-placeholder="Seleccione" data-hide-search="true">
                                         $@foreach ($admisiones as $item)
-                                        <option value="{{ $item->admision->cod_admi }}">{{ $item->admision->admision }}</option>
+                                        <option value="{{ $item->id_programa_proceso }}">{{ $item->programa_proceso->admision->admision }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -77,7 +77,7 @@
             <div class="row mb-5 mb-xl-10">
                 <div class="col-md-12 mb-md-5 mb-xl-10">
                     {{-- alerta de fecha de actualizacion de expedientes --}}
-                    @if ($admision->fecha_fin < today())
+                    @if ($admision->admision_fecha_fin_inscripcion < today())
                         <div class="alert bg-light-danger border border-danger d-flex alig-items-center p-5 mb-5">
                             <span class="svg-icon svg-icon-2hx svg-icon-danger me-4">
                                 <i class="las la-exclamation-circle fs-2 text-danger"></i>
@@ -120,8 +120,8 @@
                                         <th>Expedientes</th>
                                         <th>Estado</th>
                                         <th>Fecha de Entrega</th>
-                                        @if ($inscripcion->admision_cod_admi == $admision->cod_admi)
-                                            @if ($admision->fecha_fin >= today())
+                                        @if ($inscripcion->programa_proceso->admision->id_admision == $admision->id_admision)
+                                            @if ($admision->admision_fecha_fin_inscripcion >= today())
                                             <th></th>
                                             @endif
                                         @endif
@@ -132,23 +132,23 @@
                                     @foreach ($expedientes_model as $item2)
                                         @if ($expedientes)
                                             @foreach ($expedientes as $item)
-                                                @if($item2->cod_exp == $item->expediente_cod_exp)
+                                                @if($item2->id_expediente_admision == $item->id_expediente_admision)
                                                 <tr>
                                                     <td>
-                                                        <a href="{{ asset($item->nom_exped) }}" target="_blank" class="text-gray-800">
-                                                            {{ $item->expediente->tipo_doc }}
+                                                        <a href="{{ asset($item->expediente_inscripcion_url) }}" target="_blank" class="text-gray-800">
+                                                            {{ $item->expediente_admision->expediente->expediente }}
                                                         </a>
                                                     </td>
                                                     <td>
                                                         <span class="badge badge-success">Entregado</span>
                                                     </td>
                                                     <td>
-                                                        {{ date('d/m/Y', strtotime($item->fecha_entre)) }}
+                                                        {{ date('d/m/Y', strtotime($item->expediente_inscripcion_fecha)) }}
                                                     </td>
-                                                    @if ($inscripcion->admision_cod_admi == $admision->cod_admi)
-                                                        @if ($admision->fecha_fin >= today())
+                                                    @if ($inscripcion->programa_proceso->admision->id_admision == $admision->id_admision)
+                                                        @if ($admision->admision_fecha_fin_inscripcion >= today())
                                                         <td class="text-end">
-                                                            <a href="#modal_expediente" wire:click="cargar_expediente_inscripcion({{ $item->cod_ex_insc }})" class="btn btn-light-primary btn-sm hover-scale" data-bs-toggle="modal" data-bs-target="#modal_expediente">
+                                                            <a href="#modal_expediente" wire:click="cargar_expediente_inscripcion({{ $item->id_expediente_inscripcion }})" class="btn btn-light-primary btn-sm hover-scale" data-bs-toggle="modal" data-bs-target="#modal_expediente">
                                                                 Editar
                                                             </a>
                                                         </td>
@@ -166,7 +166,8 @@
                                             @if ($valor == 0)
                                                 <tr>
                                                     <td class="text-gray-800">
-                                                        {{ $item2->tipo_doc }}
+                                                        @php $expediente = App\Models\Expediente::find($item2->id_expediente); @endphp
+                                                        {{ $expediente->expediente }}
                                                     </td>
                                                     <td>
                                                         <span class="badge badge-danger">No Entregado</span>
@@ -174,10 +175,10 @@
                                                     <td>
                                                         Sin fecha
                                                     </td>
-                                                    @if ($inscripcion->admision_cod_admi == $admision->cod_admi)
-                                                        @if ($admision->fecha_fin >= today())
+                                                    @if ($inscripcion->programa_proceso->admision->id_admision == $admision->id_admision)
+                                                        @if ($admision->admision_fecha_fin_inscripcion >= today())
                                                         <td class="text-end">
-                                                            <a href="#modal_expediente" wire:click="cargar_expediente({{ $item2->cod_exp }})" class="btn btn-light-success btn-sm hover-scale" data-bs-toggle="modal" data-bs-target="#modal_expediente">
+                                                            <a href="#modal_expediente" wire:click="cargar_expediente({{ $item2->id_expediente_admision }})" class="btn btn-light-success btn-sm hover-scale" data-bs-toggle="modal" data-bs-target="#modal_expediente">
                                                                 Agregar
                                                             </a>
                                                         </td>

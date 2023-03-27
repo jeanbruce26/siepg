@@ -25,6 +25,7 @@ class Admision extends Model
         'admision_fecha_resultados',
         'admision_fecha_resultados',
         'admision_fecha_matricula',
+        'admision_fecha_matricula_extemporanea',
     ];
 
     public $timestamps = false;

@@ -168,7 +168,7 @@
         <div class="cursor-pointer symbol symbol-30px symbol-md-40px"
             data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-attach="parent"
             data-kt-menu-placement="bottom-end">
-            @if ($trabajador->trabajador_perfil)
+            @if ($trabajador->trabajador_perfil_url)
             <img src="{{ asset('assets/media/avatars/blank.png') }}" alt="avatar" />
             {{-- <img src="{{ asset($usuario->usuario_estudiante_perfil) }}" alt="avatar" /> --}}
             @else
@@ -183,7 +183,7 @@
                 <div class="menu-content d-flex align-items-center px-3">
                     <!--begin::Avatar-->
                     <div class="symbol symbol-50px me-5">
-                        @if ($trabajador->trabajador_perfil)
+                        @if ($trabajador->trabajador_perfil_url)
                         <img src="{{ asset('assets/media/avatars/blank.png') }}" alt="avatar" />
                         {{-- <img src="{{ asset($usuario->usuario_estudiante_perfil) }}" alt="avatar" /> --}}
                         @else
@@ -194,13 +194,13 @@
                     <!--begin::Username-->
                     <div class="d-flex flex-column">
                         <div class="fw-bold d-flex align-items-center fs-5">
-                            {{ $trabajador->trabajador_nombres }} {{ $trabajador->trabajador_apellidos }}
+                            {{ $trabajador->trabajador_nombre_completo }}
                             {{-- <span class="badge badge-light-success fw-bold fs-8 px-2 py-1 ms-2">
                                 Pro
                             </span> --}}
                         </div>
                         <span class="fw-semibold text-muted text-hover-primary fs-7">
-                            {{ ucwords(strtolower($area_administrativa->area)) }}
+                            {{ ucwords(strtolower($area_administrativa->area_administrativo)) }}
                         </span>
                     </div>
                     <!--end::Username-->

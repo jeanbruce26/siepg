@@ -10,17 +10,21 @@ use App\Models\Discapacidad;
 use App\Models\Distrito;
 use App\Models\EstadoCivil;
 use App\Models\Expediente;
+use App\Models\ExpedienteAdmision;
 use App\Models\ExpedienteInscripcion;
 use App\Models\ExpedienteInscripcionSeguimiento;
 use App\Models\ExpedienteTipoSeguimiento;
+use App\Models\Genero;
 use App\Models\GradoAcademico;
 use App\Models\HistorialInscripcion;
 use App\Models\Inscripcion;
 use App\Models\InscripcionPago;
 use App\Models\Mencion;
+use App\Models\Modalidad;
 use App\Models\Pago;
 use App\Models\Persona;
 use App\Models\Programa;
+use App\Models\ProgramaProceso;
 use App\Models\Provincia;
 use App\Models\Sede;
 use App\Models\Subprograma;
@@ -42,11 +46,14 @@ class Registro extends Component
     public $paso = 0; // variable para el paso de la vista
     public $total_pasos = 3; // variable para el total de pasos de la vista
 
+    public $admision; // variable para el nombre de la admision
+
     public $id_inscripcion; // variable para el id de la inscripcion
-    public $id_persona, $documento, $paterno, $materno, $nombres, $fecha_nacimiento, $genero, $estado_civil, $grado_academico, $especialidad_carrera, $discapacidad, $direccion, $celular, $celular_opcional, $año_egreso, $email, $email_opcional, $universidad, $centro_trabajo, $pais; // variables para el formulario de registro de información personal
-    public $sede, $sede_array, $programa, $programa_nombre, $programa_array, $subprograma, $subprograma_array, $mencion, $mencion_mostrar, $mencion_array; // variables para el formulario de registro de información de programa
-    public $departamento_direccion, $departamento_direccion_array, $provincia_direccion, $provincia_direccion_array, $distrito_direccion, $distrito_direccion_array; // variables para el formulario de registro de información de dirección
-    public $departamento_nacimiento, $departamento_nacimiento_array, $provincia_nacimiento, $provincia_nacimiento_array, $distrito_nacimiento, $distrito_nacimiento_array; // variables para el formulario de registro de información de nacimiento
+    public $id_persona, $documento, $paterno, $materno, $nombres, $fecha_nacimiento, $genero, $estado_civil, $grado_academico, $especialidad_carrera, $discapacidad, $direccion, $celular, $celular_opcional, $año_egreso, $email, $email_opcional, $universidad, $centro_trabajo; // variables para el formulario de registro de información personal
+    public $programa_array, $programa; // variables para el formulario de registro de información de programa
+    public $modalidad_array, $modalidad; // variables para el formulario de registro de información de modalidad
+    public $ubigeo_direccion_array, $ubigeo_direccion, $pais_direccion; // variables para el formulario de registro de información de dirección
+    public $ubigeo_nacimiento_array, $ubigeo_nacimiento, $pais_nacimiento; // variables para el formulario de registro de información de nacimiento
 
     public $expediente, $expediente_array, $expediente_nombre, $id_expediente; // variable para el formulario de registro de expediente
     public $mostrar_tipo_expediente; // sirve para mostrar los expedientes segun el programa que elija el usuario
@@ -61,70 +68,38 @@ class Registro extends Component
     public function mount()
     {
         $this->paso = 1;
-        $this->documento = auth('inscripcion')->user()->dni;
-        $persona = Persona::where('num_doc', $this->documento)->first();
-        $this->sede_array = Sede::where('sede_estado', 1)->get();
+        $this->documento = auth('inscripcion')->user()->pago_documento;
+        $persona = Persona::where('numero_documento', $this->documento)->first();
+        $this->modalidad_array = Modalidad::where('modalidad_estado', 1)->get();
         $this->programa_array = Collect();
-        $this->subprograma_array = Collect();
-        $this->mencion_array = Collect();
+        $this->admision = Admision::where('admision_estado', 1)->first();
+        $this->ubigeo_direccion_array = Distrito::all();
+        $this->ubigeo_nacimiento_array = Distrito::all();
         if($persona)
         {
-            $this->id_persona = $persona->idpersona;
-            $this->paterno = $persona->apell_pater;
-            $this->materno = $persona->apell_mater;
-            $this->nombres = $persona->nombres;
-            $this->fecha_nacimiento = $persona->fecha_naci;
-            $this->genero = $persona->sexo;
-            $this->estado_civil = $persona->est_civil_cod_est;
+            $this->id_persona = $persona->id_persona;
+            $this->paterno = $persona->apellido_paterno;
+            $this->materno = $persona->apellido_materno;
+            $this->nombres = $persona->nombre;
+            $this->fecha_nacimiento = $persona->fecha_nacimiento;
+            $this->genero = $persona->id_genero;
+            $this->estado_civil = $persona->id_estado_civil;
             $this->grado_academico = $persona->id_grado_academico;
-            $this->especialidad_carrera = $persona->especialidad;
-            $this->discapacidad = $persona->discapacidad_cod_disc;
+            $this->especialidad_carrera = $persona->especialidad_carrera;
+            $this->discapacidad = $persona->id_discapacidad;
             $this->direccion = $persona->direccion;
-            $this->celular = $persona->celular1;
-            $this->celular_opcional = $persona->celular2;
+            $this->celular = $persona->celular;
+            $this->celular_opcional = $persona->celular_opcional;
             $this->año_egreso = $persona->año_egreso;
-            $this->email = $persona->email;
-            $this->email_opcional = $persona->email2;
-            $this->universidad = $persona->univer_cod_uni;
-            $this->centro_trabajo = $persona->centro_trab;
-            $this->pais = $persona->pais_extra;
-            $ubi_dire = UbigeoPersona::where('persona_idpersona',$persona->idpersona)->where('tipo_ubigeo_cod_tipo',1)->first();
-            $id_distrito_dire = $ubi_dire->id_distrito;
-            $pro = Distrito::where('id',$id_distrito_dire)->first();
-            $id_provincia_dire = $pro->id_provincia;
-            $dep = Provincia::where('id',$id_provincia_dire)->first();
-            $id_departamento_dire = $dep->id_departamento;
-            $ubi_naci = UbigeoPersona::where('persona_idpersona',$persona->idpersona)->where('tipo_ubigeo_cod_tipo',2)->first();
-            $id_distrito_naci = $ubi_naci->id_distrito;
-            $pro_naci = Distrito::where('id',$id_distrito_naci)->first();
-            $id_provincia_naci = $pro_naci->id_provincia;
-            $dep_naci = Provincia::where('id',$id_provincia_naci)->first();
-            $id_departamento_naci = $dep_naci->id_departamento;
-            $this->departamento_direccion_array = Departamento::all();
-            $this->departamento_direccion = $id_departamento_dire;
-            $this->provincia_direccion_array = collect();
-            $this->distrito_direccion_array = collect();
-            $this->provincia_direccion = $id_provincia_dire;
-            $this->provincia_direccion_array = Provincia::where('id_departamento', $id_departamento_dire)->get();
-            $this->distrito_direccion = $id_distrito_dire;
-            $this->distrito_direccion_array = Distrito::where('id_provincia', $id_provincia_dire)->get();
-            $this->departamento_nacimiento_array = Departamento::all();
-            $this->departamento_nacimiento = $id_departamento_naci;
-            $this->provincia_nacimiento_array = collect();
-            $this->distrito_nacimiento_array = collect();
-            $this->provincia_nacimiento = $id_provincia_naci;
-            $this->provincia_nacimiento_array = Provincia::where('id_departamento', $id_departamento_naci)->get();
-            $this->distrito_nacimiento = $id_distrito_naci;
-            $this->distrito_nacimiento_array = Distrito::where('id_provincia', $id_provincia_naci)->get();
+            $this->email = $persona->correo;
+            $this->email_opcional = $persona->correo_opcional;
+            $this->universidad = $persona->id_universidad;
+            $this->centro_trabajo = $persona->centro_trabajo;
+            $this->pais_direccion = $persona->pais_direccion;
+            $this->pais_nacimiento = $persona->pais_nacimiento;
+            $this->ubigeo_direccion = $persona->ubigeo_direccion;
+            $this->ubigeo_nacimiento = $persona->ubigeo_nacimiento;
             $this->modo = 'update';
-        }else
-        {
-            $this->departamento_direccion_array = Departamento::all();
-            $this->provincia_direccion_array = collect();
-            $this->distrito_direccion_array = collect();
-            $this->departamento_nacimiento_array = Departamento::all();
-            $this->provincia_nacimiento_array = collect();
-            $this->distrito_nacimiento_array = collect();
         }
     }
 
@@ -133,10 +108,8 @@ class Registro extends Component
         if($this->paso == 1)
         {
             $this->validateOnly($propertyName, [
-                'sede' => 'required|numeric',
+                'modalidad' => 'required|numeric',
                 'programa' => 'required|numeric',
-                'subprograma' => 'required|numeric',
-                'mencion' => 'required|numeric',
             ]);
         }
         elseif($this->paso == 2)
@@ -159,13 +132,10 @@ class Registro extends Component
                 'email_opcional' => 'nullable|email|max:50',
                 'universidad' => 'required|numeric',
                 'centro_trabajo' => 'required|max:50',
-                'pais' => 'nullable|max:50',
-                'departamento_direccion' => 'required|numeric',
-                'provincia_direccion' => 'required|numeric',
-                'distrito_direccion' => 'required|numeric',
-                'departamento_nacimiento' => 'required|numeric',
-                'provincia_nacimiento' => 'required|numeric',
-                'distrito_nacimiento' => 'required|numeric',
+                'pais_direccion' => 'nullable|max:50',
+                'ubigeo_direccion' => 'required|numeric',
+                'pais_nacimiento' => 'nullable|max:50',
+                'ubigeo_nacimiento' => 'required|numeric',
             ]);
         }
     }
@@ -194,155 +164,163 @@ class Registro extends Component
             $this->resetErrorBag();
             $this->resetValidation();
             $this->validate([
-                'sede' => 'required|numeric',
+                'modalidad' => 'required|numeric',
                 'programa' => 'required|numeric',
-                'subprograma' => 'required|numeric',
-                'mencion' => 'required|numeric',
             ]);
         }
         elseif($this->paso === 2)
         {
             $this->resetErrorBag();
             $this->resetValidation();
-            if($this->distrito_nacimiento == 1893)
+            if($this->ubigeo_direccion == 1893)
             {
                 $this->validate([
-                    'nombres' => 'required|string|max:50',
-                    'paterno' => 'required|string|max:50',
-                    'materno' => 'required|string|max:50',
+                    'paterno' => 'required|max:50',
+                    'materno' => 'required|max:50',
+                    'nombres' => 'required|max:50',
                     'fecha_nacimiento' => 'required|date',
-                    'genero' => 'required|string',
+                    'genero' => 'required|numeric',
                     'estado_civil' => 'required|numeric',
                     'grado_academico' => 'required|numeric',
-                    'especialidad_carrera' => 'required|string|max:50',
-                    'discapacidad' => 'nullable|numeric',
-                    'direccion' => 'required|string|max:50',
-                    'celular' => 'required|numeric',
-                    'celular_opcional' => 'nullable|numeric',
+                    'especialidad_carrera' => 'required|max:50',
+                    'discapacidad' => 'required|numeric',
+                    'direccion' => 'required|max:100',
+                    'celular' => 'required|max:9',
+                    'celular_opcional' => 'nullable|max:9',
                     'año_egreso' => 'required|numeric',
-                    'email' => 'required|email',
-                    'email_opcional' => 'nullable|email',
+                    'email' => 'required|email|max:50',
+                    'email_opcional' => 'nullable|email|max:50',
                     'universidad' => 'required|numeric',
-                    'centro_trabajo' => 'required|string|max:50',
-                    'pais' => 'required',
-                    'departamento_direccion' => 'required|numeric',
-                    'provincia_direccion' => 'required|numeric',
-                    'distrito_direccion' => 'required|numeric',
-                    'departamento_nacimiento' => 'required|numeric',
-                    'provincia_nacimiento' => 'required|numeric',
-                    'distrito_nacimiento' => 'required|numeric',
+                    'centro_trabajo' => 'required|max:50',
+                    'pais_direccion' => 'required|max:50',
+                    'ubigeo_direccion' => 'required|numeric',
+                    'pais_nacimiento' => 'nullable|max:50',
+                    'ubigeo_nacimiento' => 'required|numeric',
+                ]);
+            }
+            else if($this->ubigeo_nacimiento == 1893)
+            {
+                $this->validate([
+                    'paterno' => 'required|max:50',
+                    'materno' => 'required|max:50',
+                    'nombres' => 'required|max:50',
+                    'fecha_nacimiento' => 'required|date',
+                    'genero' => 'required|numeric',
+                    'estado_civil' => 'required|numeric',
+                    'grado_academico' => 'required|numeric',
+                    'especialidad_carrera' => 'required|max:50',
+                    'discapacidad' => 'required|numeric',
+                    'direccion' => 'required|max:100',
+                    'celular' => 'required|max:9',
+                    'celular_opcional' => 'nullable|max:9',
+                    'año_egreso' => 'required|numeric',
+                    'email' => 'required|email|max:50',
+                    'email_opcional' => 'nullable|email|max:50',
+                    'universidad' => 'required|numeric',
+                    'centro_trabajo' => 'required|max:50',
+                    'pais_direccion' => 'nullable|max:50',
+                    'ubigeo_direccion' => 'required|numeric',
+                    'pais_nacimiento' => 'required|max:50',
+                    'ubigeo_nacimiento' => 'required|numeric',
+                ]);
+            }
+            else if($this->ubigeo_nacimiento == 1893 && $this->ubigeo_direccion == 1893)
+            {
+                $this->validate([
+                    'paterno' => 'required|max:50',
+                    'materno' => 'required|max:50',
+                    'nombres' => 'required|max:50',
+                    'fecha_nacimiento' => 'required|date',
+                    'genero' => 'required|numeric',
+                    'estado_civil' => 'required|numeric',
+                    'grado_academico' => 'required|numeric',
+                    'especialidad_carrera' => 'required|max:50',
+                    'discapacidad' => 'required|numeric',
+                    'direccion' => 'required|max:100',
+                    'celular' => 'required|max:9',
+                    'celular_opcional' => 'nullable|max:9',
+                    'año_egreso' => 'required|numeric',
+                    'email' => 'required|email|max:50',
+                    'email_opcional' => 'nullable|email|max:50',
+                    'universidad' => 'required|numeric',
+                    'centro_trabajo' => 'required|max:50',
+                    'pais_direccion' => 'required|max:50',
+                    'ubigeo_direccion' => 'required|numeric',
+                    'pais_nacimiento' => 'required|max:50',
+                    'ubigeo_nacimiento' => 'required|numeric',
                 ]);
             }
             else
             {
                 $this->validate([
-                    'nombres' => 'required|string|max:255',
-                    'paterno' => 'required|string|max:255',
-                    'materno' => 'required|string|max:255',
+                    'paterno' => 'required|max:50',
+                    'materno' => 'required|max:50',
+                    'nombres' => 'required|max:50',
                     'fecha_nacimiento' => 'required|date',
-                    'genero' => 'required|string',
+                    'genero' => 'required|numeric',
                     'estado_civil' => 'required|numeric',
                     'grado_academico' => 'required|numeric',
-                    'especialidad_carrera' => 'required|string',
-                    'discapacidad' => 'nullable|numeric',
-                    'direccion' => 'required|string|max:255',
-                    'celular' => 'required|numeric',
-                    'celular_opcional' => 'nullable|numeric',
+                    'especialidad_carrera' => 'required|max:50',
+                    'discapacidad' => 'required|numeric',
+                    'direccion' => 'required|max:100',
+                    'celular' => 'required|max:9',
+                    'celular_opcional' => 'nullable|max:9',
                     'año_egreso' => 'required|numeric',
-                    'email' => 'required|email',
-                    'email_opcional' => 'nullable|email',
+                    'email' => 'required|email|max:50',
+                    'email_opcional' => 'nullable|email|max:50',
                     'universidad' => 'required|numeric',
-                    'centro_trabajo' => 'required|string|max:255',
-                    'pais' => 'nullable',
-                    'departamento_direccion' => 'required|numeric',
-                    'provincia_direccion' => 'required|numeric',
-                    'distrito_direccion' => 'required|numeric',
-                    'departamento_nacimiento' => 'required|numeric',
-                    'provincia_nacimiento' => 'required|numeric',
-                    'distrito_nacimiento' => 'required|numeric',
+                    'centro_trabajo' => 'required|max:50',
+                    'pais_direccion' => 'nullable|max:50',
+                    'ubigeo_direccion' => 'required|numeric',
+                    'pais_nacimiento' => 'nullable|max:50',
+                    'ubigeo_nacimiento' => 'required|numeric',
                 ]);
             }
         }
     }
 
-    public function updatedSede($sede)
+    public function updatedModalidad($modalidad)
     {
-        $this->programa_array = Programa::where('id_sede',$sede)->get();
-        $this->subprograma_array = collect();
-        $this->mencion_array = collect();
-        $this->programa = null;
-        $this->subprograma = null;
-        $this->mencion = null;
-        $this->expediente_array = null;
+        $this->programa_array = ProgramaProceso::join('mencion_plan', 'mencion_plan.id_mencion_plan', '=', 'programa_proceso.id_mencion_plan')
+                                        ->join('mencion', 'mencion.id_mencion', '=', 'mencion_plan.id_mencion')
+                                        ->join('subprograma', 'subprograma.id_subprograma', '=', 'mencion.id_subprograma')
+                                        ->join('programa', 'programa.id_programa', '=', 'subprograma.id_programa')
+                                        ->join('sede', 'sede.id_sede', '=', 'programa.id_sede')
+                                        ->where('programa_proceso.id_modalidad',$modalidad)
+                                        ->where('programa_proceso.id_admision',$this->admision->id_admision)
+                                        ->where('programa_proceso.programa_proceso_estado',1)
+                                        ->get();
     }
 
-    public function updatedPrograma($programa)
+    public function updatedPrograma($programa_proceso)
     {
-        $this->subprograma_array = Subprograma::where('id_programa',$programa)->where('estado',1)->get();
-        $this->programa_nombre = Programa::where('id_programa',$programa)->first();
-        if($this->programa_nombre){
-            $this->programa_nombre = ucfirst(strtolower($this->programa_nombre->descripcion_programa));
-        }else{
-            $this->programa_nombre = null;
-        }
-        $this->mencion_array = collect();
-        $this->subprograma = null;
-        $this->mencion = null;
-        $programa = Programa::where('id_programa',$programa)->first();
+        $programa = ProgramaProceso::join('mencion_plan', 'mencion_plan.id_mencion_plan', '=', 'programa_proceso.id_mencion_plan')
+                                    ->join('mencion', 'mencion.id_mencion', '=', 'mencion_plan.id_mencion')
+                                    ->join('subprograma', 'subprograma.id_subprograma', '=', 'mencion.id_subprograma')
+                                    ->join('programa', 'programa.id_programa', '=', 'subprograma.id_programa')
+                                    ->join('sede', 'sede.id_sede', '=', 'programa.id_sede')
+                                    ->where('programa_proceso.id_programa_proceso',$programa_proceso)
+                                    ->where('programa_proceso.id_admision',$this->admision->id_admision)
+                                    ->first();
+        // dd($this->programa_array);
         if($programa){
-            $programa = $programa->descripcion_programa;
+            $programa = $programa->programa;
             if($programa == 'MAESTRIA'){
                 $this->mostrar_tipo_expediente = 1;
             }else if($programa == 'DOCTORADO'){
                 $this->mostrar_tipo_expediente = 2;
             }
-            $this->expediente_array = Expediente::where('estado', 1)
+            $this->expediente_array = ExpedienteAdmision::join('expediente', 'expediente.id_expediente', '=', 'expediente_admision.id_expediente')
+                            ->where('expediente_admision.expediente_admision_estado', 1)
+                            ->where('expediente.expediente_estado', 1)
                             ->where(function($query){
-                                $query->where('expediente_tipo', 0)
-                                    ->orWhere('expediente_tipo', $this->mostrar_tipo_expediente);
+                                $query->where('expediente.expediente_tipo', 0)
+                                    ->orWhere('expediente.expediente_tipo', $this->mostrar_tipo_expediente);
                             })
                             ->get();
         }else{
             $this->expediente_array = null;
         }
-    }
-
-    public function updatedSubPrograma($subprograma)
-    {
-        $this->mencion_array = Mencion::where('id_subprograma',$subprograma)->where('mencion_estado',1)->get();
-        if($this->mencion_array->count() == 1){
-            $mencion = Mencion::where('id_subprograma',$subprograma)->first();
-            if($mencion->mencion == null){
-                $this->mencion = $mencion->id_mencion;
-                $this->mencion_mostrar = 1;
-            }else{
-                $this->mencion_mostrar = 0;
-            }
-        }
-    }
-
-    public function updatedDepartamentoDireccion($departamento_direccion)
-    {
-        $this->provincia_direccion_array = Provincia::where('id_departamento',$departamento_direccion)->get();
-        $this->distrito_direccion = null;
-        $this->distrito_direccion_array = collect();
-    }
-
-    public function updatedProvinciaDireccion($provincia_direccion)
-    {
-        $this->distrito_direccion_array = Distrito::where('id_provincia',$provincia_direccion)->get();
-    }
-
-    public function updatedDepartamentoNacimiento($departamento_nacimiento)
-    {
-        $this->provincia_nacimiento_array = Provincia::where('id_departamento',$departamento_nacimiento)->get();
-        $this->distrito_nacimiento = null;
-        $this->distrito_nacimiento_array = collect();
-    }
-
-    public function updatedProvinciaNacimiento($provincia_nacimiento)
-    {
-        $this->distrito_nacimiento_array = Distrito::where('id_provincia',$provincia_nacimiento)->get();
     }
 
     public function limpiar_modal_expediente()
@@ -353,12 +331,13 @@ class Registro extends Component
         $this->iteration++;
     }
 
-    public function cargar_modal_expediente(Expediente $expediente)
+    public function cargar_modal_expediente(ExpedienteAdmision $expediente)
     {
         $this->limpiar_modal_expediente();
-        $this->expediente_nombre = $expediente->tipo_doc;
-        $this->id_expediente = $expediente->cod_exp;
-        $expediente_inscripcion = ExpedienteInscripcion::where('id_inscripcion', $this->id_inscripcion)->where('expediente_cod_exp', $expediente->cod_exp)->first();
+        $this->expediente_nombre = $expediente->expediente->expediente;
+        $this->id_expediente = $expediente->id_expediente_admision;
+        $expediente_inscripcion = ExpedienteInscripcion::where('id_inscripcion', $this->id_inscripcion)->where('id_expediente_admision', $expediente->id_expediente_admision)->first();
+        // dd($expediente_inscripcion, $this->id_inscripcion, $expediente->expediente->id_expediente, $this->id_expediente, $this->expediente_nombre);
         if($expediente_inscripcion){
             $this->modo_expediente = 'edit';
         }else{
@@ -368,22 +347,22 @@ class Registro extends Component
 
     public function registrar_expediente()
     {
-        $expediente_model = Expediente::where('estado', 1)->where('cod_exp', $this->id_expediente)->first();
+        $expediente_model = ExpedienteAdmision::where('expediente_admision_estado', 1)->where('id_expediente_admision', $this->id_expediente)->first();
 
         // Validar si el expediente es requerido
-        if($expediente_model->requerido == 1 && $this->modo_expediente == 'create')
+        if($expediente_model->expediente->expediente_requerido == 1 && $this->modo_expediente == 'create')
         {
             $this->validate([
                 'expediente' => 'required|file|max:10240|mimetypes:application/octet-stream,application/pdf,application/x-pdf,application/x-download,application/force-download',
             ]);
         }
-        else if($expediente_model->requerido == 1 && $this->modo_expediente == 'edit')
+        else if($expediente_model->expediente->expediente_requerido == 1 && $this->modo_expediente == 'edit')
         {
             $this->validate([
                 'expediente' => 'nullable|file|max:10240|mimetypes:application/octet-stream,application/pdf,application/x-pdf,application/x-download,application/force-download',
             ]);
         }
-        else if($expediente_model->requerido != 1 && $this->modo_expediente == 'edit')
+        else if($expediente_model->expediente->expediente_requerido != 1 && $this->modo_expediente == 'edit')
         {
             $this->validate([
                 'expediente' => 'nullable|file|max:10240|mimetypes:application/octet-stream,application/pdf,application/x-pdf,application/x-download,application/force-download',
@@ -391,32 +370,34 @@ class Registro extends Component
         }
 
         // numero de documento
-        $numero_documento = auth('inscripcion')->user()->dni;
+        $numero_documento = auth('inscripcion')->user()->pago_documento;
 
         // obtenemos el año de admision
-        $admision = Admision::where('estado',1)->first()->admision;
+        $admision = Admision::where('admision_estado',1)->first()->admision;
 
         if($this->expediente != null)
         {
             $path = 'Posgrado/' . $admision. '/' . $numero_documento . '/' . 'Expedientes' . '/';
-            $filename = $expediente_model->exp_nombre.".pdf";
+            $filename = $expediente_model->expediente->expediente_nombre_file . ".pdf";
             $nombreDB = $path.$filename;
             $this->expediente->storeAs($path, $filename, 'files_publico');
 
             if($this->modo_expediente == 'create')
             {
                 $expediente_inscripcion = new ExpedienteInscripcion();
-                $expediente_inscripcion->nom_exped = $nombreDB;
-                $expediente_inscripcion->estado = 'enviado';
-                $expediente_inscripcion->expediente_cod_exp = $this->id_expediente;
+                $expediente_inscripcion->expediente_inscripcion_url = $nombreDB;
+                $expediente_inscripcion->expediente_inscripcion_estado = 1;
+                $expediente_inscripcion->expediente_inscripcion_fecha = now();
+                $expediente_inscripcion->id_expediente_admision = $this->id_expediente;
                 $expediente_inscripcion->id_inscripcion = $this->id_inscripcion;
                 $expediente_inscripcion->save();
             }
             else if($this->modo_expediente == 'edit')
             {
-                $expediente_inscripcion = ExpedienteInscripcion::where('id_inscripcion', $this->id_inscripcion)->where('expediente_cod_exp', $this->id_expediente)->first();
-                $expediente_inscripcion->nom_exped = $nombreDB;
-                $expediente_inscripcion->estado = 'enviado';
+                $expediente_inscripcion = ExpedienteInscripcion::where('id_inscripcion', $this->id_inscripcion)->where('id_expediente_admision', $this->id_expediente)->first();
+                $expediente_inscripcion->expediente_inscripcion_url = $nombreDB;
+                $expediente_inscripcion->expediente_inscripcion_estado = 1;
+                $expediente_inscripcion->expediente_inscripcion_fecha = now();
                 $expediente_inscripcion->save();
             }
 
@@ -457,12 +438,16 @@ class Registro extends Component
 
     public function registrar_inscripcion()
     {
+        // obtenemos el id de admision
+        $admision = Admision::where('admision_estado', 1)->first();
         // validamos si se subieron los expedientes completos
         // buscamos los expedientes que pertenecen al tipo de expediente que se esta mostrando
-        $expediente = Expediente::where('estado', 1)
+        $expediente = ExpedienteAdmision::join('expediente', 'expediente.id_expediente', 'expediente_admision.id_expediente')
+                            ->where('expediente.expediente_estado', 1)
+                            ->where('expediente_admision.id_admision', $admision->id_admision)
                             ->where(function($query){
-                                $query->where('expediente_tipo', 0)
-                                    ->orWhere('expediente_tipo', $this->mostrar_tipo_expediente);
+                                $query->where('expediente.expediente_tipo', 0)
+                                    ->orWhere('expediente.expediente_tipo', $this->mostrar_tipo_expediente);
                             })->count();
 
         // buscamos los expedientes que se han subido
@@ -502,13 +487,26 @@ class Registro extends Component
             return redirect()->back();
         }
 
-        // verificamos el pais de procedencia
-        if ($this->distrito_nacimiento){
-            if ($this->distrito_nacimiento == 1893){
-                $this->pais = $this->pais;
-            }else{
-                $this->pais = 'Perú';
-            }
+        // verificamos el pais de procedencia de la direccion
+        if ($this->ubigeo_direccion == 1893)
+        {
+            $this->pais_direccion = $this->pais_direccion;
+            $this->pais_direccion = str_replace(["á", "é", "í", "ó", "ú", "Á", "É", "Í", "Ó", "Ú"], ["a", "e", "i", "o", "u", "A", "E", "I", "O", "U"], $this->pais_direccion);
+        }
+        else
+        {
+            $this->pais_direccion = 'PERU';
+        }
+
+        // verificamos el pais de procedencia de nacimiento
+        if ($this->ubigeo_nacimiento == 1893)
+        {
+            $this->pais_nacimiento = $this->pais_nacimiento;
+            $this->pais_nacimiento = str_replace(["á", "é", "í", "ó", "ú", "Á", "É", "Í", "Ó", "Ú"], ["a", "e", "i", "o", "u", "A", "E", "I", "O", "U"], $this->pais_nacimiento);
+        }
+        else
+        {
+            $this->pais_nacimiento = 'PERU';
         }
 
         // reemplazar tildes por letras sin tildes en los campos de apellido paterno, apellido materno y nombres
@@ -519,128 +517,137 @@ class Registro extends Component
         $this->centro_trabajo = str_replace(["á", "é", "í", "ó", "ú", "Á", "É", "Í", "Ó", "Ú"], ["a", "e", "i", "o", "u", "A", "E", "I", "O", "U"], $this->centro_trabajo);
 
         // registro de formulario de inscripcion
-        $this->documento = auth('inscripcion')->user()->dni;
-        $persona = Persona::where('num_doc', $this->documento)->first();
+        $this->documento = auth('inscripcion')->user()->pago_documento;
+        $persona = Persona::where('numero_documento', $this->documento)->first();
         if($persona)
         {
             // actualizar datos de persona
-            $persona->apell_pater = strtoupper($this->paterno);
-            $persona->apell_mater = strtoupper($this->materno);
-            $persona->nombres = strtoupper($this->nombres);
+            $persona->apellido_paterno = strtoupper($this->paterno);
+            $persona->apellido_materno = strtoupper($this->materno);
+            $persona->nombre = strtoupper($this->nombres);
             $persona->nombre_completo = strtoupper($this->paterno.' '.$this->materno.' '.$this->nombres);
+            $persona->id_genero = $this->genero;
+            $persona->fecha_nacimiento = $this->fecha_nacimiento;
             $persona->direccion = strtoupper($this->direccion);
-            $persona->celular1 = $this->celular;
-            $persona->celular2 = $this->celular_opcional;
-            $persona->sexo = $this->genero;
-            $persona->fecha_naci = $this->fecha_nacimiento;
-            $persona->email = $this->email;
-            $persona->email2 = $this->email_opcional;
+            $persona->celular = $this->celular;
+            if($this->celular_opcional != null)
+            {
+                $persona->celular_opcional = $this->celular_opcional;
+            }
+            else
+            {
+                $persona->celular_opcional = null;
+            }
+            $persona->correo = $this->email;
+            if($this->email_opcional != null)
+            {
+                $persona->correo_opcional = $this->email_opcional;
+            }
+            else
+            {
+                $persona->correo_opcional = null;
+            }
             $persona->año_egreso = $this->año_egreso;
-            $persona->centro_trab = strtoupper($this->centro_trabajo);
-            $persona->discapacidad_cod_disc = $this->discapacidad;
-            $persona->est_civil_cod_est = $this->estado_civil;
-            $persona->univer_cod_uni = $this->universidad;
+            $persona->especialidad_carrera = strtoupper($this->especialidad_carrera);
+            $persona->centro_trabajo = strtoupper($this->centro_trabajo);
+            if(strlen($this->documento) == 8)
+            {
+                $persona->id_tipo_documento = 1;
+            }
+            else if(strlen($this->documento) == 9)
+            {
+                $persona->id_tipo_documento = 2;
+            }
+            $persona->id_discapacidad = $this->discapacidad;
+            $persona->id_estado_civil = $this->estado_civil;
             $persona->id_grado_academico = $this->grado_academico;
-            $persona->especialidad = strtoupper($this->especialidad_carrera);
-            $persona->pais_extra = strtoupper($this->pais);
+            $persona->id_universidad = $this->universidad;
+            $persona->ubigeo_direccion = $this->ubigeo_direccion;
+            $persona->pais_direccion = $this->pais_direccion;
+            $persona->ubigeo_nacimiento = $this->ubigeo_nacimiento;
+            $persona->pais_nacimiento = $this->pais_nacimiento;
             $persona->save();
 
             // asignar id de persona
-            $this->id_persona = $persona->idpersona;
-
-            // actualizar datos de ubigeo de direccion
-            $ubigeo_distrito = Distrito::select('ubigeo')->where('id',$this->distrito_direccion)->first();
-            $ubigeo_direccion = UbigeoPersona::where('tipo_ubigeo_cod_tipo',1)->where('persona_idpersona',$this->id_persona)->first();
-            $ubigeo_direccion->id_distrito = $this->distrito_direccion;
-            $ubigeo_direccion->ubigeo = $ubigeo_distrito->ubigeo;
-            $ubigeo_direccion->save();
-
-            // actualizar datos de ubigeo de nacimiento
-            $ubigeo_nacimiento = Distrito::select('ubigeo')->where('id',$this->distrito_nacimiento)->first();
-            $ubigeo_nacimiento_persona = UbigeoPersona::where('tipo_ubigeo_cod_tipo',2)->where('persona_idpersona',$this->id_persona)->first();
-            $ubigeo_nacimiento_persona->id_distrito = $this->distrito_nacimiento;
-            $ubigeo_nacimiento_persona->ubigeo = $ubigeo_nacimiento->ubigeo;
-            $ubigeo_nacimiento_persona->save();
+            $this->id_persona = $persona->id_persona;
         }
         else
         {
             // registrar datos de persona
             $persona = new Persona();
-            $persona->num_doc = $this->documento;
-            $persona->apell_pater = strtoupper($this->paterno);
-            $persona->apell_mater = strtoupper($this->materno);
-            $persona->nombres = strtoupper($this->nombres);
+            $persona->numero_documento = $this->documento;
+            $persona->apellido_paterno = strtoupper($this->paterno);
+            $persona->apellido_materno = strtoupper($this->materno);
+            $persona->nombre = strtoupper($this->nombres);
             $persona->nombre_completo = strtoupper($this->paterno.' '.$this->materno.' '.$this->nombres);
+            $persona->id_genero = $this->genero;
+            $persona->fecha_nacimiento = $this->fecha_nacimiento;
             $persona->direccion = strtoupper($this->direccion);
-            $persona->celular1 = $this->celular;
-            $persona->celular2 = $this->celular_opcional;
-            $persona->sexo = $this->genero;
-            $persona->fecha_naci = $this->fecha_nacimiento;
-            $persona->email = $this->email;
-            $persona->email2 = $this->email_opcional;
+            $persona->celular = $this->celular;
+            if($this->celular_opcional != null)
+            {
+                $persona->celular_opcional = $this->celular_opcional;
+            }
+            else
+            {
+                $persona->celular_opcional = null;
+            }
+            $persona->correo = $this->email;
+            if($this->email_opcional != null)
+            {
+                $persona->correo_opcional = $this->email_opcional;
+            }
+            else
+            {
+                $persona->correo_opcional = null;
+            }
             $persona->año_egreso = $this->año_egreso;
-            $persona->centro_trab = strtoupper($this->centro_trabajo);
-            $persona->discapacidad_cod_disc = $this->discapacidad;
-            $persona->est_civil_cod_est = $this->estado_civil;
-            $persona->univer_cod_uni = $this->universidad;
+            $persona->especialidad_carrera = strtoupper($this->especialidad_carrera);
+            $persona->centro_trabajo = strtoupper($this->centro_trabajo);
+            if(strlen($this->documento) == 8)
+            {
+                $persona->id_tipo_documento = 1;
+            }
+            else if(strlen($this->documento) == 9)
+            {
+                $persona->id_tipo_documento = 2;
+            }
+            $persona->id_discapacidad = $this->discapacidad;
+            $persona->id_estado_civil = $this->estado_civil;
             $persona->id_grado_academico = $this->grado_academico;
-            $persona->especialidad = strtoupper($this->especialidad_carrera);
-            $persona->pais_extra = strtoupper($this->pais);
+            $persona->id_universidad = $this->universidad;
+            $persona->ubigeo_direccion = $this->ubigeo_direccion;
+            $persona->pais_direccion = $this->pais_direccion;
+            $persona->ubigeo_nacimiento = $this->ubigeo_nacimiento;
+            $persona->pais_nacimiento = $this->pais_nacimiento;
             $persona->save();
 
             // asignar id de persona
-            $this->id_persona = $persona->idpersona;
-
-            // registrar datos de ubigeo de direccion
-            $ubigeo_distrito = Distrito::select('ubigeo')->where('id',$this->distrito_direccion)->first();
-            $ubigeo_persona_distrito = new UbigeoPersona();
-            $ubigeo_persona_distrito->id_distrito = $this->distrito_direccion;
-            $ubigeo_persona_distrito->tipo_ubigeo_cod_tipo = 1;
-            $ubigeo_persona_distrito->persona_idpersona = $this->id_persona;
-            $ubigeo_persona_distrito->ubigeo = $ubigeo_distrito->ubigeo;
-            $ubigeo_persona_distrito->save();
-
-            // registrar datos de ubigeo de nacimiento
-            $ubigeo_nacimiento = Distrito::select('ubigeo')->where('id',$this->distrito_nacimiento)->first();
-            $ubigeo_persona_nacimiento = new UbigeoPersona();
-            $ubigeo_persona_nacimiento->id_distrito = $this->distrito_nacimiento;
-            $ubigeo_persona_nacimiento->tipo_ubigeo_cod_tipo = 2;
-            $ubigeo_persona_nacimiento->persona_idpersona = $this->id_persona;
-            $ubigeo_persona_nacimiento->ubigeo = $ubigeo_nacimiento->ubigeo;
-            $ubigeo_persona_nacimiento->save();
+            $this->id_persona = $persona->id_persona;
         }
 
         // Actulaizacion de datos de la inscripcion
         $inscripcion = Inscripcion::find($this->id_inscripcion);
-        $inscripcion->persona_idpersona = $this->id_persona;
-        $inscripcion->id_mencion = $this->mencion;
-        $inscripcion->fecha_inscripcion = now();
-        $inscripcion->tipo_programa = $this->mostrar_tipo_expediente;
+        $inscripcion->inscripcion_fecha = now();
+        $inscripcion->id_persona = $this->id_persona;
+        $inscripcion->id_programa_proceso = $this->programa;
+        $inscripcion->inscripcion_tipo_programa = $this->mostrar_tipo_expediente;
         $inscripcion->save();
-
-        // Registro del historial de inscripcion
-        $historial_inscripcion = new HistorialInscripcion();
-        $historial_inscripcion->persona_documento = $this->documento;
-        $historial_inscripcion->id_inscripcion = $this->id_inscripcion;
-        $historial_inscripcion->admision = Admision::where('estado',1)->first()->admision;
-        $historial_inscripcion->programa = $this->mencion;
-        $historial_inscripcion->historial_inscripcion_fecha = now();
-        $historial_inscripcion->admitido = 0;
-        $historial_inscripcion->save();
 
         // Sirve para asignar el seguimiento del expediente
         if($this->check_expediente == true)
         {
-            $exp_ins = ExpedienteInscripcion::join('expediente','ex_insc.expediente_cod_exp','=','expediente.cod_exp')
-                                                ->where('ex_insc.id_inscripcion',$this->id_inscripcion)
+            $exp_ins = ExpedienteInscripcion::join('expediente_admision','expediente_inscripcion.id_expediente_admsiion','=','expediente_admision.id_expediente_admsiion')
+                                                ->join('expediente','expediente_admision.id_expediente','=','expediente.id_expediente')
+                                                ->where('expediente_inscripcion.id_inscripcion',$this->id_inscripcion)
                                                 ->where(function($query){
                                                     $query->where('expediente.expediente_tipo', 0)
                                                         ->orWhere('expediente.expediente_tipo', $this->mostrar_tipo_expediente);
                                                 })
                                                 ->get();
-            $exp_seg = ExpedienteTipoSeguimiento::join('expediente','expediente_tipo_seguimiento.cod_exp','=','expediente.cod_exp')
-                                                ->where('expediente_tipo_seguimiento_estado', 1)
-                                                ->where('tipo_seguimiento', 1)
+            $exp_seg = ExpedienteTipoSeguimiento::join('expediente','expediente_tipo_seguimiento.id_expediente','=','expediente.id_expediente')
+                                                ->where('expediente_tipo_seguimiento.expediente_tipo_seguimiento_estado', 1)
+                                                ->where('expediente_tipo_seguimiento.tipo_seguimiento', 1)
                                                 ->where(function($query){
                                                     $query->where('expediente.expediente_tipo', 0)
                                                         ->orWhere('expediente.expediente_tipo', $this->mostrar_tipo_expediente);
@@ -651,9 +658,9 @@ class Registro extends Component
             {
                 foreach ($exp_seg as $seg)
                 {
-                    if($exp->expediente_cod_exp == $seg->cod_exp)
+                    if($exp->id_expediente == $seg->id_expediente)
                     {
-                        array_push($array_seguimiento, $exp->cod_ex_insc);
+                        array_push($array_seguimiento, $exp->id_expediente_inscripcion);
                     }
                 }
             }
@@ -661,7 +668,7 @@ class Registro extends Component
             foreach ($array_seguimiento as $item)
             {
                 $seguimiento_exp_ins = new ExpedienteInscripcionSeguimiento();
-                $seguimiento_exp_ins->cod_ex_insc = $item;
+                $seguimiento_exp_ins->id_expediente_inscripcion = $item;
                 $seguimiento_exp_ins->tipo_seguimiento = 1;
                 $seguimiento_exp_ins->expediente_inscripcion_seguimiento_estado = 1;
                 $seguimiento_exp_ins->save();
@@ -673,22 +680,23 @@ class Registro extends Component
         // delete storage file and database
         foreach($expediente_inscripcion as $exp)
         {
-            $expediente = Expediente::where('cod_exp', $exp->expediente_cod_exp)
+            $expediente = ExpedienteAdmision::join('expediente','expediente_admision.id_expediente','=','expediente.id_expediente')
+                                        ->where('expediente_admision.id_expediente_admision', $exp->id_expediente_admision)
                                         ->where(function($query){
-                                            $query->where('expediente_tipo', 0)
-                                                ->orWhere('expediente_tipo', $this->mostrar_tipo_expediente);
+                                            $query->where('expediente.expediente_tipo', 0)
+                                            ->orWhere('expediente.expediente_tipo', $this->mostrar_tipo_expediente);
                                         })
                                         ->first();
             if($expediente === null)
             {
                 $exp->delete();
-                File::delete($exp->nom_exped);
+                File::delete($exp->expediente_inscripcion_url);
             }
         }
 
         // Actualizar eestado del pago
-        $pago = Pago::find(auth('inscripcion')->user()->pago_id);
-        $pago->estado = 2;
+        $pago = Pago::find(auth('inscripcion')->user()->id_pago);
+        $pago->pago_estado = 2;
         $pago->save();
 
         // Registrar datos de usuario del estudiante
@@ -698,7 +706,7 @@ class Registro extends Component
             $usuario_estudiante = new UsuarioEstudiante();
             $usuario_estudiante->usuario_estudiante = $this->documento;
             $usuario_estudiante->usuario_estudiante_password = $inscripcion->inscripcion_codigo;
-            $usuario_estudiante->usuario_estudiante_created_at = now();
+            $usuario_estudiante->usuario_estudiante_creacion = now();
             $usuario_estudiante->usuario_estudiante_estado = 1;
             $usuario_estudiante->save();
         }
@@ -712,106 +720,23 @@ class Registro extends Component
         // alerta de cuenta regresiva
         $this->dispatchBrowserEvent('alerta_final_registro');
 
-        // // cerrar sesion
-        // auth('inscripcion')->logout();
-
         // redireccionar a la pagina final
         return redirect()->route('inscripcion.pdf-email', ['id' => $this->id_inscripcion]);
-
-        // // Registrar datos del pago de la inscripcion en el pdf y enviar al correo
-        // $this->ficha_inscripcion_email($this->id_inscripcion);
     }
-
-    // public function ficha_inscripcion_email($id)
-    // {
-    //     $inscripcion = Inscripcion::where('id_inscripcion',$id)->first(); // Datos de la inscripcion
-
-    //     $inscripcion_pago = InscripcionPago::where('inscripcion_id',$id)->first();
-    //     $monto_pago = $inscripcion_pago->pago->monto; // Monto del pago
-
-    //     $admision = Admision::where('estado',1)->first()->admision; // Proceso de admision actual
-    //     $admision_year = Admision::where('estado',1)->first()->admision_year; // Año del proceso de admision actual
-
-    //     $fecha_actual = date('h:i:s a d/m/Y', strtotime($inscripcion->fecha_inscripcion)); // Fecha de inscripcion
-    //     $fecha_actual2 = date('d-m-Y', strtotime($inscripcion->fecha_inscripcion)); // Fecha de inscripcion
-    //     $mencion = Mencion::where('id_mencion',$inscripcion->id_mencion)->first(); // Mencion de la inscripcion
-    //     $inscripcion_codigo = Inscripcion::where('id_inscripcion',$id)->first()->inscripcion_codigo;
-    //     $tiempo = 6;
-    //     $valor = '+ '.intval($tiempo).' month';
-    //     setlocale( LC_ALL,"es_ES@euro","es_ES","esp" );
-    //     $final = strftime('%d de %B del %Y', strtotime($fecha_actual2.$valor));
-    //     $persona = Persona::where('idpersona', $inscripcion->persona_idpersona)->first();
-    //     $expediente_inscripcion = ExpedienteInscripcion::where('id_inscripcion',$id)->get();
-    //     $expediente = Expediente::where('estado', 1)
-    //                 ->where(function($query) use ($inscripcion){
-    //                     $query->where('expediente_tipo', 0)
-    //                         ->orWhere('expediente_tipo', $inscripcion->tipo_programa);
-    //                 })
-    //                 ->get();
-
-    //     // verificamos si tiene expediente en seguimientos
-    //     $seguimiento_count = ExpedienteInscripcionSeguimiento::join('ex_insc', 'ex_insc.cod_ex_insc', '=', 'expediente_inscripcion_seguimiento.cod_ex_insc')
-    //                                                     ->where('ex_insc.id_inscripcion', $id)
-    //                                                     ->where('expediente_inscripcion_seguimiento.tipo_seguimiento', 1)
-    //                                                     ->where('expediente_inscripcion_seguimiento.expediente_inscripcion_seguimiento_estado', 1)
-    //                                                     ->count();
-
-    //     $data = [
-    //         'persona' => $persona,
-    //         'fecha_actual' => $fecha_actual,
-    //         'mencion' => $mencion,
-    //         'admision' => $admision,
-    //         'inscripcion_pago' => $inscripcion_pago,
-    //         'inscripcion' => $inscripcion,
-    //         'inscripcion_codigo' => $inscripcion_codigo,
-    //         'monto_pago' => $monto_pago,
-    //         'final' => $final,
-    //         'expediente_inscripcion' => $expediente_inscripcion,
-    //         'expediente' => $expediente,
-    //         'seguimiento_count' => $seguimiento_count
-    //     ];
-
-    //     $nombre_pdf = 'ficha-inscripcion-' . Str::slug($persona->nombre_completo, '-') . '.pdf';
-    //     $path = 'files/' . $this->documento . '/' . $admision_year . '/' . 'expedientes/';
-    //     $pdf = PDF::loadView('modulo-inscripcion.ficha-inscripcion', $data)->save(public_path($path.$nombre_pdf));
-    //     $pdf2 = PDF::loadView('modulo-inscripcion.ficha-inscripcion', $data);
-    //     $pdf_email = $pdf2->output();
-
-    //     $inscripcion = Inscripcion::find($id);
-    //     $inscripcion->inscripcion = $path . $nombre_pdf;
-    //     $inscripcion->save();
-
-    //     // enviar ficha de inscripcion por correo
-    //     $detalle = [
-    //         'nombre' => $persona->nombre_completo,
-    //         'admision' => $admision,
-    //         'email' => $persona->email,
-    //     ];
-
-    //     Mail::send('modulo-inscripcion.email', $detalle, function ($message) use ($detalle, $pdf_email, $nombre_pdf) {
-    //         $message->to($detalle['email'])
-    //                 ->subject('Ficha de Inscripción')
-    //                 ->attachData($pdf_email, $nombre_pdf, ['mime' => 'application/pdf']);
-    //     });
-
-    //     // cerrar sesion
-    //     auth('inscripcion')->logout();
-
-    //     // redireccionar a la pagina final
-    //     return redirect()->route('inscripcion.gracias', ['id' => $id]);
-    // }
 
     public function render()
     {
-        $estado_civil_array = EstadoCivil::all();
-        $tipo_discapacidad_array = Discapacidad::all();
-        $universidad_array = Universidad::all();
-        $grado_academico_array = GradoAcademico::all();
+        $estado_civil_array = EstadoCivil::where('estado_civil_estado', 1)->get();
+        $tipo_discapacidad_array = Discapacidad::where('discapacidad_estado', 1)->get();
+        $universidad_array = Universidad::where('universidad_estado', 1)->get();
+        $grado_academico_array = GradoAcademico::where('grado_academico_estado', 1)->get();
+        $genero_array = Genero::where('genero_estado', 1)->get();
         return view('livewire.modulo-inscripcion.registro', [
             'estado_civil_array' => $estado_civil_array,
             'tipo_discapacidad_array' => $tipo_discapacidad_array,
             'universidad_array' => $universidad_array,
             'grado_academico_array' => $grado_academico_array,
+            'genero_array' => $genero_array
         ]);
     }
 }

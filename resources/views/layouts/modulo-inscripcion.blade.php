@@ -3,7 +3,7 @@
 <head>
     <base href=""/>
     <title>
-        {{ config('app.name', 'Registro - Escuela de Posgrado - UNU') }}
+        Registro - Escuela de Posgrado - UNU
     </title>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
