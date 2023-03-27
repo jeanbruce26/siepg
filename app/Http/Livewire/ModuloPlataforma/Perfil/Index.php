@@ -18,12 +18,12 @@ class Index extends Component
 
     public function mount()
     {
-        $this->usuario = UsuarioEstudiante::find(auth('plataforma')->user()->usuario_estudiante_id);
+        $this->usuario = UsuarioEstudiante::find(auth('plataforma')->user()->id_usuario_estudiante);
     }
 
     public function refresh()
     {
-        $this->usuario = UsuarioEstudiante::find(auth('plataforma')->user()->usuario_estudiante_id);
+        $this->usuario = UsuarioEstudiante::find(auth('plataforma')->user()->id_usuario_estudiante);
     }
 
     public function updated($propertyName)
@@ -52,22 +52,26 @@ class Index extends Component
 
     public function actualizar_perfil()
     {
+        // validamos los campos del formulario
         $this->validate([
             'perfil' => 'nullable|image|max:2048', // validacion para la imagen
             'password' => 'nullable|min:8|max:20', // validacion para la contraseña
             'confirm_password' => 'nullable|same:password', // validacion para la confirmacion de la contraseña
         ]);
 
-        $usuario = UsuarioEstudiante::find(auth('plataforma')->user()->usuario_estudiante_id);
+        // buscar usuario logueado para actualizar el perfil
+        $usuario = UsuarioEstudiante::find(auth('plataforma')->user()->id_usuario_estudiante);
 
         if($this->perfil)
         {
-            $admision = Admision::where('estado', 1)->first()->admision;
+            $persona = Persona::where('numero_documento', auth('plataforma')->user()->usuario_estudiante)->first();
+            $inscripcion = $persona->inscripcion()->orderBy('id_inscripcion', 'desc')->first();
+            $admision = $inscripcion->programa_proceso->first()->admision->admision;
             $path = 'Posgrado/' . $admision . '/' . auth('plataforma')->user()->usuario_estudiante . '/' . 'Perfil/';
-            $filename = 'foto-perfil' . $this->perfil->getClientOriginalExtension();
+            $filename = 'foto-perfil.' . $this->perfil->getClientOriginalExtension();
             $nombre_db = $path.$filename;
             $this->perfil->storeAs($path, $filename, 'files_publico');
-            $usuario->usuario_estudiante_perfil = $nombre_db;
+            $usuario->usuario_estudiante_perfil_url = $nombre_db;
         }
         if($this->password)
         {
@@ -116,7 +120,7 @@ class Index extends Component
     public function render()
     {
         $documento = auth('plataforma')->user()->usuario_estudiante; // documento del usuario logueado
-        $persona = Persona::where('num_doc', $documento)->first(); // persona logueada
+        $persona = Persona::where('numero_documento', $documento)->first(); // persona logueada
         if(!$persona)
         {
             abort(404);

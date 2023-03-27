@@ -70,8 +70,8 @@ class Login extends Component
                             elseif($administrativo->area_administrativo->id_area_administrativo == 1)
                             {
                                 // si es de la area de contabilidad lo redireccionamos a la vista de contabilidad
-                                // auth('admin')->login($usuario);
-                                // return redirect()->route('contable.index');
+                                auth('usuario')->login($usuario);
+                                return redirect()->route('contable.inicio');
                             }
                             else
                             {

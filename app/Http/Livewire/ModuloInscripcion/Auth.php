@@ -129,7 +129,7 @@ class Auth extends Component
         {
             $admision = Admision::where('admision_estado', 1)->first()->admision;
             $path = 'Posgrado/' . $admision . '/' . $this->documento_identidad . '/' . 'Voucher/';
-            $filename = 'voucher-pago' . $this->voucher->getClientOriginalExtension();
+            $filename = 'voucher-pago.' . $this->voucher->getClientOriginalExtension();
             $nombre_db = $path.$filename;
             $data = $this->voucher;
             $data->storeAs($path, $filename, 'files_publico');
@@ -186,7 +186,7 @@ class Auth extends Component
         ]);
 
         // obtener fecha de fin de admision para sumarle 2 dias y cerrar el proceso de admision
-        $admision = Admision::where('admision_etado',1)->first();
+        $admision = Admision::where('admision_estado',1)->first();
         $valor = '+ 1 day';
         $fecha_final_admision = date('Y-m-d',strtotime($admision->admision_fecha_fin_inscripcion.$valor));
 
@@ -209,7 +209,7 @@ class Auth extends Component
             session()->flash('message', 'Credenciales incorrectas');
             return redirect()->back();
         }else{
-            if($pago->estado == 1){
+            if($pago->pago_estado == 1){
                 // iniciar sesion con el pago ingresado
                 auth('inscripcion')->login($pago);
 
@@ -217,7 +217,7 @@ class Auth extends Component
                 return redirect()->route('inscripcion.registro');
             }else{
                 // emitir evento para mostrar mensaje de alerta
-                session()->flash('message', 'Inspección de pago ya realizada');
+                session()->flash('message', 'Inscripcion de pago ya realizada');
                 return redirect()->back();
             }
         }

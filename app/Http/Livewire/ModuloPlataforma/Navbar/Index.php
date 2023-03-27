@@ -20,9 +20,9 @@ class Index extends Component
     public function render()
     {
         $usuario = auth('plataforma')->user(); // obtenemos el usuario autenticado en la plataforma
-        $persona = Persona::where('num_doc', $usuario->usuario_estudiante)->first(); // obtenemos la persona del usuario autenticado en la plataforma
+        $persona = Persona::where('numero_documento', $usuario->usuario_estudiante)->first(); // obtenemos la persona del usuario autenticado en la plataforma
         $inscripcion_persona = $persona->inscripcion()->orderBy('id_inscripcion', 'desc')->first(); // obtenemos la inscripcion de la persona del usuario autenticado en la plataforma
-        $admision = $inscripcion_persona->admision()->first(); // obtenemos la admision de la inscripcion de la persona del usuario autenticado en la plataforma
+        $admision = $inscripcion_persona->programa_proceso()->first()->admision; // obtenemos la admision de la inscripcion de la persona del usuario autenticado en la plataforma
         return view('livewire.modulo-plataforma.navbar.index', [
             'usuario' => $usuario,
             'persona' => $persona,

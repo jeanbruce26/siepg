@@ -41,8 +41,8 @@ class Inscripcion extends Model
     }
 
     // Programa Proceso
-    public function programa_proeso(){
-        return $this->hasMany(ProgramaProceso::class, 'id_programa_proceso','id_programa_proceso');
+    public function programa_proceso(){
+        return $this->belongsTo(ProgramaProceso::class, 'id_programa_proceso','id_programa_proceso');
     }
 
     // Inscripcion Expediente

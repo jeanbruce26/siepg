@@ -17,8 +17,8 @@
                 <div class="d-flex flex-wrap flex-sm-nowrap mb-5">
                     <div class="me-10 mb-5">
                         <div class="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative">
-                            @if ($usuario->usuario_estudiante_perfil)
-                            <img src="{{ asset($usuario->usuario_estudiante_perfil) }}" alt="perfil">
+                            @if ($usuario->usuario_estudiante_perfil_url)
+                            <img src="{{ asset($usuario->usuario_estudiante_perfil_url) }}" alt="perfil">
                             @else
                             <img src="{{ asset('assets/media/avatars/blank.png') }}" alt="perfil">
                             @endif
@@ -31,7 +31,7 @@
                             <div class="d-flex flex-column">
                                 <div class="d-flex align-items-center mb-5">
                                     <a class="text-gray-900 fw-bold me-4" style="font-size: 2.3rem">
-                                        {{ ucwords(strtolower($persona->nombres)) }} {{ ucwords(strtolower($persona->apell_pater)) }} {{ ucwords(strtolower($persona->apell_mater)) }}
+                                        {{ ucwords(strtolower($persona->nombre)) }} {{ ucwords(strtolower($persona->apellido_paterno)) }} {{ ucwords(strtolower($persona->apellido_materno)) }}
                                     </a>
                                     <span class="svg-icon svg-icon-1 svg-icon-primary">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" viewBox="0 0 24 24">
@@ -45,7 +45,7 @@
                                         Documento de Identidad:
                                     </span>
                                     <span class="d-flex align-items-center text-gray-800 ms-2 fw-bold">
-                                        {{ $persona->num_doc }}
+                                        {{ $persona->numero_documento }}
                                     </span>
                                 </div>
                                 <div class="d-flex flex-wrap fw-semibold fs-4 mb-2">
@@ -53,7 +53,7 @@
                                         Proceso de Admisión:
                                     </span>
                                     <span class="d-flex align-items-center text-gray-800 ms-2 fw-bold">
-                                        {{ ucwords(strtolower($inscripcion->admision->admision)) }}
+                                        {{ ucwords(strtolower($inscripcion->programa_proceso->admision->admision)) }}
                                     </span>
                                 </div>
                                 <div class="d-flex flex-wrap fw-semibold fs-4 mb-2">
@@ -61,10 +61,10 @@
                                         Programa:
                                     </span>
                                     <span class="d-flex align-items-center text-gray-800 ms-2 fw-bold">
-                                        @if ($inscripcion->mencion->mencion == null)
-                                            {{ ucwords(strtolower($inscripcion->mencion->subprograma->programa->descripcion_programa)) }} en {{ ucwords(strtolower($inscripcion->mencion->subprograma->subprograma)) }}
+                                        @if ($inscripcion->programa_proceso->mencion_plan->mencion->mencion == null)
+                                            {{ ucwords(strtolower($inscripcion->programa_proceso->mencion_plan->mencion->subprograma->programa->programa)) }} en {{ ucwords(strtolower($inscripcion->programa_proceso->mencion_plan->mencion->subprograma->subprograma)) }}
                                         @else
-                                            {{ ucwords(strtolower($inscripcion->mencion->subprograma->programa->descripcion_programa)) }} en {{ ucwords(strtolower($inscripcion->mencion->subprograma->subprograma)) }} con mención en {{ ucwords(strtolower($inscripcion->mencion->mencion)) }}
+                                            {{ ucwords(strtolower($inscripcion->programa_proceso->mencion_plan->mencion->subprograma->programa->programa)) }} en {{ ucwords(strtolower($inscripcion->programa_proceso->mencion_plan->mencion->subprograma->subprograma)) }} con mención en {{ ucwords(strtolower($inscripcion->programa_proceso->mencion_plan->mencion->mencion)) }}
                                         @endif
                                     </span>
                                 </div>
@@ -98,7 +98,7 @@
                                     </label>
                                     <br>
                                     <div class="image-input image-input-outline" data-kt-image-input="true" style="background-image: url({{ asset('assets/media/avatars/blank.png') }})">
-                                        <div class="image-input-wrapper w-125px h-125px" style="background-image: url(@if($perfil) {{ asset($perfil->temporaryUrl()) }} @elseif($usuario->usuario_estudiante_perfil) {{ asset($usuario->usuario_estudiante_perfil) }} @else {{ asset('assets/media/avatars/blank.png') }} @endif)"></div>
+                                        <div class="image-input-wrapper w-125px h-125px" style="background-image: url(@if($perfil) {{ asset($perfil->temporaryUrl()) }} @elseif($usuario->usuario_estudiante_perfil_url) {{ asset($usuario->usuario_estudiante_perfil_url) }} @else {{ asset('assets/media/avatars/blank.png') }} @endif)"></div>
                                         <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" aria-label="Change avatar" data-bs-original-title="Change avatar" data-kt-initialized="1">
                                             <i class="bi bi-pencil-fill fs-7"></i>
                                             <input type="file" wire:model="perfil" accept=".png, .jpg, .jpeg" id="upload{{ $iteration }}">
@@ -140,8 +140,13 @@
                             <button type="button" class="btn btn-light" data-bs-dismiss="modal" wire:click="limpiar_perfil">
                                 Cerrar
                             </button>
-                            <button type="button" wire:click="actualizar_perfil" class="btn btn-primary">
-                                Actualizar Datos
+                            <button type="button" wire:click="actualizar_perfil" class="btn btn-primary" style="width: 160px" wire:loading.attr="disabled">
+                                <div wire:loading.remove wire:target="actualizar_perfil">
+                                    Actualizar Datos
+                                </div>
+                                <div wire:loading wire:target="actualizar_perfil">
+                                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                </div>
                             </button>
                         </div>
                     </div>

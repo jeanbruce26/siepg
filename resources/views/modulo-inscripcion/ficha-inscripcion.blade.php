@@ -580,7 +580,7 @@
                 <tr style="">
                     <th align="left" style="text-align: left">
                         <div class="titulo6">
-                            Sede: {{ $mencion->subprograma->programa->sede->sede }}
+                            Sede: {{ $programa->mencion_plan->mencion->subprograma->programa->sede->sede }}
                         </div>
                     </th>
                     <th align="right" style="text-align: right">
@@ -610,19 +610,18 @@
                         <tr>
                             <th><div class="titulo3">Programa</div></th>
                             <th><div class="mx-2">:</div></th>
-                            <th style="text-align: initial;">{{ $mencion->subprograma->programa->descripcion_programa }}</th>
+                            <th style="text-align: initial;">{{ ucwords(strtolower($programa->mencion_plan->mencion->subprograma->programa->programa)) }}</th>
                         </tr>
                         <tr>
-                            <th><div class="titulo3">{{ Str::ucfirst($mencion->subprograma->programa->descripcion_programa)  }}</div></th>
+                            <th><div class="titulo3">{{ ucwords(strtolower($programa->mencion_plan->mencion->subprograma->programa->programa))  }}</div></th>
                             <th><div class="mx-2">:</div></th>
-                            <th style="text-align: initial;">{{ $mencion->subprograma->subprograma }}</th>
+                            <th style="text-align: initial;">{{ ucwords(strtolower($programa->mencion_plan->mencion->subprograma->subprograma )) }}</th>
                         </tr>
                         <tr>
-                            @if ($mencion->mencion == null)
-                            @else
+                            @if ($programa->mencion_plan->mencion->mencion)
                             <th><div class="titulo3">Mención</div></th>
                             <th><div class="mx-2">:</div></th>
-                            <th style="text-align: initial;">{{ $mencion->mencion }}</th>
+                            <th style="text-align: initial;">{{ $programa->mencion_plan->mencion->mencion }}</th>
                             @endif
                         </tr>
                     </table>
@@ -643,32 +642,32 @@
                                         <tr>
                                             <th><div class="titulo3">Documento de identidad</div></th>
                                             <th><div class="mx-2">:</div></th>
-                                            <th style="text-align: initial;">{{ $persona->num_doc }}</th>
+                                            <th style="text-align: initial;">{{ $persona->numero_documento }}</th>
                                         </tr>
                                         <tr>
                                             <th><div class="titulo3">Apellidos</div></th>
                                             <th><div class="mx-2">:</div></th>
-                                            <th style="text-align: initial;">{{ $persona->apell_pater }} {{ $persona->apell_mater }}</th>
+                                            <th style="text-align: initial;">{{ $persona->apellido_paterno }} {{ $persona->apellido_materno }}</th>
                                         </tr>
                                         <tr>
                                             <th><div class="titulo3">Nombres</div></th>
                                             <th><div class="mx-2">:</div></th>
-                                            <th style="text-align: initial;">{{ $persona->nombres }}</th>
+                                            <th style="text-align: initial;">{{ $persona->nombre }}</th>
                                         </tr>
                                         <tr>
                                             <th><div class="titulo3">Fecha de nacimiento</div></th>
                                             <th><div class="mx-2">:</div></th>
-                                            <th style="text-align: initial;">{{date('d/m/Y', strtotime($persona->fecha_naci)) }}</th>
+                                            <th style="text-align: initial;">{{date('d/m/Y', strtotime($persona->fecha_nacimiento)) }}</th>
                                         </tr>
                                         <tr>
                                             <th><div class="titulo3">Sexo</div></th>
                                             <th><div class="mx-2">:</div></th>
-                                            <th style="text-align: initial;">{{ $persona->sexo }}</th>
+                                            <th style="text-align: initial;">{{ $persona->genero->genero }}</th>
                                         </tr>
                                         <tr>
                                             <th><div class="titulo3">Estado Civil</div></th>
                                             <th><div class="mx-2">:</div></th>
-                                            <th style="text-align: initial;">{{ $persona->estado_civil->est_civil }}</th>
+                                            <th style="text-align: initial;">{{ $persona->estado_civil->estado_civil }}</th>
                                         </tr>
                                     </table>
                                 </div>
@@ -690,18 +689,18 @@
                                         <tr>
                                             <th><div class="titulo3">Correo electronico</div></th>
                                             <th><div class="mx-2">:</div></th>
-                                            <th style="text-align: initial;">{{ $persona->email }}</th>
+                                            <th style="text-align: initial;">{{ $persona->correo }}</th>
                                         </tr>
                                         <tr>
                                             <th><div class="titulo3">Celular</div></th>
                                             <th><div class="mx-2">:</div></th>
-                                            <th style="text-align: initial;">{{ $persona->celular1 }}</th>
+                                            <th style="text-align: initial;">{{ $persona->celular }}</th>
                                         </tr>
-                                        @if ($persona->celular2)
+                                        @if ($persona->celular_opcional)
                                         <tr>
                                             <th><div class="titulo3">Celular opcional</div></th>
                                             <th><div class="mx-2">:</div></th>
-                                            <th style="text-align: initial;">{{ $persona->celular2 }}</th>
+                                            <th style="text-align: initial;">{{ $persona->celular_opcional }}</th>
                                         </tr>
                                         @endif
                                     </table>
@@ -725,27 +724,23 @@
                     @endphp
                     @foreach ($expediente as $item2)
                         @foreach ($expediente_inscripcion as $item)
-                            @if($item2->cod_exp == $item->expediente_cod_exp)
+                            @if($item2->id_expediente_admision == $item->id_expediente_admision)
                             <tr>
-                                <th style="white-space: initial;"><div class="titulo3">{{ $item2->tipo_doc }}</div></th>
+                                <th style="white-space: initial;"><div class="titulo3">{{ $item2->expediente }}</div></th>
                                 <th><div class="mx-2">:</div></th>
-                                <th style="text-align: initial;">Entregado ({{date('d/m/Y', strtotime($item->fecha_entre))}})</th>
+                                <th style="text-align: initial;">Entregado ({{date('d/m/Y', strtotime($item->expediente_inscripcion_fecha))}})</th>
                             </tr>
-                            @php
-                                $value=1;
-                            @endphp
+                            @php $value = 1; @endphp
                             @endif
                         @endforeach
                         @if($value != 1)
                             <tr>
-                                <th style="white-space: initial;"><div class="titulo3">{{ $item2->tipo_doc }}</div></th>
+                                <th style="white-space: initial;"><div class="titulo3">{{ $item2->expediente }}</div></th>
                                 <th><div class="mx-2">:</div></th>
                                 <th style="text-align: initial; color: red;">No Entregado</th>
                             </tr>
                         @endif
-                        @php
-                            $value=0;
-                        @endphp
+                        @php $value = 0; @endphp
                     @endforeach
                 </table>
             </div>
@@ -761,7 +756,7 @@
                     <tr>
                         <th><div class="titulo3">Concepto de pago</div></th>
                         <th><div class="mx-2">:</div></th>
-                        <th style="text-align: initial;">{{ $inscripcion_pago->concepto_pago->concepto }}</th>
+                        <th style="text-align: initial;">{{ $inscripcion->concepto_pago->concepto_pago }}</th>
                     </tr>
                 </table>
             </div>
@@ -772,14 +767,14 @@
                     <th class="tabla4" align="center"><div class="titulo4 tabla">Importe</div></th>
                 </tr>
                 <tr>
-                    <th class="tabla4"><div class="titulo5" style="text-align: center">{{date('d/m/Y', strtotime($inscripcion_pago->pago->fecha_pago)) }}</div></th>
-                    <th class="tabla4"><div class="titulo5" style="text-align: center">{{ $inscripcion_pago->pago->nro_operacion }}</div></th>
-                    <th class="tabla4"><div class="titulo5" style="text-align: center">{{ $inscripcion_pago->pago->monto }}</div></th>
+                    <th class="tabla4"><div class="titulo5" style="text-align: center">{{date('d/m/Y', strtotime($pago->pago_fecha)) }}</div></th>
+                    <th class="tabla4"><div class="titulo5" style="text-align: center">{{ $pago->pago_operacion }}</div></th>
+                    <th class="tabla4"><div class="titulo5" style="text-align: center">{{ $pago->pago_monto }}</div></th>
                 </tr>
                 <tr>
                     <th><div class="titulo3"></div></th>
                     <th class="tabla4"><div class="titulo3" style="text-align: center">Total</div></th>
-                    <th class="tabla4"><div class="titulo3" style="text-align: center">S/. {{number_format($monto_pago,2)}}</div></th>
+                    <th class="tabla4"><div class="titulo3" style="text-align: center">S/. {{number_format($pago_monto,2)}}</div></th>
                 </tr>
             </table>
         </div>
@@ -793,7 +788,7 @@
             <thead>
                 <tr>
                     <th class="" style="text-align: initial;">
-                        Para consultar los resultados de la evaluación de expediente y entrevista personal, deberá acceder al siguiente enlace utilizando sus credenciales de usuario y contraseña que se les entregará a continuación:
+                        Para consultar los resultados de la evaluación de expediente, entrevista personal y subida de expedientes deberá acceder al siguiente enlace utilizando sus credenciales de usuario y contraseña que se les entregará a continuación:
                     </th>
                 </tr>
             </thead>
@@ -803,7 +798,7 @@
             <thead>
                 <tr>
                     <th class="tabla4" style="background-color: rgb(200, 229, 255)"><div class="titulo3" style="font-size: small;">Usuario</div></th>
-                    <th class="tabla4" style="text-align: initial; font-size: small;">{{ $persona->num_doc }}</th>
+                    <th class="tabla4" style="text-align: initial; font-size: small;">{{ $persona->numero_documento }}</th>
                 </tr>
                 <tr>
                     <th class="tabla4" style="background-color: rgb(200, 229, 255)"><div class="titulo3" style="font-size: small;">Contraseña</div></th>

@@ -17,7 +17,7 @@ class Gracias extends Component
 
     public function descargar_pdf(Inscripcion $inscripcion)
     {
-        return response()->download($inscripcion->inscripcion);
+        return response()->download($inscripcion->inscripcion_ficha_url);
     }
 
     public function render()

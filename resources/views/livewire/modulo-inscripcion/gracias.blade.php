@@ -102,6 +102,6 @@
     </div> --}}
     {{-- pdf --}}
     <div class="my-5">
-        <embed src="{{ asset($inscripcion->inscripcion) }}" class="rounded" type="application/pdf" width="100%" height="700px" />
+        <embed src="{{ asset($inscripcion->inscripcion_ficha_url) }}" class="rounded" type="application/pdf" width="100%" height="700px" />
     </div>
 </div>

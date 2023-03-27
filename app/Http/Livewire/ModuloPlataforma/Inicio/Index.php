@@ -7,6 +7,7 @@ use App\Models\Encuesta;
 use App\Models\EncuestaDetalle;
 use App\Models\Inscripcion;
 use App\Models\Persona;
+use App\Models\ProgramaProceso;
 use Carbon\Carbon;
 
 use Livewire\Component;
@@ -58,6 +59,7 @@ class Index extends Component
             ]);
             return;
         }
+        // validamos el campo otros
         if($this->mostra_otros == true)
         {
             if($this->encuesta_otro == null || $this->encuesta_otro == '')
@@ -78,7 +80,7 @@ class Index extends Component
         {
             $encuesta = new EncuestaDetalle();
             $encuesta->documento = auth('plataforma')->user()->usuario_estudiante;
-            $encuesta->encuesta_id = $value;
+            $encuesta->id_encuesta = $value;
             if($value == 8)
             {
                 $encuesta->otros = $this->encuesta_otro;
@@ -87,7 +89,8 @@ class Index extends Component
             {
                 $encuesta->otros = null;
             }
-            $encuesta->created_at = now();
+            $encuesta->encuesta_detalle_estado = 1;
+            $encuesta->encuesta_detalle_creacion = now();
             $encuesta->save();
         }
 
@@ -111,20 +114,19 @@ class Index extends Component
 
     public function render()
     {
-        $admision = Admision::where('estado',1)->first(); // admision activa
-        $admision_fecha_admitidos = Carbon::parse(Admision::where('estado',1)->first()->fecha_admitidos); //fecha de admision de admitidos
+        $admision = Admision::where('admision_estado',1)->first(); // admision activa
+        $admision_fecha_admitidos = Carbon::parse(Admision::where('admision_estado',1)->first()->admision_fecha_resultados); //fecha de admision de admitidos
         $admision_fecha_admitidos->locale('es'); // seteamos el idioma
         $admision_fecha_admitidos = $admision_fecha_admitidos->isoFormat('LL'); // formateamos la fecha
 
         $documento = auth('plataforma')->user()->usuario_estudiante; // documento del usuario logueado
-        $id_persona = Persona::where('num_doc', $documento)->first()->idpersona; // id de la persona logueada
-        $persona = Persona::where('idpersona', $id_persona)->first(); // persona logueada
-        $inscripcion_ultima = Inscripcion::where('persona_idpersona', $id_persona)->orderBy('id_inscripcion', 'desc')->first(); // inscripcion del usuario logueado
-        $inscripcion_admision = Admision::where('cod_admi', $inscripcion_ultima->admision_cod_admi)->first(); // admision de la inscripcion del usuario logueado
+        $persona = Persona::where('numero_documento', $documento)->first(); // persona logueada
+        $inscripcion_ultima = Inscripcion::where('id_persona', $persona->id_persona)->orderBy('id_inscripcion', 'desc')->first(); // inscripcion del usuario logueado
+        $inscripcion_admision = ProgramaProceso::where('id_programa_proceso', $inscripcion_ultima->id_programa_proceso)->first(); // admision de la inscripcion del usuario logueado
         $evaluacion = $inscripcion_ultima->evaluacion; // evaluacion de la inscripcion del usuario logueado
         if($evaluacion)
         {
-            $admitido = $persona->admitidos->where('evaluacion_id', $evaluacion->evaluacion_id)->first(); // admitido de la inscripcion del usuario logueado
+            $admitido = $persona->admitido->where('id_evaluacion', $evaluacion->id_evaluacion)->first(); // admitido de la inscripcion del usuario logueado
         }
         else
         {

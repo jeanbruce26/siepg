@@ -17,6 +17,7 @@ class EncuestaDetalle extends Model
         'id_encuesta',
         'otros',
         'encuesta_detalle_estado',
+        'encuesta_detalle_creacion',
     ];
 
     public $timestamps = false;

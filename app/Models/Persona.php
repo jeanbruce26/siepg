@@ -47,6 +47,12 @@ class Persona extends Model
         'id_tipo_documento','id_tipo_documento');
     }
 
+    // Genero
+    public function genero(){
+        return $this->belongsTo(Genero::class,
+        'id_genero','id_genero');
+    }
+
     // Discapacidad
     public function discapacidad(){
         return $this->belongsTo(Discapacidad::class,
@@ -70,13 +76,13 @@ class Persona extends Model
         return $this->belongsTo(Universidad::class,
         'id_universidad','id_universidad');
     }
-    
+
     // Ubigeo Direccion
     public function ubigeo_direccion(){
         return $this->belongsTo(Distrito::class,
         'id_distrito','ubigeo_direccion');
     }
-    
+
     // Ubigeo Nacimiento
     public function ubigeo_nacimiento(){
         return $this->belongsTo(Distrito::class,
@@ -90,8 +96,8 @@ class Persona extends Model
     }
 
     // Admitidos
-    public function admitidos(){
-        return $this->hasMany(Admitidos::class,
+    public function admitido(){
+        return $this->hasMany(Admitido::class,
         'id_persona','id_persona');
     }
 }

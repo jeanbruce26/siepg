@@ -39,7 +39,7 @@ class Evaluacion extends Model
     }
 
     // Admitidos
-    public function admitidos(){
+    public function admitido(){
         return $this->hasMany(Admitido::class, 'id_evaluacion', 'id_evaluacion');
     }
 
