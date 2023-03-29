@@ -5,10 +5,10 @@
 @endsection
 @section('scripts')
 <script>
-    window.addEventListener('modal_pagos', event => {
-        $('#modal_pagos').modal(event.detail.action);
+    window.addEventListener('modal_pago_plataforma', event => {
+        $('#modal_pago_plataforma').modal(event.detail.action);
     })
-    window.addEventListener('alerta-pagos', event => {
+    window.addEventListener('alerta_pago_plataforma', event => {
         Swal.fire({
             title: event.detail.title,
             text: event.detail.text,

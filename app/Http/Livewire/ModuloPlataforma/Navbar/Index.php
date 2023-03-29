@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\ModuloPlataforma\Navbar;
 
+use App\Models\Pago;
 use App\Models\Persona;
 use Livewire\Component;
 

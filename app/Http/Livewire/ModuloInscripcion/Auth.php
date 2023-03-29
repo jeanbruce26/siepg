@@ -136,6 +136,7 @@ class Auth extends Component
             $pago->pago_voucher_url = $nombre_db;
         }
         $pago->id_canal_pago = $this->canal_pago;
+        $pago->id_concepto_pago = 1;
         $pago->save();
 
         //  obtener el ultimo codigo de inscripcion
@@ -155,7 +156,7 @@ class Auth extends Component
         // crear la inscripcion
         $inscripcion = new Inscripcion();
         $inscripcion->inscripcion_codigo = $codigo_inscripcion;
-        $inscripcion->id_concepto_pago = 1;
+        $inscripcion->inscripcion_estado = 1;
         $inscripcion->id_pago = $pago->id_pago;
         $inscripcion->save();
 

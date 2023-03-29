@@ -21,7 +21,8 @@ class Pago extends Authenticatable
         'pago_estado',
         'pago_verificacion',
         'pago_voucher_url',
-        'id_canal_pago'
+        'id_canal_pago',
+        'id_concepto_pago'
     ];
 
     public $timestamps = false;
@@ -31,8 +32,18 @@ class Pago extends Authenticatable
         'id_canal_pago','id_canal_pago');
     }
 
+    public function concepto_pago(){
+        return $this->belongsTo(ConceptoPago::class,
+        'id_concepto_pago','id_concepto_pago');
+    }
+
     public function inscripcion(){
         return $this->hasMany(Inscripcion::class,
+        'id_pago','id_pago');
+    }
+
+    public function pago_observacion(){
+        return $this->hasMany(PagoObservacion::class,
         'id_pago','id_pago');
     }
 }
