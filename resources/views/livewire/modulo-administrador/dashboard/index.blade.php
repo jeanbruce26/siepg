@@ -51,23 +51,42 @@
 		<!--begin::Content container-->
 		<div id="kt_app_content_container" class="app-container container-fluid pt-5">
 			<!--begin::Row-->
-            <div class="row gy-5 g-xl-10">
+            <div class="row g-5">
                 <!--begin::Col-->
                 <div class="col-sm-6 col-xl-4 mb-xl-10">
                     <!--begin::Card widget 2-->
-                    <div class="card shadow-sm">
+                    <div class="card hover-elevate-up shadow-sm parent-hover text-dark">
                         <!--begin::Body-->
                         <div class="card-body d-flex align-items-start flex-column">
                             <!--begin::Icon-->
                             <div class="m-0">
-                                <span class="card-title mb-1 fs-1 fw-bold"">Ingreso Total</span>
+                                <span class="card-title mb-1 fs-1 fw-bold parent-hover-primary">Ingreso Total</span>
                             </div>
                             <!--end::Icon-->
                             <!--begin::Section-->
-                            <div class="d-flex flex-column mt-5">
+                            <div class="d-flex mt-5">
                                 <!--begin::Number-->
-                                <span class="fs-1 fw-bold">S/. {{ number_format($ingreso_total, 2, ',', ' ') }}</span>
+                                @php
+                                    use function App\Helpers\money_format;
+                                @endphp
+                                <span class="fs-1 fw-bold">
+                                    <div>S/. {{ number_format($ingreso_total, 2, ',', ' ') }}</div>
+                                </span>
                                 <!--end::Number-->
+                                <!--begin::Cantidad de ingresos por día-->
+                                <span class="badge badge-light-success fs-base ms-7" data-bs-toggle="tooltip" data-bs-placement="right" title="Ingresos por día">                                
+                                    <div class="d-flex align-items-center">
+                                        <!--begin::Svg Icon-->
+                                        <span class="svg-icon svg-icon-muted svg-icon-3 text-success"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <rect opacity="0.5" x="13" y="6" width="13" height="2" rx="1" transform="rotate(90 13 6)" fill="currentColor"/>
+                                            <path d="M12.5657 8.56569L16.75 12.75C17.1642 13.1642 17.8358 13.1642 18.25 12.75C18.6642 12.3358 18.6642 11.6642 18.25 11.25L12.7071 5.70711C12.3166 5.31658 11.6834 5.31658 11.2929 5.70711L5.75 11.25C5.33579 11.6642 5.33579 12.3358 5.75 12.75C6.16421 13.1642 6.83579 13.1642 7.25 12.75L11.4343 8.56569C11.7467 8.25327 12.2533 8.25327 12.5657 8.56569Z" fill="currentColor"/>
+                                            </svg>
+                                        </span>
+                                        <!--end::Svg Icon-->
+                                        <div class="fs-7 fw-bold me-1">S/. {{  number_format($ingreso_por_dia_total, 2, ',', ' ') }}</div>
+                                    </div>
+                                </span>
+                                <!--end::Cantidad de ingresos por día-->
                             </div>
                             <!--end::Section-->
                         </div>
@@ -79,19 +98,35 @@
                 <!--begin::Col-->
                 <div class="col-sm-6 col-xl-4 mb-xl-10">
                     <!--begin::Card widget 2-->
-                    <div class="card shadow-sm">
+                    <div class="card hover-elevate-up shadow-sm parent-hover text-dark">
                         <!--begin::Body-->
                         <div class="card-body d-flex align-items-start flex-column">
                             <!--begin::Icon-->
                             <div class="m-0">
-                                <span class="card-title mb-1 fs-1 fw-bold">Ingreso de Inscripciones</span>
+                                <span class="card-title mb-1 fs-1 fw-bold parent-hover-primary">Ingreso de Inscripciones</span>
                             </div>
                             <!--end::Icon-->
                             <!--begin::Section-->
-                            <div class="d-flex flex-column mt-5">
+                            <div class="d-flex mt-5">
                                 <!--begin::Number-->
-                                <span class="fs-1 fw-bold">S/. {{ number_format($ingreso_inscripcion, 2, ',', ' ') }}</span>
+                                <span class="fs-1 fw-bold">
+                                    <div>S/. {{ number_format($ingreso_inscripcion, 2, ',', ' ') }}</div>
+                                </span>
                                 <!--end::Number-->
+                                <!--begin::Cantidad de ingresos por día-->
+                                <span class="badge badge-light-success fs-base ms-7" data-bs-toggle="tooltip" data-bs-placement="right" title="Ingresos por día">                                
+                                    <div class="d-flex align-items-center">
+                                        <!--begin::Svg Icon-->
+                                        <span class="svg-icon svg-icon-muted svg-icon-3 text-success"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <rect opacity="0.5" x="13" y="6" width="13" height="2" rx="1" transform="rotate(90 13 6)" fill="currentColor"/>
+                                            <path d="M12.5657 8.56569L16.75 12.75C17.1642 13.1642 17.8358 13.1642 18.25 12.75C18.6642 12.3358 18.6642 11.6642 18.25 11.25L12.7071 5.70711C12.3166 5.31658 11.6834 5.31658 11.2929 5.70711L5.75 11.25C5.33579 11.6642 5.33579 12.3358 5.75 12.75C6.16421 13.1642 6.83579 13.1642 7.25 12.75L11.4343 8.56569C11.7467 8.25327 12.2533 8.25327 12.5657 8.56569Z" fill="currentColor"/>
+                                            </svg>
+                                        </span>
+                                        <!--end::Svg Icon-->
+                                        <div class="fs-7 fw-bold me-1">S/. {{  number_format($ingreso_por_dia_inscripcion, 2, ',', ' ') }}</div>
+                                    </div>
+                                </span>
+                                <!--end::Cantidad de ingresos por día-->
                             </div>
                             <!--end::Section-->
                         </div>
@@ -103,19 +138,37 @@
                 <!--begin::Col-->
                 <div class="col-sm-6 col-xl-4 mb-xl-10">
                     <!--begin::Card widget 2-->
-                    <div class="card shadow-sm">
+                    <div class="card hover-elevate-up shadow-sm parent-hover text-dark">
                         <!--begin::Body-->
                         <div class="card-body d-flex align-items-start flex-column">
                             <!--begin::Icon-->
                             <div class="m-0">
-                                <span class="card-title mb-1 fs-1 fw-bold"">Ingreso de Constancia</span>
+                                <span class="card-title mb-1 fs-1 fw-bold parent-hover-primary">Ingreso de Constancia</span>
                             </div>
                             <!--end::Icon-->
                             <!--begin::Section-->
-                            <div class="d-flex flex-column mt-5">
+                            <div class="d-flex mt-5">
                                 <!--begin::Number-->
-                                <span class="fs-1 fw-bold"">S/. {{ number_format($ingreso_constancia, 2, ',', ' ') }}</span>
+                                <span class="fs-1 fw-bold">
+                                    <div>S/. {{ number_format($ingreso_constancia, 2, ',', ' ') }}</div>
+                                </span>
                                 <!--end::Number-->
+                                @if($ingreso_por_dia_constancia > 0)
+                                    <!--begin::Cantidad de ingresos por día-->
+                                <span class="badge badge-light-success fs-base ms-5" data-bs-toggle="tooltip" data-bs-placement="right" title="Ingresos por día">                                
+                                    <div class="d-flex align-items-center">
+                                        <!--begin::Svg Icon-->
+                                        <span class="svg-icon svg-icon-muted svg-icon-3 text-success"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <rect opacity="0.5" x="13" y="6" width="13" height="2" rx="1" transform="rotate(90 13 6)" fill="currentColor"/>
+                                            <path d="M12.5657 8.56569L16.75 12.75C17.1642 13.1642 17.8358 13.1642 18.25 12.75C18.6642 12.3358 18.6642 11.6642 18.25 11.25L12.7071 5.70711C12.3166 5.31658 11.6834 5.31658 11.2929 5.70711L5.75 11.25C5.33579 11.6642 5.33579 12.3358 5.75 12.75C6.16421 13.1642 6.83579 13.1642 7.25 12.75L11.4343 8.56569C11.7467 8.25327 12.2533 8.25327 12.5657 8.56569Z" fill="currentColor"/>
+                                            </svg>
+                                        </span>
+                                        <!--end::Svg Icon-->
+                                        <div class="fs-7 fw-bold me-1">S/. {{  number_format($ingreso_por_dia_constancia, 2, ',', ' ') }}</div>
+                                    </div>
+                                </span>
+                                <!--end::Cantidad de ingresos por día-->
+                                @endif
                             </div>
                             <!--end::Section-->
                         </div>
@@ -126,99 +179,128 @@
                 <!--end::Col-->
             </div>
         
-            <div class="card card-maestria shadow-sm">
-                <div class="card-header">
-                    <h5 class="card-title mb-0 ms-2 text-uppercase">Reporte de Inscritos por Programa en Mastría</h5>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover table-rounded border gy-4 gs-4 mb-0">
-                            <thead class="bg-light-success">
-                                <tr align="center" class="fw-bold">
-                                    <th scope="col" class="col-md-1">NRO</th>
-                                    <th scope="col" class="col-md-9">PROGRAMA</th>
-                                    <th scope="col" class="col-md-2">CANTIDAD</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($programas_maestria as $item)
-                                <tr>
-                                    <td align="center" class="fw-bold fs-5">{{ $loop->iteration }}</td>
-                                    <td style="white-space: initial" class="fs-5 text-uppercase">
-                                        @if ($item->mencion === null)
-                                            {{ ucwords(strtolower($item->programa))  }} en {{ ucwords(strtolower($item->subprograma)) }}
-                                        @else
-                                            Mención en {{ ucwords(strtolower($item->mencion)) }}
-                                        @endif
-                                    </td>
-                                    <td align="center" class="fs-5">{{ $item->cantidad_mencion }}</td>
-                                </tr>
-                                @endforeach
-                                @if ($programas_maestria->count() === 0)
-                                    <tr>
-                                        <td colspan="3" class="text-center text-muted">
-                                            No hay inscritos en los programas de maestría
+            <div class="row g-5 card-maestria">
+                <div class="col-md-6">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-light-success">
+                            <h3 class="card-title fw-bold">
+                                Reporte de Inscritos por Programa de Maestría del Proceso de {{ ucwords(strtolower($admision->admision)) }}
+                            </h3>
+                        </div>
+                        <div class="card-body mb-0">
+                            <div class="table-responsive" wire:loading.class="table-loading" wire:target="aplicar_filtro">
+                                <div class="table-loading-message">
+                                    Cargando...
+                                </div>
+                                <table class="table table-hover table-rounded table-row-bordered border mb-0 gy-4 gs-4" wire:loading.class="opacity-25" wire:target="aplicar_filtro">
+                                    <thead>
+                                        <tr class="fw-bold fs-5 text-gray-800 border-bottom-2 border-gray-200">
+                                            <th class="text-center col-md-1">#</th>
+                                            <th>Programa</th>
+                                            <th class="col-md-2 text-center">Cantidad</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse ($programas_maestria as $item)
+                                            <tr>
+                                                <td class="text-center">
+                                                    {{ $loop->iteration }}
+                                                </td>
+                                                <td>
+                                                    @if ($item->mencion)
+                                                        Mencion en {{ ucwords(strtolower($item->mencion)) }}
+                                                    @else
+                                                        {{ ucwords(strtolower($item->programa)) }} en {{ ucwords(strtolower($item->subprograma)) }}
+                                                    @endif
+                                                </td>
+                                                <td class="fw-bold text-center">
+                                                    {{ $item->cantidad }}
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="3" class="text-center text-muted">
+                                                    No hay registros
+                                                </td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                    <tfoot class="bg-light-secondary">
+                                        <td colspan="2" class="text-end">
+                                            <span class="fw-bold">
+                                                Total
+                                            </span>
                                         </td>
-                                    </tr>
-                                @endif
-                            </tbody>
-                            <tfoot>
-                                <tr class="bg-light-secondary" align="center">
-                                    <td colspan="2" class="text-end fw-bold fs-6">TOTAL</td>
-                                    <td class="fw-bold fs-5">{{ $programas_maestria->sum('cantidad_mencion') }}</td>
-                                </tr>
-                            </tfoot>
-                        </table>
+                                        <td class="fw-bold text-center">
+                                            {{ $programas_maestria->sum('cantidad') }}
+                                        </td>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-light-primary">
+                            <h3 class="card-title fw-bold">
+                                Reporte de Inscritos por Programa de Doctorado del Proceso de {{ ucwords(strtolower($admision->admision)) }}
+                            </h3>
+                        </div>
+                        <div class="card-body mb-0">
+                            <div class="table-responsive" wire:loading.class="table-loading" wire:target="aplicar_filtro">
+                                <div class="table-loading-message">
+                                    Cargando...
+                                </div>
+                                <table class="table table-hover table-rounded table-row-bordered border mb-0 gy-4 gs-4" wire:loading.class="opacity-25" wire:target="aplicar_filtro">
+                                    <thead>
+                                        <tr class="fw-bold fs-5 text-gray-800 border-bottom-2 border-gray-200">
+                                            <th class="text-center col-md-1">#</th>
+                                            <th>Programa</th>
+                                            <th class="col-md-2 text-center">Cantidad</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse ($programas_doctorado as $item)
+                                            <tr>
+                                                <td class="text-center">
+                                                    {{ $loop->iteration }}
+                                                </td>
+                                                <td>
+                                                    @if ($item->mencion)
+                                                        Mencion en {{ ucwords(strtolower($item->mencion)) }}
+                                                    @else
+                                                        {{ ucwords(strtolower($item->programa)) }} en {{ ucwords(strtolower($item->subprograma)) }}
+                                                    @endif
+                                                </td>
+                                                <td class="fw-bold text-center">
+                                                    {{ $item->cantidad }}
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="3" class="text-center text-muted">
+                                                    No hay registros
+                                                </td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                    <tfoot class="bg-light-secondary">
+                                        <td colspan="2" class="text-end">
+                                            <span class="fw-bold">
+                                                Total
+                                            </span>
+                                        </td>
+                                        <td class="fw-bold text-center">
+                                            {{ $programas_doctorado->sum('cantidad') }}
+                                        </td>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        
-            {{-- <div class="card mt-10 shadow-sm">
-                <div class="card-header">
-                    <h5 class="card-title mb-0 ms-2 text-uppercase">Reporte de Inscritos por Programa de Doctorado</h5>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover table-rounded border gy-4 gs-4 mb-0">
-                            <thead class="bg-light-primary">
-                                <tr align="center" class="fw-bold">
-                                    <th scope="col" class="col-md-1">NRO</th>
-                                    <th scope="col" class="col-md-9">PROGRAMA</th>
-                                    <th scope="col" class="col-md-2">CANTIDAD</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($programas_doctorado as $item)
-                                <tr>
-                                    <td align="center" class="fw-bold fs-5">{{ $loop->iteration }}</td>
-                                    <td style="white-space: initial" class="fs-5 text-uppercase">
-                                        @if ($item->mencion === null)
-                                            {{ ucwords(strtolower($item->descripcion_programa))  }} en {{ ucwords(strtolower($item->subprograma)) }}
-                                        @else
-                                            Mención en {{ ucwords(strtolower($item->mencion)) }}
-                                        @endif
-                                    </td>
-                                    <td align="center" class="fs-5">{{ $item->cantidad_mencion }}</td>
-                                </tr>
-                                @endforeach
-                                @if ($programas_doctorado->count() === 0)
-                                    <tr>
-                                        <td colspan="3" class="text-center text-muted">
-                                            No hay inscritos en los programas de doctorado
-                                        </td>
-                                    </tr>
-                                @endif
-                            </tbody>
-                            <tfoot>
-                                <tr class="bg-light-secondary" align="center">
-                                    <td colspan="2" class="text-end fw-bold fs-6">TOTAL</td>
-                                    <td class="fw-bold fs-5">{{ $programas_doctorado->sum('cantidad_mencion') }}</td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                </div>
-            </div> --}}
 			<!--end::Row-->
 		</div>
 		<!--end::Content container-->

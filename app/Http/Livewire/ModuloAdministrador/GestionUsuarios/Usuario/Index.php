@@ -83,8 +83,8 @@ class Index extends Component
     public function cargarUsuario(Usuario $usuario)
     {
         $this->modo = 2;
-        $this->titulo = 'ACTUALIZAR USUARIO - CORREO: '  . $usuario->correo;
-        $this->usuario_id = $usuario->usuario_id;
+        $this->titulo = 'ACTUALIZAR USUARIO - CORREO: '  . $usuario->usuario_correo;
+        $this->usuario_id = $usuario->id_usuario;
 
         $this->username = $usuario->usuario_nombre;
         $this->correo = $usuario->usuario_correo;
@@ -102,11 +102,11 @@ class Index extends Component
             $usuario = Usuario::create([
                 "usuario_nombre" => $this->username,
                 "usuario_correo" => $this->correo,
-                "usuario_contraseña" => Hash::make($this->password),
+                "usuario_password" => Hash::make($this->password),
                 "usuario_estado" => 1,
             ]);
 
-            $this->subirHistorial($usuario->usuario_id, 'Creacion de usuario', 'usuario');
+            $this->subirHistorial($usuario->id_usuario, 'Creacion de usuario', 'usuario');
 
             $this->dispatchBrowserEvent('alerta-usuario', [
                 'title' => '¡Usuario agregado satisfactoriamente!',
@@ -122,15 +122,15 @@ class Index extends Component
                 'password' => 'nullable'
             ]);
 
-            $usuario = Usuario::find($this->usuario_id);
+            $usuario = Usuario::find($this->id_usuario);
             $usuario->usuario_nombre = $this->username;
             $usuario->usuario_correo = $this->correo;
             if ($this->password) {
-                $usuario->usuario_contraseña = Hash::make($this->password);
+                $usuario->usuario_password = Hash::make($this->password);
             }
             $usuario->save();
 
-            $this->subirHistorial($usuario->usuario_id, 'Actualizacion de usuario', 'usuario');
+            $this->subirHistorial($usuario->id_usuario, 'Actualizacion de usuario', 'usuario');
 
             $this->dispatchBrowserEvent('alerta-usuario', [
                 'title' => '¡Usuario <strong>' . $this->username . '</strong>  actualizado satisfactoriamente!',
@@ -146,26 +146,12 @@ class Index extends Component
         $this->limpiar();
     }
 
-    //Registrar cambios del sistema administrativo
-    public function subirHistorial($usuario_id, $descripcion, $tabla)
-    {
-        HistorialAdministrativo::create([
-            "usuario_id" => auth('usuario')->user()->usuario_id,
-            "trabajador_id" => auth('usuario')->user()->trabajador_tipo_trabajador->trabajador->trabajador_id,
-            "historial_descripcion" => $descripcion,
-            "historial_tabla" => $tabla,
-            "historial_usuario_id" => $usuario_id,
-            "historial_fecha" => now()
-        ]);
-    }
-
-
     public function render()
     {
         $usuarios = Usuario::where('usuario_nombre', 'LIKE', "%{$this->search}%")
             ->orWhere('usuario_correo', 'LIKE', "%{$this->search}%")
-            ->orWhere('usuario_id', 'LIKE', "%{$this->search}%")
-            ->orderBy('usuario_id', 'DESC')
+            ->orWhere('id_usuario', 'LIKE', "%{$this->search}%")
+            ->orderBy('id_usuario', 'DESC')
             ->paginate(50);
 
         return view('livewire.modulo-administrador.gestion-usuarios.usuario.index', [
