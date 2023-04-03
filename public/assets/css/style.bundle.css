@@ -1,9 +1,5 @@
 @charset "UTF-8";
-/*!
- * Bootstrap  v5.3.0-alpha1 (https://getbootstrap.com/)
- * Copyright 2011-2022 The Bootstrap Authors
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
- */
+
 :root,
 [data-bs-theme=light] {
   --bs-blue: #0d6efd;
@@ -49591,6 +49587,12 @@ body,
 
 @media (max-width: 1200px) {
   .card-maestria{
-    margin-top:  2.5rem;
+    margin-top:  1.25rem;
   }
+}
+
+.avatar-xs {
+  height: 2.5rem;
+  width: 2.5rem;
+  margin-right: 0.5rem;
 }

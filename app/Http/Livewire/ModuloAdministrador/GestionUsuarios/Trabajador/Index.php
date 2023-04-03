@@ -177,7 +177,7 @@ class Index extends Component
 
     public function cargarAlerta($id)
     {
-        $trabajador_tipo_trabajador = TrabajadorTipoTrabajador::where('trabajador_id',$id)->where('trabajador_tipo_trabajador_estado',1)->count();
+        $trabajador_tipo_trabajador = TrabajadorTipoTrabajador::where('id_trabajador',$id)->where('trabajador_tipo_trabajador_estado',1)->count();
         if($trabajador_tipo_trabajador == 0){
             $this->dispatchBrowserEvent('alertaConfirmacionTrabajador', ['id' => $id]);
         }else{
@@ -187,7 +187,7 @@ class Index extends Component
 
     public function cambiarEstado(TrabajadorModel $trabajador)
     {
-        $trabajador_tipo_trabajador = TrabajadorTipoTrabajador::where('trabajador_id',$trabajador->trabajador_id)->where('trabajador_tipo_trabajador_estado',1)->count();
+        $trabajador_tipo_trabajador = TrabajadorTipoTrabajador::where('id_trabajador',$trabajador->id_trabajador)->where('trabajador_tipo_trabajador_estado',1)->count();
         if($trabajador_tipo_trabajador == 0){
             if($trabajador->trabajador_estado == 1){
                 $trabajador->trabajador_estado = 2;
@@ -198,14 +198,14 @@ class Index extends Component
         $trabajador->save();
 
         $this->dispatchBrowserEvent('notificacionTrabajador', ['message' =>'Estado de Trabajador actualizado satisfactoriamente.']);
-        $this->subirHistorial($trabajador->trabajador_id,'Actualizacion de trabajador','trabajador');
+        $this->subirHistorial($trabajador->id_trabajador,'Actualizacion de trabajador','trabajador');
     }
 
     public function cargarTrabajador(TrabajadorModel $trabajador)
     {
         $this->modo = 2;
-        $this->titulo_modal = 'Actualizar Trabajador - ' . $trabajador->trabajador_apellidos . ', '  . $trabajador->trabajador_nombres;
-        $this->trabajador_id = $trabajador->trabajador_id;
+        $this->titulo_modal = 'Actualizar Trabajador - ' . $trabajador->trabajador_apellido . ', '  . $trabajador->trabajador_nombre;
+        $this->trabajador_id = $trabajador->id_trabajador;
         
         if(strlen($trabajador->trabajador_numero_documento) == 8){
             $this->tipo_documento = 1;
@@ -213,11 +213,11 @@ class Index extends Component
             $this->tipo_documento = 2;
         }
         $this->documento = $trabajador->trabajador_numero_documento;
-        $this->nombres = $trabajador->trabajador_nombres;
-        $this->apellidos = $trabajador->trabajador_apellidos;
+        $this->nombres = $trabajador->trabajador_nombre;
+        $this->apellidos = $trabajador->trabajador_apellido;
         $this->direccion = $trabajador->trabajador_direccion;
         $this->correo = $trabajador->trabajador_correo;
-        $this->grado = $trabajador->trabajador_grado;
+        $this->grado = $trabajador->id_grado_academico;
     }
 
     public function guardarTrabajador()
@@ -233,7 +233,7 @@ class Index extends Component
                     'apellidos' => 'required|string',
                     'direccion' => 'required|string',
                     'correo' => 'required|email',
-                    'grado' => 'required|string',
+                    'grado' => 'required|numeric',
                     'perfil' => 'nullable|file|mimes:jpg,png,jpeg',
                 ]);
             }else{
@@ -244,22 +244,22 @@ class Index extends Component
                     'apellidos' => 'required|string',
                     'direccion' => 'required|string',
                     'correo' => 'required|email',
-                    'grado' => 'required|string',
+                    'grado' => 'required|numeric',
                     'perfil' => 'nullable|file|mimes:jpg,png,jpeg',
                 ]);
             }
     
             $trabajador = TrabajadorModel::create([
-                "trabajador_nombres" => $this->nombres,
-                "trabajador_apellidos" => $this->apellidos,
+                "trabajador_nombre" => $this->nombres,
+                "trabajador_apellido" => $this->apellidos,
                 "trabajador_numero_documento" => $this->documento,
                 "trabajador_correo" => $this->correo,
                 "trabajador_direccion" => $this->direccion,
-                "trabajador_grado" => $this->grado,
+                "id_grado_academico " => $this->grado,
                 "trabajador_estado" => 1,
             ]);
 
-            $id_trabajador = $trabajador->trabajador_id;
+            $id_trabajador = $trabajador->id_trabajador;
 
             $this->subirHistorial($id_trabajador,'Creacion de trabajador','trabajador');
     
@@ -273,7 +273,7 @@ class Index extends Component
                     'apellidos' => 'required|string',
                     'direccion' => 'required|string',
                     'correo' => 'required|email',
-                    'grado' => 'required|string',
+                    'grado' => 'required|numeric',
                     'perfil' => 'nullable|file|mimes:jpg,png,jpeg',
                 ]);
             }else{
@@ -284,18 +284,18 @@ class Index extends Component
                     'apellidos' => 'required|string',
                     'direccion' => 'required|string',
                     'correo' => 'required|email',
-                    'grado' => 'required|string',
+                    'grado' => 'required|numeric',
                     'perfil' => 'nullable|file|mimes:jpg,png,jpeg',
                 ]);
             }
 
             $trabajador = TrabajadorModel::find($this->trabajador_id);
             $trabajador->trabajador_numero_documento = $this->documento;
-            $trabajador->trabajador_apellidos = $this->apellidos;
-            $trabajador->trabajador_nombres = $this->nombres;
+            $trabajador->trabajador_apellido = $this->apellidos;
+            $trabajador->trabajador_nombre = $this->nombres;
             $trabajador->trabajador_direccion = $this->direccion;
             $trabajador->trabajador_correo = $this->correo;
-            $trabajador->trabajador_grado = $this->grado;
+            $trabajador->id_grado_academico = $this->grado;
             $trabajador->save();
 
             $id_trabajador = $this->trabajador_id;
@@ -313,7 +313,7 @@ class Index extends Component
             $data->storeAs($path, $filename, 'files_publico');
 
             $tra = TrabajadorModel::find($id_trabajador);
-            $tra->trabajador_perfil = $path.$filename;
+            $tra->trabajador_perfil_url = $path.$filename;
             $tra->save();
         }
 
@@ -324,26 +324,26 @@ class Index extends Component
 
     public function cargarTrabajadorId(TrabajadorModel $trabajador,$valor)
     { 
-        $this->trabajador_id = $trabajador->trabajador_id;
+        $this->trabajador_id = $trabajador->id_trabajador;
 
         if($valor == 1){
             $this->modo = 3;
             $this->titulo_modal = 'Asignar Trabajador';
 
             //docentee
-            $trabajador_tipo_trabajador_docente = TrabajadorTipoTrabajador::where('trabajador_id',$this->trabajador_id)->where('tipo_trabajador_id',1)->where('trabajador_tipo_trabajador_estado',1)->first();
+            $trabajador_tipo_trabajador_docente = TrabajadorTipoTrabajador::where('id_trabajador',$this->trabajador_id)->where('id_tipo_trabajador',1)->where('trabajador_tipo_trabajador_estado',1)->first();
             // dd($trabajador_tipo_trabajador_docente);
             if($trabajador_tipo_trabajador_docente){
                 $this->docente = true;
                 $this->tipo_docente = 1;
 
-                $docente_model = Docente::where('trabajador_id',$this->trabajador_id)->where('docente_estado',1)->first();
-                $this->tipo_docentes = $docente_model->docente_tipo_docente;
+                $docente_model = Docente::where('id_trabajador',$this->trabajador_id)->where('docente_estado',1)->first();
+                $this->tipo_docentes = $docente_model->id_tipo_docente;
                 
                 $this->usuario_model = Usuario::all();
-                $usuario_model = Usuario::where('trabajador_tipo_trabajador_id',$trabajador_tipo_trabajador_docente->trabajador_tipo_trabajador_id)->first();
+                $usuario_model = Usuario::where('id_trabajador_tipo_trabajador',$trabajador_tipo_trabajador_docente->id_trabajador_tipo_trabajador)->first();
                 $this->usuario_docente = $usuario_model->usuario_correo;
-                $this->usuario_antiguo_docente = $usuario_model->usuario_id; //para cambiar el estado cuando se actualiza los datos del trabajador
+                $this->usuario_antiguo_docente = $usuario_model->id_usuario; //para cambiar el estado cuando se actualiza los datos del trabajador
 
                 $this->nullable = true;
                 $this->disabled = 'disabled'; //desabilitar el check en la vista
@@ -353,22 +353,22 @@ class Index extends Component
             }
             
             //coordinador
-            $trabajador_tipo_trabajador_coordinador = TrabajadorTipoTrabajador::where('trabajador_id',$this->trabajador_id)->where('tipo_trabajador_id',2)->where('trabajador_tipo_trabajador_estado',1)->first();
+            $trabajador_tipo_trabajador_coordinador = TrabajadorTipoTrabajador::where('id_trabajador',$this->trabajador_id)->where('id_tipo_trabajador',2)->where('trabajador_tipo_trabajador_estado',1)->first();
             // dd($trabajador_tipo_trabajador_coordinador);
             if($trabajador_tipo_trabajador_coordinador){
                 $this->coordinador = true;
                 $this->tipo_coordinador = 1;
 
-                $coordinador_model = Coordinador::where('trabajador_id', $this->trabajador_id)->first();
+                $coordinador_model = Coordinador::where('id_trabajador', $this->trabajador_id)->first();
                 $this->facultad_model = Facultad::all();
-                $this->facultad = $coordinador_model->facultad_id;
-                $this->facultad_antiguo = $coordinador_model->facultad_id; //para cambiar el estado cuando se actualiza los datos del trabajador
-                $this->categoria = $coordinador_model->categoria_docente;
+                $this->facultad = $coordinador_model->id_facultad;
+                $this->facultad_antiguo = $coordinador_model->id_facultad; //para cambiar el estado cuando se actualiza los datos del trabajador
+                $this->categoria = $coordinador_model->id_categoria_docente;
 
                 $this->usuario_model = Usuario::all();
-                $usuario_model = Usuario::where('trabajador_tipo_trabajador_id',$trabajador_tipo_trabajador_coordinador->trabajador_tipo_trabajador_id)->first();
+                $usuario_model = Usuario::where('id_trabajador_tipo_trabajador',$trabajador_tipo_trabajador_coordinador->id_trabajador_tipo_trabajador)->first();
                 $this->usuario = $usuario_model->usuario_correo;
-                $this->usuario_antiguo = $usuario_model->usuario_id; //para cambiar el estado cuando se actualiza los datos del trabajador
+                $this->usuario_antiguo = $usuario_model->id_usuario; //para cambiar el estado cuando se actualiza los datos del trabajador
 
                 $this->disabled = 'disabled'; //desabilitar el check en la vista
             }else{
@@ -377,20 +377,20 @@ class Index extends Component
             }
 
             //administrativo
-            $trabajador_tipo_trabajador_administrativo = TrabajadorTipoTrabajador::where('trabajador_id',$this->trabajador_id)->where('tipo_trabajador_id',3)->where('trabajador_tipo_trabajador_estado',1)->first();
+            $trabajador_tipo_trabajador_administrativo = TrabajadorTipoTrabajador::where('id_trabajador',$this->trabajador_id)->where('id_tipo_trabajador',3)->where('trabajador_tipo_trabajador_estado',1)->first();
             // dd($trabajador_tipo_trabajador_administrativo);
             if($trabajador_tipo_trabajador_administrativo){
                 $this->administrativo_check = true;
                 $this->tipo_administrativo = 1;
 
-                $administrativo_model = Administrativo::where('trabajador_id',$this->trabajador_id)->first();
+                $administrativo_model = Administrativo::where('id_trabajador',$this->trabajador_id)->first();
                 $this->area_model = AreaAdministrativo::all();
-                $this->area = $administrativo_model->area_id;
+                $this->area = $administrativo_model->id_area;
 
                 $this->usuario_model = Usuario::all();
-                $usuario_model = Usuario::where('trabajador_tipo_trabajador_id',$trabajador_tipo_trabajador_administrativo->trabajador_tipo_trabajador_id)->first();
+                $usuario_model = Usuario::where('id_trabajador_tipo_trabajador',$trabajador_tipo_trabajador_administrativo->id_trabajador_tipo_trabajador)->first();
                 $this->usuario = $usuario_model->usuario_correo;
-                $this->usuario_antiguo = $usuario_model->usuario_id;
+                $this->usuario_antiguo = $usuario_model->id_usuario;
                 
                 $this->disabled = 'disabled'; //desabilitar el check en la vista
             }else{
@@ -406,7 +406,7 @@ class Index extends Component
             $this->titulo_modal = 'Desasignar Trabajador';
 
             //docentee
-            $trabajador_tipo_trabajador_docente = TrabajadorTipoTrabajador::where('trabajador_id',$this->trabajador_id)->where('tipo_trabajador_id',1)->where('trabajador_tipo_trabajador_estado',1)->first();
+            $trabajador_tipo_trabajador_docente = TrabajadorTipoTrabajador::where('id_trabajador',$this->trabajador_id)->where('id_tipo_trabajador',1)->where('trabajador_tipo_trabajador_estado',1)->first();
             if($trabajador_tipo_trabajador_docente){
                 $this->docente = true;
             }else{
@@ -414,7 +414,7 @@ class Index extends Component
             }
             
             //coordinador
-            $trabajador_tipo_trabajador_coordinador = TrabajadorTipoTrabajador::where('trabajador_id',$this->trabajador_id)->where('tipo_trabajador_id',2)->where('trabajador_tipo_trabajador_estado',1)->first();
+            $trabajador_tipo_trabajador_coordinador = TrabajadorTipoTrabajador::where('id_trabajador',$this->trabajador_id)->where('id_tipo_trabajador',2)->where('trabajador_tipo_trabajador_estado',1)->first();
             if($trabajador_tipo_trabajador_coordinador){
                 $this->coordinador = true;
             }else{
@@ -422,7 +422,7 @@ class Index extends Component
             }
 
             //administrativo
-            $trabajador_tipo_trabajador_administrativo = TrabajadorTipoTrabajador::where('trabajador_id',$this->trabajador_id)->where('tipo_trabajador_id',3)->where('trabajador_tipo_trabajador_estado',1)->first();
+            $trabajador_tipo_trabajador_administrativo = TrabajadorTipoTrabajador::where('id_trabajador',$this->trabajador_id)->where('id_tipo_trabajador',3)->where('trabajador_tipo_trabajador_estado',1)->first();
             if($trabajador_tipo_trabajador_administrativo){
                 $this->administrativo_check = true;
             }else{
@@ -471,7 +471,7 @@ class Index extends Component
     public function asignarTrabajador()
     {
         //DOCENTE
-        $trabajador_tipo_trabajador_docente = TrabajadorTipoTrabajador::where('trabajador_id',$this->trabajador_id)->where('tipo_trabajador_id',1)->where('trabajador_tipo_trabajador_estado',1)->first();
+        $trabajador_tipo_trabajador_docente = TrabajadorTipoTrabajador::where('id_trabajador',$this->trabajador_id)->where('id_tipo_trabajador',1)->where('trabajador_tipo_trabajador_estado',1)->first();
         if($trabajador_tipo_trabajador_docente){
             if($this->docente == true){
                 if($this->tipo_docentes == 'DOCENTE EXTERNO'){
@@ -489,7 +489,7 @@ class Index extends Component
                     ]);
                 }
 
-                $docente = Docente::where('trabajador_id',$this->trabajador_id)->first();
+                $docente = Docente::where('id_trabajador',$this->trabajador_id)->first();
                 if($this->tipo_docentes == 'DOCENTE EXTERNO'){
                     $data = $this->cv;
                     if($data != null){
@@ -498,25 +498,25 @@ class Index extends Component
                         $data = $this->cv;
                         $data->storeAs($path, $filename, 'files_publico');
 
-                        $docente->docente_cv = $filename;
+                        $docente->docente_cv_url = $filename;
                     }
                 }else{
-                    $docente->docente_cv = null;
+                    $docente->docente_cv_url = null;
                 }
-                $docente->docente_tipo_docente = $this->tipo_docentes;
+                $docente->id_tipo_docente = $this->tipo_docentes;
                 $docente->save();
 
                 //cambiar el estado del usuario antiguo
                 $usuario = Usuario::find($this->usuario_antiguo_docente);
-                $usuario->trabajador_tipo_trabajador_id = null;
+                $usuario->id_trabajador_tipo_trabajador = null;
                 $usuario->usuario_estado = 1;
                 $usuario->save();
 
-                $usuario_id = Usuario::where('usuario_correo',$this->usuario_docente)->first()->usuario_id;
+                $usuario_id = Usuario::where('usuario_correo',$this->usuario_docente)->first()->id_usuario;
 
                 //cambiar el estado del nuevo usuario seleccionado
                 $usuario = Usuario::find($usuario_id);
-                $usuario->trabajador_tipo_trabajador_id = $trabajador_tipo_trabajador_docente->trabajador_tipo_trabajador_id;
+                $usuario->id_trabajador_tipo_trabajador = $trabajador_tipo_trabajador_docente->id_trabajador_tipo_trabajador;
                 $usuario->usuario_estado = 2;
                 $usuario->save();
 
@@ -539,10 +539,10 @@ class Index extends Component
                     ]);
                 }
 
-                $trabajador_tipo_trabajador_docente_desactivado = TrabajadorTipoTrabajador::where('trabajador_id',$this->trabajador_id)->where('tipo_trabajador_id',1)->where('trabajador_tipo_trabajador_estado',2)->first();
+                $trabajador_tipo_trabajador_docente_desactivado = TrabajadorTipoTrabajador::where('id_trabajador',$this->trabajador_id)->where('id_tipo_trabajador',1)->where('trabajador_tipo_trabajador_estado',2)->first();
                 
                 if($trabajador_tipo_trabajador_docente_desactivado){
-                    $docente = Docente::where('trabajador_id',$this->trabajador_id)->where('docente_estado',2)->first();
+                    $docente = Docente::where('id_trabajador',$this->trabajador_id)->where('docente_estado',2)->first();
                     if($this->tipo_docentes == 'DOCENTE EXTERNO'){
                         $data = $this->cv;
                         if($data != null){
@@ -551,30 +551,30 @@ class Index extends Component
                             $data = $this->cv;
                             $data->storeAs($path, $filename, 'files_publico');
     
-                            $docente->docente_cv = $filename;
+                            $docente->docente_cv_url = $filename;
                         }
                     }else{
-                        $docente->docente_cv = null;
+                        $docente->docente_cv_url = null;
                     }
                     $docente->docente_estado = 1;
-                    $docente->docente_tipo_docente = $this->tipo_docentes;
+                    $docente->id_tipo_docente = $this->tipo_docentes;
                     $docente->save();
 
                     $trabajador_tipo_trabajador_docente_desactivado->trabajador_tipo_trabajador_estado = 1;
                     $trabajador_tipo_trabajador_docente_desactivado->save();
 
                     //cambiar el estado del usuario
-                    $usuario_id = Usuario::where('usuario_correo',$this->usuario_docente)->first()->usuario_id;
+                    $usuario_id = Usuario::where('usuario_correo',$this->usuario_docente)->first()->id_usuario;
 
                     $usuario = Usuario::find($usuario_id);
-                    $usuario->trabajador_tipo_trabajador_id = $trabajador_tipo_trabajador_docente_desactivado->trabajador_tipo_trabajador_id;
+                    $usuario->id_trabajador_tipo_trabajador = $trabajador_tipo_trabajador_docente_desactivado->id_trabajador_tipo_trabajador;
                     $usuario->usuario_estado = 2;
                     $usuario->save();
                 }else{
                     $docente = Docente::create([
-                        "trabajador_id" => $this->trabajador_id,
-                        "docente_tipo_docente" => $this->tipo_docentes,
+                        "id_tipo_docente" => $this->tipo_docentes,
                         "docente_estado" => 1,
+                        "trabajador_id" => $this->trabajador_id,
                     ]);
 
                     $data = $this->cv;
@@ -584,21 +584,21 @@ class Index extends Component
                         $data = $this->cv;
                         $data->storeAs($path, $filename, 'files_publico');
 
-                        $docente_nuevo = Docente::find($docente->docente_id);
-                        $docente_nuevo->docente_cv = $filename;
+                        $docente_nuevo = Docente::find($docente->id_docente);
+                        $docente_nuevo->docente_cv_url = $filename;
                         $docente_nuevo->save();
                     }
                     
                     $trabajador_tipo_trabajador_create = TrabajadorTipoTrabajador::create([
-                        "trabajador_id" => $this->trabajador_id,
-                        "tipo_trabajador_id" => 1,
+                        "id_tipo_trabajador" => 1,
+                        "id_trabajador" => $this->trabajador_id,
                         "trabajador_tipo_trabajador_estado" => 1,
                     ]);
 
-                    $usuario_id = Usuario::where('usuario_correo',$this->usuario_docente)->first()->usuario_id;
+                    $usuario_id = Usuario::where('usuario_correo',$this->usuario_docente)->first()->id_usuario;
 
                     $usuario = Usuario::find($usuario_id);
-                    $usuario->trabajador_tipo_trabajador_id = $trabajador_tipo_trabajador_create->trabajador_tipo_trabajador_id;
+                    $usuario->id_trabajador_tipo_trabajador = $trabajador_tipo_trabajador_create->id_trabajador_tipo_trabajador;
                     $usuario->usuario_estado = 2;
                     $usuario->save();
                 }
@@ -609,31 +609,31 @@ class Index extends Component
         }
 
         //COORDINADOR
-        $trabajador_tipo_trabajador_coordinador = TrabajadorTipoTrabajador::where('trabajador_id',$this->trabajador_id)->where('tipo_trabajador_id',2)->where('trabajador_tipo_trabajador_estado',1)->first(); 
+        $trabajador_tipo_trabajador_coordinador = TrabajadorTipoTrabajador::where('id_trabajador',$this->trabajador_id)->where('id_tipo_trabajador',2)->where('trabajador_tipo_trabajador_estado',1)->first(); 
         if($trabajador_tipo_trabajador_coordinador){
             if($this->coordinador == true){ //ACTUALIZAR COORDINADOR
                 $this->validate([
-                    'categoria' => 'nullable|string',
+                    'categoria' => 'nullable|numeric',
                     'facultad' => 'required|numeric',
                     'usuario' => 'required|string',
                 ]);
 
-                $coordinador = Coordinador::where('trabajador_id', $this->trabajador_id)->first();
-                $coordinador->facultad_id = $this->facultad;
-                $coordinador->categoria_docente = $this->categoria;
+                $coordinador = Coordinador::where('id_trabajador', $this->trabajador_id)->first();
+                $coordinador->id_facultad = $this->facultad;
+                $coordinador->id_categoria_docente = $this->categoria;
                 $coordinador->save();
 
                 //cambiar el estado del usuario antiguo
                 $usuario = Usuario::find($this->usuario_antiguo);
-                $usuario->trabajador_tipo_trabajador_id = null;
+                $usuario->id_trabajador_tipo_trabajador = null;
                 $usuario->usuario_estado = 1;
                 $usuario->save();
 
-                $usuario_id = Usuario::where('usuario_correo',$this->usuario)->first()->usuario_id;
+                $usuario_id = Usuario::where('usuario_correo',$this->usuario)->first()->id_usuario;
 
                 //cambiar el estado del nuevo usuario seleccionado
                 $usuario = Usuario::find($usuario_id);
-                $usuario->trabajador_tipo_trabajador_id = $trabajador_tipo_trabajador_coordinador->trabajador_tipo_trabajador_id;
+                $usuario->id_trabajador_tipo_trabajador = $trabajador_tipo_trabajador_coordinador->id_trabajador_tipo_trabajador;
                 $usuario->usuario_estado = 2;
                 $usuario->save();
 
@@ -653,17 +653,17 @@ class Index extends Component
         }else{
             if($this->coordinador == true){ //CREAR COORDINADOR
                 $this->validate([
-                    'categoria' => 'nullable|string',
+                    'categoria' => 'nullable|numeric',
                     'facultad' => 'required|numeric',
                     'usuario' => 'required|string',
                 ]);
 
-                $trabajador_tipo_trabajador_coordinador_desactivado = TrabajadorTipoTrabajador::where('trabajador_id',$this->trabajador_id)->where('tipo_trabajador_id',2)->where('trabajador_tipo_trabajador_estado',2)->first(); 
+                $trabajador_tipo_trabajador_coordinador_desactivado = TrabajadorTipoTrabajador::where('id_trabajador',$this->trabajador_id)->where('id_tipo_trabajador',2)->where('trabajador_tipo_trabajador_estado',2)->first(); 
 
                 if($trabajador_tipo_trabajador_coordinador_desactivado){
-                    $coordinador = Coordinador::where('trabajador_id',$this->trabajador_id)->where('coordinador_estado',2)->first();
-                    $coordinador->facultad_id = $this->facultad;
-                    $coordinador->categoria_docente = $this->categoria;
+                    $coordinador = Coordinador::where('id_trabajador',$this->trabajador_id)->where('coordinador_estado',2)->first();
+                    $coordinador->id_facultad = $this->facultad;
+                    $coordinador->id_categoria_docente = $this->categoria;
                     $coordinador->coordinador_estado = 1;
                     $coordinador->save();
 
@@ -674,30 +674,30 @@ class Index extends Component
                     $trabajador_tipo_trabajador_coordinador_desactivado->trabajador_tipo_trabajador_estado = 1;
                     $trabajador_tipo_trabajador_coordinador_desactivado->save();
 
-                    $usuario_id = Usuario::where('usuario_correo',$this->usuario)->first()->usuario_id;
+                    $usuario_id = Usuario::where('usuario_correo',$this->usuario)->first()->id_usuario;
     
                     $usuario = Usuario::find($usuario_id);
-                    $usuario->trabajador_tipo_trabajador_id = $trabajador_tipo_trabajador_coordinador_desactivado->trabajador_tipo_trabajador_id;
+                    $usuario->id_trabajador_tipo_trabajador = $trabajador_tipo_trabajador_coordinador_desactivado->id_trabajador_tipo_trabajador;
                     $usuario->usuario_estado = 2;
                     $usuario->save();
                 }else{
                     $coordinador = Coordinador::create([
-                        "trabajador_id" => $this->trabajador_id,
-                        "facultad_id" => $this->facultad,
-                        "categoria_docente" => $this->categoria,
+                        "id_categoria_docente" => $this->categoria,
                         "coordinador_estado" => 1,
+                        "id_facultad" => $this->facultad,
+                        "id_trabajador" => $this->trabajador_id,
                     ]);
     
                     $trabajador_tipo_trabajador_create = TrabajadorTipoTrabajador::create([
-                        "trabajador_id" => $this->trabajador_id,
-                        "tipo_trabajador_id" => 2,
+                        "id_tipo_trabajador" => 2,
+                        "id_trabajador" => $this->trabajador_id,
                         "trabajador_tipo_trabajador_estado" => 1,
                     ]);
     
-                    $usuario_id = Usuario::where('usuario_correo',$this->usuario)->first()->usuario_id;
+                    $usuario_id = Usuario::where('usuario_correo',$this->usuario)->first()->id_usuario;
     
                     $usuario = Usuario::find($usuario_id);
-                    $usuario->trabajador_tipo_trabajador_id = $trabajador_tipo_trabajador_create->trabajador_tipo_trabajador_id;
+                    $usuario->id_trabajador_tipo_trabajador = $trabajador_tipo_trabajador_create->id_trabajador_tipo_trabajador;
                     $usuario->usuario_estado = 2;
                     $usuario->save();
     
@@ -712,7 +712,7 @@ class Index extends Component
         }
 
         //ADMINISTRATIVO
-        $trabajador_tipo_trabajador_administrativo = TrabajadorTipoTrabajador::where('trabajador_id',$this->trabajador_id)->where('tipo_trabajador_id',3)->where('trabajador_tipo_trabajador_estado',1)->first(); 
+        $trabajador_tipo_trabajador_administrativo = TrabajadorTipoTrabajador::where('id_trabajador',$this->trabajador_id)->where('id_tipo_trabajador',3)->where('trabajador_tipo_trabajador_estado',1)->first(); 
         if($trabajador_tipo_trabajador_administrativo){
             if($this->administrativo_check == true){  //ACTUALZIAR ADMINISTRATIVO
                 $this->validate([
@@ -720,21 +720,21 @@ class Index extends Component
                     'usuario' => 'required|string',
                 ]);
 
-                $administrativo = Administrativo::where('trabajador_id', $this->trabajador_id)->first();
-                $administrativo->area_id = $this->area;
+                $administrativo = Administrativo::where('id_trabajador', $this->trabajador_id)->first();
+                $administrativo->id_area = $this->area;
                 $administrativo->save();
 
                 //cambiar el estado del usuario antiguo
                 $usuario = Usuario::find($this->usuario_antiguo);
-                $usuario->trabajador_tipo_trabajador_id = null;
+                $usuario->id_trabajador_tipo_trabajador = null;
                 $usuario->usuario_estado = 1;
                 $usuario->save();
 
-                $usuario_id = Usuario::where('usuario_correo',$this->usuario)->first()->usuario_id;
+                $usuario_id = Usuario::where('usuario_correo',$this->usuario)->first()->id_usuario;
 
                 //cambiar el estado del nuevo usuario seleccionado
                 $usuario = Usuario::find($usuario_id);
-                $usuario->trabajador_tipo_trabajador_id = $trabajador_tipo_trabajador_administrativo->trabajador_tipo_trabajador_id;
+                $usuario->id_trabajador_tipo_trabajador = $trabajador_tipo_trabajador_administrativo->id_trabajador_tipo_trabajador;
                 $usuario->usuario_estado = 2;
                 $usuario->save();
 
@@ -748,40 +748,40 @@ class Index extends Component
                     'usuario' => 'required|string',
                 ]);
 
-                $trabajador_tipo_trabajador_administrativo_desactivado = TrabajadorTipoTrabajador::where('trabajador_id',$this->trabajador_id)->where('tipo_trabajador_id',3)->where('trabajador_tipo_trabajador_estado',2)->first(); 
+                $trabajador_tipo_trabajador_administrativo_desactivado = TrabajadorTipoTrabajador::where('id_trabajador',$this->trabajador_id)->where('id_tipo_trabajador',3)->where('trabajador_tipo_trabajador_estado',2)->first(); 
 
                 if($trabajador_tipo_trabajador_administrativo_desactivado){
-                    $administrativo = Administrativo::where('trabajador_id', $this->trabajador_id)->where('administrativo_estado',2)->first();
-                    $administrativo->area_id = $this->area;
+                    $administrativo = Administrativo::where('id_trabajador', $this->trabajador_id)->where('administrativo_estado',2)->first();
+                    $administrativo->id_area = $this->area;
                     $administrativo->administrativo_estado = 1;
                     $administrativo->save();
 
                     $trabajador_tipo_trabajador_administrativo_desactivado->trabajador_tipo_trabajador_estado = 1;
                     $trabajador_tipo_trabajador_administrativo_desactivado->save();
 
-                    $usuario_id = Usuario::where('usuario_correo',$this->usuario)->first()->usuario_id;
+                    $usuario_id = Usuario::where('usuario_correo',$this->usuario)->first()->id_usuario;
     
                     $usuario = Usuario::find($usuario_id);
-                    $usuario->trabajador_tipo_trabajador_id = $trabajador_tipo_trabajador_administrativo_desactivado->trabajador_tipo_trabajador_id;
+                    $usuario->id_trabajador_tipo_trabajador = $trabajador_tipo_trabajador_administrativo_desactivado->id_trabajador_tipo_trabajador;
                     $usuario->usuario_estado = 2;
                     $usuario->save();
                 }else{
                     Administrativo::create([
-                        "area_id" => $this->area,
-                        "trabajador_id" => $this->trabajador_id,
+                        "id_area_administrativo" => $this->area,
                         "administrativo_estado" => 1,
+                        "id_trabajador" => $this->trabajador_id,
                     ]);
     
                     $trabajador_tipo_trabajador_admin = TrabajadorTipoTrabajador::create([
-                        "trabajador_id" => $this->trabajador_id,
-                        "tipo_trabajador_id" => 3,
+                        "id_tipo_trabajador" => 3,
+                        "id_trabajador" => $this->trabajador_id,
                         "trabajador_tipo_trabajador_estado" => 1,
                     ]);
     
-                    $usuario_id = Usuario::where('usuario_correo',$this->usuario)->first()->usuario_id;
+                    $usuario_id = Usuario::where('usuario_correo',$this->usuario)->first()->id_usuario;
     
                     $usuario = Usuario::find($usuario_id);
-                    $usuario->trabajador_tipo_trabajador_id = $trabajador_tipo_trabajador_admin->trabajador_tipo_trabajador_id;
+                    $usuario->id_trabajador_tipo_trabajador = $trabajador_tipo_trabajador_admin->id_trabajador_tipo_trabajador;
                     $usuario->usuario_estado = 2;
                     $usuario->save();
                 }
@@ -799,7 +799,7 @@ class Index extends Component
     {
         $this->modo = 4;
         $this->titulo_modal = 'Informacion del Trabajador';
-        $this->trabajador_id = $trabajador->trabajador_id;
+        $this->trabajador_id = $trabajador->id_trabajador;
         $this->trabajador_model = $trabajador;
 
         $this->user_model_docente = null;
@@ -807,22 +807,22 @@ class Index extends Component
         $this->user_model_administrativo = null;
 
         //docente
-        $this->trabajador_docente = TrabajadorTipoTrabajador::where('trabajador_id',$this->trabajador_id)->where('tipo_trabajador_id',1)->where('trabajador_tipo_trabajador_estado',1)->first();
+        $this->trabajador_docente = TrabajadorTipoTrabajador::where('id_trabajador',$this->trabajador_id)->where('id_tipo_trabajador',1)->where('trabajador_tipo_trabajador_estado',1)->first();
         if($this->trabajador_docente){
-            $this->docente_model = Docente::where('trabajador_id',$this->trabajador_id)->first();
-            $this->user_model_docente = Usuario::where('trabajador_tipo_trabajador_id',$this->trabajador_docente->trabajador_tipo_trabajador_id)->where('usuario_estado',2)->first();
+            $this->docente_model = Docente::where('id_trabajador',$this->trabajador_id)->first();
+            $this->user_model_docente = Usuario::where('id_trabajador_tipo_trabajador',$this->trabajador_docente->id_trabajador_tipo_trabajador)->where('usuario_estado',2)->first();
         }
         //coordinador
-        $this->trabajador_coordinador = TrabajadorTipoTrabajador::where('trabajador_id',$this->trabajador_id)->where('tipo_trabajador_id',2)->where('trabajador_tipo_trabajador_estado',1)->first();
+        $this->trabajador_coordinador = TrabajadorTipoTrabajador::where('id_trabajador',$this->trabajador_id)->where('id_tipo_trabajador',2)->where('trabajador_tipo_trabajador_estado',1)->first();
         if($this->trabajador_coordinador){
-            $this->coordinador_model = Coordinador::where('trabajador_id',$this->trabajador_id)->first();
-            $this->user_model_coordinador = Usuario::where('trabajador_tipo_trabajador_id',$this->trabajador_coordinador->trabajador_tipo_trabajador_id)->where('usuario_estado',2)->first();
+            $this->coordinador_model = Coordinador::where('id_trabajador',$this->trabajador_id)->first();
+            $this->user_model_coordinador = Usuario::where('id_trabajador_tipo_trabajador',$this->trabajador_coordinador->id_trabajador_tipo_trabajador)->where('usuario_estado',2)->first();
         }
         //administrativo
-        $this->trabajador_administrativo = TrabajadorTipoTrabajador::where('trabajador_id',$this->trabajador_id)->where('tipo_trabajador_id',3)->where('trabajador_tipo_trabajador_estado',1)->first();
+        $this->trabajador_administrativo = TrabajadorTipoTrabajador::where('id_trabajador',$this->trabajador_id)->where('id_tipo_trabajador',3)->where('trabajador_tipo_trabajador_estado',1)->first();
         if($this->trabajador_administrativo){
-            $this->administrativo_model = Administrativo::where('trabajador_id',$this->trabajador_id)->first();
-            $this->user_model_administrativo = Usuario::where('trabajador_tipo_trabajador_id',$this->trabajador_administrativo->trabajador_tipo_trabajador_id)->where('usuario_estado',2)->first();
+            $this->administrativo_model = Administrativo::where('id_trabajador',$this->trabajador_id)->first();
+            $this->user_model_administrativo = Usuario::where('id_trabajador_tipo_trabajador',$this->trabajador_administrativo->id_trabajador_tipo_trabajador)->where('usuario_estado',2)->first();
         }
     }
 
@@ -834,16 +834,16 @@ class Index extends Component
     public function desasignarTrabajador()
     {
         //docentee
-        $trabajador_tipo_trabajador_docente = TrabajadorTipoTrabajador::where('trabajador_id',$this->trabajador_id)->where('tipo_trabajador_id',1)->where('trabajador_tipo_trabajador_estado',1)->first();
+        $trabajador_tipo_trabajador_docente = TrabajadorTipoTrabajador::where('id_trabajador',$this->trabajador_id)->where('id_tipo_trabajador',1)->where('trabajador_tipo_trabajador_estado',1)->first();
         if($trabajador_tipo_trabajador_docente){
             if($this->docente == false){
-                $usuario = Usuario::where('trabajador_tipo_trabajador_id',$trabajador_tipo_trabajador_docente->trabajador_tipo_trabajador_id)->first();
-                $usuario->trabajador_tipo_trabajador_id = null;
+                $usuario = Usuario::where('id_trabajador_tipo_trabajador',$trabajador_tipo_trabajador_docente->id_trabajador_tipo_trabajador)->first();
+                $usuario->id_trabajador_tipo_trabajador = null;
                 $usuario->usuario_estado = 0;
                 $usuario->save();
 
                 //cambiar el estado del coordinador 
-                $docente = Docente::where('trabajador_id',$this->trabajador_id)->where('docente_estado',1)->first();
+                $docente = Docente::where('id_trabajador',$this->trabajador_id)->where('docente_estado',1)->first();
                 $docente->docente_estado = 2;
                 $docente->save();
     
@@ -858,18 +858,18 @@ class Index extends Component
         }
         
         //coordinador
-        $trabajador_tipo_trabajador_coordinador = TrabajadorTipoTrabajador::where('trabajador_id',$this->trabajador_id)->where('tipo_trabajador_id',2)->where('trabajador_tipo_trabajador_estado',1)->first();
+        $trabajador_tipo_trabajador_coordinador = TrabajadorTipoTrabajador::where('id_trabajador',$this->trabajador_id)->where('id_tipo_trabajador',2)->where('trabajador_tipo_trabajador_estado',1)->first();
         if($trabajador_tipo_trabajador_coordinador){
             if($this->coordinador == false){
                 // desasiganr el trabajado asiganado al usuario y cambiar el estado del usuario a activo
-                $usuario = Usuario::where('trabajador_tipo_trabajador_id',$trabajador_tipo_trabajador_coordinador->trabajador_tipo_trabajador_id)->first();
-                $usuario->trabajador_tipo_trabajador_id = null;
+                $usuario = Usuario::where('id_trabajador_tipo_trabajador',$trabajador_tipo_trabajador_coordinador->id_trabajador_tipo_trabajador)->first();
+                $usuario->id_trabajador_tipo_trabajador = null;
                 $usuario->usuario_estado = 1;
                 $usuario->save();
 
                 //cambiar el estado del coordinador 
-                $coordinador = Coordinador::where('trabajador_id',$this->trabajador_id)->where('coordinador_estado',1)->first();
-                $facultad_id = $coordinador->facultad_id;
+                $coordinador = Coordinador::where('id_trabajador',$this->trabajador_id)->where('coordinador_estado',1)->first();
+                $facultad_id = $coordinador->id_facultad;
                 $coordinador->coordinador_estado = 2;
                 $coordinador->save();
 
@@ -888,17 +888,17 @@ class Index extends Component
         } 
 
         //administrativo
-        $trabajador_tipo_trabajador_administrativo = TrabajadorTipoTrabajador::where('trabajador_id',$this->trabajador_id)->where('tipo_trabajador_id',3)->where('trabajador_tipo_trabajador_estado',1)->first();
+        $trabajador_tipo_trabajador_administrativo = TrabajadorTipoTrabajador::where('id_trabajador',$this->trabajador_id)->where('id_tipo_trabajador',3)->where('trabajador_tipo_trabajador_estado',1)->first();
         if($trabajador_tipo_trabajador_administrativo){
             if($this->administrativo_check == false){
                 // desasiganr el trabajado asiganado al usuario y cambiar el estado del usuario a activo
-                $usuario = Usuario::where('trabajador_tipo_trabajador_id',$trabajador_tipo_trabajador_administrativo->trabajador_tipo_trabajador_id)->first();
-                $usuario->trabajador_tipo_trabajador_id = null;
+                $usuario = Usuario::where('id_trabajador_tipo_trabajador',$trabajador_tipo_trabajador_administrativo->id_trabajador_tipo_trabajador)->first();
+                $usuario->id_trabajador_tipo_trabajador = null;
                 $usuario->usuario_estado = 1;
                 $usuario->save();
 
                 //cambiar el estado del coordinador 
-                $administrativo = Administrativo::where('trabajador_id',$this->trabajador_id)->where('administrativo_estado',1)->first();
+                $administrativo = Administrativo::where('id_trabajador',$this->trabajador_id)->where('administrativo_estado',1)->first();
                 $administrativo->administrativo_estado = 2;
                 $administrativo->save();
     
@@ -914,18 +914,6 @@ class Index extends Component
         $this->dispatchBrowserEvent('modaldDesAsignar');
         $this->limpiarAsignacion();
     }
-
-    public function subirHistorial($usuario_id, $descripcion, $tabla)
-    {
-        HistorialAdministrativo::create([
-            "usuario_id" => auth('admin')->user()->usuario_id,
-            "trabajador_id" => auth('admin')->user()->TrabajadorTipoTrabajador->Trabajador->trabajador_id,
-            "historial_descripcion" => $descripcion,
-            "historial_tabla" => $tabla,
-            "historial_usuario_id" => $usuario_id,
-            "historial_fecha" => now()
-        ]);
-    }
     
     public function render()
     {
@@ -933,27 +921,27 @@ class Index extends Component
         $buscar = $this->search;
 
         if($this->tipo == 'all'){
-            $trabajadores = TrabajadorModel::where('trabajador_nombres','LIKE',"%{$this->search}%")
-                    ->orWhere('trabajador_apellidos','LIKE',"%{$this->search}%")
-                    ->orWhere('trabajador_grado','LIKE',"%{$this->search}%")
-                    ->orderBy('trabajador_id','DESC')
+            $trabajadores = TrabajadorModel::where('trabajador_nombre','LIKE',"%{$this->search}%")
+                    ->orWhere('trabajador_apellido','LIKE',"%{$this->search}%")
+                    ->orWhere('id_grado_academico','LIKE',"%{$this->search}%")
+                    ->orderBy('id_trabajador','DESC')
                     ->paginate($this->mostrar);
         }else{
-            $trabajadores = TrabajadorTipoTrabajador::join('trabajador','trabajador_tipo_trabajador.trabajador_id','=','trabajador.trabajador_id')
+            $trabajadores = TrabajadorTipoTrabajador::join('trabajador','trabajador_tipo_trabajador.id_trabajador','=','trabajador.id_trabajador')
                 ->where(function($query) use ($tip){
-                    $query->where('trabajador_tipo_trabajador.tipo_trabajador_id',$tip)
+                    $query->where('trabajador_tipo_trabajador.id_tipo_trabajador',$tip)
                         ->where('trabajador_tipo_trabajador.trabajador_tipo_trabajador_estado',1);
                 })
                 ->where(function($query) use ($buscar){
-                    $query->where('trabajador.trabajador_nombres','LIKE',"%{$buscar}%")
-                        ->orWhere('trabajador.trabajador_apellidos','LIKE',"%{$buscar}%")
-                        ->orWhere('trabajador.trabajador_grado','LIKE',"%{$buscar}%");
+                    $query->where('trabajador.trabajador_nombre','LIKE',"%{$buscar}%")
+                        ->orWhere('trabajador.trabajador_apellido','LIKE',"%{$buscar}%")
+                        ->orWhere('trabajador.id_grado_academico','LIKE',"%{$buscar}%");
                     })
-                ->orderBy('trabajador_tipo_trabajador_id','DESC')
+                ->orderBy('id_trabajador_tipo_trabajador','DESC')
                 ->paginate($this->mostrar);
         }
 
-        $tipo_trabajadores = TipoTrabajador::where('tipo_trabajador_id','!=','4')->get();
+        $tipo_trabajadores = TipoTrabajador::where('id_tipo_trabajador','!=','4')->get();
 
         return view('livewire.modulo-administrador.gestion-usuarios.trabajador.index', [
             'tipo_doc' => TipoDocumento::all(),
