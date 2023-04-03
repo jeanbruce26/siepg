@@ -79,14 +79,14 @@ class Persona extends Model
 
     // Ubigeo Direccion
     public function ubigeo_direccion(){
-        return $this->belongsTo(Distrito::class,
-        'id_distrito','ubigeo_direccion');
+        return $this->belongsTo(Ubigeo::class,
+        'id_ubigeo','ubigeo_direccion');
     }
 
     // Ubigeo Nacimiento
     public function ubigeo_nacimiento(){
-        return $this->belongsTo(Distrito::class,
-        'id_distrito','ubigeo_nacimiento');
+        return $this->belongsTo(Ubigeo::class,
+        'id_ubigeo','ubigeo_nacimiento');
     }
 
     // Inscripcion

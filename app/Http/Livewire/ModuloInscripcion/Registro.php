@@ -5,39 +5,25 @@ namespace App\Http\Livewire\ModuloInscripcion;
 use App\Jobs\ProcessRegistroFichaInscripcion;
 use App\Mail\EmailFichaInscripcion;
 use App\Models\Admision;
-use App\Models\Departamento;
 use App\Models\Discapacidad;
-use App\Models\Distrito;
 use App\Models\EstadoCivil;
-use App\Models\Expediente;
 use App\Models\ExpedienteAdmision;
 use App\Models\ExpedienteInscripcion;
 use App\Models\ExpedienteInscripcionSeguimiento;
 use App\Models\ExpedienteTipoSeguimiento;
 use App\Models\Genero;
 use App\Models\GradoAcademico;
-use App\Models\HistorialInscripcion;
 use App\Models\Inscripcion;
-use App\Models\InscripcionPago;
-use App\Models\Mencion;
 use App\Models\Modalidad;
 use App\Models\Pago;
 use App\Models\Persona;
-use App\Models\Programa;
 use App\Models\ProgramaProceso;
-use App\Models\Provincia;
-use App\Models\Sede;
-use App\Models\Subprograma;
-use App\Models\UbigeoPersona;
+use App\Models\Ubigeo;
 use App\Models\Universidad;
 use App\Models\UsuarioEstudiante;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\File;
-use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Response;
 
 class Registro extends Component
 {
@@ -73,8 +59,8 @@ class Registro extends Component
         $this->modalidad_array = Modalidad::where('modalidad_estado', 1)->get();
         $this->programa_array = Collect();
         $this->admision = Admision::where('admision_estado', 1)->first();
-        $this->ubigeo_direccion_array = Distrito::all();
-        $this->ubigeo_nacimiento_array = Distrito::all();
+        $this->ubigeo_direccion_array = Ubigeo::all();
+        $this->ubigeo_nacimiento_array = Ubigeo::all();
         if($persona)
         {
             $this->id_persona = $persona->id_persona;

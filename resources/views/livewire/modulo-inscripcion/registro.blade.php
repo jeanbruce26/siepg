@@ -359,7 +359,7 @@
                                 <label for="grado_academico" class="required form-label">
                                     Grado Académico o Titulo
                                 </label>
-                                <select wire:model="grado_academico" class="form-select @error('grado_academico') is-invalid @enderror" id="grado_academico"  data-control="select2" data-placeholder="Seleccione su grado academico" data-allow-clear="true" data-minimum-results-for-search="Infinity">
+                                <select wire:model="grado_academico" class="form-select @error('grado_academico') is-invalid @enderror" id="grado_academico"  data-control="select2" data-placeholder="Seleccione su grado academico" data-allow-clear="true">
                                     <option></option>
                                     @foreach ($grado_academico_array as $item)
                                         <option value="{{ $item->id_grado_academico }}">{{ $item->grado_academico }}</option>
