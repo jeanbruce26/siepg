@@ -96,6 +96,18 @@
 			</span>
 		</div>
 
+        <div id="modulo_notioficaciones"
+            class="bg-white"
+            data-kt-drawer="true"
+            data-kt-drawer-activate="true"
+            data-kt-drawer-overlay="true"
+            data-kt-drawer-toggle="#modulo_notioficaciones_button"
+            data-kt-drawer-close="#modulo_notioficaciones_close"
+            data-kt-drawer-width="{default:'400px', 'md': '450px'}"
+            >
+            @livewire('modulo-plataforma.notificaciones.index')
+        </div>
+
 		<script src="{{ asset('assets/plugins/global/plugins.bundle.js') }}"></script>
 		<script src="{{ asset('assets/js/scripts.bundle.js') }}"></script>
 

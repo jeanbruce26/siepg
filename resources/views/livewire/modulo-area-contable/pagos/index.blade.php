@@ -13,7 +13,7 @@
                     <li class="breadcrumb-item text-muted">Pagos</li>
                 </ul>
             </div>
-            <div class="d-flex align-items-center gap-2 gap-lg-3">
+            {{-- <div class="d-flex align-items-center gap-2 gap-lg-3">
                 <div class="m-0">
                     <a href="#" class="btn btn-sm btn-flex bg-body btn-color-gray-700 btn-active-color-primary shadow-sm fw-bold" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
                         <span class="svg-icon svg-icon-6 svg-icon-muted me-1">
@@ -34,11 +34,11 @@
                             <div class="mb-10">
                                 <label class="form-label fw-semibold">Proceso de Admisión:</label>
                                 <div>
-                                    {{-- <select class="form-select" wire:model="filtro_proceso" id="filtro_proceso"  data-control="select2" data-placeholder="Seleccione">
+                                    <select class="form-select" wire:model="filtro_proceso" id="filtro_proceso"  data-control="select2" data-placeholder="Seleccione">
                                         $@foreach ($admisiones as $item)
                                         <option value="{{ $item->id_admision }}">{{ $item->admision }}</option>
                                         @endforeach
-                                    </select> --}}
+                                    </select>
                                 </div>
                             </div>
                             <div class="d-flex justify-content-end">
@@ -48,7 +48,7 @@
                         </form>
                     </div>
                 </div>
-            </div>
+            </div> --}}
         </div>
     </div>
     <div id="kt_app_content" class="app-content flex-column-fluid">
@@ -62,275 +62,176 @@
                         </span>
                         <div class="d-flex flex-column">
                             <span class="fw-bold">
-                                El dato mostrado de Inscripción es el total del proceso de admisión actual.
+                                A continuación se muestran los pagos registrados en el sistema. Vas a poder ver el detalle de cada pago, así como también el estado de cada uno de ellos.
                             </span>
                         </div>
                     </div>
                     {{-- card monto de pagos --}}
-                    {{-- <div class="row g-5 mb-5">
-                        <div class="col-md-4">
-                            <div class="card shadow-sm">
-                                <div class="px-6 py-4 mb-0">
-                                    <div class="mb-3">
-                                        <span class="fs-2" style="font-weight: 700;">
-                                            Ingreso Total
-                                        </span>
+                    <div class="card shadow-sm">
+                        <div class="card-body mb-0">
+                            <div class="table-responsive">
+                                <div class="d-flex align-items-center mb-5">
+                                    <div class="col-md-4 pe-3"></div>
+                                    <div class="col-md-4 px-3">
+                                        <select class="form-select" wire:model="filtro_canal_pago" data-control="select2" id="filtro_canal_pago" data-placeholder="Seleccione el canal de pago">
+                                            <option></option>
+                                            <option value="all">Mostrar todos los pagos</option>
+                                            @foreach ($canal_pagos as $item)
+                                                <option value="{{ $item->id_canal_pago }}">Pago en {{ $item->canal_pago }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
-                                    <div>
-                                        <span class="fw-semibold fs-1">
-                                            S/. {{ number_format($ingreso_total, 2, ',', ' ') }}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card shadow-sm">
-                                <div class="px-6 py-4 mb-0">
-                                    <div class="mb-3">
-                                        <span class="fs-2" style="font-weight: 700;">
-                                            Registro Pagos
-                                        </span>
-                                    </div>
-                                    <div>
-                                        <span class="fw-semibold fs-1">
-                                            {{ $registro_total }}
-                                        </span>
+                                    <div class="col-md-4 ps-3">
+                                        <input type="search" wire:model="search" class="form-control w-100" placeholder="Buscar..."/>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card shadow-sm">
-                                <div class="px-6 py-4 mb-0">
-                                    <div class="mb-3">
-                                        <span class="fs-2" style="font-weight: 700;">
-                                            Inscripciones
-                                        </span>
-                                    </div>
-                                    <div>
-                                        <span class="fw-semibold fs-1">
-                                            S/. {{ number_format($inscripcion_total, 2, ',', ' ') }}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card shadow-sm">
-                                <div class="px-6 py-4 mb-0">
-                                    <div class="mb-3">
-                                        <span class="fs-2" style="font-weight: 700;">
-                                            Constancia Ingreso
-                                        </span>
-                                    </div>
-                                    <div>
-                                        <span class="fw-semibold fs-1">
-                                            S/. {{ number_format($constancia_total, 2, ',', ' ') }}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card shadow-sm">
-                                <div class="px-6 py-4 mb-0">
-                                    <div class="mb-3">
-                                        <span class="fs-2" style="font-weight: 700;">
-                                            Matriculas
-                                        </span>
-                                    </div>
-                                    <div>
-                                        <span class="fw-semibold fs-1">
-                                            S/. {{ number_format($matricula_total, 2, ',', ' ') }}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div> --}}
-                    {{-- card monto de pagos --}}
-                    {{-- <div class="row g-5">
-                        <div class="col-md-6">
-                            <div class="card shadow-sm">
-                                <div class="card-header bg-light-success">
-                                    <h3 class="card-title fw-bold">
-                                        Reporte de Inscritos por Programa de Maestría del Proceso de {{ ucwords(strtolower($admision->admision)) }}
-                                    </h3>
-                                </div>
-                                <div class="card-body mb-0">
-                                    <div class="table-responsive" wire:loading.class="table-loading" wire:target="aplicar_filtro">
-                                        <div class="table-loading-message">
-                                            Cargando...
-                                        </div>
-                                        <table class="table table-hover table-rounded table-row-bordered border mb-0 gy-4 gs-4" wire:loading.class="opacity-25" wire:target="aplicar_filtro">
-                                            <thead>
-                                                <tr class="fw-bold fs-5 text-gray-800 border-bottom-2 border-gray-200">
-                                                    <th>#</th>
-                                                    <th>Programa</th>
-                                                    <th class="col-md-2">Cantidad</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @forelse ($programas_maestria as $item)
-                                                    <tr>
-                                                        <td>
-                                                            {{ $loop->iteration }}
-                                                        </td>
-                                                        <td>
-                                                            @if ($item->mencion)
-                                                                Mencion en {{ ucwords(strtolower($item->mencion)) }}
-                                                            @else
-                                                                {{ ucwords(strtolower($item->programa)) }} en {{ ucwords(strtolower($item->subprograma)) }}
-                                                            @endif
-                                                        </td>
-                                                        <td class="fw-bold">
-                                                            {{ $item->cantidad }}
-                                                        </td>
-                                                    </tr>
-                                                @empty
-                                                    <tr>
-                                                        <td colspan="3" class="text-center text-muted">
-                                                            No hay registros
-                                                        </td>
-                                                    </tr>
-                                                @endforelse
-                                            </tbody>
-                                            <tfoot class="bg-light-secondary">
-                                                <td colspan="2" class="text-end">
-                                                    <span class="fw-bold">
-                                                        Total
-                                                    </span>
-                                                </td>
+                                <table class="table table-hover table-rounded align-middle table-row-bordered border mb-0 gy-4 gs-4">
+                                    <thead>
+                                        <tr class="fw-bold fs-6 text-gray-800 border-bottom-2 border-gray-200">
+                                            <th>ID</th>
+                                            <th>Numero Documento</th>
+                                            <th>Numero Operacion</th>
+                                            <th>Monto</th>
+                                            <th>Fecha</th>
+                                            <th>Canal de Pago</th>
+                                            <th>Estado</th>
+                                            <th class="text-end">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse ($pagos as $item)
+                                            <tr>
                                                 <td class="fw-bold">
-                                                    {{ $programas_maestria->sum('cantidad') }}
+                                                    {{ $item->id_pago }}
                                                 </td>
-                                            </tfoot>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="card shadow-sm">
-                                <div class="card-header bg-light-primary">
-                                    <h3 class="card-title fw-bold">
-                                        Reporte de Inscritos por Programa de Doctorado del Proceso de {{ ucwords(strtolower($admision->admision)) }}
-                                    </h3>
-                                </div>
-                                <div class="card-body mb-0">
-                                    <div class="table-responsive" wire:loading.class="table-loading" wire:target="aplicar_filtro">
-                                        <div class="table-loading-message">
-                                            Cargando...
-                                        </div>
-                                        <table class="table table-hover table-rounded table-row-bordered border mb-0 gy-4 gs-4" wire:loading.class="opacity-25" wire:target="aplicar_filtro">
-                                            <thead>
-                                                <tr class="fw-bold fs-5 text-gray-800 border-bottom-2 border-gray-200">
-                                                    <th>#</th>
-                                                    <th>Programa</th>
-                                                    <th class="col-md-2">Cantidad</th>
+                                                <td>
+                                                    {{ $item->pago_documento }}
+                                                </td>
+                                                <td>
+                                                    {{ $item->pago_operacion }}
+                                                </td>
+                                                <td>
+                                                    S/. {{ $item->pago_monto }}
+                                                </td>
+                                                <td>
+                                                    {{ date('d/m/Y', strtotime($item->pago_fecha)) }}
+                                                </td>
+                                                <td>
+                                                    {{ $item->canal_pago->canal_pago }}
+                                                </td>
+                                                <td>
+                                                    @if ($item->pago_verificacion == 2)
+                                                        <span class="badge badge-success">Validado</span>
+                                                    @elseif ($item->pago_verificacion == 1)
+                                                        <span class="badge badge-warning">No Verificado</span>
+                                                    @else
+                                                        <span class="badge badge-danger">Observado</span>
+                                                    @endif
+                                                </td>
+                                                <td class="text-end">
+                                                    <a href="#modal_pago_contable" wire:click="cargar_pago({{ $item->id_pago }})" class="btn btn-light-info btn-sm hover-scale" data-bs-toggle="modal" data-bs-target="#modal_pago_contable">
+                                                        Ver Pago
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            @if ($search != '')
+                                                <tr>
+                                                    <td colspan="8" class="text-center text-muted">
+                                                        No se encontraron resultados para la busqueda "{{ $search }}"
+                                                    </td>
                                                 </tr>
-                                            </thead>
-                                            <tbody>
-                                                @forelse ($programas_doctorado as $item)
-                                                    <tr>
-                                                        <td>
-                                                            {{ $loop->iteration }}
-                                                        </td>
-                                                        <td>
-                                                            @if ($item->mencion)
-                                                                Mencion en {{ ucwords(strtolower($item->mencion)) }}
-                                                            @else
-                                                                {{ ucwords(strtolower($item->programa)) }} en {{ ucwords(strtolower($item->subprograma)) }}
-                                                            @endif
-                                                        </td>
-                                                        <td class="fw-bold">
-                                                            {{ $item->cantidad }}
-                                                        </td>
-                                                    </tr>
-                                                @empty
-                                                    <tr>
-                                                        <td colspan="3" class="text-center text-muted">
-                                                            No hay registros
-                                                        </td>
-                                                    </tr>
-                                                @endforelse
-                                            </tbody>
-                                            <tfoot class="bg-light-secondary">
-                                                <td colspan="2" class="text-end">
-                                                    <span class="fw-bold">
-                                                        Total
-                                                    </span>
-                                                </td>
-                                                <td class="fw-bold">
-                                                    {{ $programas_doctorado->sum('cantidad') }}
-                                                </td>
-                                            </tfoot>
-                                        </table>
-                                    </div>
-                                </div>
+                                            @else
+                                                <tr>
+                                                    <td colspan="8" class="text-center text-muted">
+                                                        No hay registros
+                                                    </td>
+                                                </tr>
+                                            @endif
+                                        @endforelse
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
-                    </div> --}}
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    {{-- modal create/edit expediente --}}
-    {{-- <div wire:ignore.self class="modal fade" tabindex="-1" id="modal_expediente">
+    {{-- modal pago --}}
+    <div wire:ignore.self class="modal fade" tabindex="-1" id="modal_pago_contable" data-bs-keyboard="false" aria-labelledby="modal_pago_contable" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h3 class="modal-title">
-                        {{ $titulo_modal }}
+                        Validar Pago
                     </h3>
-                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close" wire:click="limpiar_expediente">
+                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close" wire:click="limpiar">
                         <i class="bi bi-x fs-1"></i>
                     </div>
                 </div>
                 <div class="modal-body">
                     <form autocomplete="off">
                         <div class="mb-5">
-                            <label for="expediente" class="required form-label">
-                                {{ $expediente_nombre }}
+                            <label for="expediente" class="form-label d-flex justify-content-between align-items-center mb-2">
+                                <span>
+                                    Voucher
+                                </span>
+                                <a href="{{ asset($voucher) }}" target="_blank" class="btn btn-sm btn-light-info">
+                                    Ver Voucher Completo
+                                </a>
                             </label>
-                            <input type="file" wire:model="expediente" class="form-control mb-1 @error('expediente') is-invalid @enderror" accept=".pdf" id="upload{{ $iteration }}"/>
-                            <span class="text-muted">
-                                Nota: El archivo debe ser en formato PDF y no debe pesar mas de 10MB <br>
-                            </span>
-                            @error('expediente')
-                                <span class="text-danger">{{ $message }}</span>
+                            <div class="form-control">
+                                <img src="{{ asset($voucher) }}" alt="voucher"  class="img-fluid rounded">
+                            </div>
+                        </div>
+                        <div class="">
+                            <label for="observacion" class="form-label">
+                                Observacion
+                            </label>
+                            <textarea class="form-control @error('observacion') is-invalid @enderror" id="observacion" wire:model="observacion" rows="4"></textarea>
+                            @error('observacion')
+                                <div class="text-danger">
+                                    {{ $message }}
+                                </div>
                             @enderror
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal" wire:click="limpiar_expediente">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal" wire:click="limpiar">
                         Cerrar
                     </button>
-                    <button type="button" wire:click="registrar_expediente" class="btn btn-primary" @if($expediente == null) disabled @endif wire:loading.attr="disabled">
-                        <div wire:loading.remove wire:target="registrar_expediente">
-                            {{ $boton_modal }}
+                    <button type="button" wire:click="observar_pago" class="btn btn-danger" wire:loading.attr="disabled">
+                        <div wire:loading.remove wire:target="observar_pago">
+                            Observar Pago
                         </div>
-                        <div wire:loading wire:target="registrar_expediente">
+                        <div wire:loading wire:target="observar_pago">
+                            Procesando...
+                        </div>
+                    </button>
+                    <button type="button" wire:click="validar_pago" class="btn btn-primary" wire:loading.attr="disabled">
+                        <div wire:loading.remove wire:target="validar_pago">
+                            Validar Pago
+                        </div>
+                        <div wire:loading wire:target="validar_pago">
                             Procesando...
                         </div>
                     </button>
                 </div>
             </div>
         </div>
-    </div> --}}
+    </div>
 </div>
-{{-- @push('scripts')
+@push('scripts')
     <script>
-        // filtro_proceso select2
+        // filtro_canal_pago select2
         $(document).ready(function () {
-            $('#filtro_proceso').select2({
-                placeholder: 'Seleccione',
+            $('#filtro_canal_pago').select2({
+                placeholder: 'Seleccione su canal de pago',
                 allowClear: true,
                 width: '100%',
                 selectOnClose: true,
-                minimumResultsForSearch: Infinity,
                 language: {
                     noResults: function () {
                         return "No se encontraron resultados";
@@ -340,16 +241,15 @@
                     }
                 }
             });
-            $('#filtro_proceso').on('change', function(){
-                @this.set('filtro_proceso', this.value);
+            $('#filtro_canal_pago').on('change', function(){
+                @this.set('filtro_canal_pago', this.value);
             });
             Livewire.hook('message.processed', (message, component) => {
-                $('#filtro_proceso').select2({
-                    placeholder: 'Seleccione',
+                $('#filtro_canal_pago').select2({
+                    placeholder: 'Seleccione su canal de pago',
                     allowClear: true,
                     width: '100%',
                     selectOnClose: true,
-                    minimumResultsForSearch: Infinity,
                     language: {
                         noResults: function () {
                             return "No se encontraron resultados";
@@ -359,10 +259,10 @@
                         }
                     }
                 });
-                $('#filtro_proceso').on('change', function(){
-                    @this.set('filtro_proceso', this.value);
+                $('#filtro_canal_pago').on('change', function(){
+                    @this.set('filtro_canal_pago', this.value);
                 });
             });
         });
     </script>
-@endpush --}}
+@endpush

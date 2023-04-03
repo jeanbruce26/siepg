@@ -4,11 +4,11 @@
 @livewire('modulo-area-contable.pagos.index')
 @endsection
 @section('scripts')
-{{-- <script>
-    window.addEventListener('modal_encuesta', event => {
-        $('#modal_encuesta').modal(event.detail.action);
+<script>
+    window.addEventListener('modal_pago_contable', event => {
+        $('#modal_pago_contable').modal(event.detail.action);
     })
-    window.addEventListener('alerta-encuesta', event => {
+    window.addEventListener('alerta_pago_contable', event => {
         Swal.fire({
             title: event.detail.title,
             text: event.detail.text,
@@ -20,5 +20,5 @@
             }
         });
     })
-</script> --}}
+</script>
 @endsection

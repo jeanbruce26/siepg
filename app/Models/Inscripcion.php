@@ -17,7 +17,7 @@ class Inscripcion extends Model
         'inscripcion_ficha_url',
         'inscripcion_fecha',
         'id_persona',
-        'id_concepto_pago',
+        'inscripcion_estado',
         'id_pago',
         'id_programa_proceso',
         'inscripcion_tipo_programa',
@@ -28,11 +28,6 @@ class Inscripcion extends Model
     // Persona
     public function persona(){
         return $this->belongsTo(Persona::class, 'id_persona','id_persona');
-    }
-
-    // concepto pago
-    public function concepto_pago(){
-        return $this->belongsTo(ConceptoPago::class, 'id_concepto_pago','id_concepto_pago');
     }
 
     // pago
