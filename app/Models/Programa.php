@@ -9,26 +9,37 @@ class Programa extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = "id_programa";
+    protected $primaryKey = 'id_programa';
     protected $table = 'programa';
     protected $fillable = [
         'id_programa',
+        'programa_iniciales',
         'programa',
-        'programa_estado',
+        'subprograma',
+        'mencion',
+        'id_sunedu',
+        'codigo_sunedu',
+        'id_modalidad',
+        'id_facultad',
         'id_sede',
+        'programa_tipo',
+        'programa_estado',
     ];
 
     public $timestamps = false;
 
-    // Sede
+    // sede
     public function sede(){
-        return $this->belongsTo(Sede::class,
-        'id_sede','id_sede');
+        return $this->belongsTo(Sede::class,'id_sede','id_sede');
     }
-    
-    // Subprograma
-    public function subprograma(){
-        return $this->hasMany(Subprograma::class,
-        'id_programa','id_programa');
+
+    // modalidad
+    public function modalidad(){
+        return $this->belongsTo(Modalidad::class,'id_modalidad','id_modalidad');
+    }
+
+    // facultad
+    public function facultad(){
+        return $this->belongsTo(Facultad::class,'id_facultad','id_facultad');
     }
 }

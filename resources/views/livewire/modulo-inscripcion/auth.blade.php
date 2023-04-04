@@ -118,6 +118,7 @@
                                                 Iniciar Inscripción
                                             </div>
                                             <div wire:loading wire:target="iniciar_inscripcion" class="py-1">
+                                                Procesando...
                                                 <span class="spinner-border spinner-border-sm align-middle"></span>
                                             </div>
                                         </button>
@@ -222,7 +223,7 @@
                             Registrar Pago
                         </div>
                         <div wire:loading wire:target="registrar_pago">
-                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                            Procesando...
                         </div>
                     </button>
                 </div>
@@ -239,7 +240,7 @@
                 allowClear: true,
                 width: '100%',
                 selectOnClose: true,
-                minimumResultsForSearch: Infinity,
+                // minimumResultsForSearch: Infinity,
                 language: {
                     noResults: function () {
                         return "No se encontraron resultados";
@@ -258,7 +259,7 @@
                     allowClear: true,
                     width: '100%',
                     selectOnClose: true,
-                    minimumResultsForSearch: Infinity,
+                    // minimumResultsForSearch: Infinity,
                     language: {
                         noResults: function () {
                             return "No se encontraron resultados";

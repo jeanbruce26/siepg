@@ -9,37 +9,27 @@ class ProgramaProceso extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = "id_programa_proceso";
+    protected $primaryKey = 'id_programa_proceso';
     protected $table = 'programa_proceso';
     protected $fillable = [
         'id_programa_proceso',
-        'id_modalidad',
         'id_admision',
-        'id_mencion_plan',
+        'id_programa_plan',
         'programa_proceso_estado',
     ];
 
-    //Modalidad
-    public function modalidad(){
-        return $this->belongsTo(Modalidad::class,
-        'id_modalidad',  'id_modalidad');
-    }
-
-    //Admision
+    // admision
     public function admision(){
-        return $this->belongsTo(Admision::class,
-        'id_admision',  'id_admision');
+        return $this->belongsTo(Admision::class,'id_admision','id_admision');
     }
 
-    //Mencion Plan
-    public function mencion_plan(){
-        return $this->belongsTo(MencionPlan::class,
-        'id_mencion_plan',  'id_mencion_plan');
+    // programa_plan
+    public function programa_plan(){
+        return $this->belongsTo(ProgramaPlan::class,'id_programa_plan','id_programa_plan');
     }
 
-    // Inscripcion
+    // inscripcion
     public function inscripcion(){
-        return $this->hasMany(Inscripcion::class,
-        'id_programa_proceso', 'id_programa_proceso');
+        return $this->hasMany(Inscripcion::class,'id_programa_proceso','id_programa_proceso');
     }
 }
