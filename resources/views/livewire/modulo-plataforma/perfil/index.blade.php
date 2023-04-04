@@ -61,10 +61,18 @@
                                         Programa:
                                     </span>
                                     <span class="d-flex align-items-center text-gray-800 ms-2 fw-bold">
-                                        @if ($inscripcion->programa_proceso->mencion_plan->mencion->mencion == null)
-                                            {{ ucwords(strtolower($inscripcion->programa_proceso->mencion_plan->mencion->subprograma->programa->programa)) }} en {{ ucwords(strtolower($inscripcion->programa_proceso->mencion_plan->mencion->subprograma->subprograma)) }}
+                                        @if ($admitido)
+                                            @if ($admitido->programa_proceso->programa_plan->programa->mencion == null)
+                                                {{ ucwords(strtolower($admitido->programa_proceso->programa_plan->programa->programa)) }} en {{ ucwords(strtolower($admitido->programa_proceso->programa_plan->programa->subprograma)) }}
+                                            @else
+                                                {{ ucwords(strtolower($admitido->programa_proceso->programa_plan->programa->programa)) }} en {{ ucwords(strtolower($admitido->programa_proceso->programa_plan->programa->subprograma)) }} con mención en {{ ucwords(strtolower($admitido->programa_proceso->programa_plan->programa->mencion)) }}
+                                            @endif
                                         @else
-                                            {{ ucwords(strtolower($inscripcion->programa_proceso->mencion_plan->mencion->subprograma->programa->programa)) }} en {{ ucwords(strtolower($inscripcion->programa_proceso->mencion_plan->mencion->subprograma->subprograma)) }} con mención en {{ ucwords(strtolower($inscripcion->programa_proceso->mencion_plan->mencion->mencion)) }}
+                                            @if ($inscripcion->programa_proceso->programa_plan->programa->mencion == null)
+                                                {{ ucwords(strtolower($inscripcion->programa_proceso->programa_plan->programa->programa)) }} en {{ ucwords(strtolower($inscripcion->programa_proceso->programa_plan->programa->subprograma)) }}
+                                            @else
+                                                {{ ucwords(strtolower($inscripcion->programa_proceso->programa_plan->programa->programa)) }} en {{ ucwords(strtolower($inscripcion->programa_proceso->programa_plan->programa->subprograma)) }} con mención en {{ ucwords(strtolower($inscripcion->programa_proceso->programa_plan->programa->mencion)) }}
+                                            @endif
                                         @endif
                                     </span>
                                 </div>

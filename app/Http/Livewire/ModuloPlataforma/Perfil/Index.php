@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\ModuloPlataforma\Perfil;
 
 use App\Models\Admision;
+use App\Models\Admitido;
 use App\Models\Persona;
 use App\Models\UsuarioEstudiante;
 use Livewire\Component;
@@ -121,6 +122,7 @@ class Index extends Component
     {
         $documento = auth('plataforma')->user()->usuario_estudiante; // documento del usuario logueado
         $persona = Persona::where('numero_documento', $documento)->first(); // persona logueada
+        $admitido = Admitido::where('id_persona', $persona->id_persona)->first(); // admitido del usuario logueado')
         if(!$persona)
         {
             abort(404);
@@ -133,6 +135,7 @@ class Index extends Component
         return view('livewire.modulo-plataforma.perfil.index', [
             'persona' => $persona,
             'inscripcion' => $inscripcion,
+            'admitido' => $admitido,
         ]);
     }
 }

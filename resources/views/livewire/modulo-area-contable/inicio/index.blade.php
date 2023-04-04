@@ -330,7 +330,6 @@
                 allowClear: true,
                 width: '100%',
                 selectOnClose: true,
-                minimumResultsForSearch: Infinity,
                 language: {
                     noResults: function () {
                         return "No se encontraron resultados";
@@ -349,7 +348,6 @@
                     allowClear: true,
                     width: '100%',
                     selectOnClose: true,
-                    minimumResultsForSearch: Infinity,
                     language: {
                         noResults: function () {
                             return "No se encontraron resultados";

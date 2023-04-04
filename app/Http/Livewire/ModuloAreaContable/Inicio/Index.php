@@ -29,28 +29,24 @@ class Index extends Component
                                         ->where('programa_proceso.id_admision', $this->filtro_proceso)
                                         ->sum('pago.pago_monto');
         $this->programas_maestria = Inscripcion::join('programa_proceso', 'programa_proceso.id_programa_proceso', '=', 'inscripcion.id_programa_proceso')
-                                        ->join('mencion_plan', 'mencion_plan.id_mencion_plan', '=', 'programa_proceso.id_mencion_plan')
-                                        ->join('mencion','mencion_plan.id_mencion','=','mencion.id_mencion')
-                                        ->join('subprograma','mencion.id_subprograma','=','subprograma.id_subprograma')
-                                        ->join('programa','subprograma.id_programa','=','programa.id_programa')
-                                        ->select('subprograma.subprograma', 'mencion.mencion', 'programa.programa', Inscripcion::raw('count(inscripcion.id_programa_proceso) as cantidad'))
-                                        ->where('mencion.mencion_estado',1)
-                                        ->where('programa.id_programa',1) // 1 = Maestria
+                                        ->join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
+                                        ->join('programa','programa_plan.id_programa','=','programa.id_programa')
+                                        ->select('programa.subprograma', 'programa.mencion', 'programa.programa', Inscripcion::raw('count(inscripcion.id_programa_proceso) as cantidad'))
+                                        ->where('programa.programa_estado',1)
+                                        ->where('programa.programa_tipo',1) // 1 = Maestria
                                         ->where('programa_proceso.id_admision', $this->filtro_proceso)
                                         ->groupBy('inscripcion.id_programa_proceso')
-                                        ->orderBy(Inscripcion::raw('count(inscripcion.id_programa_proceso)'), 'DESC')
+                                        ->orderBy(Inscripcion::raw('count(inscripcion.id_programa_proceso)'), 'desc')
                                         ->get();
         $this->programas_doctorado = Inscripcion::join('programa_proceso', 'programa_proceso.id_programa_proceso', '=', 'inscripcion.id_programa_proceso')
-                                        ->join('mencion_plan', 'mencion_plan.id_mencion_plan', '=', 'programa_proceso.id_mencion_plan')
-                                        ->join('mencion','mencion_plan.id_mencion','=','mencion.id_mencion')
-                                        ->join('subprograma','mencion.id_subprograma','=','subprograma.id_subprograma')
-                                        ->join('programa','subprograma.id_programa','=','programa.id_programa')
-                                        ->select('subprograma.subprograma', 'mencion.mencion', 'programa.programa', Inscripcion::raw('count(inscripcion.id_programa_proceso) as cantidad'))
-                                        ->where('mencion.mencion_estado',1)
-                                        ->where('programa.id_programa',2) // 1 = Doctorado
+                                        ->join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
+                                        ->join('programa','programa_plan.id_programa','=','programa.id_programa')
+                                        ->select('programa.subprograma', 'programa.mencion', 'programa.programa', Inscripcion::raw('count(inscripcion.id_programa_proceso) as cantidad'))
+                                        ->where('programa.programa_estado',1)
+                                        ->where('programa.programa_tipo',2) // 1 = Doctorado
                                         ->where('programa_proceso.id_admision', $this->filtro_proceso)
                                         ->groupBy('inscripcion.id_programa_proceso')
-                                        ->orderBy(Inscripcion::raw('count(inscripcion.id_programa_proceso)'), 'DESC')
+                                        ->orderBy(Inscripcion::raw('count(inscripcion.id_programa_proceso)'), 'desc')
                                         ->get();
     }
 
@@ -68,25 +64,21 @@ class Index extends Component
                                         ->where('programa_proceso.id_admision', $this->filtro_proceso)
                                         ->sum('pago.pago_monto');
             $this->programas_maestria = Inscripcion::join('programa_proceso', 'programa_proceso.id_programa_proceso', '=', 'inscripcion.id_programa_proceso')
-                                        ->join('mencion_plan', 'mencion_plan.id_mencion_plan', '=', 'programa_proceso.id_mencion_plan')
-                                        ->join('mencion','mencion_plan.id_mencion','=','mencion.id_mencion')
-                                        ->join('subprograma','mencion.id_subprograma','=','subprograma.id_subprograma')
-                                        ->join('programa','subprograma.id_programa','=','programa.id_programa')
-                                        ->select('subprograma.subprograma', 'mencion.mencion', 'programa.programa', Inscripcion::raw('count(inscripcion.id_programa_proceso) as cantidad'))
-                                        ->where('mencion.mencion_estado',1)
-                                        ->where('programa.id_programa',1) // 1 = Maestria
+                                        ->join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
+                                        ->join('programa','programa_plan.id_programa','=','programa.id_programa')
+                                        ->select('programa.subprograma', 'programa.mencion', 'programa.programa', Inscripcion::raw('count(inscripcion.id_programa_proceso) as cantidad'))
+                                        ->where('programa.programa_estado',1)
+                                        ->where('programa.programa_tipo',1) // 1 = Maestria
                                         ->where('programa_proceso.id_admision', $this->filtro_proceso)
                                         ->groupBy('inscripcion.id_programa_proceso')
                                         ->orderBy(Inscripcion::raw('count(inscripcion.id_programa_proceso)'), 'DESC')
                                         ->get();
             $this->programas_doctorado = Inscripcion::join('programa_proceso', 'programa_proceso.id_programa_proceso', '=', 'inscripcion.id_programa_proceso')
-                                        ->join('mencion_plan', 'mencion_plan.id_mencion_plan', '=', 'programa_proceso.id_mencion_plan')
-                                        ->join('mencion','mencion_plan.id_mencion','=','mencion.id_mencion')
-                                        ->join('subprograma','mencion.id_subprograma','=','subprograma.id_subprograma')
-                                        ->join('programa','subprograma.id_programa','=','programa.id_programa')
-                                        ->select('subprograma.subprograma', 'mencion.mencion', 'programa.programa', Inscripcion::raw('count(inscripcion.id_programa_proceso) as cantidad'))
-                                        ->where('mencion.mencion_estado',1)
-                                        ->where('programa.id_programa',2) // 1 = Doctorado
+                                        ->join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
+                                        ->join('programa','programa_plan.id_programa','=','programa.id_programa')
+                                        ->select('programa.subprograma', 'programa.mencion', 'programa.programa', Inscripcion::raw('count(inscripcion.id_programa_proceso) as cantidad'))
+                                        ->where('programa.programa_estado',1)
+                                        ->where('programa.programa_tipo',2) // 1 = Doctorado
                                         ->where('programa_proceso.id_admision', $this->filtro_proceso)
                                         ->groupBy('inscripcion.id_programa_proceso')
                                         ->orderBy(Inscripcion::raw('count(inscripcion.id_programa_proceso)'), 'DESC')

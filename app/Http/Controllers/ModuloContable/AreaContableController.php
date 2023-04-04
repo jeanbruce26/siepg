@@ -16,4 +16,12 @@ class AreaContableController extends Controller
     {
         return view('modulo-area-contable.pago.index');
     }
+
+    public function perfil()
+    {
+        $id_tipo_trabajador = 3;
+        return view('modulo-area-contable.perfil.index', [
+            'id_tipo_trabajador' => $id_tipo_trabajador
+        ]);
+    }
 }
