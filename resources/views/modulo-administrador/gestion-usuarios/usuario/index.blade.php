@@ -7,7 +7,6 @@
 @endsection
 
 @section('javascript')
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.38/dist/sweetalert2.all.min.js"></script>
 <script>
 	window.addEventListener('modalUsuario', event => {
 		$('#modalUsuario').modal('hide');
@@ -26,7 +25,7 @@
                 confirmButton: "btn btn-"+event.detail.color,
             }
         });
-    })
+    });
 
 	//Alerta de cuestioranio para confirmar una accion
 	window.addEventListener('alertaConfirmacionUsuario', event => {
@@ -46,7 +45,8 @@
 			if (result.isConfirmed) {
 				Livewire.emitTo('modulo-administrador.gestion-usuarios.usuario.index', 'cambiarEstado', event.detail.id);
 			}
-		})
-	})
+		});
+	});
+
 </script>
 @endsection

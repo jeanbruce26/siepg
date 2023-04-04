@@ -75,22 +75,22 @@
                                 <tbody>
                                     @foreach ($usuarios as $item)
                                     <tr>
-                                        <td align="center" class="fw-bold fs-5">{{ $item->usuario_id }}</td>
+                                        <td align="center" class="fw-bold fs-5">{{ $item->id_usuario }}</td>
                                         <td>{{ $item->usuario_nombre }}</td>
                                         <td>{{ $item->usuario_correo }}</td>
                                         <td align="center">
                                             @if ($item->usuario_estado == 1)
-                                                <span style="cursor: pointer;" wire:click="cargarAlerta({{ $item->usuario_id }})" class="badge text-bg-primary text-light hover-elevate-down">Activo <span class="pulse-ring"></span></span>
+                                                <span style="cursor: pointer;" wire:click="cargarAlerta({{ $item->id_usuario }})" class="badge text-bg-primary text-light hover-elevate-down">Activo <span class="pulse-ring"></span></span>
                                             @endif
                                             @if ($item->usuario_estado == 2)
-                                                <span style="cursor: pointer;" wire:click="cargarAlerta({{ $item->usuario_id }})" class="badge text-bg-success text-light hover-elevate-down">Asignado <span class="pulse-ring"></span></span>
+                                                <span style="cursor: pointer;" wire:click="cargarAlerta({{ $item->id_usuario }})" class="badge text-bg-success text-light hover-elevate-down">Asignado <span class="pulse-ring"></span></span>
                                             @endif
                                             @if ($item->usuario_estado == 0)
-                                                <span style="cursor: pointer;" wire:click="cargarAlerta({{ $item->usuario_id }})" class="badge text-bg-danger text-light hover-elevate-down">Inactivo <span class="pulse-ring"></span></span>
+                                                <span style="cursor: pointer;" wire:click="cargarAlerta({{ $item->id_usuario }})" class="badge text-bg-danger text-light hover-elevate-down">Inactivo <span class="pulse-ring"></span></span>
                                             @endif
                                         </td>
                                         <td align="center">
-                                            <a href="#modalUsuario" wire:click="cargarUsuario({{ $item->usuario_id }})" class="btn btn-link btn-color-success hover-scale pulse pulse-success d-flex justify-content-center align-items-center" data-bs-toggle="modal" data-bs-target="#modalUsuario">
+                                            <a href="#modalUsuario" wire:click="cargarUsuario({{ $item->id_usuario }})" class="btn btn-link btn-color-success hover-scale pulse pulse-success d-flex justify-content-center align-items-center" data-bs-toggle="modal" data-bs-target="#modalUsuario">
                                                 <i class="bi bi-pencil-square fs-1 bi-success"></i>
                                                 <span class="pulse-ring"></span>
                                             </a>

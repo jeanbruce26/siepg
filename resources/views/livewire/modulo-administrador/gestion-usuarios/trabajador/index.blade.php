@@ -198,29 +198,58 @@
                                                 @endif
                                             </td>
                                             <td align="center">
-                                                <div class="hstack gap-3 flex-wrap justify-content-center">
-                                                    <a href="#modalTra"
-                                                        wire:click="cargarTrabajador({{ $item->id_trabajador }})"
-                                                        class="link-success fs-16" data-bs-toggle="modal"
-                                                        data-bs-target="#modalTra"><i class="ri-edit-2-line"></i></a>
+                                                <a href="#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" data-kt-menu-flip="top-end">
+                                                    Actions
+                                                    <span class="svg-icon fs-5 m-0">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                                <polygon points="0 0 24 0 24 24 0 24"></polygon>
+                                                                <path d="M6.70710678,15.7071068 C6.31658249,16.0976311 5.68341751,16.0976311 5.29289322,15.7071068 C4.90236893,15.3165825 4.90236893,14.6834175 5.29289322,14.2928932 L11.2928932,8.29289322 C11.6714722,7.91431428 12.2810586,7.90106866 12.6757246,8.26284586 L18.6757246,13.7628459 C19.0828436,14.1360383 19.1103465,14.7686056 18.7371541,15.1757246 C18.3639617,15.5828436 17.7313944,15.6103465 17.3242754,15.2371541 L12.0300757,10.3841378 L6.70710678,15.7071068 Z" fill="currentColor" fill-rule="nonzero" transform="translate(12.000003, 11.999999) rotate(-180.000000) translate(-12.000003, -11.999999)"></path>
+                                                            </g>
+                                                        </svg>
+                                                    </span>
+                                                </a>
+                                                <!--begin::Menu-->
+                                                <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
+                                                    <!--begin::Menu item-->
+                                                    <div class="menu-item px-3">
+                                                        <a href="#modalTra"
+                                                        wire:click="cargarTrabajador({{ $item->id_trabajador }})" 
+                                                        class="menu-link px-3" data-bs-toggle="modal" 
+                                                        data-bs-target="#modalTra">
+                                                            Editar
+                                                        </a>
+                                                    </div>
+                                                    <!--end::Menu item-->
                                                     @if ($item->trabajador_estado == 1)
-                                                    <a href="#modalAsignar"
-                                                        wire:click="cargarTrabajadorId({{ $item->id_trabajador }},1)"
-                                                        class="link-info fs-16"data-bs-toggle="modal"
-                                                        data-bs-target="#modalAsignar"><i class="ri-user-add-line"></i></a>
+                                                        <!--begin::Menu item-->
+                                                        <div class="menu-item px-3">
+                                                            <a href="#modalAsignar"
+                                                            wire:click="cargarTrabajadorId({{ $item->id_trabajador }},1)" class="menu-link px-3" data-bs-toggle="modal" 
+                                                            data-bs-target="#modalAsignar">
+                                                                Asignar
+                                                            </a>
+                                                        </div>
+                                                        <!--end::Menu item-->
                                                         @if ($tra_tipo_tra->count() != 0)
-                                                        <a href="#modaldDesAsignar"
-                                                        wire:click="cargarTrabajadorId({{ $item->id_trabajador }},2)"
-                                                        class="link-danger fs-16"data-bs-toggle="modal"
-                                                        data-bs-target="#modaldDesAsignar"><i class="ri-user-unfollow-line
-                                                        "></i></a>
+                                                            <!--begin::Menu item-->
+                                                            <div class="menu-item px-3">
+                                                                <a href="#" class="menu-link px-3" data-kt-docs-table-filter="delete_row">
+                                                                    Desasignar
+                                                                </a>
+                                                            </div>
+                                                            <!--end::Menu item-->
                                                         @endif
                                                     @endif
-                                                    <a href="#modalInfo"
-                                                        wire:click="cargarInfoTrabajador({{ $item->id_trabajador }})"
-                                                        class="link-warning fs-16"data-bs-toggle="modal"
-                                                        data-bs-target="#modalInfo"><i class="ri-information-line"></i></a>
+                                                    <!--begin::Menu item-->
+                                                    <div class="menu-item px-3">
+                                                        <a href="#" class="menu-link px-3" data-kt-docs-table-filter="delete_row">
+                                                            Datalle
+                                                        </a>
+                                                    </div>
+                                                    <!--end::Menu item-->
                                                 </div>
+                                                <!--end::Menu-->
                                             </td>
                                         </tr>
                                         @php
@@ -348,12 +377,8 @@
                         </form>
                     </div>
                     <div class="modal-footer col-12 d-flex justify-content-between">
-                        <button type="button" wire:click="limpiar()"
-                            class="btn btn-secondary btn-label waves-effect waves-light w-md" data-bs-dismiss="modal"><i
-                                class="ri-arrow-left-s-line label-icon align-middle fs-16 me-2"></i> Cancelar</button>
-                        <button type="button" wire:click="guardarTrabajador()"
-                            class="btn btn-primary btn-label waves-effect right waves-light w-md"><i
-                                class="ri-check-double-fill label-icon align-middle fs-16 ms-2"></i> Guardar</button>
+                        <button type="button" wire:click="limpiar()" class="btn btn-secondary hover-elevate-up" data-bs-dismiss="modal">Cancelar</button>                    
+                        <button type="button" wire:click="guardarTrabajador()" class="btn btn-primary hover-elevate-up">Guardar</button>
                     </div>
                 </div>
             </div>
@@ -531,13 +556,9 @@
                             </div>
                         </form>
                     </div>
-                    <div class="modal-footer col-md-12 d-flex justify-content-between">
-                        <button type="button" wire:click="limpiarAsignacion()"
-                            class="btn btn-secondary btn-label waves-effect waves-light w-md" data-bs-dismiss="modal"><i
-                                class="ri-arrow-left-s-line label-icon align-middle fs-16 me-2"></i> Cancelar</button>
-                        <button type="button" wire:click="asignarTrabajador()"
-                            class="btn btn-primary btn-label waves-effect right waves-light w-md"><i
-                                class="ri-check-double-fill label-icon align-middle fs-16 ms-2"></i> Guardar</button>
+                    <div class="modal-footer col-12 d-flex justify-content-between">
+                        <button type="button" wire:click="limpiarAsignacion()" class="btn btn-secondary hover-elevate-up" data-bs-dismiss="modal">Cancelar</button>                    
+                        <button type="button" wire:click="asignarTrabajador()" class="btn btn-primary hover-elevate-up">Guardar</button>
                     </div>
                 </div>
             </div>
