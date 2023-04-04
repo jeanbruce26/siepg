@@ -198,13 +198,12 @@ class Index extends Component
         $trabajador->save();
 
         $this->dispatchBrowserEvent('notificacionTrabajador', ['message' =>'Estado de Trabajador actualizado satisfactoriamente.']);
-        $this->subirHistorial($trabajador->id_trabajador,'Actualizacion de trabajador','trabajador');
     }
 
     public function cargarTrabajador(TrabajadorModel $trabajador)
     {
         $this->modo = 2;
-        $this->titulo_modal = 'Actualizar Trabajador - ' . $trabajador->trabajador_apellido . ', '  . $trabajador->trabajador_nombre;
+        $this->titulo_modal = 'Editar Trabajador - ' . $trabajador->trabajador_apellido . ' '  . $trabajador->trabajador_nombre;
         $this->trabajador_id = $trabajador->id_trabajador;
         
         if(strlen($trabajador->trabajador_numero_documento) == 8){
@@ -260,15 +259,13 @@ class Index extends Component
             ]);
 
             $id_trabajador = $trabajador->id_trabajador;
-
-            $this->subirHistorial($id_trabajador,'Creacion de trabajador','trabajador');
     
             $this->dispatchBrowserEvent('notificacionTrabajador', ['message' =>'Trabajador agregado satisfactoriamente.']);
         }else{
             if($this->tipo_documento == 1){
                 $this->validate([
                     'tipo_documento' => 'required|numeric',
-                    'documento' => "required|digits:8|numeric|unique:trabajador,trabajador_numero_documento,{$this->trabajador_id},trabajador_id",
+                    'documento' => "required|digits:8|numeric|unique:trabajador,trabajador_numero_documento,{$this->trabajador_id},id_trabajador",
                     'nombres' => 'required|string',
                     'apellidos' => 'required|string',
                     'direccion' => 'required|string',
@@ -279,7 +276,7 @@ class Index extends Component
             }else{
                 $this->validate([
                     'tipo_documento' => 'required|numeric',
-                    'documento' => "required|digits:9|numeric|unique:trabajador,trabajador_numero_documento,{$this->trabajador_id},trabajador_id",
+                    'documento' => "required|digits:9|numeric|unique:trabajador,trabajador_numero_documento,{$this->trabajador_id},id_trabajador",
                     'nombres' => 'required|string',
                     'apellidos' => 'required|string',
                     'direccion' => 'required|string',
@@ -299,8 +296,6 @@ class Index extends Component
             $trabajador->save();
 
             $id_trabajador = $this->trabajador_id;
-            
-            $this->subirHistorial($id_trabajador,'Actualizacion de trabajador','trabajador');
 
             $this->dispatchBrowserEvent('notificacionTrabajador', ['message' =>'Trabajador '.$this->nombres.' actualizado satisfactoriamente.']);
         }
@@ -520,8 +515,6 @@ class Index extends Component
                 $usuario->usuario_estado = 2;
                 $usuario->save();
 
-                $this->subirHistorial($this->trabajador_id,'Actualizacion de asignacion de trabajador a docente','trabajador_tipo_trabajador');
-
                 $this->dispatchBrowserEvent('notificacionAsignar', ['message' =>'Trabajador asignado actualizado satisfactoriamente.']);
             }
         }else{
@@ -603,7 +596,6 @@ class Index extends Component
                     $usuario->save();
                 }
                 
-                $this->subirHistorial($this->trabajador_id,'Asignacion de trabajador a docente','trabajador_tipo_trabajador');
                 $this->dispatchBrowserEvent('notificacionAsignar', ['message' =>'Trabajador asignado satisfactoriamente.']);
             }
         }
@@ -647,7 +639,6 @@ class Index extends Component
                 $facu->facultad_estado = 2;
                 $facu->save();
                 
-                $this->subirHistorial($this->trabajador_id,'Actualizacion de asignacion de trabajador a coordinador','trabajador_tipo_trabajador');
                 $this->dispatchBrowserEvent('notificacionAsignar', ['message' =>'Trabajador asignado actualizado satisfactoriamente.']);
             }
         }else{
@@ -706,7 +697,6 @@ class Index extends Component
                     $facu->save();
                 }
                 
-                $this->subirHistorial($this->trabajador_id,'Asignacion de trabajador a coordinador','trabajador_tipo_trabajador');
                 $this->dispatchBrowserEvent('notificacionAsignar', ['message' =>'Trabajador asignado satisfactoriamente.']);
             }
         }
@@ -738,7 +728,6 @@ class Index extends Component
                 $usuario->usuario_estado = 2;
                 $usuario->save();
 
-                $this->subirHistorial($this->trabajador_id,'Actualizacion de asignacion de trabajador a administrativo','trabajador_tipo_trabajador');
                 $this->dispatchBrowserEvent('notificacionAsignar', ['message' =>'Trabajador asignado actualizado satisfactoriamente.']);
             }
         }else{
@@ -786,7 +775,6 @@ class Index extends Component
                     $usuario->save();
                 }
                 
-                $this->subirHistorial($this->trabajador_id,'Asignacion de trabajador a administrativo','trabajador_tipo_trabajador');
                 $this->dispatchBrowserEvent('notificacionAsignar', ['message' =>'Trabajador asignado satisfactoriamente.']);
             }
         }
@@ -798,7 +786,7 @@ class Index extends Component
     public function cargarInfoTrabajador(TrabajadorModel $trabajador)
     {
         $this->modo = 4;
-        $this->titulo_modal = 'Informacion del Trabajador';
+        $this->titulo_modal = 'Detalle del Trabajador';
         $this->trabajador_id = $trabajador->id_trabajador;
         $this->trabajador_model = $trabajador;
 
@@ -851,7 +839,6 @@ class Index extends Component
                 $trabajador_tipo_trabajador_docente->trabajador_tipo_trabajador_estado = 2;
                 $trabajador_tipo_trabajador_docente->save();
 
-                $this->subirHistorial($this->trabajador_id,'Desasignacion de trabajador docente','trabajador_tipo_trabajador');
                 $this->dispatchBrowserEvent('notificacionTrabajador', ['message' =>'Trabajador designado satisfactoriamente.']);
 
             }
@@ -883,7 +870,6 @@ class Index extends Component
                 $trabajador_tipo_trabajador_coordinador->save();
 
                 $this->dispatchBrowserEvent('notificacionTrabajador', ['message' =>'Trabajador designado satisfactoriamente.']);
-                $this->subirHistorial($this->trabajador_id,'Desasignacion de trabajador coordinador','trabajador_tipo_trabajador');
             }
         } 
 
@@ -907,7 +893,6 @@ class Index extends Component
                 $trabajador_tipo_trabajador_administrativo->save();
 
                 $this->dispatchBrowserEvent('notificacionTrabajador', ['message' =>'Trabajador designado satisfactoriamente.']);
-                $this->subirHistorial($this->trabajador_id,'Desasignacion de trabajador administrativo','trabajador_tipo_trabajador');
             }
         }
 

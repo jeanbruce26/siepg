@@ -19,7 +19,7 @@ class Index extends Component
 
     public $search = '';
     public $titulo = 'Crear Usuario';
-    public $usuario_id;
+    public $id_usuario;
 
     public $modo = 1;
 
@@ -60,7 +60,7 @@ class Index extends Component
         if ($usuario->usuario_estado == 1 || $usuario->usuario_estado == 2) {
             $usuario->usuario_estado = 0;
         } else if ($usuario->usuario_estado == 0) {
-            if ($usuario->trabajador_tipo_trabajador_id) {
+            if ($usuario->id_trabajador_tipo_trabajador) {
                 $usuario->usuario_estado = 2;
             } else {
                 $usuario->usuario_estado = 1;
@@ -74,17 +74,17 @@ class Index extends Component
             'text' => '',
             'icon' => 'success',
             'confirmButtonText' => 'Aceptar',
+            'cancelButtonClass' => 'Cancel',
             'color' => 'success'
         ]);
 
-        $this->subirHistorial($usuario->usuario_id, 'Actualizacion de estado usuario', 'usuario');
     }
 
     public function cargarUsuario(Usuario $usuario)
     {
         $this->modo = 2;
         $this->titulo = 'ACTUALIZAR USUARIO - CORREO: '  . $usuario->usuario_correo;
-        $this->usuario_id = $usuario->id_usuario;
+        $this->id_usuario = $usuario->id_usuario;
 
         $this->username = $usuario->usuario_nombre;
         $this->correo = $usuario->usuario_correo;
@@ -106,8 +106,6 @@ class Index extends Component
                 "usuario_estado" => 1,
             ]);
 
-            $this->subirHistorial($usuario->id_usuario, 'Creacion de usuario', 'usuario');
-
             $this->dispatchBrowserEvent('alerta-usuario', [
                 'title' => '¡Usuario agregado satisfactoriamente!',
                 'text' => '',
@@ -117,8 +115,8 @@ class Index extends Component
             ]);
         } else {
             $this->validate([
-                'username' => "required|unique:usuario,usuario_nombre,{$this->usuario_id},usuario_id",
-                'correo' => "required|email|unique:usuario,usuario_correo,{$this->usuario_id},usuario_id",
+                'username' => "required|unique:usuario,usuario_nombre,{$this->id_usuario},id_usuario",
+                'correo' => "required|email|unique:usuario,usuario_correo,{$this->id_usuario},id_usuario",
                 'password' => 'nullable'
             ]);
 
@@ -129,8 +127,6 @@ class Index extends Component
                 $usuario->usuario_password = Hash::make($this->password);
             }
             $usuario->save();
-
-            $this->subirHistorial($usuario->id_usuario, 'Actualizacion de usuario', 'usuario');
 
             $this->dispatchBrowserEvent('alerta-usuario', [
                 'title' => '¡Usuario <strong>' . $this->username . '</strong>  actualizado satisfactoriamente!',
