@@ -123,9 +123,9 @@
                     <div class="menu-content d-flex align-items-center px-3">
                         <div class="symbol symbol-50px me-5">
                             @if ($usuario->usuario_estudiante_perfil_url)
-                            <img src="{{ asset($usuario->usuario_estudiante_perfil_url) }}" alt="avatar" />
+                                <img src="{{ asset($usuario->usuario_estudiante_perfil_url) }}" alt="avatar" />
                             @else
-                            <img src="{{ asset('assets/media/avatars/blank.png') }}" alt="avatar" />
+                                <img src="{{ asset('assets/media/avatars/blank.png') }}" alt="avatar" />
                             @endif
                         </div>
                         <div class="d-flex flex-column">
