@@ -267,33 +267,30 @@ class Registro extends Component
 
     public function updatedModalidad($modalidad)
     {
-        $this->programa_array = ProgramaProceso::join('mencion_plan', 'mencion_plan.id_mencion_plan', '=', 'programa_proceso.id_mencion_plan')
-                                        ->join('mencion', 'mencion.id_mencion', '=', 'mencion_plan.id_mencion')
-                                        ->join('subprograma', 'subprograma.id_subprograma', '=', 'mencion.id_subprograma')
-                                        ->join('programa', 'programa.id_programa', '=', 'subprograma.id_programa')
+        $this->programa_array = ProgramaProceso::join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
+                                        ->join('programa', 'programa.id_programa', '=', 'programa_plan.id_programa')
                                         ->join('sede', 'sede.id_sede', '=', 'programa.id_sede')
-                                        ->where('programa_proceso.id_modalidad',$modalidad)
+                                        ->where('programa.id_modalidad',$modalidad)
                                         ->where('programa_proceso.id_admision',$this->admision->id_admision)
                                         ->where('programa_proceso.programa_proceso_estado',1)
+                                        ->where('programa_plan.programa_plan_estado',1)
                                         ->get();
     }
 
     public function updatedPrograma($programa_proceso)
     {
-        $programa = ProgramaProceso::join('mencion_plan', 'mencion_plan.id_mencion_plan', '=', 'programa_proceso.id_mencion_plan')
-                                    ->join('mencion', 'mencion.id_mencion', '=', 'mencion_plan.id_mencion')
-                                    ->join('subprograma', 'subprograma.id_subprograma', '=', 'mencion.id_subprograma')
-                                    ->join('programa', 'programa.id_programa', '=', 'subprograma.id_programa')
+        $programa = ProgramaProceso::join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
+                                    ->join('programa', 'programa.id_programa', '=', 'programa_plan.id_programa')
                                     ->join('sede', 'sede.id_sede', '=', 'programa.id_sede')
                                     ->where('programa_proceso.id_programa_proceso',$programa_proceso)
                                     ->where('programa_proceso.id_admision',$this->admision->id_admision)
                                     ->first();
         // dd($this->programa_array);
         if($programa){
-            $programa = $programa->programa;
-            if($programa == 'MAESTRIA'){
+            $programa_tipo = $programa->programa_tipo;
+            if($programa_tipo == 1){
                 $this->mostrar_tipo_expediente = 1;
-            }else if($programa == 'DOCTORADO'){
+            }else if($programa_tipo == 2){
                 $this->mostrar_tipo_expediente = 2;
             }
             $this->expediente_array = ExpedienteAdmision::join('expediente', 'expediente.id_expediente', '=', 'expediente_admision.id_expediente')

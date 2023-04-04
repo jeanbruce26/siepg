@@ -580,7 +580,7 @@
                 <tr style="">
                     <th align="left" style="text-align: left">
                         <div class="titulo6">
-                            Sede: {{ $programa->mencion_plan->mencion->subprograma->programa->sede->sede }}
+                            Sede: {{ $programa->programa_plan->programa->sede->sede }}
                         </div>
                     </th>
                     <th align="right" style="text-align: right">
@@ -610,18 +610,18 @@
                         <tr>
                             <th><div class="titulo3">Programa</div></th>
                             <th><div class="mx-2">:</div></th>
-                            <th style="text-align: initial;">{{ ucwords(strtolower($programa->mencion_plan->mencion->subprograma->programa->programa)) }}</th>
+                            <th style="text-align: initial;">{{ ucwords(strtolower($programa->programa_plan->programa->programa)) }}</th>
                         </tr>
                         <tr>
-                            <th><div class="titulo3">{{ ucwords(strtolower($programa->mencion_plan->mencion->subprograma->programa->programa))  }}</div></th>
+                            <th><div class="titulo3">{{ ucwords(strtolower($programa->programa_plan->programa->programa))  }}</div></th>
                             <th><div class="mx-2">:</div></th>
-                            <th style="text-align: initial;">{{ ucwords(strtolower($programa->mencion_plan->mencion->subprograma->subprograma )) }}</th>
+                            <th style="text-align: initial;">{{ ucwords(strtolower($programa->programa_plan->programa->subprograma )) }}</th>
                         </tr>
                         <tr>
-                            @if ($programa->mencion_plan->mencion->mencion)
+                            @if ($programa->programa_plan->programa->mencion)
                             <th><div class="titulo3">Mención</div></th>
                             <th><div class="mx-2">:</div></th>
-                            <th style="text-align: initial;">{{ $programa->mencion_plan->mencion->mencion }}</th>
+                            <th style="text-align: initial;">{{ $programa->programa_plan->programa->mencion }}</th>
                             @endif
                         </tr>
                     </table>
@@ -756,7 +756,7 @@
                     <tr>
                         <th><div class="titulo3">Concepto de pago</div></th>
                         <th><div class="mx-2">:</div></th>
-                        <th style="text-align: initial;">{{ $inscripcion->concepto_pago->concepto_pago }}</th>
+                        <th style="text-align: initial;">{{ $pago->concepto_pago->concepto_pago }}</th>
                     </tr>
                 </table>
             </div>

@@ -81,10 +81,10 @@
                                     @if ($modalidad)
                                     @foreach ($programa_array as $item)
                                     <option value="{{ $item->id_programa_proceso }}">
-                                        {{ $item->mencion_plan->mencion->subprograma->programa->sede->sede }} /
-                                        {{ $item->mencion_plan->mencion->subprograma->programa->programa }} /
-                                        {{ $item->mencion_plan->mencion->subprograma->subprograma }}
-                                        @if($item->mencion_plan->mencion->mencion) / {{ $item->mencion_plan->mencion->mencion }} @endif
+                                        {{ $item->programa_plan->programa->sede->sede }} /
+                                        {{ $item->programa_plan->programa->programa }} /
+                                        {{ $item->programa_plan->programa->subprograma }}
+                                        @if($item->programa_plan->programa->mencion) / {{ $item->programa_plan->programa->mencion }} @endif
                                     </option>
                                     @endforeach
                                     @endif
@@ -164,7 +164,7 @@
                                 <label for="genero" class="required form-label">
                                     Genero
                                 </label>
-                                <select wire:model="genero" class="form-select @error('genero') is-invalid @enderror" id="genero" data-control="select2" data-placeholder="Seleccione su genero" data-allow-clear="true" data-minimum-results-for-search="Infinity">
+                                <select wire:model="genero" class="form-select @error('genero') is-invalid @enderror" id="genero" data-control="select2" data-placeholder="Seleccione su genero" data-allow-clear="true">
                                     <option></option>
                                     @foreach ($genero_array as $item)
                                     <option value="{{ $item->id_genero }}">{{ $item->genero }}</option>
@@ -180,7 +180,7 @@
                                 <label for="estado_civil" class="required form-label">
                                     Estado Civil
                                 </label>
-                                <select wire:model="estado_civil" class="form-select @error('genero') is-invalid @enderror" id="estado_civil" data-control="select2" data-placeholder="Seleccione su estado civil" data-allow-clear="true" data-minimum-results-for-search="Infinity">
+                                <select wire:model="estado_civil" class="form-select @error('genero') is-invalid @enderror" id="estado_civil" data-control="select2" data-placeholder="Seleccione su estado civil" data-allow-clear="true">
                                     <option></option>
                                     @foreach ($estado_civil_array as $item)
                                     <option value="{{ $item->id_estado_civil }}">{{ $item->estado_civil }}</option>
@@ -196,7 +196,7 @@
                                 <label for="discapacidad" class="form-label">
                                     Discapacidad
                                 </label>
-                                <select wire:model="discapacidad" class="form-select @error('discapacidad') is-invalid @enderror" id="discapacidad"  data-control="select2" data-placeholder="Seleccione su discapacidad" data-allow-clear="true" data-minimum-results-for-search="Infinity">
+                                <select wire:model="discapacidad" class="form-select @error('discapacidad') is-invalid @enderror" id="discapacidad"  data-control="select2" data-placeholder="Seleccione su discapacidad" data-allow-clear="true">
                                     <option></option>
                                     @foreach ($tipo_discapacidad_array as $item)
                                     <option value="{{ $item->id_discapacidad }}">{{ $item->discapacidad }}</option>
@@ -275,7 +275,7 @@
                                 <select wire:model="ubigeo_direccion" class="form-select @error('ubigeo_direccion') is-invalid @enderror" id="ubigeo_direccion" data-control="select2" data-placeholder="Seleccione su ubigeo de direccion" data-allow-clear="true">
                                     <option></option>
                                     @foreach ($ubigeo_direccion_array as $item)
-                                    <option value="{{ $item->id_distrito }}">{{ $item->ubigeo }} / {{ $item->provincia->departamento->departamento }} / {{ $item->provincia->provincia }} / {{ $item->distrito }}</option>
+                                    <option value="{{ $item->id_ubigeo }}">{{ $item->ubigeo }} / {{ $item->departamento }} / {{ $item->provincia }} / {{ $item->distrito }}</option>
                                     @endforeach
                                 </select>
                                 @error('ubigeo_direccion')
@@ -322,7 +322,7 @@
                                 <select wire:model="ubigeo_nacimiento" class="form-select @error('ubigeo_nacimiento') is-invalid @enderror" id="ubigeo_nacimiento" data-control="select2" data-placeholder="Seleccione su ubigeo de nacimiento" data-allow-clear="true">
                                     <option></option>
                                     @foreach ($ubigeo_nacimiento_array as $item)
-                                    <option value="{{ $item->id_distrito }}">{{ $item->ubigeo }} / {{ $item->provincia->departamento->departamento }} / {{ $item->provincia->provincia }} / {{ $item->distrito }}</option>
+                                    <option value="{{ $item->id_ubigeo }}">{{ $item->ubigeo }} / {{ $item->departamento }} / {{ $item->provincia }} / {{ $item->distrito }}</option>
                                     @endforeach
                                 </select>
                                 @error('ubigeo_nacimiento')
@@ -566,14 +566,13 @@
                         Registrar Expediente
                     </button>
                     <button wire:loading wire:target="registrar_expediente" class="btn btn-primary" type="button" disabled>
-                        <i class="fas fa-spinner fa-spin"></i>
+                        Procesando...
                     </button>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 @push('scripts')
     <script>
         // modalidad select2
@@ -583,7 +582,6 @@
                 allowClear: true,
                 width: '100%',
                 selectOnClose: true,
-                minimumResultsForSearch: Infinity,
                 language: {
                     noResults: function () {
                         return "No se encontraron resultados";
@@ -602,7 +600,6 @@
                     allowClear: true,
                     width: '100%',
                     selectOnClose: true,
-                    minimumResultsForSearch: Infinity,
                     language: {
                         noResults: function () {
                             return "No se encontraron resultados";
@@ -743,7 +740,6 @@
                 allowClear: true,
                 width: '100%',
                 selectOnClose: true,
-                minimumResultsForSearch: Infinity,
                 language: {
                     noResults: function () {
                         return "No se encontraron resultados";
@@ -762,7 +758,6 @@
                     allowClear: true,
                     width: '100%',
                     selectOnClose: true,
-                    minimumResultsForSearch: Infinity,
                     language: {
                         noResults: function () {
                             return "No se encontraron resultados";
@@ -784,7 +779,6 @@
                 allowClear: true,
                 width: '100%',
                 selectOnClose: true,
-                minimumResultsForSearch: Infinity,
                 language: {
                     noResults: function () {
                         return "No se encontraron resultados";
@@ -803,7 +797,6 @@
                     allowClear: true,
                     width: '100%',
                     selectOnClose: true,
-                    minimumResultsForSearch: Infinity,
                     language: {
                         noResults: function () {
                             return "No se encontraron resultados";
@@ -825,7 +818,6 @@
                 allowClear: true,
                 width: '100%',
                 selectOnClose: true,
-                minimumResultsForSearch: Infinity,
                 language: {
                     noResults: function () {
                         return "No se encontraron resultados";
@@ -844,7 +836,6 @@
                     allowClear: true,
                     width: '100%',
                     selectOnClose: true,
-                    minimumResultsForSearch: Infinity,
                     language: {
                         noResults: function () {
                             return "No se encontraron resultados";
@@ -866,7 +857,6 @@
                 allowClear: true,
                 width: '100%',
                 selectOnClose: true,
-                minimumResultsForSearch: Infinity,
                 language: {
                     noResults: function () {
                         return "No se encontraron resultados";
@@ -885,7 +875,6 @@
                     allowClear: true,
                     width: '100%',
                     selectOnClose: true,
-                    minimumResultsForSearch: Infinity,
                     language: {
                         noResults: function () {
                             return "No se encontraron resultados";

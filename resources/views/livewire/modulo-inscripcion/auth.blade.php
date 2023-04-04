@@ -117,7 +117,7 @@
                                             <div wire:loading.remove wire:target="iniciar_inscripcion">
                                                 Iniciar Inscripción
                                             </div>
-                                            <div wire:loading wire:target="iniciar_inscripcion" class="py-1">
+                                            <div wire:loading wire:target="iniciar_inscripcion">
                                                 Procesando...
                                                 <span class="spinner-border spinner-border-sm align-middle"></span>
                                             </div>
