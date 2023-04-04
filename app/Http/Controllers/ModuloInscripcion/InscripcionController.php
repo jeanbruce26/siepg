@@ -62,8 +62,7 @@ class InscripcionController extends Controller
         $pago = Pago::where('id_pago',$inscripcion->id_pago)->first();
         $pago_monto = $pago->pago_monto; // Monto del pago
 
-        $admision = Admision::where('admision_estado',1)->first()->admision; // Proceso de admision actual
-        $admision_year = Admision::where('admision_estado',1)->first()->admision_year; // Año del proceso de admision actual
+        $admision = $inscripcion->programa_proceso->admision->admision; // Admision de la inscripcion
 
         $fecha_actual = date('h:i:s a d/m/Y', strtotime($inscripcion->inscripcion_fecha)); // Fecha de inscripcion
         $fecha_actual2 = date('d-m-Y', strtotime($inscripcion->inscripcion_fecha)); // Fecha de inscripcion
@@ -107,7 +106,7 @@ class InscripcionController extends Controller
 
         $nombre_pdf = 'ficha-inscripcion-' . Str::slug($persona->nombre_completo, '-') . '.pdf';
         $path = 'Posgrado/' . $admision. '/' . $persona->numero_documento . '/' . 'Expedientes' . '/';
-        $pdf = PDF::loadView('modulo-inscripcion.ficha-inscripcion', $data)->save(public_path($path . $nombre_pdf));
+        PDF::loadView('modulo-inscripcion.ficha-inscripcion', $data)->save(public_path($path . $nombre_pdf));
 
         $inscripcion = Inscripcion::find($id);
         $inscripcion->inscripcion_ficha_url = $path . $nombre_pdf;

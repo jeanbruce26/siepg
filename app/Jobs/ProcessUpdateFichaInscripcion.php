@@ -48,7 +48,7 @@ class ProcessUpdateFichaInscripcion implements ShouldQueue
         $pago = Pago::where('id_pago',$inscripcion->id_pago)->first();
         $pago_monto = $pago->pago_monto; // Monto del pago
 
-        $admision = Admision::where('admision_estado',1)->first()->admision; // Proceso de admision actual
+        $admision = $inscripcion->programa_proceso->admision->admision; // Datos de la admision
 
         $fecha_actual = date('h:i:s a d/m/Y', strtotime($inscripcion->inscripcion_fecha)); // Fecha de inscripcion
         $fecha_actual2 = date('d-m-Y', strtotime($inscripcion->inscripcion_fecha)); // Fecha de inscripcion
