@@ -169,10 +169,9 @@
             data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-attach="parent"
             data-kt-menu-placement="bottom-end">
             @if ($trabajador->trabajador_perfil_url)
-            <img src="{{ asset('assets/media/avatars/blank.png') }}" alt="avatar" />
-            {{-- <img src="{{ asset($usuario->usuario_estudiante_perfil) }}" alt="avatar" /> --}}
+                <img src="{{ asset($trabajador->trabajador_perfil_url) }}" alt="avatar" />
             @else
-            <img src="{{ asset('assets/media/avatars/blank.png') }}" alt="avatar" />
+                <img src="{{ asset('assets/media/avatars/blank.png') }}" alt="avatar" />
             @endif
         </div>
         <!--begin::User account menu-->
@@ -184,10 +183,10 @@
                     <!--begin::Avatar-->
                     <div class="symbol symbol-50px me-5">
                         @if ($trabajador->trabajador_perfil_url)
-                        <img src="{{ asset('assets/media/avatars/blank.png') }}" alt="avatar" />
+                            <img src="{{ asset($trabajador->trabajador_perfil_url) }}" alt="avatar" />
                         {{-- <img src="{{ asset($usuario->usuario_estudiante_perfil) }}" alt="avatar" /> --}}
                         @else
-                        <img src="{{ asset('assets/media/avatars/blank.png') }}" alt="avatar" />
+                            <img src="{{ asset('assets/media/avatars/blank.png') }}" alt="avatar" />
                         @endif
                     </div>
                     <!--end::Avatar-->

@@ -120,12 +120,12 @@
                                                                 alt="perfil Avatar">
                                                         @else
                                                             <img class="rounded-circle avatar-xs"
-                                                                src="{{ asset('assets/media/avatars/300-1.jpg') }}"
+                                                                src="{{ asset('assets/media/avatars/blank.png') }}"
                                                                 alt="perfil Avatar">
                                                         @endif
                                                     </div>
                                                     <div class="ms-2">
-                                                        {{ $item->trabajador_nombre }} {{ $item->trabajador_apellido }}
+                                                        {{ $item->trabajador_nombre_completo }}
                                                     </div>
                                                 </div>
                                             </td>
@@ -234,7 +234,7 @@
                                                         @if ($tra_tipo_tra->count() != 0)
                                                             <!--begin::Menu item-->
                                                             <div class="menu-item px-3">
-                                                                <a href="#" class="menu-link px-3" data-kt-docs-table-filter="delete_row">
+                                                                <a href="#" class="menu-link px-3">
                                                                     Desasignar
                                                                 </a>
                                                             </div>
@@ -243,7 +243,7 @@
                                                     @endif
                                                     <!--begin::Menu item-->
                                                     <div class="menu-item px-3">
-                                                        <a href="#" class="menu-link px-3" data-kt-docs-table-filter="delete_row">
+                                                        <a href="#" class="menu-link px-3">
                                                             Datalle
                                                         </a>
                                                     </div>

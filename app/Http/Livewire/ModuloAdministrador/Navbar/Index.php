@@ -13,6 +13,10 @@ class Index extends Component
     public $administrativo; // variable que almacena el administrativo del usuario logueado
     public $area_administrativa; // variable que almacena el area_administrativa del usuario logueado
 
+    protected $listeners = [
+        'update_avatar' => '$refresh',
+    ];
+
     public function mount()
     {
         $this->usuario = auth('usuario')->user(); // asignamos el usuario logueado a la variable usuario

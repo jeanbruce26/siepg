@@ -37,6 +37,7 @@ class Index extends Component
     public $documento;
     public $nombres;
     public $apellidos;
+    public $nombre_completo;
     public $direccion;
     public $correo;
     public $grado;
@@ -197,7 +198,7 @@ class Index extends Component
         }
         $trabajador->save();
 
-        $this->dispatchBrowserEvent('notificacionTrabajador', ['message' =>'Estado de Trabajador actualizado satisfactoriamente.']);
+        // notificacionTrabajador
     }
 
     public function cargarTrabajador(TrabajadorModel $trabajador)
@@ -251,6 +252,7 @@ class Index extends Component
             $trabajador = TrabajadorModel::create([
                 "trabajador_nombre" => $this->nombres,
                 "trabajador_apellido" => $this->apellidos,
+                "trabajador_nombre_completo" => $this->apellidos.' '.$this->nombres,
                 "trabajador_numero_documento" => $this->documento,
                 "trabajador_correo" => $this->correo,
                 "trabajador_direccion" => $this->direccion,
@@ -260,7 +262,7 @@ class Index extends Component
 
             $id_trabajador = $trabajador->id_trabajador;
     
-            $this->dispatchBrowserEvent('notificacionTrabajador', ['message' =>'Trabajador agregado satisfactoriamente.']);
+            // notificacionTrabajador
         }else{
             if($this->tipo_documento == 1){
                 $this->validate([
@@ -290,6 +292,7 @@ class Index extends Component
             $trabajador->trabajador_numero_documento = $this->documento;
             $trabajador->trabajador_apellido = $this->apellidos;
             $trabajador->trabajador_nombre = $this->nombres;
+            $trabajador->trabajador_nombre_completo = $this->apellidos.' '.$this->nombres;
             $trabajador->trabajador_direccion = $this->direccion;
             $trabajador->trabajador_correo = $this->correo;
             $trabajador->id_grado_academico = $this->grado;
@@ -297,7 +300,14 @@ class Index extends Component
 
             $id_trabajador = $this->trabajador_id;
 
-            $this->dispatchBrowserEvent('notificacionTrabajador', ['message' =>'Trabajador '.$this->nombres.' actualizado satisfactoriamente.']);
+            // notificacionTrabajador
+            $this->dispatchBrowserEvent('alerta-trabajador', [
+                'title' => 'Trabajador <strong>'.$trabajador->trabajador_nombre_completo.'</strong> actualizado satisfactoriamente!',
+                'text' => '',
+                'icon' => 'success',
+                'confirmButtonText' => 'Aceptar',
+                'color' => 'success'
+            ]);
         }
 
         $data = $this->perfil;
@@ -313,6 +323,9 @@ class Index extends Component
         }
 
         $this->dispatchBrowserEvent('modalTrabajador');
+        
+        // emitir evento para actualizar la imagen del usuario logueado
+        $this->emit('update_avatar');
 
         $this->limpiar();
     }
@@ -839,7 +852,7 @@ class Index extends Component
                 $trabajador_tipo_trabajador_docente->trabajador_tipo_trabajador_estado = 2;
                 $trabajador_tipo_trabajador_docente->save();
 
-                $this->dispatchBrowserEvent('notificacionTrabajador', ['message' =>'Trabajador designado satisfactoriamente.']);
+                // notificacionTrabajador
 
             }
         }
@@ -869,7 +882,7 @@ class Index extends Component
                 $trabajador_tipo_trabajador_coordinador->trabajador_tipo_trabajador_estado = 2;
                 $trabajador_tipo_trabajador_coordinador->save();
 
-                $this->dispatchBrowserEvent('notificacionTrabajador', ['message' =>'Trabajador designado satisfactoriamente.']);
+                // notificacionTrabajador
             }
         } 
 
@@ -892,7 +905,7 @@ class Index extends Component
                 $trabajador_tipo_trabajador_administrativo->trabajador_tipo_trabajador_estado = 2;
                 $trabajador_tipo_trabajador_administrativo->save();
 
-                $this->dispatchBrowserEvent('notificacionTrabajador', ['message' =>'Trabajador designado satisfactoriamente.']);
+                // notificacionTrabajador
             }
         }
 

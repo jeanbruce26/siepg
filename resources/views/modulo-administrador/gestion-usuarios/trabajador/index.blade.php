@@ -13,18 +13,20 @@
         $('#modalTra').modal('hide');
     })
 
-    window.addEventListener('notificacionTrabajador', event => {
-        Toastify({
-            text: event.detail.message,
-            close: true,
-            duration: 5000,
-            stopOnFocus: true,
-            newWindow: true,
-            style: {
-                background: "#2eb867",
+    // Alerta para confirmacion
+	window.addEventListener('alerta-trabajador', event => {
+        Swal.fire({
+            title: event.detail.title,
+            text: event.detail.text,
+            icon: event.detail.icon,
+            buttonsStyling: false,
+			confirmButtonClass: 'hover-elevate-up', // Hover para elevar boton al pasar el cursor
+            confirmButtonText: event.detail.confirmButtonText,
+            customClass: {
+                confirmButton: "btn btn-"+event.detail.color,
             }
-        }).showToast();
-    })
+        });
+    });
 
     //ASIGANAR TRABAJADOR
     window.addEventListener('modalAsignar', event => {
