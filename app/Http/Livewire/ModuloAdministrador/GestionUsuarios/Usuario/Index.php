@@ -52,7 +52,16 @@ class Index extends Component
 
     public function cargarAlerta($id)
     {
-        $this->dispatchBrowserEvent('alertaConfirmacionUsuario', ['id' => $id]);
+        $this->dispatchBrowserEvent('alertaConfirmacionUsuario', [
+            'title' => '¿Estás seguro?',
+            'text' => '¿Deseas modificar el estado del usuario?',
+            'icon' => 'question',
+            'confirmButtonText' => 'Modificar',
+            'cancelButtonText' => 'Cancelar',
+            'confirmButtonColor' => 'primary',
+            'cancelButtonColor' => 'danger',
+            'id' => $id,
+        ]);
     }
 
     public function cambiarEstado(Usuario $usuario)
@@ -70,11 +79,10 @@ class Index extends Component
         $usuario->save();
 
         $this->dispatchBrowserEvent('alerta-usuario', [
-            'title' => '¡Estado del Usuario actualizado satisfactoriamente!',
-            'text' => '',
+            'title' => '¡Éxito!',
+            'text' => 'Estado del Usuario '.$usuario->usuario_nombre.' ha sido actualizado satisfactoriamente',
             'icon' => 'success',
             'confirmButtonText' => 'Aceptar',
-            'cancelButtonClass' => 'Cancel',
             'color' => 'success'
         ]);
 
@@ -107,8 +115,8 @@ class Index extends Component
             ]);
 
             $this->dispatchBrowserEvent('alerta-usuario', [
-                'title' => '¡Usuario agregado satisfactoriamente!',
-                'text' => '',
+                'title' => '¡Éxito!',
+                'text' => 'Usuario agregado satisfactoriamente',
                 'icon' => 'success',
                 'confirmButtonText' => 'Aceptar',
                 'color' => 'success'
@@ -129,15 +137,17 @@ class Index extends Component
             $usuario->save();
 
             $this->dispatchBrowserEvent('alerta-usuario', [
-                'title' => '¡Usuario <strong>' . $this->username . '</strong>  actualizado satisfactoriamente!',
-                'text' => '',
+                'title' => '¡Éxito!',
+                'text' => 'Usuario ' . $this->username . ' ha sido actualizado satisfactoriamente',
                 'icon' => 'success',
                 'confirmButtonText' => 'Aceptar',
                 'color' => 'success'
             ]);
         }
 
-        $this->dispatchBrowserEvent('modalUsuario');
+        $this->dispatchBrowserEvent('modalUsuario', [
+            'titleModal' => '#modalUsuario',
+        ]);
 
         $this->limpiar();
     }
