@@ -9,7 +9,7 @@
 @section('javascript')
 <script>
 	window.addEventListener('modalUsuario', event => {
-		$('#modalUsuario').modal('hide');
+		$(event.detail.titleModal).modal('hide');
 	})
 
 	// Alerta para confirmacion
@@ -31,16 +31,18 @@
 	window.addEventListener('alertaConfirmacionUsuario', event => {
 		// alert('Name updated to: ' + event.detail.id);
 		Swal.fire({
-			title: '¿Estás seguro de modificar el estado del usuario?',
-			text: "",
-			icon: 'question',
+			title: event.detail.title,
+			text: event.detail.text,
+			icon: event.detail.icon,
 			showCancelButton: true,
-			confirmButtonColor: '#3085d6',
-			cancelButtonColor: '#d33',
-			confirmButtonText: 'Modificar',
-			cancelButtonText: 'Cancelar',
+			confirmButtonText: event.detail.confirmButtonText,
+			cancelButtonText: event.detail.cancelButtonText,
 			confirmButtonClass: 'hover-elevate-up', // Hover para elevar boton al pasar el cursor
-			cancelButtonClass: 'hover-elevate-up' // Hover para elevar boton al pasar el cursor
+			cancelButtonClass: 'hover-elevate-up', // Hover para elevar boton al pasar el cursor
+			customClass: {
+                confirmButton: "btn btn-"+event.detail.confirmButtonColor,
+                cancelButton: "btn btn-"+event.detail.cancelButtonColor,
+            }
 		}).then((result) => {
 			if (result.isConfirmed) {
 				Livewire.emitTo('modulo-administrador.gestion-usuarios.usuario.index', 'cambiarEstado', event.detail.id);
