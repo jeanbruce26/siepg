@@ -177,7 +177,12 @@
                             {{ $trabajador->trabajador_nombre_completo }}
                         </div>
                         <span class="fw-semibold text-muted text-hover-primary fs-7">
-                            {{ ucwords(strtolower($area_administrativa->area_administrativo)) }}
+                            @if ($administrativo)
+                                {{ ucwords(strtolower($area_administrativa->area_administrativa)) }}
+                            @endif
+                            @if ($coordinador)
+                                {{ ucwords(strtolower($coordinador->facultad->facultad)) }}
+                            @endif
                         </span>
                     </div>
                 </div>

@@ -11,7 +11,7 @@ class Trabajador extends Model
 
     protected $primaryKey = "id_trabajador";
     protected $table = 'trabajador';
-    
+
     protected $fillable = [
         'id_trabajador',
         'trabajador_apellido',
@@ -33,7 +33,6 @@ class Trabajador extends Model
         'id_grado_academico','id_grado_academico');
     }
 
-
     // Trabajador Tipo Trabajador
     public function trabajador_tipo_trabajador(){
         return $this->hasOne(TrabajadorTipoTrabajador::class,
@@ -43,6 +42,12 @@ class Trabajador extends Model
     // Administrativo
     public function administrativo(){
         return $this->hasOne(Administrativo::class,
+        'id_trabajador','id_trabajador');
+    }
+
+    // Coordinador
+    public function coordinador(){
+        return $this->hasOne(Coordinador::class,
         'id_trabajador','id_trabajador');
     }
 }
