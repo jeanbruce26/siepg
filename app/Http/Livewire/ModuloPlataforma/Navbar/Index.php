@@ -9,7 +9,7 @@ use Livewire\Component;
 class Index extends Component
 {
     protected $listeners = [
-        'update_avatar' => '$refresh',
+        'update_avatar' => 'render',
     ];
 
     public function cerrar_sesion()

@@ -65,11 +65,14 @@ class Index extends Component
 
         if($this->perfil)
         {
+            if (file_exists($usuario->usuario_estudiante_perfil_url)) {
+                unlink($usuario->usuario_estudiante_perfil_url);
+            }
             $persona = Persona::where('numero_documento', auth('plataforma')->user()->usuario_estudiante)->first();
             $inscripcion = $persona->inscripcion()->orderBy('id_inscripcion', 'desc')->first();
             $admision = $inscripcion->programa_proceso->first()->admision->admision;
             $path = 'Posgrado/' . $admision . '/' . auth('plataforma')->user()->usuario_estudiante . '/' . 'Perfil/';
-            $filename = 'foto-perfil.' . $this->perfil->getClientOriginalExtension();
+            $filename = 'foto-perfil-' . date('HisdmY') . '.' . $this->perfil->getClientOriginalExtension();
             $nombre_db = $path.$filename;
             $this->perfil->storeAs($path, $filename, 'files_publico');
             $usuario->usuario_estudiante_perfil_url = $nombre_db;
