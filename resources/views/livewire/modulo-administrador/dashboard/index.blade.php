@@ -1,50 +1,100 @@
 <div>
 
-    <!--begin::Content wrapper-->
 <div class="d-flex flex-column flex-column-fluid">
 	<!--begin::Toolbar-->
 	<div id="kt_app_toolbar" class="app-toolbar py-3 py-lg-6">
-		<!--begin::Toolbar container-->
 		<div id="kt_app_toolbar_container" class="app-container container-fluid d-flex flex-stack">
-			<!--begin::Page title-->
 			<div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
-				<!--begin::Title-->
 				<h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
 					Dashboard
 				</h1>
-				<!--end::Title-->
-				<!--begin::Breadcrumb-->
 				<ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
-					<!--begin::Item-->
 					<li class="breadcrumb-item text-muted">
                         <a href="{{ route('administrador.dashboard') }}" class="text-muted text-hover-primary">
                             Dashboard
                         </a>
                     </li>
-					<!--end::Item-->
-					<!--begin::Item-->
 					<li class="breadcrumb-item">
 						<span class="bullet bg-gray-400 w-5px h-2px"></span>
 					</li>
-					<!--end::Item-->
-					<!--begin::Item-->
 					<li class="breadcrumb-item text-muted">Dashboard</li>
-					<!--end::Item-->
 				</ul>
-				<!--end::Breadcrumb-->
 			</div>
-			<!--end::Page title-->
-			<!--begin::Actions-->
-			<div class="d-flex align-items-center gap-2 gap-lg-3">
-				<!--begin::Primary button-->
-				<a href="#" class="btn btn-primary btn-sm">Exportar PDF</a>
-				<!--end::Primary button-->
-			</div>
-			<!--end::Actions-->
+            <div class="d-flex flex-stack">
+                <div class="d-flex align-items-center gap-2 gap-lg-3">
+                    <div class="m-0">
+                        <a href="#" class="btn btn-sm btn-flex bg-body btn-color-gray-700 btn-active-color-primary shadow-sm fw-bold" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+                            <span class="svg-icon svg-icon-6 svg-icon-muted me-1">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M19.0759 3H4.72777C3.95892 3 3.47768 3.83148 3.86067 4.49814L8.56967 12.6949C9.17923 13.7559 9.5 14.9582 9.5 16.1819V19.5072C9.5 20.2189 10.2223 20.7028 10.8805 20.432L13.8805 19.1977C14.2553 19.0435 14.5 18.6783 14.5 18.273V13.8372C14.5 12.8089 14.8171 11.8056 15.408 10.964L19.8943 4.57465C20.3596 3.912 19.8856 3 19.0759 3Z" fill="currentColor" />
+                                </svg>
+                            </span>
+                            Filtrar por Proceso de Admisión
+                        </a>
+                        <div class="menu menu-sub menu-sub-dropdown w-250px w-md-300px" data-kt-menu="true" id="menu_expediente" wire:ignore.self>
+                            <div class="px-7 py-5">
+                                <div class="fs-5 text-dark fw-bold">
+                                    Opciones de filtrado
+                                </div>
+                            </div>
+                            <div class="separator border-gray-200"></div>
+                            <form class="px-7 py-5" wire:submit.prevent="aplicar_filtro">
+                                <div class="mb-10">
+                                    <label class="form-label fw-semibold">Proceso de Admisión:</label>
+                                    <div>
+                                        <select class="form-select" wire:model="filtro_proceso" id="filtro_proceso"  data-control="select2" data-placeholder="Seleccione">
+                                            $@foreach ($admisiones as $item)
+                                            <option value="{{ $item->id_admision }}">{{ $item->admision }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-end">
+                                    <button type="button" wire:click="resetear_filtro" class="btn btn-sm btn-light btn-active-light-primary me-2" data-kt-menu-dismiss="true">Resetear</button>
+                                    <button type="submit" class="btn btn-sm btn-primary" data-kt-menu-dismiss="true">Aplicar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center text-center gap-2 gap-lg-3 ms-5">
+                    <button type="button" class="btn btn-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+                        <span class="svg-icon svg-icon-muted svg-icon-3"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path opacity="0.3" d="M10 4H21C21.6 4 22 4.4 22 5V7H10V4Z" fill="currentColor"/>
+                            <path opacity="0.3" d="M13 14.4V9C13 8.4 12.6 8 12 8C11.4 8 11 8.4 11 9V14.4H13Z" fill="currentColor"/>
+                            <path d="M10.4 3.60001L12 6H21C21.6 6 22 6.4 22 7V19C22 19.6 21.6 20 21 20H3C2.4 20 2 19.6 2 19V4C2 3.4 2.4 3 3 3H9.20001C9.70001 3 10.2 3.20001 10.4 3.60001ZM13 14.4V9C13 8.4 12.6 8 12 8C11.4 8 11 8.4 11 9V14.4H8L11.3 17.7C11.7 18.1 12.3 18.1 12.7 17.7L16 14.4H13Z" fill="currentColor"/>
+                            </svg>
+                        </span>
+                        {{-- <span class="svg-icon svg-icon-muted svg-icon-3"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path opacity="0.3" d="M19 15C20.7 15 22 13.7 22 12C22 10.3 20.7 9 19 9C18.9 9 18.9 9 18.8 9C18.9 8.7 19 8.3 19 8C19 6.3 17.7 5 16 5C15.4 5 14.8 5.2 14.3 5.5C13.4 4 11.8 3 10 3C7.2 3 5 5.2 5 8C5 8.3 5 8.7 5.1 9H5C3.3 9 2 10.3 2 12C2 13.7 3.3 15 5 15H19Z" fill="currentColor"/>
+                            <path d="M13 17.4V12C13 11.4 12.6 11 12 11C11.4 11 11 11.4 11 12V17.4H13Z" fill="currentColor"/>
+                            <path opacity="0.3" d="M8 17.4H16L12.7 20.7C12.3 21.1 11.7 21.1 11.3 20.7L8 17.4Z" fill="currentColor"/>
+                            </svg>
+                        </span> --}}
+                        Exportar
+                    </button>
+                    <div id="kt_datatable_example_export_menu" class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-200px py-4" data-kt-menu="true">
+                        <div class="menu-item px-3">
+                            <a href="#" class="menu-link px-3">
+                            Exportar a PDF
+                            </a>
+                        </div>
+                        <div class="menu-item px-3">
+                            <a href="#" class="menu-link px-3">
+                            Exportar a Excel
+                            </a>
+                        </div>
+                        <div class="menu-item px-3">
+                            <a href="#" class="menu-link px-3">
+                            Exportar a CSV
+                            </a>
+                        </div>
+                    </div>
+                    <div id="kt_datatable_example_buttons" class="d-none"></div>
+                </div>
+            </div>
 		</div>
-		<!--end::Toolbar container-->
 	</div>
-	<!--end::Toolbar-->
 	
 	<!--begin::Content-->
 	<div id="kt_app_content" class="app-content flex-column-fluid">

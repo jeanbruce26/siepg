@@ -298,7 +298,7 @@
                                         wire:model="tipo_documento">
                                         <option value="" selected>Seleccione</option>
                                         @foreach ($tipo_doc as $item)
-                                            <option value="{{ $item->id_tipo_doc }}">{{ $item->doc }}
+                                            <option value="{{ $item->id_tipo_documento }}">{{ $item->tipo_documento }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -355,10 +355,10 @@
                                 <div class="mb-3 col-md-6">
                                     <label class="form-label">Grado <span class="text-danger">*</span></label>
                                     <select class="form-select @error('grado') is-invalid  @enderror" wire:model="grado">
-                                        <option value="" selected>Seleccione</option>
-                                        <option>BACHILLER</option>
-                                        <option>MAGISTER</option>
-                                        <option>DOCTOR</option>
+                                        @foreach ($grado_academico as $item)
+                                            <option value="{{ $item->id_grado_academico }}">{{ $item->grado_academico }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                     @error('grado')
                                         <span class="error text-danger">{{ $message }}</span>

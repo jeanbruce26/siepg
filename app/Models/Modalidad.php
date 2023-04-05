@@ -17,8 +17,5 @@ class Modalidad extends Model
         'modalidad_estado',
     ];
 
-    public function programa_proceso(){
-        return $this->hasMany(ProgramaProceso::class,
-        'id_modalidad','id_modalidad');
-    }
+    
 }

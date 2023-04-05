@@ -7,6 +7,7 @@ use App\Models\AreaAdministrativo;
 use App\Models\Coordinador;
 use App\Models\Docente;
 use App\Models\Facultad;
+use App\Models\GradoAcademico;
 use App\Models\HistorialAdministrativo;
 use App\Models\TipoDocumento;
 use App\Models\TipoTrabajador;
@@ -176,6 +177,12 @@ class Index extends Component
         $this->coordinador = false;
     }
 
+    public function cancelar()
+    {
+        $this->limpiar();
+        $this->mount();
+    }
+
     public function cargarAlerta($id)
     {
         $trabajador_tipo_trabajador = TrabajadorTipoTrabajador::where('id_trabajador',$id)->where('trabajador_tipo_trabajador_estado',1)->count();
@@ -310,17 +317,32 @@ class Index extends Component
             ]);
         }
 
-        $data = $this->perfil;
-        if($data != null){
-            $path =  'Perfil/';
-            $filename = "perfil-".$id_trabajador.".".$data->extension();
-            $data = $this->perfil;
-            $data->storeAs($path, $filename, 'files_publico');
-
-            $tra = TrabajadorModel::find($id_trabajador);
-            $tra->trabajador_perfil_url = $path.$filename;
-            $tra->save();
+        if ($this->perfil) {
+            if (file_exists($trabajador->trabajador_perfil_url)) {
+                unlink($trabajador->trabajador_perfil_url);
+            }
+            $path = 'Posgrado/Usuarios/' . $id_trabajador . '/Perfil' . '/';
+            $filename = 'foto-perfil-' . date('HisdmY') . '.' . $this->perfil->getClientOriginalExtension();
+            $nombre_db = $path.$filename;
+            $this->perfil->storeAs($path, $filename, 'files_publico');
+            $trabajador->trabajador_perfil_url = $nombre_db;
         }
+        $trabajador->save();
+
+        // emitir evento para actualizar el perfil del usuario logueado en la barra de navegacion
+        $this->emit('actualizar_perfil');
+
+        // emitir alerta de exito
+        $this->dispatchBrowserEvent('alerta_perfil', [
+            'title' => '¡Éxito!',
+            'text' => 'El perfil se ha actualizado correctamente.',
+            'icon' => 'success',
+            'confirmButtonText' => 'Aceptar',
+            'color' => 'success'
+        ]);
+
+        // volver al modo show
+        $this->cancelar();
 
         $this->dispatchBrowserEvent('modalTrabajador');
         
@@ -943,6 +965,7 @@ class Index extends Component
 
         return view('livewire.modulo-administrador.gestion-usuarios.trabajador.index', [
             'tipo_doc' => TipoDocumento::all(),
+            'grado_academico' => GradoAcademico::all(),
             'trabajadores' => $trabajadores,
             'tipo_trabajadores' => $tipo_trabajadores,
         ]);
