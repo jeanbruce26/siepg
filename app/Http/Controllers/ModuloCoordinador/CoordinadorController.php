@@ -30,6 +30,28 @@ class CoordinadorController extends Controller
         ]);
     }
 
+    public function evaluaciones($id , $id_admision)
+    {
+        $id_programa = $id;
+        $id_admision = $id_admision;
+        return view('modulo-coordinador.inicio.evaluaciones.inscripciones', [
+            'id_programa' => $id_programa,
+            'id_admision' => $id_admision
+        ]);
+    }
+
+    public function evaluacion_expediente($id , $id_admision, $id_evaluacion)
+    {
+        $id_programa = $id;
+        $id_admision = $id_admision;
+        $id_evaluacion = $id_evaluacion;
+        return view('modulo-coordinador.inicio.evaluaciones.evaluacion-expediente', [
+            'id_programa' => $id_programa,
+            'id_admision' => $id_admision,
+            'id_evaluacion' => $id_evaluacion
+        ]);
+    }
+
     public function perfil()
     {
         $id_tipo_trabajador = 2;

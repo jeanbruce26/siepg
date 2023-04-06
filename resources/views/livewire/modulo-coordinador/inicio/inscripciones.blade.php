@@ -4,9 +4,9 @@
             <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
                 <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
                     @if ($programa->mencion)
-                        Mencion en {{ ucwords(strtolower($programa->mencion)) }} - Modalidad {{ ucwords(strtolower($programa->modalidad->modalidad)) }}
+                        Inscripciones de la Mencion en {{ ucwords(strtolower($programa->mencion)) }} en Modalidad {{ ucwords(strtolower($programa->modalidad->modalidad)) }} del Proceso de {{ ucwords(strtolower($admision->admision)) }}
                     @else
-                        {{ ucwords(strtolower($programa->programa)) }} en {{ ucwords(strtolower($programa->subprograma)) }} - Modalidad {{ ucwords(strtolower($programa->modalidad->modalidad)) }}
+                    Inscripciones de la {{ ucwords(strtolower($programa->programa)) }} en {{ ucwords(strtolower($programa->subprograma)) }} en Modalidad {{ ucwords(strtolower($programa->modalidad->modalidad)) }} del Proceso de {{ ucwords(strtolower($admision->admision)) }}
                     @endif
                 </h1>
                 <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
@@ -30,9 +30,9 @@
                     </li>
                     <li class="breadcrumb-item text-muted">
                         @if ($programa->mencion)
-                            Mencion en {{ ucwords(strtolower($programa->mencion)) }}
+                            Inscripciones de la Mencion en {{ ucwords(strtolower($programa->mencion)) }}
                         @else
-                            {{ ucwords(strtolower($programa->programa)) }} en {{ ucwords(strtolower($programa->subprograma)) }}
+                            Inscripciones de la {{ ucwords(strtolower($programa->programa)) }} en {{ ucwords(strtolower($programa->subprograma)) }}
                         @endif
                     </li>
                 </ul>

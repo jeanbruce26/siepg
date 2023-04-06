@@ -5,6 +5,7 @@ namespace App\Http\Livewire\ModuloCoordinador\Inicio;
 use App\Models\Admision;
 use App\Models\Inscripcion;
 use App\Models\Programa;
+use App\Models\TrabajadorTipoTrabajador;
 use Livewire\Component;
 
 class Inscripciones extends Component
@@ -27,8 +28,24 @@ class Inscripciones extends Component
 
     public function mount()
     {
+        $usuario = auth('usuario')->user();
+        $trabajador_tipo_trabajador = TrabajadorTipoTrabajador::where('id_trabajador_tipo_trabajador', $usuario->id_trabajador_tipo_trabajador)->first();
+        $trabajador = $trabajador_tipo_trabajador->trabajador;
+        $coordinador = $trabajador->coordinador;
         $this->programa = Programa::find($this->id_programa);
+        if(!$this->programa)
+        {
+            abort(404);
+        }
+        elseif($this->programa->id_facultad != $coordinador->id_facultad)
+        {
+            abort(404);
+        }
         $this->admision = Admision::find($this->id_admision);
+        if(!$this->admision)
+        {
+            abort(404);
+        }
     }
 
     public function ordenar_tabla($value)

@@ -81,7 +81,7 @@
                                     ->join('programa', 'programa.id_programa', '=', 'programa_plan.id_programa')
                                     ->where('programa.id_programa', $item->id_programa)
                                     ->where('programa.id_modalidad', $modalidad->id_modalidad)
-                                    ->where('programa_proceso.id_admision', $filtro_proceso)
+                                    ->where('programa_proceso.id_admision', $proceso)
                                     ->count();
                             @endphp
                             <div class="col-md-6 col-lg-4">
@@ -102,10 +102,10 @@
                                             </span>
                                         </div>
                                         <div class="d-flex flex-column row-gap-5">
-                                            <button class="btn btn-info w-100">
+                                            <a href="{{ route('coordinador.evaluaciones', ['id' => $item->id_programa, 'id_admision' => $proceso]) }}" class="btn btn-info w-100">
                                                 Evaluaciones
-                                            </button>
-                                            <a href="{{ route('coordinador.inscripciones', ['id' => $item->id_programa, 'id_admision' => $filtro_proceso]) }}" class="btn btn-secondary w-100">
+                                            </a>
+                                            <a href="{{ route('coordinador.inscripciones', ['id' => $item->id_programa, 'id_admision' => $proceso]) }}" class="btn btn-secondary w-100">
                                                 Ver Inscritos
                                             </a>
                                         </div>
