@@ -30,7 +30,7 @@
                                 </svg>
                             </span>
                         </span>
-                        <span class="menu-title" style="font-weight: 700;">Evaluaciones</span>
+                        <span class="menu-title fw-semibold">Evaluaciones</span>
                     </a>
                 </div>
                 <div class="menu-item pt-5">

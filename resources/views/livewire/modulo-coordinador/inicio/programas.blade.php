@@ -105,9 +105,9 @@
                                             <button class="btn btn-info w-100">
                                                 Evaluaciones
                                             </button>
-                                            <button class="btn btn-secondary w-100">
+                                            <a href="{{ route('coordinador.inscripciones', ['id' => $item->id_programa, 'id_admision' => $filtro_proceso]) }}" class="btn btn-secondary w-100">
                                                 Ver Inscritos
-                                            </button>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>

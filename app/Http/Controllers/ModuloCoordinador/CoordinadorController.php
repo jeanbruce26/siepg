@@ -20,6 +20,16 @@ class CoordinadorController extends Controller
         ]);
     }
 
+    public function inscripciones($id , $id_admision)
+    {
+        $id_programa = $id;
+        $id_admision = $id_admision;
+        return view('modulo-coordinador.inicio.inscripciones', [
+            'id_programa' => $id_programa,
+            'id_admision' => $id_admision
+        ]);
+    }
+
     public function perfil()
     {
         $id_tipo_trabajador = 2;

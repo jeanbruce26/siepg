@@ -7,5 +7,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [CoordinadorController::class, 'inicio'])->middleware(['auth.usuario', 'verificar.usuario.coordinador'])->name('coordinador.inicio');
 // ruta para ir a la pagina de perfil
 Route::get('/perfil', [CoordinadorController::class, 'perfil'])->middleware(['auth.usuario', 'verificar.usuario.coordinador'])->name('coordinador.perfil');
-// // ruta para ir a la pagina de pagos
+// ruta para ir a la pagina de pagos
 Route::get('/{id}/programas', [CoordinadorController::class, 'programas'])->middleware(['auth.usuario', 'verificar.usuario.coordinador'])->name('coordinador.programas');
+// ruta para ir a la pagina de pagos
+Route::get('/programas/{id}/inscripciones/{id_admision}/proceso', [CoordinadorController::class, 'inscripciones'])->middleware(['auth.usuario', 'verificar.usuario.coordinador'])->name('coordinador.inscripciones');
