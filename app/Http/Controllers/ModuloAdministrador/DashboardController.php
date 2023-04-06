@@ -17,4 +17,12 @@ class DashboardController extends Controller
     {
         return view('modulo-administrador.dashboard.index');
     }
+
+    public function perfil()
+    {
+        $id_tipo_trabajador = 3;
+        return view('modulo-administrador.perfil.index', [
+            'id_tipo_trabajador' => $id_tipo_trabajador
+        ]);
+    }
 }

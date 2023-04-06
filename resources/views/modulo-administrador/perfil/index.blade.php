@@ -1,5 +1,5 @@
-@extends('layouts.modulo-area-contable')
-@section('title', 'Perfil - Area Contable - Escuela de Posgrado')
+@extends('layouts.modulo-administrador')
+@section('title', 'Perfil - Administrador - Escuela de Posgrado')
 @section('content')
 @livewire('modulo-administrador.perfil.index', ['id_tipo_trabajador' => $id_tipo_trabajador], key('modulo-administrador.perfil.index'))
 @endsection

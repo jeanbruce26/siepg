@@ -52,6 +52,16 @@ class Index extends Component
                 // redireccionamos al usuario a la pagina de perfil del area administrativa de la plataforma contable
                 return redirect()->route('contable.perfil');
             }
+            else if($area_administrativa->id_area_administrativo == 2)
+            {
+                // redireccionamos al usuario a la pagina de perfil del area administrativa de emision de actas
+                dd('area administrativa de emision de actas');
+            }
+            else if($area_administrativa->id_area_administrativo == 3)
+            {
+                // redireccionamos al usuario a la pagina de perfil del area administrativa de soporte informatico
+                return redirect()->route('administrador.perfil');
+            }
             else{
                 dd('area administrativa');
             }
