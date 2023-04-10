@@ -102,7 +102,7 @@
                                                     @if ($evaluacion)
                                                         @if ($evaluacion->puntaje_expediente)
                                                             <span class="fw-bold fs-6">
-                                                                {{ number_format($evaluacion->puntaje_expediente) }}
+                                                                {{ number_format($evaluacion->puntaje_expediente) }} pts.
                                                             </span>
                                                         @else
                                                             <button class="btn btn-info btn-sm hover-scale" wire:click="evaluacion_expediente({{ $item->id_inscripcion }})">
@@ -120,7 +120,7 @@
                                                     @if ($evaluacion)
                                                         @if ($evaluacion->puntaje_investigacion)
                                                             <span class="fw-bold fs-6">
-                                                                {{ number_format($evaluacion->puntaje_investigacion) }}
+                                                                {{ number_format($evaluacion->puntaje_investigacion) }} pts.
                                                             </span>
                                                         @else
                                                             <button class="btn btn-info btn-sm hover-scale" wire:click="evaluacion_investigacion({{ $item->id_inscripcion }})">
@@ -138,7 +138,7 @@
                                                     @if ($evaluacion)
                                                         @if ($evaluacion->puntaje_entrevista)
                                                             <span class="fw-bold fs-6">
-                                                                {{ number_format($evaluacion->puntaje_entrevista) }}
+                                                                {{ number_format($evaluacion->puntaje_entrevista) }} pts.
                                                             </span>
                                                         @else
                                                             <button class="btn btn-info btn-sm hover-scale" wire:click="evaluacion_entrevista({{ $item->id_inscripcion }})">
@@ -155,9 +155,9 @@
                                                     @if ($evaluacion)
                                                         @if ($evaluacion->evaluacion_estado == 1)
                                                             <span class="badge badge-warning fs-6">Pendiente</span>
-                                                        @elseif ($evaluacion->evaluacion_estado == 3)
-                                                            <span class="badge badge-success fs-6">Aprobado</span>
                                                         @elseif ($evaluacion->evaluacion_estado == 2)
+                                                            <span class="badge badge-success fs-6">Aprobado</span>
+                                                        @elseif ($evaluacion->evaluacion_estado == 3)
                                                             <span class="badge badge-danger fs-6">Desaprobado</span>
                                                         @endif
                                                     @else

@@ -64,41 +64,6 @@
                             </div>
                         </div>
                     </div>
-                    {{-- alerta declaracion de regularizacion de constancia de la SUNEDU --}}
-                    @if ($expediente_inscripcion_seguimiento->count() > 0)
-                        <div class="alert bg-light-danger border-danger d-flex alig-items-center p-5 mb-5">
-                            <span class="svg-icon svg-icon-2hx svg-icon-danger me-4 d-flex align-items-center">
-                                <i class="las la-exclamation-triangle fs-2 text-danger"></i>
-                            </span>
-                            <div class="d-flex flex-column gap-2">
-                                <span class="fw-bold">
-                                    Observacion: Alumno con declaracion de regulización de constancia en lina de la SUNEDU.
-                                </span>
-                            </div>
-                        </div>
-                    @endif
-                    {{-- card de exediente --}}
-                    <div class="row g-5 mb-5">
-                        @foreach ($expedientes as $item)
-                            @php $expediente_tipo_evaluacion = App\Models\ExpedienteTipoEvaluacion::where('expediente_tipo_evaluacion', 1)->where('id_expediente', $item->id_expediente)->first(); @endphp
-                            <div class="col-xl-4 col-lg-6 col-md-6">
-                                <div class="card shadow-sm bg-info bg-opacity-20 h-100">
-                                    <div class="card-body mb-0 d-flex flex-column justify-content-center">
-                                        <div class="text-center mb-5">
-                                            <span class="fs-4 fs-md-3 fw-bold text-gray-800">
-                                                {{ $item->expediente }}
-                                            </span>
-                                        </div>
-                                        <div>
-                                            <a href="{{ asset($item->expediente_inscripcion_url) }}" target="_blank" class="btn btn-info w-100 hover-scale">
-                                                Abrir Expediente
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
                     {{-- card monto de pagos --}}
                     <div class="card shadow-sm">
                         <div class="card-body mb-0">
@@ -113,78 +78,26 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($evaluacion_expediente as $item)
-                                            @php $evaluacion_expediente_items = App\Models\EvaluacionExpedienteItem::where('id_evaluacion_expediente_titulo', $item->id_evaluacion_expediente_titulo)->get(); @endphp
+                                        @foreach ($evaluacion_entrevista as $item)
                                             <tr>
-                                                <td>
-                                                    <div class="d-flex flex-column">
-                                                        <strong>
-                                                            <span class="me-3">
-                                                                {{ $loop->iteration }}.
-                                                            </span>
-                                                            {{ $item->evaluacion_expediente_titulo }}
-                                                        </strong>
-                                                        <div class="ms-3">
-                                                            @foreach ($evaluacion_expediente_items as $item2)
-                                                                @php $evaluacion_expediente_subitems = App\Models\EvaluacionExpedienteSubitem::where('id_evaluacion_expediente_item', $item2->id_evaluacion_expediente_item)->get(); @endphp
-                                                                <div>
-                                                                    <span class="me-3">
-                                                                        <i class="las la-long-arrow-alt-right"></i>
-                                                                    </span>
-                                                                    {{ $item2->evaluacion_expediente_item }}
-                                                                    @foreach ($evaluacion_expediente_subitems as $item3)
-                                                                        <div>
-                                                                            <span class="me-3 ms-3">
-                                                                                <i class="las la-long-arrow-alt-right"></i>
-                                                                            </span>
-                                                                            {{ $item3->evaluacion_expediente_subitem }}
-                                                                        </div>
-                                                                    @endforeach
-                                                                </div>
-                                                            @endforeach
-                                                        </div>
-                                                    </div>
+                                                <td class="fw-bold">
+                                                    <span class="me-3">
+                                                        {{ $loop->iteration }}.
+                                                    </span>
+                                                    {{ $item->evaluacion_entrevista_item }}
+                                                </td>
+                                                <td align="center" class="fw-bold">
+                                                    PUNTAJE MAXIMO ({{ number_format($item->evaluacion_entrevista_item_puntaje,0) }})
                                                 </td>
                                                 <td align="center">
-                                                    <strong>
-                                                        PUNTAJE MAXIMO ({{ number_format($item->evaluacion_expediente_titulo_puntaje,0) }})
-                                                    </strong>
-                                                    <div class="ms-3">
-                                                        @foreach ($evaluacion_expediente_items as $item2)
-                                                            @if ($item2->evaluacion_expediente_item_puntaje != null)
-                                                                <div>
-                                                                    @if ($evaluacion_expediente_subitems->count() > 0)
-                                                                        <strong>
-                                                                            Maximo {{ number_format($item2->evaluacion_expediente_item_puntaje) }}
-                                                                        </strong>
-                                                                    @else
-                                                                        <span class="me-2">
-                                                                            <i class="las la-long-arrow-alt-right"></i>
-                                                                        </span>
-                                                                        {{ number_format($item2->evaluacion_expediente_item_puntaje) }} {{ number_format($item2->evaluacion_expediente_item_puntaje) > 1 ? 'pts.' : 'pto.' }}
-                                                                    @endif
-                                                                    @foreach ($evaluacion_expediente_subitems as $item3)
-                                                                        <div>
-                                                                            <span class="me-2">
-                                                                                <i class="las la-long-arrow-alt-right"></i>
-                                                                            </span>
-                                                                            {{ number_format($item3->evaluacion_expediente_subitem_puntaje,2) }} pts.
-                                                                        </div>
-                                                                    @endforeach
-                                                                </div>
-                                                            @endif
-                                                        @endforeach
-                                                    </div>
-                                                </td>
-                                                <td align="center">
-                                                    <button type="button" wire:click="cargar_evaluacion_expediente_titulo({{$item->id_evaluacion_expediente_titulo}})" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modal_puntaje">
+                                                    <button type="button" wire:click="cargar_evaluacion_entrevista_item({{ $item->id_evaluacion_entrevista_item }})" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modal_puntaje">
                                                         Ingresar Puntaje
                                                     </button>
                                                 </td>
-                                                @php $evaluacion_expediente_notas = App\Models\EvaluacionExpediente::where('id_evaluacion_expediente_titulo', $item->id_evaluacion_expediente_titulo)->where('id_evaluacion',$id_evaluacion)->first(); @endphp
+                                                @php $evaluacion_entrevista_notas = App\Models\EvaluacionEntrevista::where('id_evaluacion_entrevista_item', $item->id_evaluacion_entrevista_item)->where('id_evaluacion',$id_evaluacion)->first(); @endphp
                                                 <td align="center" class="fs-5">
-                                                    @if ($evaluacion_expediente_notas)
-                                                        <strong>{{ number_format($evaluacion_expediente_notas->evaluacion_expediente_puntaje, 0) }}</strong>
+                                                    @if ($evaluacion_entrevista_notas)
+                                                        <strong>{{ number_format($evaluacion_entrevista_notas->evaluacion_entrevista_puntaje, 0) }}</strong>
                                                     @else
                                                         <strong>-</strong>
                                                     @endif
@@ -210,7 +123,7 @@
                                 </form>
                             </div>
                             <div class="text-end">
-                                <button type="button" wire:click="evaluar_expediente_paso_1()" class="btn btn-info">
+                                <button type="button" wire:click="evaluar_entrevista_paso_1()" class="btn btn-info">
                                     Evaluar
                                 </button>
                             </div>

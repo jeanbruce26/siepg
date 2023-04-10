@@ -1,14 +1,14 @@
 @extends('layouts.modulo-coordinador')
-@section('title', 'Evaluacion de Expediente - Direccitor de Unidad - Escuela de Posgrado')
+@section('title', 'Evaluacion de Tema de Tesis - Direccitor de Unidad - Escuela de Posgrado')
 @section('content')
-@livewire('modulo-coordinador.inicio.evaluaciones.evaluacion-expediente', ['id_programa' => $id_programa, 'id_admision' => $id_admision, 'id_evaluacion' => $id_evaluacion], key('modulo-coordinador.inicio.evaluacion-expediente'))
+@livewire('modulo-coordinador.inicio.evaluaciones.evaluacion-investigacion', ['id_programa' => $id_programa, 'id_admision' => $id_admision, 'id_evaluacion' => $id_evaluacion], key('modulo-coordinador.inicio.evaluacion-investigacion'))
 @endsection
 @section('scripts')
     <script>
         window.addEventListener('modal_puntaje', event => {
             $('#modal_puntaje').modal(event.detail.action);
         })
-        window.addEventListener('alerta_evaluacion_expediente', event => {
+        window.addEventListener('alerta_evaluacion_investigacion', event => {
             Swal.fire({
                 title: event.detail.title,
                 text: event.detail.text,
@@ -20,8 +20,7 @@
                 }
             });
         });
-
-        window.addEventListener('alerta_evaluacion_expediente_2', event => {
+        window.addEventListener('alerta_evaluacion_investigacion_2', event => {
             Swal.fire({
                 title: event.detail.title,
                 text: event.detail.text,
@@ -35,7 +34,7 @@
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
-                    Livewire.emitTo('modulo-coordinador.inicio.evaluaciones.evaluacion-expediente', 'evaluar_expediente_paso_2');
+                    Livewire.emitTo('modulo-coordinador.inicio.evaluaciones.evaluacion-investigacion', 'evaluar_investigacion_paso_2');
                 }
             })
         })

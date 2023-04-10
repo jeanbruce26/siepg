@@ -8,7 +8,7 @@
         window.addEventListener('modal_encuesta', event => {
             $('#modal_encuesta').modal(event.detail.action);
         })
-        window.addEventListener('alerta-encuesta', event => {
+        window.addEventListener('alerta_inscripcion_coordinador', event => {
             Swal.fire({
                 title: event.detail.title,
                 text: event.detail.text,

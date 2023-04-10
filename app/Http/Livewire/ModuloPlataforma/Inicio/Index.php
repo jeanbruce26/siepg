@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\ModuloPlataforma\Inicio;
 use App\Models\Admision;
+use App\Models\Admitido;
 use App\Models\Admitidos;
 use App\Models\Encuesta;
 use App\Models\EncuestaDetalle;
@@ -133,7 +134,7 @@ class Index extends Component
             $admitido = null;
         }
         $encuestas = Encuesta::where('encuesta_estado', 1)->get(); // obtenemos las encuestas activas
-
+        
         return view('livewire.modulo-plataforma.inicio.index', [
             'admision' => $admision,
             'admision_fecha_admitidos' => $admision_fecha_admitidos,

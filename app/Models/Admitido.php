@@ -16,6 +16,7 @@ class Admitido extends Model
         'admitido_codigo',
         'id_persona',
         'id_evaluacion',
+        'id_programa_proceso',
         'admitido_estado'
     ];
 
@@ -31,5 +32,11 @@ class Admitido extends Model
     public function persona(){
         return $this->belongsTo(Persona::class,
         'id_persona','id_persona');
+    }
+
+    // Programa Proceso
+    public function programa_proceso(){
+        return $this->belongsTo(ProgramaProceso::class,
+        'id_programa_proceso','id_programa_proceso');
     }
 }

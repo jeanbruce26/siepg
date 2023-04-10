@@ -8,6 +8,7 @@ use App\Models\Inscripcion;
 use App\Models\Programa;
 use App\Models\Puntaje;
 use App\Models\TrabajadorTipoTrabajador;
+use Illuminate\Support\Facades\Session;
 use Livewire\Component;
 
 class Inscripciones extends Component
@@ -45,6 +46,11 @@ class Inscripciones extends Component
         $this->puntaje_model = Puntaje::where('puntaje_estado', 1)->first();
     }
 
+    public function alerta_evaluacion($tipo_evaluacion)
+    {
+        dd($tipo_evaluacion);
+    }
+
     public function evaluacion_expediente(Inscripcion $inscripcion)
     {
         if($this->admision->admision_fecha_inicio_expediente <= date('Y-m-d') && $this->admision->admision_fecha_fin_expediente >= date('Y-m-d'))
@@ -68,7 +74,7 @@ class Inscripciones extends Component
                 $evaluacion->save();
 
                 // retorna a la vista de evaluacion de expediente
-                return redirect()->route('coordinador.evaluacion_expediente', [
+                return redirect()->route('coordinador.evaluacion-expediente', [
                     'id' => $this->id_programa,
                     'id_admision' => $this->id_admision,
                     'id_evaluacion' => $evaluacion->id_evaluacion
@@ -108,7 +114,7 @@ class Inscripciones extends Component
                 {
                     if($evaluacion->puntaje_expediente)
                     {
-                        return redirect()->route('coordinador.evaluacion_investigacion', [
+                        return redirect()->route('coordinador.evaluacion-investigacion', [
                             'id' => $this->id_programa,
                             'id_admision' => $this->id_admision,
                             'id_evaluacion' => $evaluacion->id_evaluacion
@@ -170,7 +176,7 @@ class Inscripciones extends Component
                 {
                     if($evaluacion->puntaje_expediente)
                     {
-                        return redirect()->route('coordinador.evaluacion_entrevista', [
+                        return redirect()->route('coordinador.evaluacion-entrevista', [
                             'id' => $this->id_programa,
                             'id_admision' => $this->id_admision,
                             'id_evaluacion' => $evaluacion->id_evaluacion
@@ -204,7 +210,7 @@ class Inscripciones extends Component
                 {
                     if($evaluacion->puntaje_investigacion)
                     {
-                        return redirect()->route('coordinador.evaluacion_entrevista', [
+                        return redirect()->route('coordinador.evaluacion-entrevista', [
                             'id' => $this->id_programa,
                             'id_admision' => $this->id_admision,
                             'id_evaluacion' => $evaluacion->id_evaluacion

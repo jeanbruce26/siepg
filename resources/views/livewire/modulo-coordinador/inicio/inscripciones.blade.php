@@ -37,6 +37,38 @@
                     </li>
                 </ul>
             </div>
+            <div class="d-flex flex-stack">
+                <div class="d-flex align-items-center text-center gap-2 gap-lg-3 ms-5">
+                    <button type="button" class="btn btn-secondary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+                        <span class="svg-icon svg-icon-3">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path opacity="0.3" d="M10 4H21C21.6 4 22 4.4 22 5V7H10V4Z" fill="currentColor"/>
+                                <path opacity="0.3" d="M13 14.4V9C13 8.4 12.6 8 12 8C11.4 8 11 8.4 11 9V14.4H13Z" fill="currentColor"/>
+                                <path d="M10.4 3.60001L12 6H21C21.6 6 22 6.4 22 7V19C22 19.6 21.6 20 21 20H3C2.4 20 2 19.6 2 19V4C2 3.4 2.4 3 3 3H9.20001C9.70001 3 10.2 3.20001 10.4 3.60001ZM13 14.4V9C13 8.4 12.6 8 12 8C11.4 8 11 8.4 11 9V14.4H8L11.3 17.7C11.7 18.1 12.3 18.1 12.7 17.7L16 14.4H13Z" fill="currentColor"/>
+                            </svg>
+                        </span>
+                        Exportar
+                    </button>
+                    <div id="kt_datatable_example_export_menu" class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-200px py-4" data-kt-menu="true">
+                        {{-- <div class="menu-item px-3">
+                            <a href="#" class="menu-link px-3">
+                            Exportar a PDF
+                            </a>
+                        </div> --}}
+                        <div class="menu-item px-3">
+                            <a wire:click="export_excel" style="cursor: pointer;" class="menu-link px-3">
+                                Exportar a Excel
+                            </a>
+                        </div>
+                        {{-- <div class="menu-item px-3">
+                            <a href="#" class="menu-link px-3">
+                            Exportar a CSV
+                            </a>
+                        </div> --}}
+                    </div>
+                    <div id="kt_datatable_example_buttons" class="d-none"></div>
+                </div>
+            </div>
         </div>
     </div>
     <div id="kt_app_content" class="app-content flex-column-fluid">

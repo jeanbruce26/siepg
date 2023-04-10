@@ -2,11 +2,13 @@
 
 namespace App\Http\Livewire\ModuloCoordinador\Inicio;
 
+use App\Exports\ModuloCoordinador\InscripcionesExport;
 use App\Models\Admision;
 use App\Models\Inscripcion;
 use App\Models\Programa;
 use App\Models\TrabajadorTipoTrabajador;
 use Livewire\Component;
+use Maatwebsite\Excel\Facades\Excel;
 
 class Inscripciones extends Component
 {
@@ -60,6 +62,23 @@ class Inscripciones extends Component
             $this->sort_nombre = $value;
             $this->sort_direccion = 'asc';
         }
+    }
+
+    public function export_excel()
+    {
+        $fecha_actual = date("Ymd", strtotime(today()));
+        $hora_actual = date("His", strtotime(now()));
+
+        // mostramos una alerta de confirmacion
+        $this->dispatchBrowserEvent('alerta_inscripcion_coordinador', [
+            'title' => '¡Exito!',
+            'text' => 'Se ha descargado el archivo excel con los datos de las inscripciones del programa',
+            'icon' => 'success',
+            'confirmButtonText' => 'Aceptar',
+            'color' => 'success'
+        ]);
+
+        return Excel::download(new InscripcionesExport($this->id_programa), 'data-inscripciones-coodinadores-'.$fecha_actual.'-'.$hora_actual.'.xlsx');
     }
 
     public function render()

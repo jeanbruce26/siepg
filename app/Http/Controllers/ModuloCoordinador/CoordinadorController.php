@@ -52,6 +52,30 @@ class CoordinadorController extends Controller
         ]);
     }
 
+    public function evaluacion_investigacion($id , $id_admision, $id_evaluacion)
+    {
+        $id_programa = $id;
+        $id_admision = $id_admision;
+        $id_evaluacion = $id_evaluacion;
+        return view('modulo-coordinador.inicio.evaluaciones.evaluacion-investigacion', [
+            'id_programa' => $id_programa,
+            'id_admision' => $id_admision,
+            'id_evaluacion' => $id_evaluacion
+        ]);
+    }
+
+    public function evaluacion_entrevista($id , $id_admision, $id_evaluacion)
+    {
+        $id_programa = $id;
+        $id_admision = $id_admision;
+        $id_evaluacion = $id_evaluacion;
+        return view('modulo-coordinador.inicio.evaluaciones.evaluacion-entrevista', [
+            'id_programa' => $id_programa,
+            'id_admision' => $id_admision,
+            'id_evaluacion' => $id_evaluacion
+        ]);
+    }
+
     public function perfil()
     {
         $id_tipo_trabajador = 2;
