@@ -275,6 +275,17 @@ class Inscripciones extends Component
                                         })
                                         ->orderBy('persona.nombre_completo', 'asc')
                                         ->get();
-        return view('livewire.modulo-coordinador.inicio.evaluaciones.inscripciones');
+        $evaluaciones = Evaluacion::join('inscripcion', 'inscripcion.id_inscripcion', '=', 'evaluacion.id_inscripcion')
+                                    ->join('programa_proceso', 'programa_proceso.id_programa_proceso', '=', 'inscripcion.id_programa_proceso')
+                                    ->join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
+                                    ->join('programa', 'programa.id_programa', '=', 'programa_plan.id_programa')
+                                    ->join('persona', 'persona.id_persona', '=', 'inscripcion.id_persona')
+                                    ->where('programa.id_programa', $this->id_programa)
+                                    ->where('programa_proceso.id_admision', $this->id_admision)
+                                    ->orderBy('persona.nombre_completo', 'asc')
+                                    ->get();
+        return view('livewire.modulo-coordinador.inicio.evaluaciones.inscripciones', [
+            'evaluaciones' => $evaluaciones
+        ]);
     }
 }
