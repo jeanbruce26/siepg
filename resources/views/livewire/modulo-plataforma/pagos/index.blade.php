@@ -62,56 +62,58 @@
                         </div>
                     </div> --}}
                     {{-- tabla de pagos --}}
-                    <div class="card card-body shadow-sm mb-5">
-                        <div class="table-responsive">
-                            <table class="table table-hover align-middle table-rounded border mb-0 gy-5 gs-5">
-                                <thead>
-                                    <tr class="fw-bold fs-6 text-gray-800 border-bottom-2 border-gray-200">
-                                        <th>ID</th>
-                                        <th>Concepto Pago</th>
-                                        <th>Numero Operacion</th>
-                                        <th>Monto</th>
-                                        <th>Fecha</th>
-                                        <th>Estado</th>
-                                        <th class="text-end">Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($pagos as $item)
-                                    <tr>
-                                        <td>
-                                            {{ $item->id_pago }}
-                                        </td>
-                                        <td>
-                                            Concepto por {{ $item->concepto_pago->concepto_pago }}
-                                        </td>
-                                        <td>
-                                            {{ $item->pago_operacion }}
-                                        </td>
-                                        <td>
-                                            S/. {{ $item->pago_monto }}
-                                        </td>
-                                        <td>
-                                            {{ date('d/m/Y', strtotime($item->pago_fecha)) }}
-                                        </td>
-                                        <td>
-                                            @if ($item->pago_verificacion == 1)
-                                                <span class="badge badge-warning">Pendiente</span>
-                                            @elseif ($item->pago_verificacion == 2)
-                                                <span class="badge badge-success">Validado</span>
-                                            @else
-                                                <span class="badge badge-danger">Observado</span>
-                                            @endif
-                                        </td>
-                                        <td class="text-end">
-                                            <a href="#modal_pago_plataforma" wire:click="cargar_pago({{ $item->id_pago }})" class="btn btn-light-info btn-sm hover-scale" data-bs-toggle="modal" data-bs-target="#modal_pago_plataforma">
-                                                Editar
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                    <div class="card shadow-sm mb-5">
+                        <div class="card-body mb-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle table-rounded border mb-0 gy-5 gs-5">
+                                    <thead>
+                                        <tr class="fw-bold fs-6 text-gray-800 border-bottom-2 border-gray-200">
+                                            <th>ID</th>
+                                            <th>Concepto Pago</th>
+                                            <th>Numero Operacion</th>
+                                            <th>Monto</th>
+                                            <th>Fecha</th>
+                                            <th>Estado</th>
+                                            <th class="text-end">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($pagos as $item)
+                                        <tr>
+                                            <td>
+                                                {{ $item->id_pago }}
+                                            </td>
+                                            <td>
+                                                Concepto por {{ $item->concepto_pago->concepto_pago }}
+                                            </td>
+                                            <td>
+                                                {{ $item->pago_operacion }}
+                                            </td>
+                                            <td>
+                                                S/. {{ $item->pago_monto }}
+                                            </td>
+                                            <td>
+                                                {{ date('d/m/Y', strtotime($item->pago_fecha)) }}
+                                            </td>
+                                            <td>
+                                                @if ($item->pago_verificacion == 1)
+                                                    <span class="badge badge-warning">Pendiente</span>
+                                                @elseif ($item->pago_verificacion == 2)
+                                                    <span class="badge badge-success">Validado</span>
+                                                @else
+                                                    <span class="badge badge-danger">Observado</span>
+                                                @endif
+                                            </td>
+                                            <td class="text-end">
+                                                <a href="#modal_pago_plataforma" wire:click="cargar_pago({{ $item->id_pago }})" class="btn btn-light-info btn-sm hover-scale" data-bs-toggle="modal" data-bs-target="#modal_pago_plataforma">
+                                                    Editar
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
