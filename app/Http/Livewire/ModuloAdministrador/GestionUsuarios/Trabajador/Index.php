@@ -4,11 +4,12 @@ namespace App\Http\Livewire\ModuloAdministrador\GestionUsuarios\Trabajador;
 
 use App\Models\Administrativo;
 use App\Models\AreaAdministrativo;
+use App\Models\CategoriaDocente;
 use App\Models\Coordinador;
 use App\Models\Docente;
 use App\Models\Facultad;
 use App\Models\GradoAcademico;
-use App\Models\HistorialAdministrativo;
+use App\Models\TipoDocente;
 use App\Models\TipoDocumento;
 use App\Models\TipoTrabajador;
 use App\Models\Trabajador as TrabajadorModel;
@@ -99,7 +100,7 @@ class Index extends Component
         if($this->modo == 3){
             if($this->docente == true){
                 $this->validateOnly($propertyName, [
-                    'tipo_docentes' => 'required|string',
+                    'tipo_docentes' => 'required|numeric',
                     'usuario' => 'required|string',
                 ]);
                 $this->tipo_docente = 1;
@@ -188,8 +189,8 @@ class Index extends Component
         $trabajador_tipo_trabajador = TrabajadorTipoTrabajador::where('id_trabajador',$id)->where('trabajador_tipo_trabajador_estado',1)->count();
         if($trabajador_tipo_trabajador == 0){
             $this->dispatchBrowserEvent('alertaConfirmacion', [
-                'title' => '¿Estás seguro de modificar el estado del trabajador?',
-                'text' => '',
+                'title' => '¿Estás seguro?',
+                'text' => '¿Desea modificar el estado del trabajador?',
                 'icon' => 'question',
                 'confirmButtonText' => 'Modificar',
                 'cancelButtonText' => 'Cancelar',
@@ -201,7 +202,7 @@ class Index extends Component
         }else{
             
             $this->dispatchBrowserEvent('alerta-trabajador', [
-                'title' => 'Advertencia!',
+                'title' => '¡Advertencia!',
                 'text' => 'Para desactivar un trabajador primero debes desasignar sus cargos.',
                 'icon' => 'warning',
                 'confirmButtonText' => 'Entendido',
@@ -324,51 +325,75 @@ class Index extends Component
                     'perfil' => 'nullable|file|mimes:jpg,png,jpeg',
                 ]);
             }
-
+            
             $trabajador = TrabajadorModel::find($this->trabajador_id);
-            $trabajador->trabajador_numero_documento = $this->documento;
-            $trabajador->trabajador_apellido = $this->apellidos;
-            $trabajador->trabajador_nombre = $this->nombres;
-            $trabajador->trabajador_nombre_completo = $this->apellidos.' '.$this->nombres;
-            $trabajador->trabajador_direccion = $this->direccion;
-            $trabajador->trabajador_correo = $this->correo;
-            $trabajador->id_grado_academico = $this->grado;
-            $trabajador->save();
-
             $id_trabajador = $this->trabajador_id;
 
-            $this->dispatchBrowserEvent('alerta-trabajador', [
-                'title' => '¡Éxito!',
-                'text' => 'Trabajador '.$trabajador->trabajador_nombre_completo.' ha sido actualizado satisfactoriamente.',
-                'icon' => 'success',
-                'confirmButtonText' => 'Aceptar',
-                'color' => 'success'
-            ]);
-        }
+            if($trabajador->trabajador_numero_documento == $this->documento && $trabajador->trabajador_apellido == $this->apellidos
+                && $trabajador->trabajador_nombre == $this->nombres && $trabajador->trabajador_direccion == $this->direccion 
+                && $trabajador->trabajador_correo == $this->correo && $trabajador->id_grado_academico == $this->grado){
+                    if ($this->perfil) {
+                        if (file_exists($trabajador->trabajador_perfil_url)) {
+                            unlink($trabajador->trabajador_perfil_url);
+                        }
+                        $path = 'Posgrado/Usuarios/' . $id_trabajador . '/Perfil' . '/';
+                        $filename = 'foto-perfil-' . date('HisdmY') . '.' . $this->perfil->getClientOriginalExtension();
+                        $nombre_db = $path.$filename;
+                        $this->perfil->storeAs($path, $filename, 'files_publico');
+                        $trabajador->trabajador_perfil_url = $nombre_db;
 
-        if ($this->perfil) {
-            if (file_exists($trabajador->trabajador_perfil_url)) {
-                unlink($trabajador->trabajador_perfil_url);
+                        $trabajador->save();
+
+                        $this->dispatchBrowserEvent('alerta-trabajador', [
+                            'title' => '¡Éxito!',
+                            'text' => 'El perfil del trabajador '.$trabajador->trabajador_nombre_completo.' ha sido actualizado satisfactoriamente.',
+                            'icon' => 'success',
+                            'confirmButtonText' => 'Aceptar',
+                            'color' => 'success'
+                        ]);
+                    }else{
+                        $this->dispatchBrowserEvent('alerta-trabajador', [
+                            'title' => '¡Información!',
+                            'text' => 'No se realizaron cambios en los datos del trabajador.',
+                            'icon' => 'info',
+                            'confirmButtonText' => 'Aceptar',
+                            'color' => 'info'
+                        ]);
+                    }
+            }else{
+                $trabajador->trabajador_numero_documento = $this->documento;
+                $trabajador->trabajador_apellido = $this->apellidos;
+                $trabajador->trabajador_nombre = $this->nombres;
+                $trabajador->trabajador_nombre_completo = $this->apellidos.' '.$this->nombres;
+                $trabajador->trabajador_direccion = $this->direccion;
+                $trabajador->trabajador_correo = $this->correo;
+                $trabajador->id_grado_academico = $this->grado;
+                $trabajador->save();
+    
+                if ($this->perfil) {
+                    if (file_exists($trabajador->trabajador_perfil_url)) {
+                        unlink($trabajador->trabajador_perfil_url);
+                    }
+                    $path = 'Posgrado/Usuarios/' . $id_trabajador . '/Perfil' . '/';
+                    $filename = 'foto-perfil-' . date('HisdmY') . '.' . $this->perfil->getClientOriginalExtension();
+                    $nombre_db = $path.$filename;
+                    $this->perfil->storeAs($path, $filename, 'files_publico');
+                    $trabajador->trabajador_perfil_url = $nombre_db;
+                }
+                $trabajador->save();
+
+                $this->dispatchBrowserEvent('alerta-trabajador', [
+                    'title' => '¡Éxito!',
+                    'text' => 'Trabajador '.$trabajador->trabajador_nombre_completo.' ha sido actualizado satisfactoriamente.',
+                    'icon' => 'success',
+                    'confirmButtonText' => 'Aceptar',
+                    'color' => 'success'
+                ]);
             }
-            $path = 'Posgrado/Usuarios/' . $id_trabajador . '/Perfil' . '/';
-            $filename = 'foto-perfil-' . date('HisdmY') . '.' . $this->perfil->getClientOriginalExtension();
-            $nombre_db = $path.$filename;
-            $this->perfil->storeAs($path, $filename, 'files_publico');
-            $trabajador->trabajador_perfil_url = $nombre_db;
         }
-        $trabajador->save();
 
         // emitir evento para actualizar el perfil del usuario logueado en la barra de navegacion
         $this->emit('actualizar_perfil');
-
-        // emitir alerta de exito
-        $this->dispatchBrowserEvent('alerta_perfil', [
-            'title' => '¡Éxito!',
-            'text' => 'El perfil se ha actualizado correctamente.',
-            'icon' => 'success',
-            'confirmButtonText' => 'Aceptar',
-            'color' => 'success'
-        ]);
 
         // Resetear variables y renderizar
         $this->cancelar();
@@ -446,7 +471,7 @@ class Index extends Component
 
                 $administrativo_model = Administrativo::where('id_trabajador',$this->trabajador_id)->first();
                 $this->area_model = AreaAdministrativo::all();
-                $this->area = $administrativo_model->id_area;
+                $this->area = $administrativo_model->id_area_administrativo;
 
                 $this->usuario_model = Usuario::all();
                 $usuario_model = Usuario::where('id_trabajador_tipo_trabajador',$trabajador_tipo_trabajador_administrativo->id_trabajador_tipo_trabajador)->first();
@@ -535,9 +560,9 @@ class Index extends Component
         $trabajador_tipo_trabajador_docente = TrabajadorTipoTrabajador::where('id_trabajador',$this->trabajador_id)->where('id_tipo_trabajador',1)->where('trabajador_tipo_trabajador_estado',1)->first();
         if($trabajador_tipo_trabajador_docente){
             if($this->docente == true){
-                if($this->tipo_docentes == 'DOCENTE EXTERNO'){
+                if($this->tipo_docentes == 2){
                     $this->validate([
-                        'tipo_docentes' => 'required|string',
+                        'tipo_docentes' => 'required|numeric',
                         'cv' => 'nullable|file|mimes:pdf|max:10048',
                         'usuario_docente' => 'required|string',
                     ]);
@@ -545,13 +570,13 @@ class Index extends Component
                     $this->cv = null;
                     $this->iteration++;
                     $this->validate([
-                        'tipo_docentes' => 'required|string',
+                        'tipo_docentes' => 'required|numeric',
                         'usuario_docente' => 'required|string',
                     ]);
                 }
 
                 $docente = Docente::where('id_trabajador',$this->trabajador_id)->first();
-                if($this->tipo_docentes == 'DOCENTE EXTERNO'){
+                if($this->tipo_docentes == 2){
                     $data = $this->cv;
                     if($data != null){
                         $path =  'Docente/';
@@ -592,15 +617,15 @@ class Index extends Component
             }
         }else{
             if($this->docente == true){
-                if($this->tipo_docentes == 'DOCENTE EXTERNO'){
+                if($this->tipo_docentes == 2){
                     $this->validate([
-                        'tipo_docentes' => 'required|string',
+                        'tipo_docentes' => 'required|numeric',
                         'cv' => 'required|file|mimes:pdf|max:10048',
                         'usuario_docente' => 'required|string',
                     ]);
                 }else{
                     $this->validate([
-                        'tipo_docentes' => 'required|string',
+                        'tipo_docentes' => 'required|numeric',
                         'usuario_docente' => 'required|string',
                     ]);
                 }
@@ -609,7 +634,7 @@ class Index extends Component
                 
                 if($trabajador_tipo_trabajador_docente_desactivado){
                     $docente = Docente::where('id_trabajador',$this->trabajador_id)->where('docente_estado',2)->first();
-                    if($this->tipo_docentes == 'DOCENTE EXTERNO'){
+                    if($this->tipo_docentes == 2){
                         $data = $this->cv;
                         if($data != null){
                             $path =  'Docente/';
@@ -640,7 +665,7 @@ class Index extends Component
                     $docente = Docente::create([
                         "id_tipo_docente" => $this->tipo_docentes,
                         "docente_estado" => 1,
-                        "trabajador_id" => $this->trabajador_id,
+                        "id_trabajador" => $this->trabajador_id,
                     ]);
 
                     $data = $this->cv;
@@ -802,7 +827,7 @@ class Index extends Component
                 ]);
 
                 $administrativo = Administrativo::where('id_trabajador', $this->trabajador_id)->first();
-                $administrativo->id_area = $this->area;
+                $administrativo->id_area_administrativo = $this->area;
                 $administrativo->save();
 
                 //cambiar el estado del usuario antiguo
@@ -838,7 +863,7 @@ class Index extends Component
 
                 if($trabajador_tipo_trabajador_administrativo_desactivado){
                     $administrativo = Administrativo::where('id_trabajador', $this->trabajador_id)->where('administrativo_estado',2)->first();
-                    $administrativo->id_area = $this->area;
+                    $administrativo->id_area_administrativo = $this->area;
                     $administrativo->administrativo_estado = 1;
                     $administrativo->save();
 
@@ -922,8 +947,8 @@ class Index extends Component
     public function desasignarTrabajadorAlerta()
     {
         $this->dispatchBrowserEvent('alertaConfirmacion', [
-            'title' => '¿Estás seguro de desasignar sus cargos al trabajador?',
-                'text' => '',
+            'title' => '¿Estás seguro?',
+                'text' => '¿Desea desasignar sus cargos al trabajador?',
                 'icon' => 'question',
                 'confirmButtonText' => 'Desasignar',
                 'cancelButtonText' => 'Cancelar',
@@ -938,11 +963,17 @@ class Index extends Component
     {
         //docentee
         $trabajador_tipo_trabajador_docente = TrabajadorTipoTrabajador::where('id_trabajador',$this->trabajador_id)->where('id_tipo_trabajador',1)->where('trabajador_tipo_trabajador_estado',1)->first();
+
         if($trabajador_tipo_trabajador_docente){
+
+            $docente_desasig = '';
+            $coodinador_desasig = '';
+            $administrativo_desasig = '';
+
             if($this->docente == false){
                 $usuario = Usuario::where('id_trabajador_tipo_trabajador',$trabajador_tipo_trabajador_docente->id_trabajador_tipo_trabajador)->first();
                 $usuario->id_trabajador_tipo_trabajador = null;
-                $usuario->usuario_estado = 0;
+                $usuario->usuario_estado = 1;
                 $usuario->save();
 
                 //cambiar el estado del coordinador 
@@ -954,14 +985,7 @@ class Index extends Component
                 $trabajador_tipo_trabajador_docente->trabajador_tipo_trabajador_estado = 2;
                 $trabajador_tipo_trabajador_docente->save();
 
-                // notificacionTrabajador
-                $this->dispatchBrowserEvent('alerta-trabajador', [
-                    'title' => '¡Éxito!',
-                    'text' => 'El trabajador ha sido desasignado satisfactoriamente.',
-                    'icon' => 'success',
-                    'confirmButtonText' => 'Aceptar',
-                    'color' => 'success'
-                ]);
+                $docente_desasig = $usuario->usuario_nombre;
 
             }
         }
@@ -991,7 +1015,8 @@ class Index extends Component
                 $trabajador_tipo_trabajador_coordinador->trabajador_tipo_trabajador_estado = 2;
                 $trabajador_tipo_trabajador_coordinador->save();
 
-                // notificacionTrabajador
+                $coodinador_desasig = $usuario->usuario_nombre;
+
             }
         } 
 
@@ -1014,8 +1039,45 @@ class Index extends Component
                 $trabajador_tipo_trabajador_administrativo->trabajador_tipo_trabajador_estado = 2;
                 $trabajador_tipo_trabajador_administrativo->save();
 
-                // notificacionTrabajador
+                $administrativo_desasig = $usuario->usuario_nombre;
+
             }
+        }
+
+        if(!empty($docente_desasig) || !empty($coodinador_desasig) || !empty($administrativo_desasig)){
+            $text = 'El trabajador ha sido desasignado satisfactoriamente del usuario';
+            if (!empty($docente_desasig)) {
+                if (!empty($coodinador_desasig)) {
+                    $text .= ' ' . $coodinador_desasig . ' y ' . $docente_desasig;
+                }else if(!empty($administrativo_desasig)) {
+                    $text .= ' ' . $administrativo_desasig . ' y ' . $docente_desasig;
+                }else{
+                    $text .= ' ' . $docente_desasig;
+                }
+            }else if (!empty($coodinador_desasig)) {
+                if (!empty($docente_desasig)) {
+                    $text .= ' ' . $coodinador_desasig . ' y ' . $docente_desasig;
+                }else{
+                    $text .= ' ' . $coodinador_desasig;
+                }
+            }else if (!empty($administrativo_desasig)) {
+                $text .= ' ' . $administrativo_desasig;
+            }
+            $this->dispatchBrowserEvent('alerta-trabajador', [
+                'title' => '¡Éxito!',
+                'text' => $text . '.',
+                'icon' => 'success',
+                'confirmButtonText' => 'Aceptar',
+                'color' => 'success'
+            ]);
+        }else{
+            $this->dispatchBrowserEvent('alerta-trabajador', [
+                'title' => '¡Información!',
+                'text' => 'No se han desasignado usuarios del trabajador.',
+                'icon' => 'info',
+                'confirmButtonText' => 'Aceptar',
+                'color' => 'info'
+            ]);
         }
 
         $this->dispatchBrowserEvent('modal', [
@@ -1051,12 +1113,16 @@ class Index extends Component
         }
 
         $tipo_trabajadores = TipoTrabajador::where('id_tipo_trabajador','!=','4')->get();
+        $tipo_docente_model = TipoDocente::all();
+        $categoria_docente_model = CategoriaDocente::all();
 
         return view('livewire.modulo-administrador.gestion-usuarios.trabajador.index', [
             'tipo_doc' => TipoDocumento::all(),
             'grado_academico' => GradoAcademico::all(),
             'trabajadores' => $trabajadores,
             'tipo_trabajadores' => $tipo_trabajadores,
+            'tipo_docente_model' => $tipo_docente_model,
+            'categoria_docente_model' => $categoria_docente_model,
         ]);
     }
 }

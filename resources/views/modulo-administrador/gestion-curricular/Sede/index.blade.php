@@ -2,7 +2,7 @@
 
 @section('content')
 
-@livewire('modulo-administrador.gestion-usuarios.trabajador.index')
+@livewire('modulo-administrador.gestion-curricular.sede.index')
 
 @endsection
 
@@ -14,7 +14,7 @@
     })
 
     // Alerta para confirmacion
-	window.addEventListener('alerta-trabajador', event => {
+	window.addEventListener('alerta-sede', event => {
         Swal.fire({
             title: event.detail.title,
             text: event.detail.text,
@@ -44,9 +44,10 @@
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                Livewire.emitTo('modulo-administrador.gestion-usuarios.trabajador.index', event.detail.metodo, event.detail.id);
+                Livewire.emitTo('modulo-administrador.gestion-curricular.sede.index', event.detail.metodo, event.detail.id);
             }
         })
     })
+
 </script>
 @endsection

@@ -30,4 +30,6 @@ class Docente extends Model
     {
         return $this->belongsTo(Trabajador::class, 'id_trabajador', 'id_trabajador');
     }
+
+    
 }

@@ -45,4 +45,10 @@ class Trabajador extends Model
         return $this->hasOne(Administrativo::class,
         'id_trabajador','id_trabajador');
     }
+
+    // Docente
+    public function docente()
+    {
+        return $this->hasOne(Docente::class, 'id_trabajador', 'id_trabajador');
+    }
 }
