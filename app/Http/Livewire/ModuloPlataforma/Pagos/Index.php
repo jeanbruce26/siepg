@@ -185,7 +185,10 @@ class Index extends Component
 
     public function render()
     {
-        $pagos = Pago::where('pago_documento', auth('plataforma')->user()->usuario_estudiante)->orderBy('id_pago', 'desc')->get(); // pagos del usuario logueado
+        $canal_pagos = CanalPago::where('canal_pago_estado', 1)->get();
+        $pagos = Pago::where('pago_documento', auth('plataforma')->user()->usuario_estudiante)
+                        ->orderBy('id_pago', 'desc')
+                        ->get(); // pagos del usuario logueado
         $persona = Persona::where('numero_documento', auth('plataforma')->user()->usuario_estudiante)->first(); // persona del usuario logueado
         $inscripcion_ultima = Inscripcion::where('id_persona', $persona->id_persona)->orderBy('id_inscripcion', 'desc')->first(); // inscripcion del usuario logueado
         $evaluacion = $inscripcion_ultima->evaluacion; // evaluacion de la inscripcion del usuario logueado
@@ -200,6 +203,7 @@ class Index extends Component
         $canales_pagos = CanalPago::where('canal_pago_estado', 1)->get(); // canales de pago
         $conceptos_pagos = ConceptoPago::where('concepto_pago_estado', 1)->get(); // canales de pago
         return view('livewire.modulo-plataforma.pagos.index', [
+            'canal_pagos' => $canal_pagos,
             'pagos' => $pagos,
             'admitido' => $admitido,
             'canales_pagos' => $canales_pagos,

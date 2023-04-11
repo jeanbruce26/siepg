@@ -77,7 +77,7 @@
             <div class="row mb-5 mb-xl-10">
                 <div class="col-md-12 mb-md-5 mb-xl-10">
                     {{-- alerta de fecha de actualizacion de expedientes --}}
-                    @if ($admision->admision_fecha_fin_inscripcion < today())
+                    @if ($admision->admision_fecha_fin_inscripcion < date('Y-m-d'))
                         <div class="alert bg-light-danger border border-danger d-flex alig-items-center p-5 mb-5">
                             <span class="svg-icon svg-icon-2hx svg-icon-danger me-4">
                                 <i class="las la-exclamation-circle fs-2 text-danger"></i>
@@ -121,7 +121,7 @@
                                         <th>Estado</th>
                                         <th>Fecha de Entrega</th>
                                         @if ($inscripcion->programa_proceso->admision->id_admision == $admision->id_admision)
-                                            @if ($admision->admision_fecha_fin_inscripcion >= today())
+                                            @if ($admision->admision_fecha_fin_inscripcion >= date('Y-m-d'))
                                             <th></th>
                                             @endif
                                         @endif
@@ -146,7 +146,7 @@
                                                         {{ date('d/m/Y', strtotime($item->expediente_inscripcion_fecha)) }}
                                                     </td>
                                                     @if ($inscripcion->programa_proceso->admision->id_admision == $admision->id_admision)
-                                                        @if ($admision->admision_fecha_fin_inscripcion >= today())
+                                                        @if ($admision->admision_fecha_fin_inscripcion >= date('Y-m-d'))
                                                         <td class="text-end">
                                                             <a href="#modal_expediente" wire:click="cargar_expediente_inscripcion({{ $item->id_expediente_inscripcion }})" class="btn btn-light-primary btn-sm hover-scale" data-bs-toggle="modal" data-bs-target="#modal_expediente">
                                                                 Editar
@@ -176,7 +176,7 @@
                                                         Sin fecha
                                                     </td>
                                                     @if ($inscripcion->programa_proceso->admision->id_admision == $admision->id_admision)
-                                                        @if ($admision->admision_fecha_fin_inscripcion >= today())
+                                                        @if ($admision->admision_fecha_fin_inscripcion >= date('Y-m-d'))
                                                         <td class="text-end">
                                                             <a href="#modal_expediente" wire:click="cargar_expediente({{ $item2->id_expediente_admision }})" class="btn btn-light-success btn-sm hover-scale" data-bs-toggle="modal" data-bs-target="#modal_expediente">
                                                                 Agregar

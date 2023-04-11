@@ -49,6 +49,10 @@ class RouteServiceProvider extends ServiceProvider
             Route::middleware('web')
                 ->prefix('area-contable')
                 ->group(base_path('routes/area-contable.php'));
+
+            Route::middleware('web')
+                ->prefix('coordinador')
+                ->group(base_path('routes/coordinador.php'));
         });
     }
 

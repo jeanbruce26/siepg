@@ -17,6 +17,7 @@ class Admision extends Model
         'admision_año',
         'admision_convocatoria',
         'admision_estado',
+        'admision_fecha_inicio_inscripcion',
         'admision_fecha_fin_inscripcion',
         'admision_fecha_inicio_expediente',
         'admision_fecha_fin_expediente',

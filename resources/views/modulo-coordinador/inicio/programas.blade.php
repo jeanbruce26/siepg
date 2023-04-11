@@ -1,11 +1,14 @@
-@extends('layouts.modulo-area-contable')
-@section('title', 'Perfil - Area Contable - Escuela de Posgrado')
+@extends('layouts.modulo-coordinador')
+@section('title', 'Programas - Direccitor de Unidad - Escuela de Posgrado')
 @section('content')
-@livewire('modulo-administrador.perfil.index', ['id_tipo_trabajador' => $id_tipo_trabajador], key('modulo-administrador.perfil.index'))
+@livewire('modulo-coordinador.inicio.programas', ['id_modalidad' => $id_modalidad], key('modulo-coordinador.inicio.programas'))
 @endsection
 @section('scripts')
     <script>
-        window.addEventListener('alerta_perfil', event => {
+        window.addEventListener('modal_encuesta', event => {
+            $('#modal_encuesta').modal(event.detail.action);
+        })
+        window.addEventListener('alerta-encuesta', event => {
             Swal.fire({
                 title: event.detail.title,
                 text: event.detail.text,

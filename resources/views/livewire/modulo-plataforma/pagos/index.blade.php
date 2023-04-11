@@ -63,55 +63,57 @@
                     </div> --}}
                     {{-- tabla de pagos --}}
                     <div class="card shadow-sm mb-5">
-                        <div class="table-responsive">
-                            <table class="table table-hover align-middle table-rounded border mb-0 gy-5 gs-5">
-                                <thead>
-                                    <tr class="fw-bold fs-6 text-gray-800 border-bottom-2 border-gray-200">
-                                        <th>ID</th>
-                                        <th>Concepto Pago</th>
-                                        <th>Numero Operacion</th>
-                                        <th>Monto</th>
-                                        <th>Fecha</th>
-                                        <th>Estado</th>
-                                        <th class="text-end">Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($pagos as $item)
-                                    <tr>
-                                        <td>
-                                            {{ $item->id_pago }}
-                                        </td>
-                                        <td>
-                                            Concepto por {{ $item->concepto_pago->concepto_pago }}
-                                        </td>
-                                        <td>
-                                            {{ $item->pago_operacion }}
-                                        </td>
-                                        <td>
-                                            S/. {{ $item->pago_monto }}
-                                        </td>
-                                        <td>
-                                            {{ date('d/m/Y', strtotime($item->pago_fecha)) }}
-                                        </td>
-                                        <td>
-                                            @if ($item->pago_verificacion == 1)
-                                                <span class="badge badge-warning">Pendiente</span>
-                                            @elseif ($item->pago_verificacion == 2)
-                                                <span class="badge badge-success">Validado</span>
-                                            @else
-                                                <span class="badge badge-danger">Observado</span>
-                                            @endif
-                                        </td>
-                                        <td class="text-end">
-                                            <a href="#modal_pago_plataforma" wire:click="cargar_pago({{ $item->id_pago }})" class="btn btn-light-info btn-sm hover-scale" data-bs-toggle="modal" data-bs-target="#modal_pago_plataforma">
-                                                Editar
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                        <div class="card-body mb-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle table-rounded border mb-0 gy-5 gs-5">
+                                    <thead>
+                                        <tr class="fw-bold fs-6 text-gray-800 border-bottom-2 border-gray-200">
+                                            <th>ID</th>
+                                            <th>Concepto Pago</th>
+                                            <th>Numero Operacion</th>
+                                            <th>Monto</th>
+                                            <th>Fecha</th>
+                                            <th>Estado</th>
+                                            <th class="text-end">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($pagos as $item)
+                                        <tr>
+                                            <td>
+                                                {{ $item->id_pago }}
+                                            </td>
+                                            <td>
+                                                Concepto por {{ $item->concepto_pago->concepto_pago }}
+                                            </td>
+                                            <td>
+                                                {{ $item->pago_operacion }}
+                                            </td>
+                                            <td>
+                                                S/. {{ $item->pago_monto }}
+                                            </td>
+                                            <td>
+                                                {{ date('d/m/Y', strtotime($item->pago_fecha)) }}
+                                            </td>
+                                            <td>
+                                                @if ($item->pago_verificacion == 1)
+                                                    <span class="badge badge-warning">Pendiente</span>
+                                                @elseif ($item->pago_verificacion == 2)
+                                                    <span class="badge badge-success">Validado</span>
+                                                @else
+                                                    <span class="badge badge-danger">Observado</span>
+                                                @endif
+                                            </td>
+                                            <td class="text-end">
+                                                <a href="#modal_pago_plataforma" wire:click="cargar_pago({{ $item->id_pago }})" class="btn btn-light-info btn-sm hover-scale" data-bs-toggle="modal" data-bs-target="#modal_pago_plataforma">
+                                                    Editar
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -234,50 +236,9 @@
 </div>
 @push('scripts')
     <script>
-        // filtro_proceso select2
+        // filtro_canal_pago select2
         $(document).ready(function () {
-            $('#filtro_proceso').select2({
-                placeholder: 'Seleccione',
-                allowClear: true,
-                width: '100%',
-                selectOnClose: true,
-                minimumResultsForSearch: Infinity,
-                language: {
-                    noResults: function () {
-                        return "No se encontraron resultados";
-                    },
-                    searching: function () {
-                        return "Buscando..";
-                    }
-                }
-            });
-            $('#filtro_proceso').on('change', function(){
-                @this.set('filtro_proceso', this.value);
-            });
-            Livewire.hook('message.processed', (message, component) => {
-                $('#filtro_proceso').select2({
-                    placeholder: 'Seleccione',
-                    allowClear: true,
-                    width: '100%',
-                    selectOnClose: true,
-                    minimumResultsForSearch: Infinity,
-                    language: {
-                        noResults: function () {
-                            return "No se encontraron resultados";
-                        },
-                        searching: function () {
-                            return "Buscando..";
-                        }
-                    }
-                });
-                $('#filtro_proceso').on('change', function(){
-                    @this.set('filtro_proceso', this.value);
-                });
-            });
-        });
-        // canal_pago select2
-        $(document).ready(function () {
-            $('#canal_pago').select2({
+            $('#filtro_canal_pago').select2({
                 placeholder: 'Seleccione su canal de pago',
                 allowClear: true,
                 width: '100%',
@@ -291,11 +252,11 @@
                     }
                 }
             });
-            $('#canal_pago').on('change', function(){
-                @this.set('canal_pago', this.value);
+            $('#filtro_canal_pago').on('change', function(){
+                @this.set('filtro_canal_pago', this.value);
             });
             Livewire.hook('message.processed', (message, component) => {
-                $('#canal_pago').select2({
+                $('#filtro_canal_pago').select2({
                     placeholder: 'Seleccione su canal de pago',
                     allowClear: true,
                     width: '100%',
@@ -309,47 +270,8 @@
                         }
                     }
                 });
-                $('#canal_pago').on('change', function(){
-                    @this.set('canal_pago', this.value);
-                });
-            });
-        });
-        // concepto_pago select2
-        $(document).ready(function () {
-            $('#concepto_pago').select2({
-                placeholder: 'Seleccione su concepto de pago',
-                allowClear: true,
-                width: '100%',
-                selectOnClose: true,
-                language: {
-                    noResults: function () {
-                        return "No se encontraron resultados";
-                    },
-                    searching: function () {
-                        return "Buscando..";
-                    }
-                }
-            });
-            $('#concepto_pago').on('change', function(){
-                @this.set('concepto_pago', this.value);
-            });
-            Livewire.hook('message.processed', (message, component) => {
-                $('#concepto_pago').select2({
-                    placeholder: 'Seleccione su concepto de pago',
-                    allowClear: true,
-                    width: '100%',
-                    selectOnClose: true,
-                    language: {
-                        noResults: function () {
-                            return "No se encontraron resultados";
-                        },
-                        searching: function () {
-                            return "Buscando..";
-                        }
-                    }
-                });
-                $('#concepto_pago').on('change', function(){
-                    @this.set('concepto_pago', this.value);
+                $('#filtro_canal_pago').on('change', function(){
+                    @this.set('filtro_canal_pago', this.value);
                 });
             });
         });

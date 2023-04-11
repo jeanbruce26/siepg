@@ -19,7 +19,7 @@
             <div class="menu menu-column menu-rounded menu-sub-indention px-3" id="#kt_app_sidebar_menu" data-kt-menu="true" data-kt-menu-expand="false">
                 <div class="menu-item">
                     {{-- {{ request()->is('administrador') ? 'active' : '' }} -> sirve para poner activo el modulo --}}
-                    <a class="menu-link {{ request()->is('area-contable') ? 'active' : '' }}" href="{{ route('contable.inicio') }}">
+                    <a class="menu-link {{ request()->is('coordinador') ? 'active' : '' }}" href="{{ route('coordinador.inicio') }}">
                         <span class="menu-icon">
                             <span class="svg-icon svg-icon-2">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -30,7 +30,7 @@
                                 </svg>
                             </span>
                         </span>
-                        <span class="menu-title fw-semibold">Inicio</span>
+                        <span class="menu-title fw-semibold">Evaluaciones</span>
                     </a>
                 </div>
                 <div class="menu-item pt-5">
@@ -38,7 +38,7 @@
                         <span class="menu-heading fw-bold text-uppercase fs-7">Menu</span>
                     </div>
                 </div>
-                <div class="menu-item">
+                {{-- <div class="menu-item">
                     <a class="menu-link {{ request()->is('plataforma/expedientes') ? 'active' : '' }}" href="">
                         <span class="menu-icon">
                             <span class="svg-icon svg-icon-2">
@@ -48,10 +48,10 @@
                                 </svg>
                             </span>
                         </span>
-                        <span class="menu-title fw-semibold">Inscripciones</span>
+                        <span class="menu-title" style="font-weight: 700;">Inscripciones</span>
                     </a>
-                </div>
-                <div class="menu-item">
+                </div> --}}
+                {{-- <div class="menu-item">
                     <a class="menu-link {{ request()->is('area-contable/pagos') ? 'active' : '' }}" href="{{ route('contable.pago') }}">
                         <span class="menu-icon">
                             <span class="svg-icon svg-icon-2">
@@ -61,9 +61,9 @@
                                 </svg>
                             </span>
                         </span>
-                        <span class="menu-title fw-semibold">Pagos</span>
+                        <span class="menu-title" style="font-weight: 700;">Pagos</span>
                     </a>
-                </div>
+                </div> --}}
                 {{-- <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
                     <span class="menu-link">
                         <span class="menu-icon">

@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class VerificationUsuarioContable
+class VerificationUsuarioCoordinador
 {
     /**
      * Handle an incoming request.
@@ -18,17 +18,9 @@ class VerificationUsuarioContable
         $usuario = auth('usuario')->user(); // obtenemos el usuario autenticado
         $trabajador_tipo_trabajador = $usuario->trabajador_tipo_trabajador; // obtenemos el trabajador_tipo_trabajador del usuario autenticado
         $trabajador = $trabajador_tipo_trabajador->trabajador; // obtenemos el trabajador del usuario autenticado
-        if($trabajador_tipo_trabajador->id_tipo_trabajador == 3)
+        if($trabajador_tipo_trabajador->id_tipo_trabajador == 2)
         {
-            $administrativo = $trabajador->administrativo; // obtenemos el administrativo del usuario autenticado
-            if($administrativo->id_area_administrativo == 1) // area contable
-            {
-                return $next($request);
-            }
-            else
-            {
-                return redirect()->back();
-            }
+            return $next($request);
         }
         else
         {

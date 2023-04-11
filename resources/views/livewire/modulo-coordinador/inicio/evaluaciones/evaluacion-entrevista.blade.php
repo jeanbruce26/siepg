@@ -1,0 +1,208 @@
+<div>
+    <div id="kt_app_toolbar" class="app-toolbar py-3 py-lg-6">
+        <div id="kt_app_toolbar_container" class="app-container container-fluid d-flex flex-stack">
+            <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
+                <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
+                    Evaluación de Expediente de {{ ucwords(strtolower($persona->nombre_completo)) }}
+                </h1>
+                <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
+                    <li class="breadcrumb-item text-muted">
+                        <a href="{{ route('coordinador.inicio') }}" class="text-muted text-hover-primary">Home</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <span class="bullet bg-gray-400 w-5px h-2px"></span>
+                    </li>
+                    <li class="breadcrumb-item text-muted">
+                        <a href="{{ route('coordinador.inicio') }}" class="text-muted text-hover-primary">Evaluaciones</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <span class="bullet bg-gray-400 w-5px h-2px"></span>
+                    </li>
+                    <li class="breadcrumb-item text-muted">
+                        <a href="{{ route('coordinador.programas', $programa->id_modalidad) }}" class="text-muted text-hover-primary">Modalidad {{ ucwords(strtolower($programa->modalidad->modalidad)) }}</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <span class="bullet bg-gray-400 w-5px h-2px"></span>
+                    </li>
+                    <li class="breadcrumb-item text-muted">
+                        @if ($programa->mencion)
+                            <a href="{{ route('coordinador.evaluaciones', ['id' => $id_programa, 'id_admision' => $id_admision]) }}" class="text-muted text-hover-primary">
+                                Mencion en {{ ucwords(strtolower($programa->mencion)) }}
+                            </a>
+                        @else
+                            <a href="{{ route('coordinador.evaluaciones', ['id' => $id_programa, 'id_admision' => $id_admision]) }}" class="text-muted text-hover-primary">
+                                {{ ucwords(strtolower($programa->programa)) }} en {{ ucwords(strtolower($programa->subprograma)) }}
+                            </a>
+                        @endif
+                    </li>
+                    <li class="breadcrumb-item">
+                        <span class="bullet bg-gray-400 w-5px h-2px"></span>
+                    </li>
+                    <li class="breadcrumb-item text-muted">
+                        Evalaución de Expediente
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div id="kt_app_content" class="app-content flex-column-fluid">
+        <div id="kt_app_content_container" class="app-container container-fluid">
+            <div class="row mb-5 mb-xl-10">
+                <div class="col-md-12 mb-md-5 mb-xl-10">
+                    {{-- card de datos del postulante y fecha de evaluacion --}}
+                    <div class="card shadow-sm mb-5">
+                        <div class="px-8 py-5 mb-0 d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center gap-3">
+                                <i class="las la-user-tie fs-1"></i>
+                                <span class="fs-5">Postulante:</span>
+                                <span class="fw-bold fs-5">{{ ucwords(strtolower($persona->nombre_completo)) }}</span>
+                            </div>
+                            <div class="d-flex align-items-center gap-3">
+                                <i class="las la-calendar-alt fs-1"></i>
+                                <span class="fs-5">Fecha de Evaluación:</span>
+                                <span class="fw-bold fs-5">{{ $evaluacion->fecha_expediente ? date('d/m/Y', strtotime($evaluacion->fecha_expediente)) : date('d/m/Y', strtotime(today())) }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    {{-- card monto de pagos --}}
+                    <div class="card shadow-sm">
+                        <div class="card-body mb-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover table-rounded table-bordered align-middle table-row-bordered border mb-0 gy-4 gs-4">
+                                    <thead class="bg-light-warning">
+                                        <tr class="fw-bold fs-6 text-gray-800 border-bottom-2 border-gray-200">
+                                            <th class="col-md-6">Concepto</th>
+                                            <th class="text-center">Punatje Especifico</th>
+                                            <th class="text-center">Calificación</th>
+                                            <th class="text-center">Puntaje</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($evaluacion_entrevista as $item)
+                                            <tr>
+                                                <td class="fw-bold">
+                                                    <span class="me-3">
+                                                        {{ $loop->iteration }}.
+                                                    </span>
+                                                    {{ $item->evaluacion_entrevista_item }}
+                                                </td>
+                                                <td align="center" class="fw-bold">
+                                                    PUNTAJE MAXIMO ({{ number_format($item->evaluacion_entrevista_item_puntaje,0) }})
+                                                </td>
+                                                <td align="center">
+                                                    <button type="button" wire:click="cargar_evaluacion_entrevista_item({{ $item->id_evaluacion_entrevista_item }})" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modal_puntaje">
+                                                        Ingresar Puntaje
+                                                    </button>
+                                                </td>
+                                                @php $evaluacion_entrevista_notas = App\Models\EvaluacionEntrevista::where('id_evaluacion_entrevista_item', $item->id_evaluacion_entrevista_item)->where('id_evaluacion',$id_evaluacion)->first(); @endphp
+                                                <td align="center" class="fs-5">
+                                                    @if ($evaluacion_entrevista_notas)
+                                                        <strong>{{ number_format($evaluacion_entrevista_notas->evaluacion_entrevista_puntaje, 0) }}</strong>
+                                                    @else
+                                                        <strong>-</strong>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                    <tfoot class="bg-light-secondary">
+                                        <tr>
+                                            <td colspan="3" class="fw-bold text-center">TOTAL</td>
+                                            <td align="center" class="fw-bold fs-5">{{ $puntaje_total }}</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <div class="my-5">
+                                <form novalidate autocomplete="off">
+                                    <!-- Example Textarea -->
+                                    <div>
+                                        <label class="form-label">Ingrese observación</label>
+                                        <textarea class="form-control" rows="3" wire:model="observacion" ></textarea>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="text-end">
+                                <button type="button" wire:click="evaluar_entrevista_paso_1()" class="btn btn-info">
+                                    Evaluar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- Modal Puntaje --}}
+    <div wire:ignore.self class="modal fade" id="modal_puntaje" tabindex="-1" role="dialog" aria-labelledby="modalNotaLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-uppercase" id="modalNotaLabel">Ingresar su puntaje</h5>
+                    <button type="button" wire:click="limpiar_modal()" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form class="row g-5 alig-items-center">
+                        <div class="col-12">
+                            <input type="number" class="form-control @error('puntaje') is-invalid @enderror w-100" wire:model="puntaje" placeholder="Ingrese el puntaje...">
+                            @error('puntaje')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <div class="d-flex justify-content-between w-100">
+                        <button type="button" wire:click="limpiar_modal()" class="btn btn-light" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="button" wire:click="agregar_puntaje()" class="btn btn-success">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@push('scripts')
+    <script>
+        // filtro_proceso select2
+        $(document).ready(function () {
+            $('#filtro_proceso').select2({
+                placeholder: 'Seleccione',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando..";
+                    }
+                }
+            });
+            $('#filtro_proceso').on('change', function(){
+                @this.set('filtro_proceso', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#filtro_proceso').select2({
+                    placeholder: 'Seleccione',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando..";
+                        }
+                    }
+                });
+                $('#filtro_proceso').on('change', function(){
+                    @this.set('filtro_proceso', this.value);
+                });
+            });
+        });
+    </script>
+@endpush

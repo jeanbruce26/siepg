@@ -1,57 +1,57 @@
 <div class="col-md-12 mb-md-5 mb-xl-10">
     {{-- alerta para ver la fecha de resultados de admitidos --}}
-    @if ($admision->fecha_admitidos <= today())
+    @if ($admision->admision_fecha_resultados <= today())
         @if ($admitido)
-        {{-- alerta de admitido --}}
-        <div class="alert bg-light-success border border-success d-flex alig-items-center p-5 mb-5">
-            <span class="svg-icon svg-icon-2hx svg-icon-success me-4">
-                <i class="las la-check-circle fs-2 text-success"></i>
-            </span>
-            <div class="d-flex flex-column">
-                <span class="fw-bold">
-                    Fue admitido en la {{ ucwords(strtolower($inscripcion_admision->admision)) }}
+            {{-- alerta de admitido --}}
+            <div class="alert bg-light-success border border-success d-flex alig-items-center p-5 mb-5">
+                <span class="svg-icon svg-icon-2hx svg-icon-success me-4">
+                    <i class="las la-check-circle fs-2 text-success"></i>
                 </span>
+                <div class="d-flex flex-column">
+                    <span class="fw-bold">
+                        Fue admitido en el Proceso de {{ ucwords(strtolower($inscripcion_admision->admision->admision)) }}
+                    </span>
+                </div>
             </div>
-        </div>
         @else
             @if ($evaluacion)
-            {{-- alerta de no admitido --}}
-            <div class="alert bg-light-danger border border-danger d-flex alig-items-center p-5 mb-5">
-                <span class="svg-icon svg-icon-2hx svg-icon-danger me-4">
-                    <i class="las la-exclamation-triangle fs-2 text-danger"></i>
-                </span>
-                <div class="d-flex flex-column">
-                    <span class="fw-bold">
-                        No fuiste admitido en la {{ ucwords(strtolower($inscripcion_admision->admision)) }}
+                {{-- alerta de no admitido --}}
+                <div class="alert bg-light-danger border border-danger d-flex alig-items-center p-5 mb-5">
+                    <span class="svg-icon svg-icon-2hx svg-icon-danger me-4">
+                        <i class="las la-exclamation-triangle fs-2 text-danger"></i>
                     </span>
+                    <div class="d-flex flex-column">
+                        <span class="fw-bold">
+                            No fuiste admitido en el Proceso de {{ ucwords(strtolower($inscripcion_admision->admision->admision)) }}
+                        </span>
+                    </div>
                 </div>
-            </div>
             @else
-            {{-- alerta de fecha de resultados de admitidos --}}
-            <div class="alert bg-light-primary border border-primary d-flex alig-items-center p-5 mb-5">
-                <span class="svg-icon svg-icon-2hx svg-icon-primary me-4">
-                    <i class="las la-info-circle fs-2 text-primary"></i>
-                </span>
-                <div class="d-flex flex-column">
-                    <span class="fw-bold">
-                        Los resultados de admitidos se presentará el {{ $admision_fecha_admitidos }}.
+                {{-- alerta de fecha de resultados de admitidos --}}
+                <div class="alert bg-light-primary border border-primary d-flex alig-items-center p-5 mb-5">
+                    <span class="svg-icon svg-icon-2hx svg-icon-primary me-4">
+                        <i class="las la-info-circle fs-2 text-primary"></i>
                     </span>
+                    <div class="d-flex flex-column">
+                        <span class="fw-bold">
+                            Los resultados de admitidos se presentará el {{ $admision_fecha_admitidos }}.
+                        </span>
+                    </div>
                 </div>
-            </div>
             @endif
         @endif
     @else
-    {{-- alerta de fecha de resultados de admitidos --}}
-    <div class="alert bg-light-primary border border-primary d-flex alig-items-center p-5 mb-5">
-        <span class="svg-icon svg-icon-2hx svg-icon-primary me-4">
-            <i class="las la-info-circle fs-2 text-primary"></i>
-        </span>
-        <div class="d-flex flex-column">
-            <span class="fw-bold">
-                Los resultados de admitidos se presentará el {{ $admision_fecha_admitidos }}.
+        {{-- alerta de fecha de resultados de admitidos --}}
+        <div class="alert bg-light-primary border border-primary d-flex alig-items-center p-5 mb-5">
+            <span class="svg-icon svg-icon-2hx svg-icon-primary me-4">
+                <i class="las la-info-circle fs-2 text-primary"></i>
             </span>
+            <div class="d-flex flex-column">
+                <span class="fw-bold">
+                    Los resultados de admitidos se presentará el {{ $admision_fecha_admitidos }}.
+                </span>
+            </div>
         </div>
-    </div>
     @endif
     {{-- card de estado de inscripcion puntajes --}}
     <div class="row g-5 mb-5">
@@ -60,7 +60,7 @@
                 <span class="fs-1 text-gray-800 text-center py-2" style="font-weight: 700">
                     Evaluación de Expedientes
                 </span>
-                @if ($inscripcion_admision->admision_fecha_resultados <= today())
+                @if ($inscripcion_admision->admision->admision_fecha_resultados <= today())
                     @if ($evaluacion)
                     <span class="fs-3 text-gray-800 text-center py-2">
                         Puntaje: <span class="fw-bold fs-2">{{ number_format($evaluacion->puntaje_expediente) }}</span> pts.
@@ -71,42 +71,42 @@
                     </span>
                     @endif
                 @else
-                <span class="fs-3 text-center py-2 d-flex align-items-center justify-content-center text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Los resultados se presentará el {{ $admision_fecha_admitidos }}">
-                    Sin puntaje <i class="las la-info-circle fs-3 text-danger ms-2"></i>
-                </span>
+                    <span class="fs-3 text-center py-2 d-flex align-items-center justify-content-center text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Los resultados se presentará el {{ $admision_fecha_admitidos }}">
+                        Sin puntaje <i class="las la-info-circle fs-3 text-danger ms-2"></i>
+                    </span>
                 @endif
             </div>
         </div>
         @if ($inscripcion_ultima->inscripcion_tipo_programa == 2)
-        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-4">
-            <div class="card card-body shadow-sm">
-                <span class="fs-1 text-gray-800 text-center py-2" style="font-weight: 700">
-                    Evaluación de Investigación
-                </span>
-                @if ($inscripcion_admision->fecha_admitidos <= today())
-                    @if ($evaluacion)
-                    <span class="fs-3 text-gray-800 text-center py-2">
-                        Puntaje: <span class="fw-bold fs-2">{{ number_format($evaluacion->puntaje_investigacion) }}</span> pts.
+            <div class="col-sm-12 col-md-6 col-lg-6 col-xl-4">
+                <div class="card card-body shadow-sm">
+                    <span class="fs-1 text-gray-800 text-center py-2" style="font-weight: 700">
+                        Evaluación de Investigación
                     </span>
+                    @if ($inscripcion_admision->admision->admision_fecha_resultados <= today())
+                        @if ($evaluacion)
+                            <span class="fs-3 text-gray-800 text-center py-2">
+                                Puntaje: <span class="fw-bold fs-2">{{ number_format($evaluacion->puntaje_investigacion) }}</span> pts.
+                            </span>
+                        @else
+                            <span class="fs-3 text-center py-2 d-flex align-items-center justify-content-center text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Los resultados se presentará el {{ $admision_fecha_admitidos }}">
+                                Sin puntaje <i class="las la-info-circle fs-3 text-danger ms-2"></i>
+                            </span>
+                        @endif
                     @else
-                    <span class="fs-3 text-center py-2 d-flex align-items-center justify-content-center text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Los resultados se presentará el {{ $admision_fecha_admitidos }}">
-                        Sin puntaje <i class="las la-info-circle fs-3 text-danger ms-2"></i>
-                    </span>
+                        <span class="fs-3 text-center py-2 d-flex align-items-center justify-content-center text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Los resultados se presentará el {{ $admision_fecha_admitidos }}">
+                            Sin puntaje <i class="las la-info-circle fs-3 text-danger ms-2"></i>
+                        </span>
                     @endif
-                @else
-                <span class="fs-3 text-center py-2 d-flex align-items-center justify-content-center text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Los resultados se presentará el {{ $admision_fecha_admitidos }}">
-                    Sin puntaje <i class="las la-info-circle fs-3 text-danger ms-2"></i>
-                </span>
-                @endif
+                </div>
             </div>
-        </div>
         @endif
         <div class="col-sm-12 col-md-6 col-lg-6 @if ($inscripcion_ultima->inscripcion_tipo_programa == 1) col-xl-6 @elseif ($inscripcion_ultima->inscripcion_tipo_programa == 2) col-xl-4 @endif">
             <div class="card card-body shadow-sm">
                 <span class="fs-1 text-gray-800 text-center py-2" style="font-weight: 700">
                     Evaluación de Entrevista
                 </span>
-                @if ($inscripcion_admision->fecha_admitidos <= today())
+                @if ($inscripcion_admision->admision->admision_fecha_resultados <= today())
                     @if ($evaluacion)
                     <span class="fs-3 text-gray-800 text-center py-2">
                         Puntaje: <span class="fw-bold fs-2">{{ number_format($evaluacion->puntaje_entrevista) }}</span> pts.
@@ -117,9 +117,9 @@
                     </span>
                     @endif
                 @else
-                <span class="fs-3 text-center py-2 d-flex align-items-center justify-content-center text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Los resultados se presentará el {{ $admision_fecha_admitidos }}">
-                    Sin puntaje <i class="las la-info-circle fs-3 text-danger ms-2"></i>
-                </span>
+                    <span class="fs-3 text-center py-2 d-flex align-items-center justify-content-center text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Los resultados se presentará el {{ $admision_fecha_admitidos }}">
+                        Sin puntaje <i class="las la-info-circle fs-3 text-danger ms-2"></i>
+                    </span>
                 @endif
             </div>
         </div>

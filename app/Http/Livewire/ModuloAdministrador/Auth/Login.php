@@ -84,8 +84,8 @@ class Login extends Component
                         if($tra_tipo_tra->id_tipo_trabajador == 2)
                         {
                             // si es un coordinador lo redireccionamos a la vista de coordinador
-                            // auth('admin')->login($usuario);
-                            // return redirect()->route('coordinador.index');
+                            auth('usuario')->login($usuario);
+                            return redirect()->route('coordinador.inicio');
                         }
                         // verificamos si el usuario logueado es un docente
                         if($tra_tipo_tra->id_tipo_trabajador == 1)
