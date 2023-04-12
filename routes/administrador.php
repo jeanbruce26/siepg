@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ModuloAdministrador\AdmitidoController;
 use App\Http\Controllers\ModuloAdministrador\DashboardController;
 use App\Http\Controllers\ModuloAdministrador\PlanController;
 use App\Http\Controllers\ModuloAdministrador\ProgramaController;
@@ -27,6 +28,8 @@ Route::get('/plan', [PlanController::class, 'index'])->middleware(['auth.usuario
 //Ruta para ir a la vista de Programa en la Gestion Curricular
 Route::get('/programa', [ProgramaController::class, 'index'])->middleware(['auth.usuario'])->name('administrador.programa');
 
+//Ruta para ir a la vista de Programa en la Gestion Curricular
+Route::get('/admitido', [AdmitidoController::class, 'index'])->middleware(['auth.usuario'])->name('administrador.admitido');
 
 
 
