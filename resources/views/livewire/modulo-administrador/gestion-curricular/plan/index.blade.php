@@ -4,7 +4,7 @@
             <div id="kt_app_toolbar_container" class="app-container container-fluid d-flex flex-stack">
                 <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
                     <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
-                        Sede
+                        Plan
                     </h1>
                     <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                         <li class="breadcrumb-item text-muted">
@@ -15,11 +15,11 @@
                         <li class="breadcrumb-item">
                             <span class="bullet bg-gray-400 w-5px h-2px"></span>
                         </li>
-                        <li class="breadcrumb-item text-muted">Sede</li>
+                        <li class="breadcrumb-item text-muted">Plan</li>
                     </ul>
                 </div>
                 <div class="d-flex align-items-center gap-2 gap-lg-3">
-                    <a href="#modalSede" wire:click="modo()" class="btn btn-primary btn-sm hover-elevate-up" data-bs-toggle="modal" data-bs-target="#modalSede">Nuevo</a>
+                    <a href="#modalPlan" wire:click="modo()" class="btn btn-primary btn-sm hover-elevate-up" data-bs-toggle="modal" data-bs-target="#modalPlan">Nuevo</a>
                 </div>
             </div>
         </div>
@@ -41,21 +41,23 @@
                                 <thead class="bg-light-primary">
                                     <tr align="center" class="fw-bold fs-5">
                                         <th scope="col" class="col-md-1">ID</th>
-                                        <th scope="col" class="col-md-7">Sede</th>
-                                        <th scope="col" class="col-md-1">Estado</th>
-                                        <th scope="col" class="col-md-2">Acciones</th>
+                                        <th scope="col" class="col-md-3">Codigo</th>
+                                        <th scope="col" class="col-md-2">Plan</th>
+                                        <th scope="col" class="col-md-2">Estado</th>
+                                        <th scope="col" class="col-md-1">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse ($sede_model as $item)
+                                    @forelse ($plan_model as $item)
                                     <tr>
-                                        <td align="center" class="fw-bold fs-5">{{ $item->id_sede }}</td>
-                                        <td>{{ $item->sede }}</td>
+                                        <td align="center" class="fw-bold fs-5">{{ $item->id_plan }}</td>
+                                        <td align="center">{{ $item->plan }}</td>
+                                        <td align="center">{{ $item->plan_codigo }}</td>
                                         <td align="center">
-                                            @if ($item->sede_estado == 1)
-                                                <span style="cursor: pointer;" wire:click="cargarAlertaEstado({{ $item->id_sede }})" class="badge text-bg-success text-light hover-elevate-down">Activo<span class="pulse-ring"></span></span>
+                                            @if ($item->plan_estado == 1)
+                                                <span style="cursor: pointer;" wire:click="cargarAlerta({{ $item->id_plan }})" class="badge text-bg-success text-light hover-elevate-down">Activo<span class="pulse-ring"></span></span>
                                             @else
-                                                <span style="cursor: pointer;" wire:click="cargarAlertaEstado({{ $item->id_sede }})" class="badge text-bg-danger text-light hover-elevate-down">Inactivo <span class="pulse-ring"></span></span>
+                                                <span style="cursor: pointer;" wire:click="cargarAlerta({{ $item->id_plan }})" class="badge text-bg-danger text-light hover-elevate-down">Inactivo <span class="pulse-ring"></span></span>
                                             @endif
                                         </td>
                                         <td align="center">
@@ -73,10 +75,10 @@
                                             </a>
                                             <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
                                                 <div class="menu-item px-3">
-                                                    <a href="#modalSede"
-                                                    wire:click="cargarSede({{ $item->id_sede }})" 
+                                                    <a href="#modalPlan"
+                                                    wire:click="cargarPlan({{ $item->id_plan }})" 
                                                     class="menu-link px-3" data-bs-toggle="modal" 
-                                                    data-bs-target="#modalSede">
+                                                    data-bs-target="#modalPlan">
                                                         Editar
                                                     </a>
                                                 </div>
@@ -98,7 +100,7 @@
     </div>
 
     {{-- Modal Sede --}}
-    <div wire:ignore.self class="modal fade" id="modalSede" tabindex="-1" aria-labelledby="modalSede"
+    <div wire:ignore.self class="modal fade" id="modalPlan" tabindex="-1" aria-labelledby="modalPlan"
         aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -111,20 +113,21 @@
                     <form novalidate>
                         <div class="row">
                             <div class="mb-3 col-md-12 col-sm-12">
-                                <label class="form-label">Sede<span
+                                <label class="form-label">Plan<span
                                         class="text-danger">*</span></label>
-                                <input wire:model="sede" type="text" class="form-control @error('sede') is-invalid  @enderror" placeholder="Ingrese la sede">
-                                @error('sede') <span class="error text-danger" >{{ $message }}</span> @enderror
+                                <input wire:model="plan" type="text" class="form-control @error('plan') is-invalid  @enderror" placeholder="Ingrese el plan que desea crear">
+                                @error('plan') <span class="error text-danger" >{{ $message }}</span> @enderror
                             </div>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer col-12 d-flex justify-content-between">
                     <button type="button" wire:click="limpiar()" class="btn btn-secondary hover-elevate-up" data-bs-dismiss="modal">Cancelar</button>                    
-                    <button type="button" wire:click="guardarSede()" class="btn btn-primary hover-elevate-up">Guardar</button>
+                    <button type="button" wire:click="guardarPlan()" class="btn btn-primary hover-elevate-up">Guardar</button>
                 </div>
             </div>
         </div>
     </div>
 
 </div>
+

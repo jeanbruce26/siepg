@@ -2,19 +2,18 @@
 
 @section('content')
 
-@livewire('modulo-administrador.gestion-curricular.sede.index')
+@livewire('modulo-administrador.gestion-curricular.programa.index')
 
 @endsection
 
 @section('javascript')
 <script>
-
     window.addEventListener('modal', event => {   
         $(event.detail.titleModal).modal('hide');
     })
 
     // Alerta para confirmacion
-	window.addEventListener('alerta-sede', event => {
+	window.addEventListener('alerta-programa', event => {
         Swal.fire({
             title: event.detail.title,
             text: event.detail.text,
@@ -28,7 +27,7 @@
         });
     });
 
-    //alerta
+    //alerta 
     window.addEventListener('alertaConfirmacion', event => {
         Swal.fire({
             title: event.detail.title,
@@ -43,10 +42,9 @@
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                Livewire.emitTo('modulo-administrador.gestion-curricular.sede.index', event.detail.metodo, event.detail.id);
+                Livewire.emitTo('modulo-administrador.gestion-curricular.programa.index', event.detail.metodo, event.detail.id);
             }
         })
     })
-
 </script>
 @endsection

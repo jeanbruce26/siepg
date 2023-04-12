@@ -250,7 +250,7 @@
 										<!--begin:Menu item-->
 										<div class="menu-item">
 											<!--begin:Menu link-->
-											<a class="menu-link class="menu-link {{ request()->is('administrador/pla') ? 'active border-3 border-start border-primary' : '' }}"" href="{{ route('administrador.sede') }}">
+											<a class="menu-link {{ request()->is('administrador/plan') ? 'active border-3 border-start border-primary' : '' }}"" href="{{ route('administrador.plan') }}">
 												<span class="menu-bullet">
 													<span class="bullet bullet-dot"></span>
 												</span>
@@ -262,7 +262,7 @@
 										<!--begin:Menu item-->
 										<div class="menu-item">
 											<!--begin:Menu link-->
-											<a class="menu-link" href="../../demo1/dist/widgets/feeds.html">
+											<a class="menu-link {{ request()->is('administrador/programa') ? 'active border-3 border-start border-primary' : '' }}" href="{{ route('administrador.programa') }}">
 												<span class="menu-bullet">
 													<span class="bullet bullet-dot"></span>
 												</span>

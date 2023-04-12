@@ -118,12 +118,18 @@ class Index extends Component
             $this->validate([
                 'sede' => 'required|string|unique:sede,sede,' . $this->id_sede . ',id_sede'
             ]);
-
-            $sede = Sede::find($this->id_sede);
-            $sede->sede = $this->sede;
-            $sede->save();
             
-            $this->alertaSede('¡Éxito!', 'La sede ' . $sede->sede . ' ha sido actualizada satisfactoriamente.', 'success', 'Aceptar', 'success');
+            $sede = Sede::find($this->id_sede);
+
+            if($sede->sede == $this->sede){
+                $this->alertaSede('¡Información!', 'No se realizaron cambios en los datos de la sede.', 'info', 'Aceptar', 'info');
+
+            }else{
+                $sede->sede = $this->sede;
+                $sede->save();
+                
+                $this->alertaSede('¡Éxito!', 'La sede ' . $sede->sede . ' ha sido actualizada satisfactoriamente.', 'success', 'Aceptar', 'success');
+            }
         }
 
         $this->limpiar();

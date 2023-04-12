@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\ModuloAdministrador\DashboardController;
+use App\Http\Controllers\ModuloAdministrador\PlanController;
+use App\Http\Controllers\ModuloAdministrador\ProgramaController;
 use App\Http\Controllers\ModuloAdministrador\SedeController;
 use App\Http\Controllers\ModuloAdministrador\TrabajadorController;
 use App\Http\Controllers\ModuloAdministrador\UsuarioTrabajadorController;
@@ -20,6 +22,10 @@ Route::get('/trabajador', [TrabajadorController::class, 'index'])->middleware(['
 //Gestion Curricular
 //Ruta para ir a la vista de Sede en la Gestion Curricular
 Route::get('/sede', [SedeController::class, 'index'])->middleware(['auth.usuario'])->name('administrador.sede');
+//Ruta para ir a la vista de Plan en la Gestion Curricular
+Route::get('/plan', [PlanController::class, 'index'])->middleware(['auth.usuario'])->name('administrador.plan');
+//Ruta para ir a la vista de Programa en la Gestion Curricular
+Route::get('/programa', [ProgramaController::class, 'index'])->middleware(['auth.usuario'])->name('administrador.programa');
 
 
 

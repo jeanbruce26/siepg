@@ -30,7 +30,6 @@
 
 	//Alerta de cuestioranio para confirmar una accion
 	window.addEventListener('alertaConfirmacionUsuario', event => {
-		// alert('Name updated to: ' + event.detail.id);
 		Swal.fire({
 			title: '¿Estás seguro de modificar el estado del usuario?',
 			text: "",
