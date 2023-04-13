@@ -243,6 +243,7 @@ class Index extends Component
             $admitido->id_persona = $item->id_persona;
             $admitido->id_evaluacion = $item->id_evaluacion;
             $admitido->id_programa_proceso = $item->id_programa_proceso;
+            $admitido->id_tipo_estudiante = 1;
             $admitido->admitido_estado = 1;
             $admitido->save();
 

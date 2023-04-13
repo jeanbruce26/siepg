@@ -17,6 +17,7 @@ class Admitido extends Model
         'id_persona',
         'id_evaluacion',
         'id_programa_proceso',
+        'id_tipo_estudiante',
         'admitido_estado'
     ];
 
@@ -38,5 +39,11 @@ class Admitido extends Model
     public function programa_proceso(){
         return $this->belongsTo(ProgramaProceso::class,
         'id_programa_proceso','id_programa_proceso');
+    }
+
+    // Tipo Estudiante
+    public function tipo_estudiante(){
+        return $this->belongsTo(TipoEstudiante::class,
+        'id_tipo_estudiante','id_tipo_estudiante');
     }
 }
