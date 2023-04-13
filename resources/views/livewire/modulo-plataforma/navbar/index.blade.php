@@ -149,7 +149,13 @@
                                 {{ ucwords(strtolower($persona->nombre)) }} {{ ucwords(strtolower($persona->apellido_paterno)) }} {{ ucwords(strtolower($persona->apellido_materno)) }}
                                 {{-- <span class="badge badge-light-success fw-bold fs-8 px-2 py-1 ms-2">Pro</span> --}}
                             </div>
-                            <span style="cursor: pointer;" class="fw-semibold text-muted text-hover-primary fs-7">{{ $usuario->usuario_estudiante }}</span>
+                            <span style="cursor: pointer;" class="fw-semibold text-muted text-hover-primary fs-7">
+                                @if ($admitido)
+                                    {{ $admitido->admitido_codigo }}
+                                @else
+                                    {{ $usuario->usuario_estudiante }}
+                                @endif
+                            </span>
                         </div>
                     </div>
                 </div>
