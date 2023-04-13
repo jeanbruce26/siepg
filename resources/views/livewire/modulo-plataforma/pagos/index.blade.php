@@ -15,7 +15,7 @@
             </div>
             @if ($admitido)
             <div class="d-flex align-items-center gap-2 gap-lg-3">
-                <a href="#modal_pago" class="btn btn-sm fw-bold btn-primary" data-bs-toggle="modal" data-bs-target="#modal_pago">
+                <a href="#modal_pago_plataforma" class="btn btn-sm fw-bold btn-primary" data-bs-toggle="modal" data-bs-target="#modal_pago_plataforma">
                     Nuevo Pago
                 </a>
             </div>
@@ -66,7 +66,7 @@
                         <div class="card-body mb-0">
                             <div class="table-responsive">
                                 <table class="table table-hover align-middle table-rounded border mb-0 gy-5 gs-5">
-                                    <thead>
+                                    <thead class="bg-light-warning">
                                         <tr class="fw-bold fs-6 text-gray-800 border-bottom-2 border-gray-200">
                                             <th>ID</th>
                                             <th>Concepto Pago</th>
@@ -236,9 +236,9 @@
 </div>
 @push('scripts')
     <script>
-        // filtro_canal_pago select2
+        // canal_pago select2
         $(document).ready(function () {
-            $('#filtro_canal_pago').select2({
+            $('#canal_pago').select2({
                 placeholder: 'Seleccione su canal de pago',
                 allowClear: true,
                 width: '100%',
@@ -252,11 +252,11 @@
                     }
                 }
             });
-            $('#filtro_canal_pago').on('change', function(){
-                @this.set('filtro_canal_pago', this.value);
+            $('#canal_pago').on('change', function(){
+                @this.set('canal_pago', this.value);
             });
             Livewire.hook('message.processed', (message, component) => {
-                $('#filtro_canal_pago').select2({
+                $('#canal_pago').select2({
                     placeholder: 'Seleccione su canal de pago',
                     allowClear: true,
                     width: '100%',
@@ -270,8 +270,47 @@
                         }
                     }
                 });
-                $('#filtro_canal_pago').on('change', function(){
-                    @this.set('filtro_canal_pago', this.value);
+                $('#canal_pago').on('change', function(){
+                    @this.set('canal_pago', this.value);
+                });
+            });
+        });
+        // concepto_pago select2
+        $(document).ready(function () {
+            $('#concepto_pago').select2({
+                placeholder: 'Seleccione su concepto de pago',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando..";
+                    }
+                }
+            });
+            $('#concepto_pago').on('change', function(){
+                @this.set('concepto_pago', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#concepto_pago').select2({
+                    placeholder: 'Seleccione su concepto de pago',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando..";
+                        }
+                    }
+                });
+                $('#concepto_pago').on('change', function(){
+                    @this.set('concepto_pago', this.value);
                 });
             });
         });
