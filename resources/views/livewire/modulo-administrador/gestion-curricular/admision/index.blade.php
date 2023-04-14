@@ -4,7 +4,7 @@
             <div id="kt_app_toolbar_container" class="app-container container-fluid d-flex flex-stack">
                 <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
                     <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
-                        Programa
+                        Admision
                     </h1>
                     <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                         <li class="breadcrumb-item text-muted">
@@ -15,11 +15,11 @@
                         <li class="breadcrumb-item">
                             <span class="bullet bg-gray-400 w-5px h-2px"></span>
                         </li>
-                        <li class="breadcrumb-item text-muted">Programa</li>
+                        <li class="breadcrumb-item text-muted">Admision</li>
                     </ul>
                 </div>
                 <div class="d-flex align-items-center gap-2 gap-lg-3">
-                    <a href="#modalPrograma" wire:click="modo()" class="btn btn-primary btn-sm hover-elevate-up" data-bs-toggle="modal" data-bs-target="#modalPrograma">Nuevo</a>
+                    <a href="#modalAdmision" wire:click="modo()" class="btn btn-primary btn-sm hover-elevate-up" data-bs-toggle="modal" data-bs-target="#modalAdmision">Nuevo</a>
                 </div>
             </div>
         </div>
@@ -30,22 +30,6 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-5">
                             <div class="d-flex justify-content-between align-items-center gap-4">
-                                <div class="text-muted d-flex align-items-center">
-                                    <select class="form-select form-select-sm text-muted" wire:model="buscar_programa" aria-label="Default select example">
-                                        <option value="all">Seleccione un programa</option>
-                                        @foreach ($programa_model as $item)
-                                            <option value="{{ $item->id_programa }}">{{ $item->programa }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="text-muted d-flex align-items-center">
-                                    <select class="form-select form-select-sm text-muted" wire:model="buscar_plan" aria-label="Default select example">
-                                        <option value="all" selected>Seleccione el Plan</option>
-                                        @foreach ($plan_model as $item)
-                                            <option value="{{ $item->id_plan }}">{{ $item->plan }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
                             </div>
                             <div class="w-25">
                                 <input class="form-control form-control-sm text-muted" type="search" wire:model="search"
@@ -57,28 +41,17 @@
                                 <thead class="bg-light-primary">
                                     <tr align="center" class="fw-bold fs-5">
                                         <th scope="col" class="col-md-1">ID</th>
-                                        <th scope="col" class="col-md-3">Programas</th>
-                                        <th scope="col" class="col-md-1">Plan</th>
-                                        <th scope="col" class="col-md-2">Sede</th>
-                                        <th scope="col" class="col-md-2">Modalidad</th>
+                                        <th scope="col" class="col-md-3">Codigo</th>
+                                        <th scope="col" class="col-md-2">Plan</th>
                                         <th scope="col" class="col-md-2">Estado</th>
                                         <th scope="col" class="col-md-1">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse ($programas as $item)
+                                    @forelse ($plan_model as $item)
                                     <tr>
-                                        <td align="center" class="fw-bold fs-5">{{ $item->id_mencion }}</td>
-                                        <td>{{ $item->descripcion_programa }}</td>
-                                        <td>{{ $item->subprograma }}</td>
-                                        <td>
-                                            @if($item->mencion == null)
-                                                SIN MENCION
-                                            @else
-                                            {{ $item->mencion }}
-                                            @endif
-                                        </td>
-
+                                        <td align="center" class="fw-bold fs-5">{{ $item->id_plan }}</td>
+                                        <td align="center">{{ $item->plan }}</td>
                                         <td align="center">{{ $item->plan_codigo }}</td>
                                         <td align="center">
                                             @if ($item->plan_estado == 1)
@@ -125,6 +98,36 @@
             </div>
         </div>
     </div>
+
+    {{-- Modal Sede --}}
+    {{-- <div wire:ignore.self class="modal fade" id="modalPlan" tabindex="-1" aria-labelledby="modalPlan"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">{{ $titulo }}</h5>
+                    <button type="button" wire:click="limpiar()" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form novalidate>
+                        <div class="row">
+                            <div class="mb-3 col-md-12 col-sm-12">
+                                <label class="form-label">Plan<span
+                                        class="text-danger">*</span></label>
+                                <input wire:model="plan" type="text" class="form-control @error('plan') is-invalid  @enderror" placeholder="Ingrese el plan que desea crear">
+                                @error('plan') <span class="error text-danger" >{{ $message }}</span> @enderror
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer col-12 d-flex justify-content-between">
+                    <button type="button" wire:click="limpiar()" class="btn btn-secondary hover-elevate-up" data-bs-dismiss="modal">Cancelar</button>                    
+                    <button type="button" wire:click="guardarPlan()" class="btn btn-primary hover-elevate-up">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div> --}}
 
 </div>
 
