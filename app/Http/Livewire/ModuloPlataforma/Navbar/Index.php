@@ -23,11 +23,22 @@ class Index extends Component
         $usuario = auth('plataforma')->user(); // obtenemos el usuario autenticado en la plataforma
         $persona = Persona::where('numero_documento', $usuario->usuario_estudiante)->first(); // obtenemos la persona del usuario autenticado en la plataforma
         $inscripcion_persona = $persona->inscripcion()->orderBy('id_inscripcion', 'desc')->first(); // obtenemos la inscripcion de la persona del usuario autenticado en la plataforma
+        $evaluacion = $inscripcion_persona->evaluacion; // evaluacion de la inscripcion del usuario logueado
+        if($evaluacion)
+        {
+            $admitido = $persona->admitido->where('id_evaluacion', $evaluacion->id_evaluacion)->first(); // admitido de la inscripcion del usuario logueado
+        }
+        else
+        {
+            $admitido = null;
+        }
         $admision = $inscripcion_persona->programa_proceso()->first()->admision; // obtenemos la admision de la inscripcion de la persona del usuario autenticado en la plataforma
         return view('livewire.modulo-plataforma.navbar.index', [
             'usuario' => $usuario,
             'persona' => $persona,
             'admision' => $admision,
+            'evaluacion' => $evaluacion,
+            'admitido' => $admitido,
         ]);
     }
 }

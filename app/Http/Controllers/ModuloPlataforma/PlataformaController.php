@@ -17,6 +17,11 @@ class PlataformaController extends Controller
         return view('modulo-plataforma.inicio.index');
     }
 
+    public function admision()
+    {
+        return view('modulo-plataforma.admision.index');
+    }
+
     public function perfil()
     {
         return view('modulo-plataforma.perfil.index');

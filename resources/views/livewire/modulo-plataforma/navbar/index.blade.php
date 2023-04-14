@@ -3,7 +3,11 @@
         <div class="menu menu-rounded menu-column menu-lg-row my-5 my-lg-0 align-items-stretch fw-semibold px-2 px-lg-0" id="kt_app_header_menu" data-kt-menu="true">
             <div class="menu-item">
                 <span class="fs-3 fw-bold">
-                    PROCESO DE {{ $admision->admision }}
+                    @if ($admitido)
+                        PLATAFORMA DEL ESTUDIANTE
+                    @else
+                        PLATAFORMA DEL POSTULANTE
+                    @endif
                 </span>
             </div>
         </div>
@@ -111,6 +115,18 @@
             <!--end::Menu-->
         </div>
         <div class="app-navbar-item ms-2 ms-md-4" id="kt_header_user_menu_toggle">
+            <div class="text-end d-none d-sm-flex flex-column justify-content-center me-3">
+                <span class="">
+                    @if ($admitido)
+                        {{ $admitido->admitido_codigo }}
+                    @else
+                        {{ $persona->numero_documento }}
+                    @endif
+                </span>
+                <a href="{{ route('plataforma.perfil') }}" class="text-gray-800 text-hover-primary fs-7 fw-bold d-block">
+                    {{ ucwords(strtolower($persona->nombre)) }} {{ ucwords(strtolower($persona->apellido_paterno)) }} {{ ucwords(strtolower($persona->apellido_materno)) }}
+                </a>
+            </div>
             <div class="cursor-pointer symbol symbol-30px symbol-md-40px" data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
                 @if ($usuario->usuario_estudiante_perfil_url)
                 <img src="{{ asset($usuario->usuario_estudiante_perfil_url) }}" alt="avatar" />
@@ -133,7 +149,13 @@
                                 {{ ucwords(strtolower($persona->nombre)) }} {{ ucwords(strtolower($persona->apellido_paterno)) }} {{ ucwords(strtolower($persona->apellido_materno)) }}
                                 {{-- <span class="badge badge-light-success fw-bold fs-8 px-2 py-1 ms-2">Pro</span> --}}
                             </div>
-                            <span style="cursor: pointer;" class="fw-semibold text-muted text-hover-primary fs-7">{{ $usuario->usuario_estudiante }}</span>
+                            <span style="cursor: pointer;" class="fw-semibold text-muted text-hover-primary fs-7">
+                                @if ($admitido)
+                                    {{ $admitido->admitido_codigo }}
+                                @else
+                                    {{ $usuario->usuario_estudiante }}
+                                @endif
+                            </span>
                         </div>
                     </div>
                 </div>

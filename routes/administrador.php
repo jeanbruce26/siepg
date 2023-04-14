@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ModuloAdministrador\AdmisionController;
+use App\Http\Controllers\ModuloAdministrador\AdmitidoController;
 use App\Http\Controllers\ModuloAdministrador\DashboardController;
 use App\Http\Controllers\ModuloAdministrador\PlanController;
 use App\Http\Controllers\ModuloAdministrador\ProgramaController;
@@ -30,6 +31,8 @@ Route::get('/programa', [ProgramaController::class, 'index'])->middleware(['auth
 //Ruta para ir a la vista de Admision en la Gestion Curricular
 Route::get('/admision', [AdmisionController::class, 'index'])->middleware(['auth.usuario'])->name('administrador.admision');
 
+//Ruta para Admitidos
+Route::get('/admitido', [AdmitidoController::class, 'index'])->middleware(['auth.usuario'])->name('administrador.admitido');
 
 
 

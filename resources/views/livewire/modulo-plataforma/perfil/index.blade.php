@@ -48,6 +48,16 @@
                                         {{ $persona->numero_documento }}
                                     </span>
                                 </div>
+                                @if ($admitido)
+                                    <div class="d-flex flex-wrap fw-semibold fs-4 mb-2">
+                                        <span class="d-flex align-items-center text-gray-600">
+                                            Codigo de Estudiante:
+                                        </span>
+                                        <span class="d-flex align-items-center text-gray-800 ms-2 fw-bold">
+                                            {{ $admitido->admitido_codigo }}
+                                        </span>
+                                    </div>
+                                @endif
                                 <div class="d-flex flex-wrap fw-semibold fs-4 mb-2">
                                     <span class="d-flex align-items-center text-gray-600">
                                         Proceso de Admisión:
