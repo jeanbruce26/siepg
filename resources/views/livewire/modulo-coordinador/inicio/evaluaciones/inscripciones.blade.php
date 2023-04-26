@@ -63,7 +63,7 @@
             <div class="row mb-5 mb-xl-10">
                 <div class="col-md-12 mb-md-5 mb-xl-10">
                     {{-- alerta --}}
-                    <div class="alert bg-light-primary border-primary d-flex alig-items-center p-5 mb-5">
+                    <div class="alert bg-light-primary border-primary d-flex align-items-center p-5 mb-5">
                         <span class="svg-icon svg-icon-2hx svg-icon-primary me-4 d-flex align-items-center">
                             <i class="las la-exclamation-circle fs-2 text-primary"></i>
                         </span>
@@ -101,6 +101,7 @@
                                             <th class="text-center">Eva. Tesis</th>
                                             @endif
                                             <th class="text-center">Eva. Entrevista</th>
+                                            <th class="text-center">Puntaje Final</th>
                                             <th class="text-center">Estado</th>
                                         </tr>
                                     </thead>
@@ -172,15 +173,37 @@
                                                 </td>
                                                 <td align="center">
                                                     @if ($evaluacion)
+                                                        @if ($evaluacion->puntaje_final)
+                                                            <span class="fw-bold fs-6">
+                                                                {{ number_format($evaluacion->puntaje_final) }} pts.
+                                                            </span>
+                                                        @else
+                                                            <span class="fw-bold fs-6">
+                                                                -
+                                                            </span>
+                                                        @endif
+
+                                                    @endif
+                                                </td>
+                                                <td align="center">
+                                                    @if ($evaluacion)
                                                         @if ($evaluacion->evaluacion_estado == 1)
-                                                            <span class="badge badge-warning fs-6">Pendiente</span>
+                                                            <span class="badge badge-warning fs-6">
+                                                                Pendiente
+                                                            </span>
                                                         @elseif ($evaluacion->evaluacion_estado == 2)
-                                                            <span class="badge badge-success fs-6">Aprobado</span>
+                                                            <span class="badge badge-success fs-6">
+                                                                Admitido
+                                                            </span>
                                                         @elseif ($evaluacion->evaluacion_estado == 3)
-                                                            <span class="badge badge-danger fs-6">Desaprobado</span>
+                                                            <span class="badge badge-danger fs-6">
+                                                                No Admitido
+                                                            </span>
                                                         @endif
                                                     @else
-                                                        <span class="badge badge-warning fs-6">Pendiente</span>
+                                                        <span class="badge badge-warning fs-6">
+                                                            Pendiente
+                                                        </span>
                                                     @endif
                                                 </td>
                                             </tr>

@@ -46,10 +46,10 @@ class Inscripciones extends Component
         $this->puntaje_model = Puntaje::where('puntaje_estado', 1)->first();
     }
 
-    public function alerta_evaluacion($tipo_evaluacion)
-    {
-        dd($tipo_evaluacion);
-    }
+    // public function alerta_evaluacion($tipo_evaluacion)
+    // {
+    //     dd($tipo_evaluacion);
+    // }
 
     public function evaluacion_expediente(Inscripcion $inscripcion)
     {
@@ -282,6 +282,10 @@ class Inscripciones extends Component
                                     ->join('persona', 'persona.id_persona', '=', 'inscripcion.id_persona')
                                     ->where('programa.id_programa', $this->id_programa)
                                     ->where('programa_proceso.id_admision', $this->id_admision)
+                                    ->where(function($query) {
+                                        $query->where('evaluacion.evaluacion_estado', 2)
+                                            ->orWhere('evaluacion.evaluacion_estado', 3);
+                                    })
                                     ->orderBy('persona.nombre_completo', 'asc')
                                     ->get();
         return view('livewire.modulo-coordinador.inicio.evaluaciones.inscripciones', [

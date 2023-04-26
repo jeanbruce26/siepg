@@ -20,6 +20,7 @@ class Evaluacion extends Model
         'puntaje_entrevista',
         'fecha_entrevista',
         'puntaje_final',
+        'evaluacion_observacion',
         'evaluacion_estado',
         'evaluacion_estado_admitido',
         'id_inscripcion',

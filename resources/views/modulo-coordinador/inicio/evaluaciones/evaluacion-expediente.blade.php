@@ -20,7 +20,6 @@
                 }
             });
         });
-
         window.addEventListener('alerta_evaluacion_expediente_2', event => {
             Swal.fire({
                 title: event.detail.title,
@@ -36,6 +35,24 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     Livewire.emitTo('modulo-coordinador.inicio.evaluaciones.evaluacion-expediente', 'evaluar_expediente_paso_2');
+                }
+            })
+        })
+        window.addEventListener('alerta_evaluacion_expediente_cero', event => {
+            Swal.fire({
+                title: event.detail.title,
+                text: event.detail.text,
+                icon: event.detail.icon,
+                showCancelButton: true,
+                confirmButtonText: event.detail.confirmButtonText,
+                cancelButtonText: event.detail.cancelButtonText,
+                customClass: {
+                    confirmButton: "btn btn-"+event.detail.colorConfirmButton,
+                    cancelButton: "btn btn-"+event.detail.colorCancelButton,
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Livewire.emitTo('modulo-coordinador.inicio.evaluaciones.evaluacion-expediente', 'evaluar_expediente_cero_paso_2');
                 }
             })
         })

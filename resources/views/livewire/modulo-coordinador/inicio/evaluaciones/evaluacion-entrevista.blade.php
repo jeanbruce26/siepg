@@ -64,6 +64,17 @@
                             </div>
                         </div>
                     </div>
+                    {{-- alerta --}}
+                    <div class="alert bg-light-warning border-warning d-flex align-items-center p-5 mb-5">
+                        <span class="svg-icon svg-icon-2hx svg-icon-warning me-4 d-flex align-items-center">
+                            <i class="las la-exclamation-circle fs-2 text-warning"></i>
+                        </span>
+                        <div class="d-flex flex-column gap-2">
+                            <span class="fw-bold">
+                                Nota: Si el postulante no se presenta a la entrevista, se debe colocar "0" (cero) en todos los campos.
+                            </span>
+                        </div>
+                    </div>
                     {{-- card monto de pagos --}}
                     <div class="card shadow-sm">
                         <div class="card-body mb-0">
