@@ -33,7 +33,3 @@ Route::get('/admision', [AdmisionController::class, 'index'])->middleware(['auth
 
 //Ruta para Admitidos
 Route::get('/admitido', [AdmitidoController::class, 'index'])->middleware(['auth.usuario'])->name('administrador.admitido');
-
-
-
-

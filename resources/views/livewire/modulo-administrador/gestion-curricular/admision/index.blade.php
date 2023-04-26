@@ -41,23 +41,23 @@
                                 <thead class="bg-light-primary">
                                     <tr align="center" class="fw-bold fs-5">
                                         <th scope="col" class="col-md-1">ID</th>
-                                        <th scope="col" class="col-md-3">Codigo</th>
-                                        <th scope="col" class="col-md-2">Plan</th>
+                                        <th scope="col" class="col-md-3">Admisión</th>
+                                        <th scope="col" class="col-md-2">Año</th>
                                         <th scope="col" class="col-md-2">Estado</th>
                                         <th scope="col" class="col-md-1">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse ($plan_model as $item)
+                                    @forelse ($admision_model as $item)
                                     <tr>
-                                        <td align="center" class="fw-bold fs-5">{{ $item->id_plan }}</td>
-                                        <td align="center">{{ $item->plan }}</td>
-                                        <td align="center">{{ $item->plan_codigo }}</td>
+                                        <td align="center" class="fw-bold fs-5">{{ $item->id_admision }}</td>
+                                        <td align="center">{{ $item->admision }}</td>
+                                        <td align="center">{{ $item->admision_año }}</td>
                                         <td align="center">
-                                            @if ($item->plan_estado == 1)
-                                                <span style="cursor: pointer;" wire:click="cargarAlerta({{ $item->id_plan }})" class="badge text-bg-success text-light hover-elevate-down">Activo<span class="pulse-ring"></span></span>
+                                            @if ($item->admision_estado == 1)
+                                                <span style="cursor: pointer;" wire:click="cargarAlerta({{ $item->id_admision }})" class="badge text-bg-success text-light hover-elevate-down">Activo<span class="pulse-ring"></span></span>
                                             @else
-                                                <span style="cursor: pointer;" wire:click="cargarAlerta({{ $item->id_plan }})" class="badge text-bg-danger text-light hover-elevate-down">Inactivo <span class="pulse-ring"></span></span>
+                                                <span style="cursor: pointer;" wire:click="cargarAlerta({{ $item->id_admision }})" class="badge text-bg-danger text-light hover-elevate-down">Inactivo <span class="pulse-ring"></span></span>
                                             @endif
                                         </td>
                                         <td align="center">
@@ -75,8 +75,8 @@
                                             </a>
                                             <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
                                                 <div class="menu-item px-3">
-                                                    <a href="#modalPlan"
-                                                    wire:click="cargarPlan({{ $item->id_plan }})" 
+                                                    <a href="#modalAdmision"
+                                                    wire:click="cargarAdmision({{ $item->id_admision }})" 
                                                     class="menu-link px-3" data-bs-toggle="modal" 
                                                     data-bs-target="#modalPlan">
                                                         Editar
