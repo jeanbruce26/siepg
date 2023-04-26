@@ -3,12 +3,12 @@
     @if ($admision->admision_fecha_resultados <= today())
         @if ($admitido)
             {{-- alerta de admitido --}}
-            <div class="alert bg-light-success border border-success d-flex alig-items-center p-5 mb-5">
+            <div class="alert bg-light-success border border-3 border-success d-flex align-items-center p-5 mb-5">
                 <span class="svg-icon svg-icon-2hx svg-icon-success me-4">
                     <i class="las la-check-circle fs-2 text-success"></i>
                 </span>
                 <div class="d-flex flex-column">
-                    <span class="fw-bold">
+                    <span class="fw-bold fs-4">
                         Fue admitido en el Proceso de {{ ucwords(strtolower($inscripcion_admision->admision->admision)) }}
                     </span>
                 </div>
@@ -29,12 +29,12 @@
                     </div>
                 @else
                     {{-- alerta de no admitido --}}
-                    <div class="alert bg-light-danger border border-danger d-flex alig-items-center p-5 mb-5">
+                    <div class="alert bg-light-danger border border-3 border-danger d-flex align-items-center p-5 mb-5">
                         <span class="svg-icon svg-icon-2hx svg-icon-danger me-4">
                             <i class="las la-exclamation-triangle fs-2 text-danger"></i>
                         </span>
                         <div class="d-flex flex-column">
-                            <span class="fw-bold">
+                            <span class="fw-bold fs-4">
                                 No fuiste admitido en el Proceso de {{ ucwords(strtolower($inscripcion_admision->admision->admision)) }}
                             </span>
                         </div>
