@@ -208,10 +208,12 @@ class EvaluacionEntrevista extends Component
             $puntaje_final = $this->evaluacion->puntaje_expediente + $this->evaluacion->puntaje_entrevista;
             if($this->puntaje_model->puntaje_maestria <= $puntaje_final)
             {
+                $this->evaluacion->evaluacion_observacion = null;
                 $this->evaluacion->evaluacion_estado = 2; // 1 = Pendiente // 2 = Aprobado // 3 = Rechazado
             }
             else
             {
+                $this->evaluacion->evaluacion_observacion = 'El puntaje total no supera el puntaje mínimo.';
                 $this->evaluacion->evaluacion_estado = 3; // 1 = Pendiente // 2 = Aprobado // 3 = Rechazado
             }
         }
@@ -220,10 +222,12 @@ class EvaluacionEntrevista extends Component
             $puntaje_final = $this->evaluacion->puntaje_expediente + $this->evaluacion->puntaje_investigacion + $this->evaluacion->puntaje_entrevista;
             if($this->puntaje_model->puntaje_doctorado <= $puntaje_final)
             {
+                $this->evaluacion->evaluacion_observacion = null;
                 $this->evaluacion->evaluacion_estado = 2; // 1 = Pendiente // 2 = Aprobado // 3 = Rechazado
             }
             else
             {
+                $this->evaluacion->evaluacion_observacion = 'El puntaje total no supera el puntaje mínimo.';
                 $this->evaluacion->evaluacion_estado = 3; // 1 = Pendiente // 2 = Aprobado // 3 = Rechazado
             }
         }
@@ -238,6 +242,11 @@ class EvaluacionEntrevista extends Component
             $observacion->evaluacion_observacion_fecha = now();
             $observacion->id_evaluacion = $this->id_evaluacion;
             $observacion->save();
+        }
+
+        if($this->puntaje_total == 0){
+            $this->evaluacion->evaluacion_observacion = 'No se presentó a la evaluación de entrevista.';
+            $this->evaluacion->save();
         }
 
         // redireccionamos a la vista de evaluaciones

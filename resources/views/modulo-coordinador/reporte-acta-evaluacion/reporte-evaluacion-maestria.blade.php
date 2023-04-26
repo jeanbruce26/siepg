@@ -80,7 +80,7 @@
             </div>
         </div>
     </div>
-    <div style="padding-right: 7rem; padding-left: 7rem; padding-top: 1.5rem; font-size: 0.9rem; text-align: justify; line-height: 1.5;">
+    <div style="padding-right: 6rem; padding-left: 6rem; padding-top: 1.5rem; font-size: 0.9rem; text-align: justify; line-height: 1.5;">
         En Pucallpa a los días ..... días del mes de .................. del 202...., se reunieron en los ambientes de la Escuela de Posgrado de la UNU, en concordancia con la Resolución N° 001-2023-CAREPG-UNU que aprueba el Concurso de {{ $admision }} de la Escuela de Posgrado, la Comisión de Evaluación de Postulantes de la
         <strong>Maestria
             @if ($mencion == null)
@@ -114,10 +114,10 @@
             </tbody>
         </table>
     </div>
-    <div style="padding-right: 7rem; padding-left: 7rem; padding-top: 1.5rem; font-size: 0.9rem; text-align: justify; line-height: 1.5;">
+    <div style="padding-right: 6rem; padding-left: 6rem; padding-top: 1.5rem; font-size: 0.9rem; text-align: justify; line-height: 1.5;">
         Con	la	finalidad	de	evaluar	a	los	postulantes	de	la Maestría y después de realizado el Proceso de Evaluación, la relación de postulantes es como sigue:
     </div>
-    <div style="padding-right: 7rem; padding-left: 7rem; padding-top: 1rem; font-size: 0.9rem; text-align: justify;">
+    <div style="padding-right: 6rem; padding-left: 6rem; padding-top: 1rem; font-size: 0.9rem; text-align: justify;">
         <table class="customTable">
             <thead>
                 <tr style="font-size: 0.7rem; font-weight: 700;">
@@ -126,6 +126,7 @@
                     <th colspan="2">EVALUACION (PUNTOS)</th>
                     <th rowspan="2">PUNTAJE <br> TOTAL</th>
                     <th rowspan="2">RESULTADO</th>
+                    <th rowspan="2">OBSERVACION</th>
                 </tr>
                 <tr style="font-size: 0.7rem; font-weight: 700;">
                     <th>EXPEDIENTE <br> C. VITAE (20)</th>
@@ -147,15 +148,16 @@
                         @else
                             <td align="center">POR EVALUAR</td>
                         @endif
+                        <td>{{ $item->evaluacion_observacion ? $item->evaluacion_observacion : '' }}</td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
     </div>
-    <div style="padding-right: 7rem; padding-left: 7rem; padding-top: 1rem; font-size: 0.9rem; text-align: justify; line-height: 1.5;">
+    <div style="padding-right: 6rem; padding-left: 6rem; padding-top: 1rem; font-size: 0.9rem; text-align: justify; line-height: 1.5;">
         Terminado el acto de evaluación, a los ..... días del mes de .................. del 202...., se hace llegar los resultados a la Dirección de la Escuela de Posgrado de la UNU y se procede a firmar el acta en señal de conformidad.
     </div>
-    <div style="padding-right: 7rem; padding-left: 7rem; padding-top: 5rem; font-size: 0.9rem; text-align: justify;">
+    <div style="padding-right: 6rem; padding-left: 6rem; padding-top: 5rem; font-size: 0.9rem; text-align: justify;">
         <table style="width: 100%">
             <tbody>
                 <tr>

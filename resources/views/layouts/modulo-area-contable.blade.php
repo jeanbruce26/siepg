@@ -56,7 +56,7 @@
 							</div>
 						</div>
 						<div class="d-flex align-items-center flex-grow-1 flex-lg-grow-0">
-							<a href="{{ route('plataforma.inicio') }}" class="d-lg-none">
+							<a href="{{ route('contable.inicio') }}" class="d-lg-none">
 								<img alt="Logo" src="{{ asset('assets/media/logos/logo-pg.png') }}" class="h-30px" />
 							</a>
 						</div>

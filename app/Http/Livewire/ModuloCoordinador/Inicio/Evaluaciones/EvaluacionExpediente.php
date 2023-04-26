@@ -4,8 +4,12 @@ namespace App\Http\Livewire\ModuloCoordinador\Inicio\Evaluaciones;
 
 use App\Models\Admision;
 use App\Models\Evaluacion;
+use App\Models\EvaluacionEntrevista;
+use App\Models\EvaluacionEntrevistaItem;
 use App\Models\EvaluacionExpediente as EvaluacionExpedienteModel;
 use App\Models\EvaluacionExpedienteTitulo;
+use App\Models\EvaluacionInvestigacion;
+use App\Models\EvaluacionInvestigacionItem;
 use App\Models\EvaluacionObservacion;
 use App\Models\ExpedienteInscripcion;
 use App\Models\ExpedienteInscripcionSeguimiento;
@@ -35,6 +39,7 @@ class EvaluacionExpediente extends Component
 
     protected $listeners = [
         'evaluar_expediente_paso_2' => 'evaluar_expediente',
+        'evaluar_expediente_cero_paso_2' => 'evaluar_expediente_cero',
     ];
 
     public function mount()
@@ -216,6 +221,102 @@ class EvaluacionExpediente extends Component
             $observacion->id_evaluacion = $this->id_evaluacion;
             $observacion->save();
         }
+
+        if($this->puntaje_total == 0){
+            $this->evaluar_expediente_cero();
+        }
+
+        // redireccionamos a la vista de evaluaciones
+        return redirect()->route('coordinador.evaluaciones', [
+            'id' => $this->id_programa,
+            'id_admision' => $this->id_admision
+        ]);
+    }
+
+    public function evaluar_expediente_cero_paso_1()
+    {
+        // emitimos alerta para confirmar la evaluacion
+        $this->dispatchBrowserEvent('alerta_evaluacion_expediente_cero', [
+            'title' => '¿Está seguro?',
+            'text' => 'Una vez realizada la evaluación cero, no podrá modificar los puntajes.',
+            'icon' => 'question',
+            'confirmButtonText' => 'Evaluar',
+            'cancelButtonText' => 'Cancelar',
+            'colorConfirmButton' => 'primary',
+            'colorCancelButton' => 'danger',
+        ]);
+    }
+
+    public function evaluar_expediente_cero()
+    {
+        // asignamos los puntajes 0 en las evaluaciones de expediente, investigacion y entrevista
+        // evaluacion de expediente
+        $evaluacion_expediente_titulo = EvaluacionExpedienteTitulo::where('id_tipo_evaluacion', $this->evaluacion->id_tipo_evaluacion)->get();
+        foreach ($evaluacion_expediente_titulo as $key => $value) {
+            $evaluacion_expediente = EvaluacionExpedienteModel::where('id_evaluacion', $this->id_evaluacion)->where('id_evaluacion_expediente_titulo', $value->id_evaluacion_expediente_titulo)->first();
+            if($evaluacion_expediente){
+                $evaluacion_expediente->evaluacion_expediente_puntaje = 0;
+                $evaluacion_expediente->save();
+            }else{
+                $evaluacion_expediente = new EvaluacionExpedienteModel();
+                $evaluacion_expediente->evaluacion_expediente_puntaje = 0;
+                $evaluacion_expediente->id_evaluacion_expediente_titulo = $value->id_evaluacion_expediente_titulo;
+                $evaluacion_expediente->id_evaluacion = $this->id_evaluacion;
+                $evaluacion_expediente->save();
+            }
+        }
+
+        // evaluacion de investigacion
+        if ($this->evaluacion->id_tipo_evaluacion == 2) {
+            $evaluacion_investigacion_item = EvaluacionInvestigacionItem::where('id_tipo_evaluacion', $this->evaluacion->id_tipo_evaluacion)->get();
+            foreach ($evaluacion_investigacion_item as $key => $value) {
+                $evaluacion_investigacion = EvaluacionInvestigacion::where('id_evaluacion', $this->id_evaluacion)->where('id_evaluacion_investigacion_item', $value->id_evaluacion_investigacion_item)->first();
+                if($evaluacion_investigacion){
+                    $evaluacion_investigacion->evaluacion_investigacion_puntaje = 0;
+                    $evaluacion_investigacion->save();
+                }else{
+                    $evaluacion_investigacion = new EvaluacionInvestigacion();
+                    $evaluacion_investigacion->evaluacion_investigacion_puntaje = 0;
+                    $evaluacion_investigacion->id_evaluacion_investigacion_item = $value->id_evaluacion_investigacion_item;
+                    $evaluacion_investigacion->id_evaluacion = $this->id_evaluacion;
+                    $evaluacion_investigacion->save();
+                }
+            }
+        }
+
+        // evaluacion de entrevista
+        $evaluacion_entrevista_item = EvaluacionEntrevistaItem::where('id_tipo_evaluacion', $this->evaluacion->id_tipo_evaluacion)->get();
+        foreach ($evaluacion_entrevista_item as $key => $value) {
+            $evaluacion_entrevista = EvaluacionEntrevista::where('id_evaluacion', $this->id_evaluacion)->where('id_evaluacion_entrevista_item', $value->id_evaluacion_entrevista_item)->first();
+            if($evaluacion_entrevista){
+                $evaluacion_entrevista->evaluacion_entrevista_puntaje = 0;
+                $evaluacion_entrevista->save();
+            }else{
+                $evaluacion_entrevista = new EvaluacionEntrevista();
+                $evaluacion_entrevista->evaluacion_entrevista_puntaje = 0;
+                $evaluacion_entrevista->id_evaluacion_entrevista_item = $value->id_evaluacion_entrevista_item;
+                $evaluacion_entrevista->id_evaluacion = $this->id_evaluacion;
+                $evaluacion_entrevista->save();
+            }
+        }
+
+        // asignamos los puntajes a cero de las evaluaciones
+        $this->evaluacion->puntaje_expediente = 0;
+        $this->evaluacion->fecha_expediente = now();
+        if ($this->evaluacion->id_tipo_evaluacion == 2) {
+            $this->evaluacion->puntaje_investigacion = 0;
+            $this->evaluacion->fecha_investigacion = now();
+        }
+        $this->evaluacion->puntaje_entrevista = 0;
+        $this->evaluacion->fecha_entrevista = now();
+        if ($this->evaluacion->id_tipo_evaluacion == 1) {
+            $this->evaluacion->evaluacion_observacion = 'No cumple con el Grado Académico del Art. 51.';
+        } else {
+            $this->evaluacion->evaluacion_observacion = 'No cumple con el Grado Académico del Art. 68.';
+        }
+        $this->evaluacion->puntaje_final = 0;
+        $this->evaluacion->evaluacion_estado = 3;
+        $this->evaluacion->save();
 
         // redireccionamos a la vista de evaluaciones
         return redirect()->route('coordinador.evaluaciones', [

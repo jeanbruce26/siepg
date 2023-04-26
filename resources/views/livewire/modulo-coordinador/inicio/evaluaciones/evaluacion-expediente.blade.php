@@ -99,6 +99,17 @@
                             </div>
                         @endforeach
                     </div>
+                    {{-- alerta --}}
+                    <div class="alert bg-light-warning border-warning d-flex align-items-center p-5 mb-5">
+                        <span class="svg-icon svg-icon-2hx svg-icon-warning me-4 d-flex align-items-center">
+                            <i class="las la-exclamation-circle fs-2 text-warning"></i>
+                        </span>
+                        <div class="d-flex flex-column gap-2">
+                            <span class="fw-bold">
+                                Nota: Si el postulante no cuenta con su Grado Académico "Bachiller" en caso de Maestria o "Magister" en caso de Doctorado, se debe evaluar con puntaje "0" (cero) o dar click en el boton "Evaluar Cero".
+                            </span>
+                        </div>
+                    </div>
                     {{-- card monto de pagos --}}
                     <div class="card shadow-sm">
                         <div class="card-body mb-0">
@@ -210,6 +221,9 @@
                                 </form>
                             </div>
                             <div class="text-end">
+                                <button type="button" wire:click="evaluar_expediente_cero_paso_1()" class="btn btn-danger">
+                                    Evaluar Cero
+                                </button>
                                 <button type="button" wire:click="evaluar_expediente_paso_1()" class="btn btn-info">
                                     Evaluar
                                 </button>
