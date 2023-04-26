@@ -25,7 +25,7 @@ class Coordinador extends Model
     //Categoria Docente
     public function categoria_docente(){
         return $this->belongsTo(CategoriaDocente::class,
-        'id_categoria_docente','id_conceid_categoria_docentepto_pago');
+        'id_categoria_docente','id_categoria_docente');
     }
 
     //Facultad
