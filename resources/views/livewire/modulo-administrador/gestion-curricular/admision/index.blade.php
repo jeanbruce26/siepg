@@ -61,7 +61,6 @@
                                             @endif
                                         </td>
                                         <td align="center">
-
                                             <a href="#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" data-kt-menu-flip="top-end">
                                                 Actions
                                                 <span class="svg-icon fs-5 m-0">
@@ -78,7 +77,7 @@
                                                     <a href="#modalAdmision"
                                                     wire:click="cargarAdmision({{ $item->id_admision }})" 
                                                     class="menu-link px-3" data-bs-toggle="modal" 
-                                                    data-bs-target="#modalPlan">
+                                                    data-bs-target="#modalAdmision">
                                                         Editar
                                                     </a>
                                                 </div>
@@ -128,6 +127,108 @@
             </div>
         </div>
     </div> --}}
+
+    {{-- Modal Usuario --}}
+    <div wire:ignore.self class="modal fade" id="modalAdmision" tabindex="-1" aria-labelledby="modalAdmision"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">{{ $titulo }}</h5>
+                    <button type="button" wire:click="limpiar()" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form novalidate>
+                        <div class="row">
+                            <div class="mb-3 col-md-6 col-sm-6">
+                                <label class="form-label">Año <span
+                                        class="text-danger">*</span></label>
+                                <input type="number" class="form-control @error('año') is-invalid  @enderror" wire:model="año" placeholder="Ingrese el año del proceso de admision">
+                                @error('año') <span class="error text-danger" >{{ $message }}</span> @enderror
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label class="form-label">Convocatoria </label>
+                                <input type="text" class="form-control @error('convocatoria') is-invalid  @enderror" wire:model="convocatoria" placeholder="Ingrese la convocatoria del proceso de admision">
+                                @error('convocatoria') <span class="error text-danger" >{{ $message }}</span> @enderror
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label class="form-label">Fecha de inicio de admisión <span
+                                        class="text-danger">*</span></label>
+                                <input type="date" class="form-control @error('fecha_inicio_inscripcion') is-invalid  @enderror" wire:model="fecha_inicio_inscripcion">
+                                @error('fecha_inicio_inscripcion') <span class="error text-danger" >{{ $message }}</span> @enderror
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label class="form-label">Fecha de fin de admisión <span
+                                        class="text-danger">*</span></label>
+                                <input type="date" class="form-control @error('fecha_fin_inscripcion') is-invalid  @enderror" wire:model="fecha_fin_inscripcion">
+                                @error('fecha_fin_inscripcion') <span class="error text-danger" >{{ $message }}</span> @enderror
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label class="form-label">Fecha de inicio de expediente <span
+                                        class="text-danger">*</span></label>
+                                <input type="date" class="form-control @error('fecha_inicio_expediente') is-invalid  @enderror" wire:model="fecha_inicio_expediente">
+                                @error('fecha_inicio_expediente') <span class="error text-danger" >{{ $message }}</span> @enderror
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label class="form-label">Fecha de fin de expediente <span
+                                        class="text-danger">*</span></label>
+                                <input type="date" class="form-control @error('fecha_fin_expediente') is-invalid  @enderror" wire:model="fecha_fin_expediente">
+                                @error('fecha_fin_expediente') <span class="error text-danger" >{{ $message }}</span> @enderror
+                            </div>
+                            
+                            <div class="mb-3 col-md-6">
+                                <label class="form-label">Fecha de inicio de entrevista <span
+                                        class="text-danger">*</span></label>
+                                <input type="date" class="form-control @error('fecha_inicio_entrevista') is-invalid  @enderror" wire:model="fecha_inicio_entrevista">
+                                @error('fecha_inicio_entrevista') <span class="error text-danger" >{{ $message }}</span> @enderror
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label class="form-label">Fecha de fin de entrevista <span
+                                        class="text-danger">*</span></label>
+                                <input type="date" class="form-control @error('fecha_fin_entrevista') is-invalid  @enderror" wire:model="fecha_fin_entrevista">
+                                @error('fecha_fin_entrevista') <span class="error text-danger" >{{ $message }}</span> @enderror
+                            </div>
+                            <div class="mb-3 col-md-12">
+                                <label class="form-label">Fecha de resultados <span
+                                        class="text-danger">*</span></label>
+                                <input type="date" class="form-control @error('fecha_resultados') is-invalid  @enderror" wire:model="fecha_resultados">
+                                @error('fecha_resultados') <span class="error text-danger" >{{ $message }}</span> @enderror
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label class="form-label">Fecha de inicio de matrícula <span
+                                        class="text-danger">*</span></label>
+                                <input type="date" class="form-control @error('fecha_inicio_matricula') is-invalid  @enderror" wire:model="fecha_inicio_matricula">
+                                @error('fecha_inicio_matricula') <span class="error text-danger" >{{ $message }}</span> @enderror
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label class="form-label">Fecha de fin de matrícula <span
+                                        class="text-danger">*</span></label>
+                                <input type="date" class="form-control @error('fecha_fin_matricula') is-invalid  @enderror" wire:model="fecha_fin_matricula">
+                                @error('fecha_fin_matricula') <span class="error text-danger" >{{ $message }}</span> @enderror
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label class="form-label">Fecha de inicio de matricula extemporánea <span
+                                        class="text-danger">*</span></label>
+                                <input type="date" class="form-control @error('fecha_inicio_extemporanea') is-invalid  @enderror" wire:model="fecha_inicio_extemporanea">
+                                @error('fecha_inicio_extemporanea') <span class="error text-danger" >{{ $message }}</span> @enderror
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label class="form-label">Fecha de fin de matricula extemporánea <span
+                                        class="text-danger">*</span></label>
+                                <input type="date" class="form-control @error('fecha_fin_extemporanea') is-invalid  @enderror" wire:model="fecha_fin_extemporanea">
+                                @error('fecha_fin_extemporanea') <span class="error text-danger" >{{ $message }}</span> @enderror
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer col-12 d-flex justify-content-between">
+                    <button type="button" wire:click="limpiar()" class="btn btn-secondary hover-elevate-up" data-bs-dismiss="modal">Cancelar</button>                    
+                    <button type="button" wire:click="guardarAdmision()" class="btn btn-primary hover-elevate-up">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </div>
 

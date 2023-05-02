@@ -99,7 +99,7 @@
         </div>
     </div>
 
-    {{-- Modal Sede --}}
+    {{-- Modal Plan --}}
     <div wire:ignore.self class="modal fade" id="modalPlan" tabindex="-1" aria-labelledby="modalPlan"
         aria-hidden="true">
         <div class="modal-dialog">

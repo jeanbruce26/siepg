@@ -392,8 +392,17 @@
                         </form>
                     </div>
                     <div class="modal-footer col-12 d-flex justify-content-between">
-                        <button type="button" wire:click="limpiar()" class="btn btn-secondary hover-elevate-up" data-bs-dismiss="modal">Cancelar</button>                    
-                        <button type="button" wire:click="guardarTrabajador()" class="btn btn-primary hover-elevate-up">Guardar</button>
+                        <button type="button" wire:click="limpiar()" class="btn btn-secondary hover-elevate-up" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" wire:click="guardarTrabajador()" class="btn btn-primary" wire:loading.attr="disabled">
+                            <div wire:loading.remove wire:target="guardarTrabajador">
+                                Guardar
+                            </div>
+                            <div wire:loading wire:target="guardarTrabajador">
+                                <span class="spinner-border spinner-border-sm align-middle me-2"></span>
+                                Guardando...
+                            </div>
+                        </button>
+                        
                     </div>
                 </div>
             </div>
@@ -583,8 +592,16 @@
                         </form>
                     </div>
                     <div class="modal-footer col-12 d-flex justify-content-between">
-                        <button type="button" wire:click="limpiarAsignacion()" class="btn btn-secondary hover-elevate-up" data-bs-dismiss="modal">Cancelar</button>                    
-                        <button type="button" wire:click="asignarTrabajador()" class="btn btn-primary hover-elevate-up">Guardar</button>
+                        <button type="button" wire:click="limpiarAsignacion()" class="btn btn-secondary hover-elevate-up" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" wire:click="asignarTrabajador()" class="btn btn-primary" wire:loading.attr="disabled">
+                            <div wire:loading.remove wire:target="asignarTrabajador">
+                                Guardar
+                            </div>
+                            <div wire:loading wire:target="asignarTrabajador">
+                                <span class="spinner-border spinner-border-sm align-middle me-2"></span>
+                                Guardando...
+                            </div>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -635,8 +652,16 @@
                         </form>
                     </div>
                     <div class="modal-footer col-12 d-flex justify-content-between">
-                        <button type="button" wire:click="limpiarAsignacion()" class="btn btn-secondary hover-elevate-up" data-bs-dismiss="modal">Cancelar</button>                    
-                        <button type="button" wire:click="desasignarTrabajadorAlerta()" class="btn btn-primary hover-elevate-up">Guardar</button>
+                        <button type="button" wire:click="limpiarAsignacion()" class="btn btn-secondary hover-elevate-up" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" wire:click="desasignarTrabajadorAlerta()" class="btn btn-primary" wire:loading.attr="disabled">
+                            <div wire:loading.remove wire:target="desasignarTrabajadorAlerta">
+                                Guardar
+                            </div>
+                            <div wire:loading wire:target="desasignarTrabajadorAlerta">
+                                <span class="spinner-border spinner-border-sm align-middle me-2"></span>
+                                Guardando...
+                            </div>
+                        </button>
                     </div>
                 </div>
             </div>

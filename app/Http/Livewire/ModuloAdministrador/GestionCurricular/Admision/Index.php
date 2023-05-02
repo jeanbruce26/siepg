@@ -228,7 +228,7 @@ class Index extends Component
                 $admision->admision_fecha_fin_entrevista == $this->fecha_fin_entrevista || $admision->admision_fecha_resultados == $this->fecha_resultados ||
                 $admision->admision_fecha_inicio_matricula = $this->fecha_inicio_matricula || $admision->admision_fecha_fin_matricula = $this->fecha_fin_matricula ||
                 $admision->admision_fecha_inicio_matricula_extemporanea = $this->fecha_inicio_extemporanea || $admision->admision_fecha_fin_matricula_extemporanea = $this->fecha_fin_extemporanea){
-                    $this->alertaPlan('¡Información!', 'No se realizaron cambios en los datos del proceso de admisión.', 'info', 'Aceptar', 'info');
+                    $this->alertaAdmision('¡Información!', 'No se realizaron cambios en los datos del proceso de admisión.', 'info', 'Aceptar', 'info');
             }else{
                 if($this->convocatoria == null){
                     $admision->admision = 'ADMISION ' . $this->año;

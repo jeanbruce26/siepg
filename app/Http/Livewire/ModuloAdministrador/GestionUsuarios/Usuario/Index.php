@@ -129,20 +129,31 @@ class Index extends Component
             ]);
 
             $usuario = Usuario::find($this->id_usuario);
-            $usuario->usuario_nombre = $this->username;
-            $usuario->usuario_correo = $this->correo;
-            if ($this->password) {
-                $usuario->usuario_password = Hash::make($this->password);
-            }
-            $usuario->save();
 
-            $this->dispatchBrowserEvent('alerta-usuario', [
-                'title' => '¡Éxito!',
-                'text' => 'Usuario ' . $this->username . ' ha sido actualizado satisfactoriamente',
-                'icon' => 'success',
-                'confirmButtonText' => 'Aceptar',
-                'color' => 'success'
-            ]);
+            if($usuario->usuario_nombre = $this->username || $usuario->usuario_correo = $this->correo){
+                $this->dispatchBrowserEvent('alerta-usuario', [
+                    'title' => '¡Información!',
+                    'text' => 'No se realizaron cambios en los datos del Usuario.',
+                    'icon' => 'info',
+                    'confirmButtonText' => 'Aceptar',
+                    'color' => 'info'
+                ]);
+            }else{
+                $usuario->usuario_nombre = $this->username;
+                $usuario->usuario_correo = $this->correo;
+                if ($this->password) {
+                    $usuario->usuario_password = Hash::make($this->password);
+                }
+                $usuario->save();
+    
+                $this->dispatchBrowserEvent('alerta-usuario', [
+                    'title' => '¡Éxito!',
+                    'text' => 'Usuario ' . $this->username . ' ha sido actualizado satisfactoriamente',
+                    'icon' => 'success',
+                    'confirmButtonText' => 'Aceptar',
+                    'color' => 'success'
+                ]);
+            }
         }
 
         $this->dispatchBrowserEvent('modalUsuario', [
