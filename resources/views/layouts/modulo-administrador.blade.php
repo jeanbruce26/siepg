@@ -289,7 +289,7 @@
 								<!--end:Menu item-->
 
 								<!--begin:Menu item-->
-								<div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->is('administrador/sede') || request()->is('administrador/plan')  || request()->is('administrador/programa')  || request()->is('administrador/admision') ? 'active show border-2 border-start border-gray-300 rounded' : ''}}">
+								<div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->is('administrador/inscripcion-pago') || request()->is('administrador/inscripcion')  || request()->is('administrador/programa')  || request()->is('administrador/admision') ? 'active show border-2 border-start border-gray-300 rounded' : ''}}">
 									<!--begin:Menu link-->
 									<span class="menu-link">
 										<span class="menu-icon">
@@ -310,7 +310,7 @@
 										<!--begin:Menu item-->
 										<div class="menu-item">
 											<!--begin:Menu link-->
-											<a class="menu-link {{ request()->is('administrador/sede') ? 'active border-3 border-start border-primary' : '' }}" href="{{ route('administrador.sede') }}">
+											<a class="menu-link {{ request()->is('administrador/inscripcion') ? 'active border-3 border-start border-primary' : '' }}" href="{{ route('administrador.inscripcion') }}">
 												<span class="menu-bullet">
 													<span class="bullet bullet-dot"></span>
 												</span>
@@ -322,7 +322,7 @@
 										<!--begin:Menu item-->
 										<div class="menu-item">
 											<!--begin:Menu link-->
-											<a class="menu-link {{ request()->is('administrador/plan') ? 'active border-3 border-start border-primary' : '' }}"" href="{{ route('administrador.plan') }}">
+											<a class="menu-link {{ request()->is('administrador/inscripcion-pago') ? 'active border-3 border-start border-primary' : '' }}"" href="{{ route('administrador.inscripcion-pago') }}">
 												<span class="menu-bullet">
 													<span class="bullet bullet-dot"></span>
 												</span>

@@ -3,6 +3,8 @@
 use App\Http\Controllers\ModuloAdministrador\AdmisionController;
 use App\Http\Controllers\ModuloAdministrador\AdmitidoController;
 use App\Http\Controllers\ModuloAdministrador\DashboardController;
+use App\Http\Controllers\ModuloAdministrador\InscripcionController;
+use App\Http\Controllers\ModuloAdministrador\InscripcionPagoController;
 use App\Http\Controllers\ModuloAdministrador\PlanController;
 use App\Http\Controllers\ModuloAdministrador\ProgramaController;
 use App\Http\Controllers\ModuloAdministrador\SedeController;
@@ -30,6 +32,12 @@ Route::get('/plan', [PlanController::class, 'index'])->middleware(['auth.usuario
 Route::get('/programa', [ProgramaController::class, 'index'])->middleware(['auth.usuario'])->name('administrador.programa');
 //Ruta para ir a la vista de Admision en la Gestion Curricular
 Route::get('/admision', [AdmisionController::class, 'index'])->middleware(['auth.usuario'])->name('administrador.admision');
+
+//Inscripcion
+//Ruta para ir a la vista de Inscripción
+Route::get('/inscripcion', [InscripcionController::class, 'index'])->middleware(['auth.usuario'])->name('administrador.inscripcion');
+Route::get('/inscripcion-pago', [InscripcionPagoController::class, 'index'])->middleware(['auth.usuario'])->name('administrador.inscripcion-pago');
+
 
 //Ruta para Admitidos
 Route::get('/admitido', [AdmitidoController::class, 'index'])->middleware(['auth.usuario'])->name('administrador.admitido');
