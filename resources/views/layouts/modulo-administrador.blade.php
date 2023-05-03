@@ -289,7 +289,7 @@
 								<!--end:Menu item-->
 
 								<!--begin:Menu item-->
-								<div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->is('administrador/inscripcion-pago') || request()->is('administrador/inscripcion')  || request()->is('administrador/programa')  || request()->is('administrador/admision') ? 'active show border-2 border-start border-gray-300 rounded' : ''}}">
+								<div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->is('administrador/inscripcion-pago') || request()->is('administrador/inscripcion')  || request()->is('administrador/pago') ? 'active show border-2 border-start border-gray-300 rounded' : ''}}">
 									<!--begin:Menu link-->
 									<span class="menu-link">
 										<span class="menu-icon">
@@ -334,7 +334,7 @@
 										<!--begin:Menu item-->
 										<div class="menu-item">
 											<!--begin:Menu link-->
-											<a class="menu-link {{ request()->is('administrador/programa') ? 'active border-3 border-start border-primary' : '' }}" href="{{ route('administrador.programa') }}">
+											<a class="menu-link {{ request()->is('administrador/pago') ? 'active border-3 border-start border-primary' : '' }}" href="{{ route('administrador.pago') }}">
 												<span class="menu-bullet">
 													<span class="bullet bullet-dot"></span>
 												</span>
