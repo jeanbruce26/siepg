@@ -135,19 +135,80 @@
                 </div>
                 <div class="modal-body">
                     <form novalidate>
-                        <div class="row">
+                        <div class="row g-3">
                             <div class="mb-3 col-md-4">
-                                <label class="form-label">Documento<span
-                                        class="text-danger">*</span></label>
+                                <label class="form-label">Documento <span class="text-danger">*</span></label>
                                 <input wire:model="documento" type="text" class="form-control @error('documento') is-invalid  @enderror" placeholder="Ingrese número de documento">
-                                @error('documento') <span class="error text-danger" >{{ $message }}</span> @enderror
+                                @error('documento') 
+                                    <span class="error text-danger" >{{ $message }}</span> 
+                                @enderror
+                            </div>
+                            <div class="mb-3 col-md-4">
+                                <label class="form-label">Número de Operación <span class="text-danger">*</span></label>
+                                <input wire:model="numero_operacion" type="text" class="form-control mb-2 @error('numero_operacion') is-invalid  @enderror" placeholder="Ingrese el número de operación">
+                                <div class="mt-1 text-muted">
+                                    <strong>Nota: </strong>Omitir los ceros iniciales.
+                                </div>
+                                @error('numero_operacion') 
+                                <span class="error text-danger" >{{ $message }}</span> 
+                                @enderror
+                            </div>
+                            <div class="mb-3 col-md-4">
+                                <label class="form-label">Monto <span class="text-danger">*</span></label>
+                                <input wire:model="monto" type="text" class="form-control @error('monto') is-invalid  @enderror" placeholder="Ingrese el monto en soles">
+                                @error('monto') 
+                                    <span class="error text-danger" >{{ $message }}</span> 
+                                @enderror
+                            </div>
+                            <div class="mb-3 col-md-4">
+                                <label class="form-label">Fecha de Pago <span class="text-danger">*</span></label>
+                                <input wire:model="fecha_pago" type="text" class="form-control @error('fecha_pago') is-invalid  @enderror" placeholder="Ingrese la fecha de pago">
+                                @error('fecha_pago') 
+                                    <span class="error text-danger" >{{ $message }}</span> 
+                                @enderror
+                            </div>
+                            <div class="mb-3 col-md-4">
+                                <label class="form-label">Canal de Pago <span class="text-danger">*</span></label>
+                                <select class="form-select @error('canal_pago') is-invalid  @enderror" wire:model="canal_pago">
+                                    <option value="" selected>Seleccione</option>
+                                    @foreach ($canalPago as $item)
+                                        <option value="{{$item->id_canal_pago}}">{{$item->canal_pago}}</option>
+                                    @endforeach
+                                </select>
+                                @error('canal_pago')
+                                    <span class="error text-danger" >{{ $message }}</span> 
+                                @enderror
+                            </div>
+                            <div class="mb-3 col-md-4">
+                                <label class="form-label">Concepto de Pago <span class="text-danger">*</span></label>
+                                <select class="form-select @error('concepto_pago') is-invalid  @enderror" wire:model="concepto_pago">
+                                    <option value="" selected>Seleccione</option>
+                                    @foreach ($conceptoPago as $item)
+                                        <option value="{{$item->id_concepto_pago}}">{{$item->concepto_pago}}</option>
+                                    @endforeach
+                                </select>
+                                @error('concepto_pago')
+                                    <span class="error text-danger" >{{ $message }}</span> 
+                                @enderror
+                            </div>
+                            <div class="mb-3 col-md-12">
+                                <label for="voucher" class="required form-label">
+                                    Voucher de Pago
+                                </label>
+                                <input type="file" wire:model="voucher_url" class="form-control mb-2 @error('voucher_url') is-invalid @enderror" id="upload{{ $iteracion }}" accept="image/jpeg, image/png, image/jpg" />
+                                <span class="form-text text-muted" >
+                                    <strong>Nota: </strong> El voucher debe ser imagen en formato JPG, JPEG, PNG y no debe superar los 2MB. <br>
+                                </span>
+                                @error('voucher_url')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer col-12 d-flex justify-content-between">
                     <button type="button" wire:click="limpiar()" class="btn btn-secondary hover-elevate-up" data-bs-dismiss="modal">Cancelar</button>                    
-                    <button type="button" wire:click="guardarPago()" class="btn btn-primary hover-elevate-up">Guardar</button>
+                    <button type="button" wire:click="guardarAdmision()" class="btn btn-primary hover-elevate-up">Guardar</button>
                 </div>
             </div>
         </div>

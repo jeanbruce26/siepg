@@ -27,6 +27,8 @@ class Index extends Component
     public $modo = 1; // Modo 1 = Agregar o nuevo | Modo 2 = Actualizar o editar
     public $pago_id;
     public $titulo = 'Crear Pago';
+    public $iteracion = 0;
+
 
     public $documento;
     public $numero_operacion;
@@ -112,13 +114,13 @@ class Index extends Component
         $validar = Pago::where('pago_operacion', $this->numero_operacion)->first();
         if ($validar) {
             if($validar->pago_documento == $this->documento && $validar->pago_fecha == $this->fecha_pago){
-                $this->alertaPlan('¡Información!', 'El número de operación y el DNI ya fueron registrados en el sistema.', 'info', 'Aceptar', 'info');
+                $this->alertaPago('¡Información!', 'El número de operación y el DNI ya fueron registrados en el sistema.', 'info', 'Aceptar', 'info');
                 return back();// Retornamos
             }else if ($validar->pago_fecha == $this->fecha_pago) {
-                $this->alertaPlan('¡Información!', 'El número de operación ya se encuentra registrado en el sistema.', 'info', 'Aceptar', 'info');
+                $this->alertaPago('¡Información!', 'El número de operación ya se encuentra registrado en el sistema.', 'info', 'Aceptar', 'info');
                 return back();// Retornamos
             }else if($validar->pago_documento == $this->documento){
-                $this->alertaPlan('¡Información!', 'El número de operación y el DNI ya existen en el sistema.', 'info', 'Aceptar', 'info');
+                $this->alertaPago('¡Información!', 'El número de operación y el DNI ya existen en el sistema.', 'info', 'Aceptar', 'info');
                 return back();// Retornamos
             }
         }
@@ -144,7 +146,7 @@ class Index extends Component
             $concepto_pago_monto = ConceptoPago::where('id_concepto_pago', $this->concepto_pago)->first()->concepto_pago_monto;
             if($this->monto_operacion != $concepto_pago_monto)
             {
-                $this->alertaPlan('¡Error!', 'El monto ingresado no es igual al monto por concepto seleccionado', 'info', 'Cerrar', 'danger');
+                $this->alertaPago('¡Error!', 'El monto ingresado no es igual al monto por concepto seleccionado', 'info', 'Cerrar', 'danger');
                 return redirect()->back();// Retornamos
             }
 
@@ -196,7 +198,7 @@ class Index extends Component
                 $inscripcion->save();
             }
 
-            $this->alertaPlan('¡Éxito!', 'El pago ' . $pago->pago_operacion . ' por concepto de ' . $pago->concepto_pago->concepto_pago . ' ha sido creado satisfactoriamente.', 'success', 'Aceptar', 'success');
+            $this->alertaPago('¡Éxito!', 'El pago ' . $pago->pago_operacion . ' por concepto de ' . $pago->concepto_pago->concepto_pago . ' ha sido creado satisfactoriamente.', 'success', 'Aceptar', 'success');
 
         }else{// Modo actualizar o editar
             // Validamos los campos de la vista
@@ -212,7 +214,7 @@ class Index extends Component
 
             $this->validacionDatos();// Validamos los datos repetidos de DNI, nro de operación y fecha
 
-            $pago = Pago::find($this->id_pago);
+            $pago = Pago::find($this->pago_id);
             $pago->pago_documento = $this->documento;
             $pago->pago_operacion = $this->numero_operacion;
             $pago->pago_monto = $this->monto;
@@ -235,7 +237,7 @@ class Index extends Component
             $pago->id_concepto_pago = $this->concepto_pago;
             $pago->save();
 
-            $this->alertaPlan('¡Éxito!', 'El pago ' . $pago->pago_operacion . ' por concepto de ' . $pago->concepto_pago->concepto_pago . ' ha sido actualizado satisfactoriamente.', 'success', 'Aceptar', 'success');
+            $this->alertaPago('¡Éxito!', 'El pago ' . $pago->pago_operacion . ' por concepto de ' . $pago->concepto_pago->concepto_pago . ' ha sido actualizado satisfactoriamente.', 'success', 'Aceptar', 'success');
         }
 
         // Cerramos el modal
@@ -254,7 +256,7 @@ class Index extends Component
     public function deletePago(Pago $pago)
     {
         $pago->delete();
-        $this->alertaPlan('¡Éxito!', 'El pago ' . $pago->pago_operacion . ' por concepto de ' . $pago->concepto_pago->concepto_pago . ' ha sido eliminado satisfactoriamente.', 'success', 'Aceptar', 'success');
+        $this->alertaPago('¡Éxito!', 'El pago ' . $pago->pago_operacion . ' por concepto de ' . $pago->concepto_pago->concepto_pago . ' ha sido eliminado satisfactoriamente.', 'success', 'Aceptar', 'success');
     }
 
     public function render()
@@ -266,9 +268,11 @@ class Index extends Component
                 ->orWhere('id_pago','LIKE',"%{$buscar}%")
                 ->orderBy('id_pago','DESC')->paginate(200);
         $canalPago = CanalPago::all();
+        $conceptoPago = ConceptoPago::all();
         return view('livewire.modulo-administrador.inscripcion.pago.index', [
             'pago_model' => $pago_model,
-            'canalPago' => $canalPago
+            'canalPago' => $canalPago,
+            'conceptoPago' => $conceptoPago
         ]);
     }
 }
