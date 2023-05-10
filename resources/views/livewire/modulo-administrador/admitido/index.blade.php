@@ -74,8 +74,8 @@
                     <div class="card-body mb-0">
                         <div class="table-responsive">
                             <table class="table table-hover table-rounded table-row-bordered border mb-0 gy-4 gs-4">
-                                <thead class="bg-light-warning">
-                                    <tr class="fw-bold fs-6 text-gray-800 border-bottom-2 border-gray-200">
+                                <thead class="bg-light-primary">
+                                    <tr align="center" class="fw-bold fs-6 text-gray-800 border-bottom-2 border-gray-200">
                                         <th>#</th>
                                         <th>Codigo Estudiante</th>
                                         <th>Numero de Documento</th>
@@ -87,7 +87,7 @@
                                 </thead>
                                 <tbody>
                                     @forelse ($admitidos as $item)
-                                        <tr>
+                                        <tr align="center">
                                             <td>
                                                 {{ $loop->iteration }}
                                             </td>
@@ -97,7 +97,7 @@
                                             <td>
                                                 {{ $item->numero_documento }}
                                             </td>
-                                            <td>
+                                            <td align="start">
                                                 {{ ucwords(strtolower($item->nombre_completo)) }}
                                             </td>
                                             <td>

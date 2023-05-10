@@ -39,7 +39,7 @@
                         <div class="table-responsive">
                             <table class="table table-hover table-rounded border gy-4 gs-4 mb-0 align-middle">
                                 <thead class="bg-light-primary">
-                                    <tr align="center" class="fw-bold fs-5">
+                                    <tr align="center" class="fw-bold fs-5 text-gray-800 border-bottom-2 border-gray-200">
                                         <th scope="col" class="col-md-1">ID</th>
                                         <th scope="col" class="col-md-3">Admisión</th>
                                         <th scope="col" class="col-md-2">Año</th>
@@ -97,36 +97,6 @@
             </div>
         </div>
     </div>
-
-    {{-- Modal Sede --}}
-    {{-- <div wire:ignore.self class="modal fade" id="modalPlan" tabindex="-1" aria-labelledby="modalPlan"
-        aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">{{ $titulo }}</h5>
-                    <button type="button" wire:click="limpiar()" class="btn-close" data-bs-dismiss="modal"
-                        aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form novalidate>
-                        <div class="row">
-                            <div class="mb-3 col-md-12 col-sm-12">
-                                <label class="form-label">Plan<span
-                                        class="text-danger">*</span></label>
-                                <input wire:model="plan" type="text" class="form-control @error('plan') is-invalid  @enderror" placeholder="Ingrese el plan que desea crear">
-                                @error('plan') <span class="error text-danger" >{{ $message }}</span> @enderror
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer col-12 d-flex justify-content-between">
-                    <button type="button" wire:click="limpiar()" class="btn btn-secondary hover-elevate-up" data-bs-dismiss="modal">Cancelar</button>                    
-                    <button type="button" wire:click="guardarPlan()" class="btn btn-primary hover-elevate-up">Guardar</button>
-                </div>
-            </div>
-        </div>
-    </div> --}}
 
     {{-- Modal Usuario --}}
     <div wire:ignore.self class="modal fade" id="modalAdmision" tabindex="-1" aria-labelledby="modalAdmision"

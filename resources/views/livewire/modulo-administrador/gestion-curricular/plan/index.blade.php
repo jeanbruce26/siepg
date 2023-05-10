@@ -39,8 +39,8 @@
                         <div class="table-responsive">
                             <table class="table table-hover table-rounded border gy-4 gs-4 mb-0 align-middle">
                                 <thead class="bg-light-primary">
-                                    <tr align="center" class="fw-bold fs-5">
-                                        <th scope="col" class="col-md-1">ID</th>
+                                    <tr align="center" class="fw-bold fs-5 text-gray-800 border-bottom-2 border-gray-200">
+                                        <th scope="col" class="col-md-1">#</th>
                                         <th scope="col" class="col-md-3">Codigo</th>
                                         <th scope="col" class="col-md-2">Plan</th>
                                         <th scope="col" class="col-md-2">Estado</th>

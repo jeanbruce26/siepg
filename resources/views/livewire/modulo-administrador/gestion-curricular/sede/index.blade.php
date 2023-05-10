@@ -39,7 +39,7 @@
                         <div class="table-responsive">
                             <table class="table table-hover table-rounded border gy-4 gs-4 mb-0 align-middle">
                                 <thead class="bg-light-primary">
-                                    <tr align="center" class="fw-bold fs-5">
+                                    <tr align="center" class="fw-bold fs-5 text-gray-800 border-bottom-2 border-gray-200">
                                         <th scope="col" class="col-md-1">ID</th>
                                         <th scope="col" class="col-md-7">Sede</th>
                                         <th scope="col" class="col-md-1">Estado</th>
@@ -50,7 +50,7 @@
                                     @forelse ($sede_model as $item)
                                     <tr>
                                         <td align="center" class="fw-bold fs-5">{{ $item->id_sede }}</td>
-                                        <td>{{ $item->sede }}</td>
+                                        <td align="center">{{ $item->sede }}</td>
                                         <td align="center">
                                             @if ($item->sede_estado == 1)
                                                 <span style="cursor: pointer;" wire:click="cargarAlertaEstado({{ $item->id_sede }})" class="badge text-bg-success text-light hover-elevate-down">Activo<span class="pulse-ring"></span></span>

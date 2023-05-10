@@ -64,12 +64,12 @@
                         <div class="table-responsive">
                             <table class="table table-hover table-rounded border gy-4 gs-4 mb-0 align-middle">
                                 <thead class="bg-light-primary">
-                                    <tr align="center" class="fw-bold fs-5">
-                                        <th scope="col" class="col-md-1">ID</th>
-                                        <th scope="col" class="col-md-3">Username</th>
-                                        <th scope="col" class="col-md-5">Correo</th>
-                                        <th scope="col" class="col-md-2">Estado</th>
-                                        <th scope="col" class="col-md-1">Acciones</th>
+                                    <tr align="center" class="fw-bold fs-5 text-gray-800 border-bottom-2 border-gray-200">
+                                        <th>#</th>
+                                        <th>Username</th>
+                                        <th>Correo</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>

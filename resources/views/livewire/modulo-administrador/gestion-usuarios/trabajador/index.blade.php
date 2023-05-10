@@ -86,15 +86,15 @@
                         <div class="table-responsive">
                             <table class="table table-hover table-rounded border gy-4 gs-4 mb-0 align-middle">
                                 <thead class="bg-light-primary">
-                                    <tr align="center" class="fw-bold fs-5">
-                                        <th scope="col" class="col-md-1">ID</th>
-                                        <th scope="col" class="col-md-1">Documento</th>
-                                        <th scope="col" class="col-md-3">Nombres</th>
-                                        <th scope="col" class="col-md-1">Grado</th>
-                                        <th scope="col" class="col-md-2">Correo</th>
-                                        <th scope="col" class="col-md-2">Tipo</th>
-                                        <th scope="col" class="col-md-1">Estado</th>
-                                        <th scope="col" class="col-md-1">Acciones</th>
+                                    <tr align="center" class="fw-bold fs-5 text-gray-800 border-bottom-2 border-gray-200">
+                                        <th>#</th>
+                                        <th>Documento</th>
+                                        <th>Nombres</th>
+                                        <th>Grado</th>
+                                        <th>Correo</th>
+                                        <th>Tipo</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -103,7 +103,7 @@
                                     @endphp
                                     @foreach ($trabajadores as $item)
                                         <tr>
-                                            <td align="center"  class="fs-5">
+                                            <td align="center" class="fs-5">
                                                 @if ($num < 10)
                                                     <strong>0{{ $num }}</strong>
                                                 @else
