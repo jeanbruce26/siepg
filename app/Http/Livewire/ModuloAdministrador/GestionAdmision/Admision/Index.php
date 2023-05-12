@@ -119,7 +119,17 @@ class Index extends Component
     public function cargarAlerta($id)
     {
         $admision = Admision::where('id_admision',$id)->first();
-        $this->alertaConfirmacion('¿Estás seguro?', '¿Desea modificar el estado del proceso de admisión ' . $admision->admision . ' ?', 'question', 'Modificar', 'Cancelar', 'primary', 'danger', 'cambiarEstado', $id);
+        $this->alertaConfirmacion(
+            '¿Estás seguro?', 
+            '¿Desea modificar el estado del proceso de admisión ' . $admision->admision . ' ?', 
+            'question', 
+            'Modificar', 
+            'Cancelar', 
+            'primary', 
+            'danger', 
+            'cambiarEstado', 
+            $id
+        );
     }
 
     public function cambiarEstado(Admision $admision)
