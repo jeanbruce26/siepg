@@ -9,6 +9,6 @@ class InscripcionController extends Controller
 {
     public function index()
     {
-        return view('modulo-administrador.inscripcion.inscripcion.index');
+        return view('modulo-administrador.gestion-admision.inscripcion.index');
     }
 }

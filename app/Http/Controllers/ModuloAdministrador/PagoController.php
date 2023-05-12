@@ -9,6 +9,6 @@ class PagoController extends Controller
 {
     public function index()
     {
-        return view('modulo-administrador.inscripcion.pago.index');
+        return view('modulo-administrador.gestion-pagos.pago.index');
     }
 }
