@@ -43,8 +43,8 @@ class Index extends Component
         $this->modo = 1;
     }
 
-    public function alertaConfirmacion($title, $text, $icon, $confirmButtonText, $cancelButtonText, 
-                            $confimrColor, $cancelColor, $metodo, $id){
+    public function alertaConfirmacion($title, $text, $icon, $confirmButtonText, $cancelButtonText, $confimrColor, $cancelColor, $metodo, $id)
+    {
         $this->dispatchBrowserEvent('alertaConfirmacion', [
             'title' => $title,
             'text' => $text,
@@ -58,7 +58,8 @@ class Index extends Component
         ]);
     }
 
-    public function alertaSede($title, $text, $icon, $confirmButtonText, $color){
+    public function alertaSede($title, $text, $icon, $confirmButtonText, $color)
+    {
         $this->dispatchBrowserEvent('alerta-sede', [
             'title' => $title,
             'text' => $text,

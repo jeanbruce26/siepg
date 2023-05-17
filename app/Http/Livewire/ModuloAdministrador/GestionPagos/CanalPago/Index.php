@@ -12,9 +12,16 @@ class Index extends Component
     public $titulo = 'Crear Canal de Pago';
     public $modo = 1;//1=new | 2=update
 
+    // Para poder agregar los parámetros de búsqueda en la URL 
+    protected $queryString = [
+        'search' => ['except' => '']
+    ];
+
     public $canalPago_id;
 
     public $canalPago;
+
+    protected $listeners = ['render', 'cambiarEstado'];//Para que se escuche el evento y se actualice el componente
 
     public function updated($propertyName)
     {
@@ -67,36 +74,25 @@ class Index extends Component
     }
 
     //Alerta para cambiar estado del canal de pago
-    public function cargarAlertaEstado($id)
+    public function cargarAlertaEstado($id_canal_pago)
     {
-        $canalPago = CanalPago::find($id);//Buscamos el canal de pago
-        $this->alertaConfirmacion(
-            '¿Estás seguro?',
-            "¿Está seguro que desea cambiar el estado del canal de pago $canalPago->canal_pago?",
-            'question',
-            'Modificar',
-            'Cancelar',
-            'primary',
-            'danger',
-            'cambiarEstado',
-            $id
-        );
+        $canalPago = CanalPago::find($id_canal_pago);//Buscamos el canal de pago
+        $this->alertaConfirmacion('¿Estás seguro?',"¿Desea cambiar el estado del canal de pago $canalPago->canal_pago?",'question','Modificar','Cancelar','primary','danger','cambiarEstado',$id_canal_pago);
     }
 
     //Cambiar estado del canal de pago
     public function cambiarEstado(CanalPago $canalPago)
     {
-        if ($canalPago->estado == 1) {//Si el estado es 1 "activo", lo cambiamos a 0 "inactivo"
-            $canalPago->estado = 0;
-            $canalPago->save();
-            //Mostramos un mensaje de exito de cambio de estado
-            $this->alertaCanalPago('¡Éxito!', "Se ha cambiado el estado del canal de pago: $canalPago->canal_pago", 'success', 'Continuar', 'success');
+        if ($canalPago->canal_pago_estado == 1) {//Si el estado es 1 "activo", lo cambiamos a 0 "inactivo"
+            $canalPago->canal_pago_estado = 0;
         } else {//Si el estado es 0 "inactivo", lo cambiamos a 1 "activo"
-            $canalPago->estado = 1;
-            $canalPago->save();
-            //Mostramos un mensaje de exito de cambio de estado
-            $this->alertaCanalPago('¡Éxito!', "Se ha cambiado el estado del canal de pago: $canalPago->canal_pago: satisfactoriamente.", 'success', 'Continuar', 'success');
+            $canalPago->canal_pago_estado = 1;
         }
+
+        $canalPago->save();//Guardamos los cambios realizados
+
+        //Mostramos un mensaje de exito de cambio de estado
+        $this->alertaCanalPago('¡Éxito!', "Se ha cambiado el estado del canal de pago $canalPago->canal_pago satisfactoriamente.", 'success', 'Continuar', 'success');
     }
 
     //Cargar canal de pago
@@ -124,7 +120,7 @@ class Index extends Component
             $canalPago->save();//Guardamos los cambios realizados
 
             //Mostramos un mensaje de exito de creacion
-            $this->alertaPago('¡Éxito!', 'El Canal de Pago ' . $canalPago->canal_pago . ' ha sido creado satisfactoriamente.', 'success', 'Aceptar', 'success');
+            $this->alertaCanalPago('¡Éxito!', 'El Canal de Pago ' . $canalPago->canal_pago . ' ha sido creado satisfactoriamente.', 'success', 'Aceptar', 'success');
         }else{
             //Validamos los datos ingresados
             $this->validate([
@@ -136,7 +132,7 @@ class Index extends Component
             $canalPago->save();//Guardamos los cambios realizados
 
             //Mostramos un mensaje de exito de actualizacion
-            $this->alertaPago('¡Éxito!', 'El Canal de Pago ' . $canalPago->canal_pago . ' ha sido actualizado satisfactoriamente.', 'success', 'Aceptar', 'success');
+            $this->alertaCanalPago('¡Éxito!', 'El Canal de Pago ' . $canalPago->canal_pago . ' ha sido actualizado satisfactoriamente.', 'success', 'Aceptar', 'success');
 
         }
 

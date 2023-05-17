@@ -127,7 +127,7 @@ class Index extends Component
             'Cancelar', 
             'primary', 
             'danger', 
-            'cambiarEstado', 
+            'cambiarEstado',
             $id
         );
     }
@@ -167,7 +167,8 @@ class Index extends Component
 
     public function guardarAdmision()
     {
-        if ($this->modo == 1) {
+        if ($this->modo == 1) {//Modo 1 = crear
+            //Validamos los campos que se van a crear
             $this->validate([
                 'año' => 'required|numeric',
                 'convocatoria' => 'nullable|string',
@@ -184,7 +185,9 @@ class Index extends Component
                 'fecha_fin_extemporanea' => 'required|date',
             ]);
     
+            //Creamos el nuevo proceso de admision
             $admision = new Admision();
+            //Validar si se ingreso una convocatoria con convocatoria o sin convocatoria
             if($this->convocatoria == null){
                 $admision->admision = 'ADMISION ' . $this->año;
             }else{
@@ -204,10 +207,12 @@ class Index extends Component
             $admision->admision_fecha_fin_matricula = $this->fecha_fin_matricula;
             $admision->admision_fecha_inicio_matricula_extemporanea = $this->fecha_inicio_extemporanea;
             $admision->admision_fecha_fin_matricula_extemporanea = $this->fecha_fin_extemporanea;
-            $admision->save();
+            $admision->save();//Guardamos los datos del nuevo proceso de admision
 
+            //Alerta de exito al crear un nuevo proceso de admision
             $this->alertaAdmision('¡Éxito!', 'El proceso de admision ' . $admision->admision . ' ha sido creado satisfactoriamente.', 'success', 'Aceptar', 'success');
-        }else{
+        }else{//Modo 2 = actualizar
+            //Validamos los campos que se van a actualizar
             $this->validate([
                 'año' => 'required|numeric',
                 'convocatoria' => 'nullable|string',
@@ -233,14 +238,15 @@ class Index extends Component
 
             $admision = Admision::find($this->id_admision);
 
+            //Validar si se realizo algun cambio en los datos del proceso de admision
             if($admision->admision == $nombre_admision || $admision->admision_fecha_inicio_inscripcion == $this->fecha_inicio_inscripcion ||
                 $admision->admision_fecha_fin_inscripcion == $this->fecha_fin_inscripcion || $admision->admision_fecha_inicio_expediente == $this->fecha_inicio_expediente ||
                 $admision->admision_fecha_fin_expediente == $this->fecha_fin_expediente || $admision->admision_fecha_inicio_entrevista == $this->fecha_inicio_entrevista ||
                 $admision->admision_fecha_fin_entrevista == $this->fecha_fin_entrevista || $admision->admision_fecha_resultados == $this->fecha_resultados ||
                 $admision->admision_fecha_inicio_matricula = $this->fecha_inicio_matricula || $admision->admision_fecha_fin_matricula = $this->fecha_fin_matricula ||
                 $admision->admision_fecha_inicio_matricula_extemporanea = $this->fecha_inicio_extemporanea || $admision->admision_fecha_fin_matricula_extemporanea = $this->fecha_fin_extemporanea){
-                    $this->alertaAdmision('¡Información!', 'No se realizaron cambios en los datos del proceso de admisión.', 'info', 'Aceptar', 'info');
-            }else{
+                    $this->alertaAdmision('¡Información!', 'No se realizaron cambios en los datos del proceso de admisión.', 'info', 'Aceptar', 'info');//Alerta de informacion
+            }else{//Si se realizo algun cambio en los datos del proceso de admision
                 if($this->convocatoria == null){
                     $admision->admision = 'ADMISION ' . $this->año;
                 }else{
@@ -262,10 +268,12 @@ class Index extends Component
                 $admision->admision_fecha_fin_matricula_extemporanea = $this->fecha_fin_extemporanea;
                 $admision->save();
                 
+                //Alerta de exito al actualizar
                 $this->alertaAdmision('¡Éxito!', 'El proceso de admision ' . $admision->admision . ' ha sido actualizado satisfactoriamente.', 'success', 'Aceptar', 'success');
             }
         }
 
+        //Cerrar modal de admision
         $this->dispatchBrowserEvent('modal', [
             'titleModal' => '#modalAdmision'
         ]);
