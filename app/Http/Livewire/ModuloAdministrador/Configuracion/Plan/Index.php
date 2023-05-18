@@ -89,7 +89,7 @@ class Index extends Component
 
         $plan->save();
 
-        $this->alertaPlan('¡Éxito!', 'El estado del plan ' . $plan->plan . ' ha sido actualizado satisfactoriamente.', 'success', 'Aceptar', 'success');
+        $this->alertaPlan('¡Éxito!', "El estado del plan $plan->plan ha sido actualizado satisfactoriamente.", 'success', 'Aceptar', 'success');
     }
 
     public function cargarPlan(Plan $plan)

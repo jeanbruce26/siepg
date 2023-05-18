@@ -5,6 +5,7 @@ use App\Http\Controllers\ModuloAdministrador\AdmitidoController;
 use App\Http\Controllers\ModuloAdministrador\CanalPagoController;
 use App\Http\Controllers\ModuloAdministrador\ConceptoPagoController;
 use App\Http\Controllers\ModuloAdministrador\DashboardController;
+use App\Http\Controllers\ModuloAdministrador\ExpedienteController;
 use App\Http\Controllers\ModuloAdministrador\InscripcionController;
 use App\Http\Controllers\ModuloAdministrador\InscripcionPagoController;
 use App\Http\Controllers\ModuloAdministrador\PagoController;
