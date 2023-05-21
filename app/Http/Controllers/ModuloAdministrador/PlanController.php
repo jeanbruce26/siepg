@@ -9,6 +9,6 @@ class PlanController extends Controller
 {
     public function index()
     {
-        return view('modulo-administrador.gestion-curricular.plan.index');
+        return view('modulo-administrador.configuracion.plan.index');
     }
 }

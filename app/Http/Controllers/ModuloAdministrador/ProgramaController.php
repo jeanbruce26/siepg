@@ -9,6 +9,6 @@ class ProgramaController extends Controller
 {
     public function index()
     {
-        return view('modulo-administrador.gestion-curricular.programa.index');
+        return view('modulo-administrador.configuracion.programa.index');
     }
 }

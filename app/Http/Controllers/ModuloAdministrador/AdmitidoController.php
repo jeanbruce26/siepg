@@ -9,6 +9,6 @@ class AdmitidoController extends Controller
 {
     public function index()
     {
-        return view('modulo-administrador.admitido.index');
+        return view('modulo-administrador.gestion-admision.admitidos.index');
     }
 }

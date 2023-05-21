@@ -64,12 +64,12 @@
                         <div class="table-responsive">
                             <table class="table table-hover table-rounded border gy-4 gs-4 mb-0 align-middle">
                                 <thead class="bg-light-primary">
-                                    <tr align="center" class="fw-bold fs-5">
-                                        <th scope="col" class="col-md-1">ID</th>
-                                        <th scope="col" class="col-md-3">Username</th>
-                                        <th scope="col" class="col-md-5">Correo</th>
-                                        <th scope="col" class="col-md-2">Estado</th>
-                                        <th scope="col" class="col-md-1">Acciones</th>
+                                    <tr align="center" class="fw-bold fs-5 text-gray-800 border-bottom-2 border-gray-200">
+                                        <th>#</th>
+                                        <th>Username</th>
+                                        <th>Correo</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -89,11 +89,29 @@
                                                 <span style="cursor: pointer;" wire:click="cargarAlerta({{ $item->id_usuario }})" class="badge text-bg-danger text-light hover-elevate-down">Inactivo <span class="pulse-ring"></span></span>
                                             @endif
                                         </td>
+
                                         <td align="center">
-                                            <a href="#modalUsuario" wire:click="cargarUsuario({{ $item->id_usuario }})" class="btn btn-link btn-color-success hover-scale pulse pulse-success d-flex justify-content-center align-items-center" data-bs-toggle="modal" data-bs-target="#modalUsuario">
-                                                <i class="bi bi-pencil-square fs-1 bi-success"></i>
-                                                <span class="pulse-ring"></span>
+                                            <a href="#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" data-kt-menu-flip="top-end">
+                                                Actions
+                                                <span class="svg-icon fs-5 m-0">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                            <polygon points="0 0 24 0 24 24 0 24"></polygon>
+                                                            <path d="M6.70710678,15.7071068 C6.31658249,16.0976311 5.68341751,16.0976311 5.29289322,15.7071068 C4.90236893,15.3165825 4.90236893,14.6834175 5.29289322,14.2928932 L11.2928932,8.29289322 C11.6714722,7.91431428 12.2810586,7.90106866 12.6757246,8.26284586 L18.6757246,13.7628459 C19.0828436,14.1360383 19.1103465,14.7686056 18.7371541,15.1757246 C18.3639617,15.5828436 17.7313944,15.6103465 17.3242754,15.2371541 L12.0300757,10.3841378 L6.70710678,15.7071068 Z" fill="currentColor" fill-rule="nonzero" transform="translate(12.000003, 11.999999) rotate(-180.000000) translate(-12.000003, -11.999999)"></path>
+                                                        </g>
+                                                    </svg>
+                                                </span>
                                             </a>
+                                            <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
+                                                <div class="menu-item px-3">
+                                                    <a href="#modalUsuario"
+                                                    wire:click="cargarUsuario({{ $item->id_usuario }})" 
+                                                    class="menu-link px-3" data-bs-toggle="modal" 
+                                                    data-bs-target="#modalUsuario">
+                                                        Editar
+                                                    </a>
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
                                     @endforeach
@@ -157,8 +175,16 @@
                     </form>
                 </div>
                 <div class="modal-footer col-12 d-flex justify-content-between">
-                    <button type="button" wire:click="limpiar()" class="btn btn-secondary hover-elevate-up" data-bs-dismiss="modal">Cancelar</button>                    
-                    <button type="button" wire:click="guardarUsuario()" class="btn btn-primary hover-elevate-up">Guardar</button>
+                    <button type="button" wire:click="limpiar()" class="btn btn-secondary hover-elevate-up" data-bs-dismiss="modal">Cancelar</button> 
+                    <button type="button" wire:click="guardarUsuario()" class="btn btn-primary" wire:loading.attr="disabled">
+                        <div wire:loading.remove wire:target="guardarUsuario">
+                            Guardar
+                        </div>
+                        <div wire:loading wire:target="guardarUsuario">
+                            <span class="spinner-border spinner-border-sm align-middle me-2"></span>
+                            Guardando...
+                        </div>
+                    </button>
                 </div>
             </div>
         </div>

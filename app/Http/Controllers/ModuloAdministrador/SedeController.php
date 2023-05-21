@@ -9,6 +9,6 @@ class SedeController extends Controller
 {
     public function index()
     {
-        return view('modulo-administrador.gestion-curricular.sede.index');
+        return view('modulo-administrador.configuracion.sede.index');
     }
 }

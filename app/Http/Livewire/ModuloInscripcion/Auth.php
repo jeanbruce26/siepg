@@ -283,6 +283,31 @@ class Auth extends Component
             if($ultimo_codifo_inscripcion == null)
             {
                 $codigo_inscripcion = 'IN0001';
+            }
+            else
+            {
+                $codigo_inscripcion = $ultimo_codifo_inscripcion->inscripcion_codigo;
+                $codigo_inscripcion = substr($codigo_inscripcion, 2, 6);
+                $codigo_inscripcion = intval($codigo_inscripcion) + 1;
+                $codigo_inscripcion = str_pad($codigo_inscripcion, 4, "0", STR_PAD_LEFT);
+                $codigo_inscripcion = 'IN'.$codigo_inscripcion;
+            }
+
+            // crear la inscripcion
+            $inscripcion = new Inscripcion();
+            $inscripcion->inscripcion_codigo = $codigo_inscripcion;
+            $inscripcion->inscripcion_estado = 1;
+            $inscripcion->id_pago = $pago->id_pago;
+            $inscripcion->save();
+        }
+
+        // Si el concepto de pago es "Inscripción", creamos su inscripción
+        if($pago->id_concepto_pago == 1){
+            //  obtener el ultimo codigo de inscripcion
+            $ultimo_codifo_inscripcion = Inscripcion::orderBy('inscripcion_codigo','DESC')->first();
+            if($ultimo_codifo_inscripcion == null)
+            {
+                $codigo_inscripcion = 'IN0001';
             }else
             {
                 $codigo_inscripcion = $ultimo_codifo_inscripcion->inscripcion_codigo;
@@ -297,6 +322,7 @@ class Auth extends Component
             $inscripcion->inscripcion_codigo = $codigo_inscripcion;
             $inscripcion->inscripcion_estado = 1;
             $inscripcion->id_pago = $pago->id_pago;
+            $inscripcion->id_programa_proceso = null;
             $inscripcion->save();
         }
 
