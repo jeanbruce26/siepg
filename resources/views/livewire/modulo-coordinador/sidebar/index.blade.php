@@ -30,12 +30,12 @@
                                 </svg>
                             </span>
                         </span>
-                        <span class="menu-title fw-semibold">Evaluaciones</span>
+                        <span class="menu-title fw-semibold fs-5">Evaluaciones</span>
                     </a>
                 </div>
                 <div class="menu-item pt-5">
                     <div class="menu-content">
-                        <span class="menu-heading fw-bold text-uppercase fs-7">Menu</span>
+                        <span class="menu-heading fw-bold text-uppercase fs-6">Menu</span>
                     </div>
                 </div>
                 {{-- <div class="menu-item">
