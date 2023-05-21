@@ -13,16 +13,27 @@
                     </span>
                 </div>
             </div>
+            {{-- alerta de observaciones de la evaluacion --}}
+            <div class="alert bg-body border border-3 border-primary d-flex align-items-center p-5 mb-5">
+                <div class="d-flex flex-column">
+                    <span class="fw-bold fs-3">
+                        Observaciones de la evaluación
+                    </span>
+                    <span class="mt-2 fs-5">
+                        {{ $evaluacion->evaluacion_observacion ? '- ' . $evaluacion->evaluacion_observacion : '- No cuenta con observaciones en su evaluación.' }}
+                    </span>
+                </div>
+            </div>
         @else
             @if ($evaluacion)
                 @if ($evaluacion->evaluacion_estado == 2)
                     {{-- alerta de fecha de resultados de admitidos --}}
-                    <div class="alert bg-light-primary border border-primary d-flex alig-items-center p-5 mb-5">
+                    <div class="alert bg-light-primary border border-3 border-primary d-flex align-items-center p-5 mb-5">
                         <span class="svg-icon svg-icon-2hx svg-icon-primary me-4">
-                            <i class="las la-info-circle fs-2 text-primary"></i>
+                            <i class="las la-info-circle fs-1 text-primary"></i>
                         </span>
                         <div class="d-flex flex-column">
-                            <span class="fw-bold">
+                            <span class="fw-bold fs-4">
                                 Los resultados de admitidos se presentará el {{ $admision_fecha_admitidos }}.
                             </span>
                         </div>
@@ -39,15 +50,26 @@
                             </span>
                         </div>
                     </div>
+                    {{-- alerta de observaciones de la evaluacion --}}
+                    <div class="alert bg-body border border-3 border-primary d-flex align-items-center p-5 mb-5">
+                        <div class="d-flex flex-column">
+                            <span class="fw-bold fs-3">
+                                Observaciones de la evaluación
+                            </span>
+                            <span class="mt-2 fs-5">
+                                {{ $evaluacion->evaluacion_observacion ? '- ' . $evaluacion->evaluacion_observacion : '- No cuenta con observaciones en su evaluación.' }}
+                            </span>
+                        </div>
+                    </div>
                 @endif
             @else
                 {{-- alerta de fecha de resultados de admitidos --}}
-                <div class="alert bg-light-primary border border-primary d-flex alig-items-center p-5 mb-5">
+                <div class="alert bg-light-primary border border-3 border-primary d-flex align-items-center p-5 mb-5">
                     <span class="svg-icon svg-icon-2hx svg-icon-primary me-4">
-                        <i class="las la-info-circle fs-2 text-primary"></i>
+                        <i class="las la-info-circle fs-1 text-primary"></i>
                     </span>
                     <div class="d-flex flex-column">
-                        <span class="fw-bold">
+                        <span class="fw-bold fs-4">
                             Los resultados de admitidos se presentará el {{ $admision_fecha_admitidos }}.
                         </span>
                     </div>
@@ -56,12 +78,12 @@
         @endif
     @else
         {{-- alerta de fecha de resultados de admitidos --}}
-        <div class="alert bg-light-primary border border-primary d-flex alig-items-center p-5 mb-5">
+        <div class="alert bg-light-primary border border-3 border-primary d-flex align-items-center p-5 mb-5">
             <span class="svg-icon svg-icon-2hx svg-icon-primary me-4">
-                <i class="las la-info-circle fs-2 text-primary"></i>
+                <i class="las la-info-circle fs-1 text-primary"></i>
             </span>
             <div class="d-flex flex-column">
-                <span class="fw-bold">
+                <span class="fw-bold fs-4">
                     Los resultados de admitidos se presentará el {{ $admision_fecha_admitidos }}.
                 </span>
             </div>
@@ -69,7 +91,7 @@
     @endif
     {{-- card de estado de inscripcion puntajes --}}
     <div class="row g-5 mb-5">
-        <div class="col-sm-12 col-md-6 col-lg-6 @if ($inscripcion_ultima->inscripcion_tipo_programa == 1) col-xl-6 @elseif ($inscripcion_ultima->inscripcion_tipo_programa == 2) col-xl-4 @endif">
+        {{-- <div class="col-sm-12 col-md-6 col-lg-6 @if ($inscripcion_ultima->inscripcion_tipo_programa == 1) col-xl-6 @elseif ($inscripcion_ultima->inscripcion_tipo_programa == 2) col-xl-4 @endif">
             <div class="card card-body shadow-sm">
                 <span class="fs-1 text-gray-800 text-center py-2" style="font-weight: 700">
                     Evaluación de Expedientes
@@ -136,7 +158,7 @@
                     </span>
                 @endif
             </div>
-        </div>
+        </div> --}}
     </div>
     {{-- card de ficha de inscripcion, prospecto de admision y expedientes --}}
     <div class="row g-5 mb-5">
@@ -145,9 +167,9 @@
                 <div class="bg-light-info px-10 py-5 rounded-4 mx-auto mb-5">
                     <i class="bi bi-file-pdf text-info" style="font-size: 4rem;"></i>
                 </div>
-                <h4 class="card-title mb-5 text-center">
+                <h2 class="card-title mb-5 text-center">
                     Ficha de Inscripción
-                </h4>
+                </h2>
                 <a target="_blank" href="{{ asset($inscripcion_ultima->inscripcion_ficha_url) }}" class="btn btn-info">
                     Descargar
                 </a>
@@ -158,9 +180,9 @@
                 <div class="bg-light-info px-10 py-5 rounded-4 mx-auto mb-5">
                     <i class="bi bi-file-pdf text-info" style="font-size: 4rem;"></i>
                 </div>
-                <h4 class="card-title mb-5 text-center">
+                <h2 class="card-title mb-5 text-center">
                     Prospecto de Admisión
-                </h4>
+                </h2>
                 <a target="_blank" href="{{ asset('assets_pdf/prospecto-admision-posgrado.pdf') }}" class="btn btn-info">
                     Descargar
                 </a>
@@ -171,9 +193,9 @@
                 <div class="bg-light-info px-10 py-5 rounded-4 mx-auto mb-5">
                     <i class="bi bi-file-earmark-text text-info" style="font-size: 4rem;"></i>
                 </div>
-                <h4 class="card-title mb-5 text-center">
+                <h2 class="card-title mb-5 text-center">
                     Expedientes
-                </h4>
+                </h2>
                 <a href="{{ route('plataforma.expediente') }}" type="button" class="btn btn-info">
                     Ver detalle
                 </a>

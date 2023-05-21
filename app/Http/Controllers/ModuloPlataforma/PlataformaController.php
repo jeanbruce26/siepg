@@ -36,4 +36,9 @@ class PlataformaController extends Controller
     {
         return view('modulo-plataforma.pagos.index');
     }
+
+    public function constancia()
+    {
+        return view('modulo-plataforma.constancia-ingreso.index');
+    }
 }

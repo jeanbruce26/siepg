@@ -2,24 +2,37 @@
 
 namespace App\Http\Livewire\ModuloPlataforma\Pagos;
 
+use App\Models\Admision;
+use App\Models\Admitido;
 use App\Models\CanalPago;
 use App\Models\ConceptoPago;
+use App\Models\ConstanciaIngreso;
 use App\Models\Inscripcion;
 use App\Models\Pago;
 use App\Models\PagoObservacion;
 use App\Models\Persona;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Livewire\WithPagination;
 
 class Index extends Component
 {
     use WithFileUploads; // trait para subir archivos
+    use WithPagination; // trait para paginacion
+    protected $paginationTheme = 'bootstrap'; // tema de paginacion
 
     public $titulo_modal_pago = 'Registrar Pago'; // titulo del modal de pago
     public $id_pago; // variable para el id del pago
+    public $admitido; // variable para el admitido
     public $documento_identidad, $numero_operacion, $monto_operacion, $fecha_pago, $canal_pago, $concepto_pago, $voucher, $iteration = 0; // variables para el formulario del modal de registro
     public $modo = 'create'; // variable para el modo de la vista
+    public $activar_voucher = false; // variable para activar el voucher
     public $button_modal = 'Registrar Pago'; // variable para el boton del modal de registro
+    public $terminos_condiciones_pagos = false; // variable para los terminos y condiciones de los pagos
+
+    protected $listeners = [
+        'guardar_pago' => 'guardar_pago',
+    ]; // listener para mostrar alertas
 
     public function mount()
     {
@@ -38,7 +51,8 @@ class Index extends Component
                 'fecha_pago' => 'required|date',
                 'canal_pago' => 'required|numeric',
                 'concepto_pago' => 'required|numeric',
-                'voucher' => 'required|image|mimes:jpg,jpeg,png|max:2048'
+                'voucher' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+                'terminos_condiciones_pagos' => 'accepted'
             ]);
         }
         elseif($this->modo == 'edit')
@@ -50,9 +64,17 @@ class Index extends Component
                 'fecha_pago' => 'required|date',
                 'canal_pago' => 'required|numeric',
                 'concepto_pago' => 'required|numeric',
-                'voucher' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
+                'voucher' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+                'terminos_condiciones_pagos' => 'nullable'
             ]);
         }
+    }
+
+    public function modo()
+    {
+        $this->modo = 'create';
+        $this->button_modal = 'Registrar Pago';
+        $this->limpiar_pago();
     }
 
     public function cargar_pago(Pago $pago)
@@ -67,18 +89,26 @@ class Index extends Component
         $this->concepto_pago = $pago->id_concepto_pago;
         $this->modo = 'edit';
         $this->button_modal = 'Editar Pago';
+        if($pago->pago_estado == 0 && $pago->pago_verificacion == 0)
+        {
+            $this->activar_voucher = true;
+        }
+        else
+        {
+            $this->activar_voucher = false;
+        }
     }
 
     public function limpiar_pago()
     {
-        $this->reset(['documento_identidad', 'numero_operacion', 'monto_operacion', 'fecha_pago', 'canal_pago', 'voucher']);
+        $this->reset(['numero_operacion', 'monto_operacion', 'fecha_pago', 'canal_pago', 'voucher', 'concepto_pago', 'terminos_condiciones_pagos']);
         $this->resetErrorBag();
         $this->resetValidation();
         $this->iteration++;
         $this->modo = 'create';
     }
 
-    public function guardar_pago()
+    public function alerta_guardar_pago()
     {
         // validar formulario de registro de pago
         if($this->modo == 'create')
@@ -90,22 +120,256 @@ class Index extends Component
                 'fecha_pago' => 'required|date',
                 'canal_pago' => 'required|numeric',
                 'concepto_pago' => 'required|numeric',
-                'voucher' => 'required|image|mimes:jpg,jpeg,png|max:2048'
+                'voucher' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+                'terminos_condiciones_pagos' => 'accepted'
+            ]);
+
+            // validar si el estudiante existe en la plataforma
+            $persona = Persona::where('numero_documento', $this->documento_identidad)->first();
+            $admitido = $this->admitido;
+            if($persona == null)
+            {
+                $this->dispatchBrowserEvent('alerta_pago_plataforma', [
+                    'title' => '¡Error!',
+                    'text' => 'El número de documento ingresado no se encuentra registrado en la plataforma.',
+                    'icon' => 'error',
+                    'confirmButtonText' => 'Aceptar',
+                    'color' => 'danger'
+                ]);
+                return;
+            }
+            if($this->documento_identidad != $admitido->persona->numero_documento)
+            {
+                $this->dispatchBrowserEvent('alerta_pago_plataforma', [
+                    'title' => '¡Error!',
+                    'text' => 'El número de documento ingresado no coincide con el número de documento del postulante admitido.',
+                    'icon' => 'error',
+                    'confirmButtonText' => 'Aceptar',
+                    'color' => 'danger'
+                ]);
+                return;
+            }
+
+            // validar si el numero de operacion, numero de documento, fecha de operacion y concepto de pago ya se encuentran registrados
+            $pago = Pago::where('pago_operacion', $this->numero_operacion)
+                        ->where('pago_documento', $this->documento_identidad)
+                        ->where('pago_fecha', $this->fecha_pago)
+                        ->where('id_concepto_pago', $this->concepto_pago)
+                        ->first();
+            if($pago)
+            {
+                $this->dispatchBrowserEvent('alerta_pago_plataforma', [
+                    'title' => '¡Error!',
+                    'text' => 'El número de operación, número de documento, fecha de operación y concepto de pago ya se encuentran registrados en la plataforma.',
+                    'icon' => 'error',
+                    'confirmButtonText' => 'Aceptar',
+                    'color' => 'danger'
+                ]);
+                return;
+            }
+
+            // valiadar si el numero de operacion, fecha de operacion y concepto de pago ya se encuentran registrados
+            $pago = Pago::where('pago_operacion', $this->numero_operacion)
+                        ->where('pago_fecha', $this->fecha_pago)
+                        ->where('id_concepto_pago', $this->concepto_pago)
+                        ->first();
+            if($pago)
+            {
+                $this->dispatchBrowserEvent('alerta_pago_plataforma', [
+                    'title' => '¡Error!',
+                    'text' => 'El número de operación, fecha de operación y concepto de pago ya se encuentran registrados en la plataforma.',
+                    'icon' => 'error',
+                    'confirmButtonText' => 'Aceptar',
+                    'color' => 'danger'
+                ]);
+                return;
+            }
+
+            // validar si el numero de operacion, numero de documento y concepto de pago ya se encuentran registrados
+            $pago = Pago::where('pago_operacion', $this->numero_operacion)
+                        ->where('pago_documento', $this->documento_identidad)
+                        ->where('id_concepto_pago', $this->concepto_pago)
+                        ->first();
+            if($pago)
+            {
+                $this->dispatchBrowserEvent('alerta_pago_plataforma', [
+                    'title' => '¡Error!',
+                    'text' => 'El número de operación, número de documento y concepto de pago ya se encuentran registrados en la plataforma.',
+                    'icon' => 'error',
+                    'confirmButtonText' => 'Aceptar',
+                    'color' => 'danger'
+                ]);
+                return;
+            }
+
+            // validar si el numero de operacion, numero de documento y fecha de operacion ya se encuentran registrados
+            $pago = Pago::where('pago_operacion', $this->numero_operacion)
+                        ->where('pago_documento', $this->documento_identidad)
+                        ->where('pago_fecha', $this->fecha_pago)
+                        ->first();
+            if($pago)
+            {
+                $this->dispatchBrowserEvent('alerta_pago_plataforma', [
+                    'title' => '¡Error!',
+                    'text' => 'El número de operación, número de documento y fecha de operación ya se encuentran registrados en la plataforma.',
+                    'icon' => 'error',
+                    'confirmButtonText' => 'Aceptar',
+                    'color' => 'danger'
+                ]);
+                return;
+            }
+
+            // validar si el numero de operacion, numero de documento ya se encuentran registrados
+            $pago = Pago::where('pago_operacion', $this->numero_operacion)
+                        ->where('pago_documento', $this->documento_identidad)
+                        ->first();
+            if($pago)
+            {
+                $this->dispatchBrowserEvent('alerta_pago_plataforma', [
+                    'title' => '¡Error!',
+                    'text' => 'El número de operación y número de documento ya se encuentran registrados en la plataforma.',
+                    'icon' => 'error',
+                    'confirmButtonText' => 'Aceptar',
+                    'color' => 'danger'
+                ]);
+                return;
+            }
+
+            // validar si el monto de opreacion ingresado es menor al monto del concepto de pago seleccionado
+            $concepto_pago = ConceptoPago::find($this->concepto_pago);
+            if($this->monto_operacion < $concepto_pago->concepto_pago_monto)
+            {
+                $this->dispatchBrowserEvent('alerta_pago_plataforma', [
+                    'title' => '¡Error!',
+                    'text' => 'El monto de operación ingresado es menor al monto del concepto de pago seleccionado.',
+                    'icon' => 'error',
+                    'confirmButtonText' => 'Aceptar',
+                    'color' => 'danger'
+                ]);
+                return;
+            }
+
+            // validar si el concepto es de constancia de ingreso y verificar si ya genero su constancia de ingreso
+            if($this->concepto_pago == 2)
+            {
+                $persona = Persona::where('numero_documento', $this->documento_identidad)->first();
+                $admitido = Admitido::where('id_persona', $persona->id_persona)->orderBy('id_admitido', 'desc')->first();
+                $constancia = ConstanciaIngreso::where('id_admitido', $admitido->id_admitido)->first();
+                if($constancia)
+                {
+                    $this->dispatchBrowserEvent('alerta_pago_plataforma', [
+                        'title' => '¡Error!',
+                        'text' => 'Usted ya generó su constancia de ingreso, por favor realice el proceso de matrícula.',
+                        'icon' => 'error',
+                        'confirmButtonText' => 'Aceptar',
+                        'color' => 'danger'
+                    ]);
+                    return;
+                }
+            }
+
+            // validar si el concepto es el de matriccula o matricula extemporanea y verificar si ya genero su constancia de ingreso
+            if($this->concepto_pago == 3 || $this->concepto_pago == 5)
+            {
+                $persona = Persona::where('numero_documento', $this->documento_identidad)->first();
+                $admitido = Admitido::where('id_persona', $persona->id_persona)->orderBy('id_admitido', 'desc')->first();
+                $constancia = ConstanciaIngreso::where('id_admitido', $admitido->id_admitido)->first();
+                if($constancia == null)
+                {
+                    $this->dispatchBrowserEvent('alerta_pago_plataforma', [
+                        'title' => '¡Error!',
+                        'text' => 'Constancia de Ingreso no generada, por favor realice el proceso para generar su Constancia de Ingreso.',
+                        'icon' => 'error',
+                        'confirmButtonText' => 'Aceptar',
+                        'color' => 'danger'
+                    ]);
+                    return;
+                }
+            }
+
+            // validar si el pago a registrar pertenece a la matricula extemporanea
+            $fecha_matricula_extemporanea_inicio = Admision::where('admision_estado',1)->first()->admision_fecha_inicio_matricula_extemporanea;
+            $fecha_matricula_extemporanea_fin = Admision::where('admision_estado',1)->first()->admision_fecha_fin_matricula_extemporanea;
+            if($this->concepto_pago != 5 || $this->concepto_pago != 6)
+            {
+                if($this->concepto_pago == 3 || $this->concepto_pago == 4)
+                {
+                    if($this->fecha_pago >= $fecha_matricula_extemporanea_inicio || $this->fecha_pago <= $fecha_matricula_extemporanea_fin)
+                    {
+                        $this->dispatchBrowserEvent('alerta_pago_plataforma', [
+                            'title' => '¡Error!',
+                            'text' => 'El pago que usted desea registrar pertenece a la matrícula extemporánea, por favor realice el proceso de matrícula extemporánea.',
+                            'icon' => 'error',
+                            'confirmButtonText' => 'Aceptar',
+                            'color' => 'danger'
+                        ]);
+                        return;
+                    }
+                }
+            }
+
+            // validar si ya cuenta con el pago de su ficha de matricula del ciclo correspondiente
+
+            // validar si el registro del pago es del ciclo correspondiente
+        }
+        else
+        {
+            if($this->activar_voucher == true)
+            {
+                $this->validate([
+                    'documento_identidad' => 'required|numeric|digits_between:8,9',
+                    'numero_operacion' => 'required|numeric',
+                    'monto_operacion' => 'required|numeric',
+                    'fecha_pago' => 'required|date',
+                    'canal_pago' => 'required|numeric',
+                    'concepto_pago' => 'required|numeric',
+                    'voucher' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+                    'terminos_condiciones_pagos' => 'nullable'
+                ]);
+            }
+            else
+            {
+                $this->validate([
+                    'documento_identidad' => 'required|numeric|digits_between:8,9',
+                    'numero_operacion' => 'required|numeric',
+                    'monto_operacion' => 'required|numeric',
+                    'fecha_pago' => 'required|date',
+                    'canal_pago' => 'required|numeric',
+                    'concepto_pago' => 'required|numeric',
+                    'voucher' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+                    'terminos_condiciones_pagos' => 'nullable'
+                ]);
+            }
+        }
+
+        if($this->modo == 'create')
+        {
+            $this->dispatchBrowserEvent('alerta_pago_plataforma_2', [
+                'title' => 'Confirmar Registro',
+                'text' => '¿Está seguro de registrar el pago?',
+                'icon' => 'question',
+                'confirmButtonText' => 'Registrar',
+                'cancelButtonText' => 'Cancelar',
+                'confirmButtonColor' => 'primary',
+                'cancelButtonColor' => 'danger'
             ]);
         }
         else
         {
-            $this->validate([
-                'documento_identidad' => 'required|numeric|digits_between:8,9',
-                'numero_operacion' => 'required|numeric',
-                'monto_operacion' => 'required|numeric',
-                'fecha_pago' => 'required|date',
-                'canal_pago' => 'required|numeric',
-                'concepto_pago' => 'required|numeric',
-                'voucher' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
+            $this->dispatchBrowserEvent('alerta_pago_plataforma_2', [
+                'title' => 'Confirmar Actualización',
+                'text' => '¿Está seguro de actualizar el pago?',
+                'icon' => 'question',
+                'confirmButtonText' => 'Actualizar',
+                'cancelButtonText' => 'Cancelar',
+                'confirmButtonColor' => 'primary',
+                'cancelButtonColor' => 'danger'
             ]);
         }
+    }
 
+    public function guardar_pago()
+    {
         // guardar pago
         if($this->modo == 'create')
         {
@@ -118,7 +382,7 @@ class Index extends Component
             $pago->pago_verificacion = 1;
             if($this->voucher)
             {
-                $persona = Persona::where('persona_documento', $this->documento_identidad)->first();
+                $persona = Persona::where('numero_documento', $this->documento_identidad)->first();
                 $inscripcion = Inscripcion::where('id_persona', $persona->id_persona)->orderBy('id_inscripcion', 'desc')->first();
                 $admision = $inscripcion->programa_proceso->admision->admision;
                 $path = 'Posgrado/' . $admision . '/' . $this->documento_identidad . '/' . 'Voucher/';
@@ -131,6 +395,9 @@ class Index extends Component
             $pago->id_canal_pago = $this->canal_pago;
             $pago->id_concepto_pago = $this->concepto_pago;
             $pago->save();
+
+            // registrar tipo de pago
+            $this->registrar_tipo_pago($pago->id_pago);
         }
         else
         {
@@ -139,10 +406,12 @@ class Index extends Component
             $pago->pago_operacion = $this->numero_operacion;
             $pago->pago_monto = $this->monto_operacion;
             $pago->pago_fecha = $this->fecha_pago;
+            $pago->pago_estado = 1;
             $pago->pago_verificacion = 1;
+            $pago->pago_leido = 1;
             if($this->voucher)
             {
-                $persona = Persona::where('persona_documento', $this->documento_identidad)->first();
+                $persona = Persona::where('numero_documento', $this->documento_identidad)->first();
                 $inscripcion = Inscripcion::where('id_persona', $persona->id_persona)->orderBy('id_inscripcion', 'desc')->first();
                 $admision = $inscripcion->programa_proceso->admision->admision;
                 $path = 'Posgrado/' . $admision . '/' . $this->documento_identidad . '/' . 'Voucher/';
@@ -157,9 +426,15 @@ class Index extends Component
             $pago->save();
 
             // cambiar de estado a la observacion del pago
-            $observacion = PagoObservacion::where('id_pago', $pago->id_pago)->orderBy('id_pago_observacion', 'desc')->first();
-            $observacion->pago_observacion_estado = 0;
-            $observacion->save();
+            $observacion = PagoObservacion::where('id_pago', $pago->id_pago)->orderBy('id_pago_observacion', 'desc')->get();
+            if($observacion)
+            {
+                foreach($observacion as $item)
+                {
+                    $item->pago_observacion_estado = 0;
+                    $item->save();
+                }
+            }
 
             // emitir alerta de exito
             $this->dispatchBrowserEvent('alerta_pago_plataforma', [
@@ -174,6 +449,9 @@ class Index extends Component
             $this->emit('actualizar_notificaciones');
         }
 
+        // emitir evento para actualizar el sidebar de la plataforma del estudiante
+        $this->emit('actualizar_sidebar');
+
         // limpiar formulario
         $this->limpiar_pago();
 
@@ -183,29 +461,50 @@ class Index extends Component
         ]);
     }
 
+    public function registrar_tipo_pago($id_pago)
+    {
+        $pago = Pago::find($id_pago);
+        $admitido = $this->admitido;
+
+        // si el pago es de concepto de constancia de ingreso
+        if($pago->id_concepto_pago == 2)
+        {
+            // registrar constancia de ingreso
+            $constancia = new ConstanciaIngreso();
+            $constancia->constancia_ingreso_fecha = date('Y-m-d');
+            $constancia->id_pago = $pago->id_pago;
+            $constancia->id_admitido = $admitido->id_admitido;
+            $constancia->constancia_ingreso_estado = 1;
+            $constancia->save();
+
+            // cambiar de estado
+            $pago->pago_estado = 2;
+            $pago->save();
+        }
+    }
+
     public function render()
     {
         $canal_pagos = CanalPago::where('canal_pago_estado', 1)->get();
         $pagos = Pago::where('pago_documento', auth('plataforma')->user()->usuario_estudiante)
                         ->orderBy('id_pago', 'desc')
-                        ->get(); // pagos del usuario logueado
+                        ->paginate(5); // pagos del usuario logueado
         $persona = Persona::where('numero_documento', auth('plataforma')->user()->usuario_estudiante)->first(); // persona del usuario logueado
         $inscripcion_ultima = Inscripcion::where('id_persona', $persona->id_persona)->orderBy('id_inscripcion', 'desc')->first(); // inscripcion del usuario logueado
         $evaluacion = $inscripcion_ultima->evaluacion; // evaluacion de la inscripcion del usuario logueado
         if($evaluacion)
         {
-            $admitido = $persona->admitido->where('id_evaluacion', $evaluacion->id_evaluacion)->first(); // admitido de la inscripcion del usuario logueado
+            $this->admitido = $persona->admitido->where('id_evaluacion', $evaluacion->id_evaluacion)->first(); // admitido de la inscripcion del usuario logueado
         }
         else
         {
-            $admitido = null;
+            $this->admitido = null;
         }
         $canales_pagos = CanalPago::where('canal_pago_estado', 1)->get(); // canales de pago
         $conceptos_pagos = ConceptoPago::where('concepto_pago_estado', 1)->get(); // canales de pago
         return view('livewire.modulo-plataforma.pagos.index', [
             'canal_pagos' => $canal_pagos,
             'pagos' => $pagos,
-            'admitido' => $admitido,
             'canales_pagos' => $canales_pagos,
             'conceptos_pagos' => $conceptos_pagos
         ]);

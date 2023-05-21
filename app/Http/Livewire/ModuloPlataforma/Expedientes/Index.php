@@ -4,6 +4,7 @@ namespace App\Http\Livewire\ModuloPlataforma\Expedientes;
 
 use App\Jobs\ProcessUpdateFichaInscripcion;
 use App\Models\Admision;
+use App\Models\Evaluacion;
 use App\Models\Expediente;
 use App\Models\ExpedienteAdmision;
 use App\Models\ExpedienteInscripcion;
@@ -24,6 +25,8 @@ class Index extends Component
     public $expedientes_model; // variable para los expedientes
     public $inscripcion; // variable para la inscripcion
     public $id_inscripcion; // variable para el id de la inscripcion
+    public $admitido; // variable para el admitido
+    public $mostrar_acciones_expediente = false; // variable para mostrar las acciones del expediente
 
     // variables para el modal
     public $titulo_modal = 'Nuevo expediente'; // titulo del modal
@@ -45,7 +48,7 @@ class Index extends Component
         $this->filtro_proceso = $this->admision->id_admision; // asignamos el valor de la admision activa a la variable filtro_proceso
         // $this->admisiones = Admision::orderBy('cod_admi', 'desc')->get(); // obtenemos todas las admisiones
         $persona = Persona::where('numero_documento', auth('plataforma')->user()->usuario_estudiante)->first(); // obtenemos la persona
-        $this->inscripcion = $persona->inscripcion()->orderBy('id_inscripcion', 'desc')->first(); // obtenemos la inscripcion
+        $this->inscripcion = $persona->inscripcion()->orderBy('id_inscripcion', 'desc')->first(); // obtenemos la
         $this->filtro_proceso = $this->inscripcion->id_programa_proceso; // asignamos el valor de la inscripcion a la variable filtro_proceso
         $this->admisiones = Inscripcion::where('id_persona', $persona->id_persona)->groupBy('id_programa_proceso')->orderBy('id_inscripcion', 'desc')->get(); // obtenemos todas las inscripciones de la persona
         $this->id_inscripcion = $this->inscripcion->id_inscripcion; // asignamos el valor de la inscripcion a la variable id_inscripcion
@@ -56,6 +59,35 @@ class Index extends Component
                                                                     $query->where('expediente.expediente_tipo', 0)
                                                                         ->orWhere('expediente.expediente_tipo', $this->inscripcion->inscripcion_tipo_programa);
                                                                 })->get(); // obtenemos los expedientes segun tipo de programa
+        $this->admitido = $persona->admitido()->orderBy('id_admitido', 'desc')->first(); // obtenemos el admitido
+        if($this->admitido)
+        {
+            $evaluacion_admitido = $this->admitido->evaluacion; // obtenemos la evaluacion del admitido
+            $evaluacion_inscripcion = Evaluacion::where('id_inscripcion', $this->id_inscripcion)->orderBy('id_evaluacion', 'desc')->first(); // obtenemos la evaluacion de la inscripcion
+            if($evaluacion_admitido && $evaluacion_inscripcion)
+            {
+                if($evaluacion_admitido->id_evaluacion != $evaluacion_inscripcion->id_evaluacion)
+                {
+                    $this->admitido = null; // asignamos null a la variable admitido
+                }
+                else
+                {
+                    $inscripcion = Inscripcion::where('id_inscripcion', $evaluacion_admitido->id_inscripcion)->first(); // obtenemos la inscripcion
+                    $programa_proceso = $inscripcion->programa_proceso; // obtenemos el programa proceso
+                    $admision = $programa_proceso->admision; // obtenemos la admision
+                    $fecha_fin_inscripcion = $admision->admision_fecha_fin_inscripcion; // obtenemos la fecha fin de inscripcion
+                    $fecha_fin_inscripcion = date('Y-m-d', strtotime($fecha_fin_inscripcion . '+1 month')); // sumamos un mes a la fecha fin de inscripcion
+                    if($fecha_fin_inscripcion <= date('Y-m-d'))
+                    {
+                        $this->mostrar_acciones_expediente = true; // asignamos null a la variable admitido
+                    }
+                    else
+                    {
+                        $this->mostrar_acciones_expediente = false; // asignamos null a la variable admitido
+                    }
+                }
+            }
+        }
     }
 
     public function aplicar_filtro()
@@ -206,7 +238,9 @@ class Index extends Component
         $this->emit('expediente_registrado'); // emitimos el evento expedienteRegistrado
         $this->dispatchBrowserEvent('modal_expediente', ['action' => 'hide']); // ocultamos el modal
 
-        ProcessUpdateFichaInscripcion::dispatch($this->inscripcion); // despachamos el proceso de actualizacion de la ficha de inscripcion
+        if($this->mostrar_acciones_expediente == false){
+            ProcessUpdateFichaInscripcion::dispatch($this->inscripcion); // despachamos el proceso de actualizacion de la ficha de inscripcion
+        }
     }
 
     public function render()

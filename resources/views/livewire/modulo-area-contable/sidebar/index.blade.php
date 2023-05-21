@@ -30,7 +30,7 @@
                                 </svg>
                             </span>
                         </span>
-                        <span class="menu-title fw-semibold">Inicio</span>
+                        <span class="menu-title fs-6">Inicio</span>
                     </a>
                 </div>
                 <div class="menu-item pt-5">
@@ -48,7 +48,7 @@
                                 </svg>
                             </span>
                         </span>
-                        <span class="menu-title fw-semibold">Inscripciones</span>
+                        <span class="menu-title fs-6">Inscripciones</span>
                     </a>
                 </div>
                 <div class="menu-item">
@@ -61,7 +61,7 @@
                                 </svg>
                             </span>
                         </span>
-                        <span class="menu-title fw-semibold">Pagos</span>
+                        <span class="menu-title fs-6">Pagos</span>
                     </a>
                 </div>
                 {{-- <div data-kt-menu-trigger="click" class="menu-item menu-accordion">

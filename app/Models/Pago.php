@@ -20,6 +20,7 @@ class Pago extends Authenticatable
         'pago_fecha',
         'pago_estado',
         'pago_verificacion',
+        'pago_leido',
         'pago_voucher_url',
         'id_canal_pago',
         'id_concepto_pago'

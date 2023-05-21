@@ -3,10 +3,13 @@
 namespace App\Http\Livewire\ModuloAreaContable\Pagos;
 
 use App\Models\CanalPago;
+use App\Models\ConceptoPago;
+use App\Models\ConstanciaIngreso;
 use App\Models\Pago;
 use App\Models\PagoObservacion;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Illuminate\Support\Facades\File;
 
 class Index extends Component
 {
@@ -14,12 +17,12 @@ class Index extends Component
     protected $paginationTheme = 'bootstrap'; // tema de paginacion
     protected $queryString = [
         'search' => ['except' => ''],
-        'filtro_canal_pago' => ['except' => 'all'],
+        'filtro_concepto_pago' => ['except' => 'all'],
     ]; // variable para almacenar el texto de busqueda
 
     // public $pagos = null; // variable para almacenar los pagos
     public $search = ''; // variable para almacenar el texto de busqueda
-    public $filtro_canal_pago = "all"; // variable para almacenar el texto de busqueda
+    public $filtro_concepto_pago = "all"; // variable para almacenar el texto de busqueda
     public $voucher = ''; // variable para almacenar el voucher
     public $observacion; // variable para almacenar la observacion
     public $id_pago; // variable para almacenar el id del pago
@@ -28,10 +31,10 @@ class Index extends Component
     {
     }
 
-    public function updatedFiltroCanalPago($value)
+    public function updatedFiltroConceptoPago($value)
     {
         if($value == 'all' || $value == ''){
-            $this->filtro_canal_pago = 'all';
+            $this->filtro_concepto_pago = 'all';
         }
     }
 
@@ -65,6 +68,11 @@ class Index extends Component
 
         // almacenar los datos
         $pago = Pago::find($this->id_pago);
+        if($pago->id_concepto_pago == 1){
+            $pago->pago_estado = 1;
+        }else{
+            $pago->pago_estado = 2;
+        }
         $pago->pago_verificacion = 2;
         $pago->save();
 
@@ -105,7 +113,7 @@ class Index extends Component
     {
         // validacion de los campos
         $this->validate([
-            'observacion' => 'nullable|max:255',
+            'observacion' => 'required|max:255',
         ]);
 
         // almacenar los datos
@@ -116,6 +124,7 @@ class Index extends Component
         // almacenar los datos de observacion
         $observacion = PagoObservacion::where('id_pago', $this->id_pago)->where('pago_observacion_estado', 1)->orderBy('id_pago_observacion', 'desc')->first();
         if ($observacion) {
+            $observacion->pago_observacion = $this->observacion;
             $observacion->pago_observacion_estado = 1;
             $observacion->save();
         }else{
@@ -147,19 +156,87 @@ class Index extends Component
         $this->limpiar();
     }
 
+    public function rechazar_pago()
+    {
+        // validacion de los campos
+        $this->validate([
+            'observacion' => 'required|max:255',
+        ]);
+
+        // cambiar el estado de la verificacion a 0 (rechazado - observado)
+        $pago = Pago::find($this->id_pago);
+        $pago->pago_estado = 0;
+        $pago->pago_verificacion = 0;
+        $pago->pago_leido = 1;
+        if($pago->pago_voucher_url)
+        {
+            File::delete($pago->pago_voucher_url);
+        }
+        $pago->pago_voucher_url = null;
+        $pago->save();
+
+        // eliminar la constancia de ingreso
+        $constancia = ConstanciaIngreso::where('id_pago', $this->id_pago)->orderBy('id_constancia_ingreso')->first();
+        if($constancia)
+        {
+            $constancia->constancia_ingreso_codigo = null;
+            if($constancia->constancia_ingreso_url)
+            {
+                File::delete($constancia->constancia_ingreso_url);
+            }
+            $constancia->constancia_ingreso_url = null;
+            $constancia->save();
+        }
+
+        // almacenar los datos de observacion
+        $observacion = PagoObservacion::where('id_pago', $this->id_pago)->where('pago_observacion_estado', 1)->orderBy('id_pago_observacion', 'desc')->first();
+        if ($observacion) {
+            $observacion->pago_observacion = $this->observacion;
+            $observacion->pago_observacion_estado = 2;
+            $observacion->save();
+        }else{
+            if ($this->observacion != '' || $this->observacion != null) {
+                $observacion = new PagoObservacion();
+                $observacion->pago_observacion = $this->observacion;
+                $observacion->id_pago = $this->id_pago;
+                $observacion->pago_observacion_creacion = now();
+                $observacion->pago_observacion_estado = 2;
+                $observacion->save();
+            }
+        }
+
+        // mostramos alerta de confirmacion
+        $this->dispatchBrowserEvent('alerta_pago_contable', [
+            'title' => '!Rechazado!',
+            'text' => 'Pago rechazado correctamente',
+            'icon' => 'success',
+            'confirmButtonText' => 'Aceptar',
+            'color' => 'success'
+        ]);
+
+        // cerra el modal
+        $this->dispatchBrowserEvent('modal_pago_contable', [
+            'action' => 'hide'
+        ]);
+
+        // limpiar los campos
+        $this->limpiar();
+    }
+
     public function render()
     {
-        $canal_pagos = CanalPago::where('canal_pago_estado', 1)->get();
-        $pagos = Pago::where('id_canal_pago', $this->filtro_canal_pago == "all" ? '!=' : '=', $this->filtro_canal_pago)
+        $concepto_pagos = ConceptoPago::where('concepto_pago_estado', 1)->get();
+        $pagos = Pago::where('id_concepto_pago', $this->filtro_concepto_pago == "all" ? '!=' : '=', $this->filtro_concepto_pago)
                         ->where(function ($query) {
                             $query->where('pago_documento', 'like', '%' . $this->search . '%')
                                 ->orWhere('pago_operacion', 'like', '%' . $this->search . '%');
                         })
                         ->orderBy('id_pago','desc')
                         ->paginate(100);
+        // dd($pagos, $this->filtro_concepto_pago);
         return view('livewire.modulo-area-contable.pagos.index', [
             'pagos' => $pagos,
-            'canal_pagos' => $canal_pagos,
+            'concepto_pagos' => $concepto_pagos,
         ]);
     }
 }

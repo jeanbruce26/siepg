@@ -20,3 +20,7 @@ Route::get('/expedientes', [PlataformaController::class, 'expediente'])->middlew
 
 // ruta para ir a los pagos de los estudiantes
 Route::get('/pagos', [PlataformaController::class, 'pago'])->middleware(['auth.plataforma'])->name('plataforma.pago');
+
+
+// ruta para ir ver la constancia de ingreso
+Route::get('/constancia-ingreso', [PlataformaController::class, 'constancia'])->middleware(['auth.plataforma'])->name('plataforma.constancia');
