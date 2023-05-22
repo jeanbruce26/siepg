@@ -30,7 +30,7 @@
                                 </svg>
                             </span>
                         </span>
-                        <span class="menu-title fw-semibold fs-6">Inicio</span>
+                        <span class="menu-title fw-semibold fs-5">Inicio</span>
                     </a>
                 </div>
                 <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->is('plataforma/admision') || request()->is('plataforma/expedientes') ? 'show active' : '' }}">
@@ -43,7 +43,7 @@
                                 </svg>
                             </span>
                         </span>
-                        <span class="menu-title fw-semibold fs-6">Proceso de Admisión</span>
+                        <span class="menu-title fw-semibold fs-5">Proceso de Admisión</span>
                         <span class="menu-arrow"></span>
                     </span>
                     <div class="menu-sub menu-sub-accordion menu-active-bg">
@@ -52,7 +52,7 @@
                                 <span class="menu-bullet">
                                     <span class="bullet bullet-dot"></span>
                                 </span>
-                                <span class="menu-title fs-6">Admisión</span>
+                                <span class="menu-title fs-5">Admisión</span>
                             </a>
                         </div>
                         <div class="menu-item">
@@ -60,7 +60,7 @@
                                 <span class="menu-bullet">
                                     <span class="bullet bullet-dot"></span>
                                 </span>
-                                <span class="menu-title fs-6">Expedientes</span>
+                                <span class="menu-title fs-5">Expedientes</span>
                             </a>
                         </div>
                     </div>
@@ -82,7 +82,7 @@
                                     </svg>
                                 </span>
                             </span>
-                            <span class="menu-title fw-semibold fs-6">Constancia de Ingreso</span>
+                            <span class="menu-title fw-semibold fs-5">Constancia de Ingreso</span>
                         </a>
                     </div>
                 @endif
@@ -108,7 +108,7 @@
                                 </svg>
                             </span>
                         </span>
-                        <span class="menu-title fw-semibold fs-6">Gestión de Pagos</span>
+                        <span class="menu-title fw-semibold fs-5">Gestión de Pagos</span>
                         <span class="menu-arrow"></span>
                     </span>
                     <div class="menu-sub menu-sub-accordion menu-active-bg">
@@ -117,7 +117,7 @@
                                 <span class="menu-bullet">
                                     <span class="bullet bullet-dot"></span>
                                 </span>
-                                <span class="menu-title fs-6">Pagos</span>
+                                <span class="menu-title fs-5">Pagos</span>
                             </a>
                         </div>
                         @if ($admitido)
@@ -126,7 +126,7 @@
                                     <span class="menu-bullet">
                                         <span class="bullet bullet-dot"></span>
                                     </span>
-                                    <span class="menu-title fs-6">Estado de Cuenta</span>
+                                    <span class="menu-title fs-5">Estado de Cuenta</span>
                                 </a>
                             </div>
                         @endif
