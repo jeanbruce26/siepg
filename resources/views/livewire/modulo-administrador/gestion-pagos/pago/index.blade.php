@@ -42,11 +42,11 @@
                                     <tr align="center" class="fw-bold fs-5 text-gray-800 border-bottom-2 border-gray-200">
                                         <th scope="col" class="col-md-1">ID</th>
                                         <th scope="col">Documento</th>
-                                        <th scope="col">Número de Operación</th>
+                                        <th scope="col">Operación</th>
                                         <th scope="col">Monto</th>
-                                        <th scope="col">Fecha de Pago</th>
-                                        <th scope="col">Canal de Pago</th>
-                                        <th scope="col">Concepto de Pago</th>
+                                        <th scope="col">Fecha</th>
+                                        {{-- <th scope="col">Canal de Pago</th> --}}
+                                        <th scope="col">Concepto</th>
                                         <th scope="col" class="col-md-2">Estado</th>
                                         <th scope="col" class="col-md-1">Voucher</th>
                                         <th scope="col" class="col-md-1">Acciones</th>
@@ -60,7 +60,7 @@
                                             <td align="center">{{ $item->pago_operacion }}</td>
                                             <td align="center">S/. {{ $item->pago_monto }}</td>
                                             <td align="center">{{ date('d/m/Y', strtotime($item->pago_fecha)) }}</td>
-                                            <td align="center">{{ $item->canal_pago->canal_pago }}</td>
+                                            {{-- <td align="center">{{ $item->canal_pago->canal_pago }}</td> --}}
                                             <td align="center">{{ $item->concepto_pago->concepto_pago }}</td>
                                             <td align="center">
                                                 @if ($item->pago_estado == 1)
