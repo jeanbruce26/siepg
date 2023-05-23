@@ -53,9 +53,9 @@
                                         <td align="center">{{ $item->sede }}</td>
                                         <td align="center">
                                             @if ($item->sede_estado == 1)
-                                                <span style="cursor: pointer;" wire:click="cargarAlertaEstado({{ $item->id_sede }})" class="badge text-bg-success text-light hover-elevate-down">Activo<span class="pulse-ring"></span></span>
+                                                <span style="cursor: pointer;" wire:click="cargarAlertaEstado({{ $item->id_sede }})" class="badge text-bg-success text-light hover-elevate-down">Activo</span>
                                             @else
-                                                <span style="cursor: pointer;" wire:click="cargarAlertaEstado({{ $item->id_sede }})" class="badge text-bg-danger text-light hover-elevate-down">Inactivo <span class="pulse-ring"></span></span>
+                                                <span style="cursor: pointer;" wire:click="cargarAlertaEstado({{ $item->id_sede }})" class="badge text-bg-danger text-light hover-elevate-down">Inactivo</span>
                                             @endif
                                         </td>
                                         <td align="center">

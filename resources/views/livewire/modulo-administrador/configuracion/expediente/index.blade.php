@@ -29,9 +29,74 @@
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-5">
-                            <div class="d-flex justify-content-between align-items-center gap-4">
+                            <div class="me-1">
+                                {{-- <button type="button" class="btn btn-sm btn-light-primary me-3 fw-bold" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start">
+                                    <span class="svg-icon svg-icon-6">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M19.0759 3H4.72777C3.95892 3 3.47768 3.83148 3.86067 4.49814L8.56967 12.6949C9.17923 13.7559 9.5 14.9582 9.5 16.1819V19.5072C9.5 20.2189 10.2223 20.7028 10.8805 20.432L13.8805 19.1977C14.2553 19.0435 14.5 18.6783 14.5 18.273V13.8372C14.5 12.8089 14.8171 11.8056 15.408 10.964L19.8943 4.57465C20.3596 3.912 19.8856 3 19.0759 3Z" fill="currentColor" />
+                                        </svg>
+                                    </span>
+                                    Filtro
+                                </button>
+                                <div class="menu menu-sub menu-sub-dropdown w-300px w-md-325px" data-kt-menu="true" id="filtro_expediente"  wire:ignore.self>
+                                    <div class="px-7 py-5">
+                                        <div class="fs-4 text-dark fw-bold">Opciones de filtrado</div>
+                                    </div>
+                                    <div class="separator border-gray-200"></div>
+                                    <div class="px-7 py-5">
+                                        <div class="mb-10">
+                                            <label class="form-label fs-5 fw-semibold mb-3">Tipo de Expediente:</label>
+                                            <select class="form-select fw-bold" data-kt-select2="true" data-placeholder="Seleccione" data-allow-clear="true" wire:model="filtro_expediente" data-dropdown-parent="#filtro_expediente">
+                                                <option value="0">Maestría y Doctorado</option>
+                                                <option value="1">Maestría</option>
+                                                <option value="2">Doctorado</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="d-flex justify-content-end">
+                                            <button type="reset" wire:click="resetear_filtro" class="btn btn-sm btn-light btn-active-light-primary me-2" data-kt-menu-dismiss="true">Resetear</button>
+                                            <button type="button" class="btn btn-sm btn-primary" data-kt-menu-dismiss="true" wire:click="filtrar">Aplicar</button>
+                                        </div>
+                                    </div>
+                                </div> --}}
+
+                                <a class="btn btn-sm btn-light-primary me-3 fw-bold" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start">
+                                    <span class="svg-icon svg-icon-6 svg-icon-muted me-1">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M19.0759 3H4.72777C3.95892 3 3.47768 3.83148 3.86067 4.49814L8.56967 12.6949C9.17923 13.7559 9.5 14.9582 9.5 16.1819V19.5072C9.5 20.2189 10.2223 20.7028 10.8805 20.432L13.8805 19.1977C14.2553 19.0435 14.5 18.6783 14.5 18.273V13.8372C14.5 12.8089 14.8171 11.8056 15.408 10.964L19.8943 4.57465C20.3596 3.912 19.8856 3 19.0759 3Z" fill="currentColor" />
+                                        </svg>
+                                    </span>
+                                    Filtro
+                                </a>
+                                <div class="menu menu-sub menu-sub-dropdown w-250px w-md-300px" data-kt-menu="true" id="menu_expediente" wire:ignore.self>
+                                    <div class="px-7 py-5">
+                                        <div class="fs-5 text-dark fw-bold">
+                                            Opciones de filtrado
+                                        </div>
+                                    </div>
+                                    <div class="separator border-gray-200"></div>
+                                    <div class="px-7 py-5">
+                                        <div class="mb-10">
+                                            <label class="form-label fw-semibold">Tipo de Expediente:</label>
+                                            <div>
+                                                <select class="form-select" wire:model="filtro_expediente" id="filtro_expediente"  data-control="select2" data-placeholder="Seleccione">
+                                                    <option></option>
+                                                    <option value="0">Maestría y Doctorado</option>
+                                                    <option value="1">Maestría</option>
+                                                    <option value="2">Doctorado</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-end">
+                                            <button type="button" wire:click="resetear_filtro" class="btn btn-sm btn-light btn-active-light-primary me-2" data-kt-menu-dismiss="true">Resetear</button>
+                                            <button type="button" class="btn btn-sm btn-primary" data-kt-menu-dismiss="true" wire:click="filtrar">Aplicar</button>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
-                            <div class="w-25">
+
+                            <div class="ms-2">
                                 <input class="form-control form-control-sm text-muted" type="search" wire:model="search"
                                     placeholder="Buscar...">
                             </div>
@@ -42,11 +107,9 @@
                                     <tr align="center" class="fw-bold fs-5 text-gray-800 border-bottom-2 border-gray-200">
                                         <th scope="col" class="col-md-1">ID</th>
                                         <th>Expediente</th>
-                                        <th>Texto de Complemento</th>
-                                        <th scope="col" class="col-md-1">Requerido</th>
-                                        <th scope="col" class="col-md-1">Tipo</th>
+                                        <th scope="col" class="col-md-2">Tipo</th>
                                         <th scope="col" class="col-md-1">Estado</th>
-                                        <th scope="col" class="col-md-1">Acciones</th>
+                                        <th scope="col" class="col-md-2">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -54,28 +117,6 @@
                                     <tr>
                                         <td align="center" class="fw-bold fs-5">{{ $item->id_expediente }}</td>
                                         <td>{{ $item->expediente }}</td>
-                                        <td>
-                                            @if($item->expediente_complemento == null)
-                                                <span >-</span>
-                                            @endif
-                                            {{ $item->expediente_complemento }}
-                                        </td>
-                                        <td align="center">
-                                            <span class="svg-icon svg-icon-2x {{ ($item->expediente_requerido == 1) ? 'svg-icon-success' : 'svg-icon-danger' }}">
-                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
-                                                    <path d="M10.4343 12.4343L8.75 10.75C8.33579 10.3358 7.66421 10.3358 7.25 10.75C6.83579 11.1642 6.83579 11.8358 7.25 12.25L10.2929 15.2929C10.6834 15.6834 11.3166 15.6834 11.7071 15.2929L17.25 9.75C17.6642 9.33579 17.6642 8.66421 17.25 8.25C16.8358 7.83579 16.1642 7.83579 15.75 8.25L11.5657 12.4343C11.2533 12.7467 10.7467 12.7467 10.4343 12.4343Z" fill="currentColor"/>
-                                                </svg>
-                                            </span>
-                                            @switch($item->expediente_requerido)
-                                                @case(1)
-                                                    <span class="ms-1">Si</span>
-                                                    @break
-                                                @case(2)
-                                                    <span class="ms-1">No</span>
-                                                    @break
-                                            @endswitch
-                                        </td>
                                         <td align="center">
                                             {{-- tipo => 0 = maestria y doctorado, 1 = maestria, 2 = doctorado --}}
                                             @switch($item->expediente_tipo)
@@ -93,9 +134,9 @@
                                         </td>
                                         <td align="center">
                                             @if ($item->expediente_estado == 1)
-                                                <span style="cursor: pointer;" wire:click="cargarAlertaEstado({{ $item->id_expediente }})" class="badge text-bg-success text-light hover-elevate-down">Activo<span class="pulse-ring"></span></span>
+                                                <span style="cursor: pointer;" wire:click="cargarAlertaEstado({{ $item->id_expediente }})" class="badge text-bg-success text-light hover-elevate-down">Activo</span></span>
                                             @else
-                                                <span style="cursor: pointer;" wire:click="cargarAlertaEstado({{ $item->id_expediente }})" class="badge text-bg-danger text-light hover-elevate-down">Inactivo <span class="pulse-ring"></span></span>
+                                                <span style="cursor: pointer;" wire:click="cargarAlertaEstado({{ $item->id_expediente }})" class="badge text-bg-danger text-light hover-elevate-down">Inactivo</span></span>
                                             @endif
                                         </td>
                                         <td align="center">
@@ -110,13 +151,25 @@
                                                     </svg>
                                                 </span>
                                             </a>
-                                            <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
+                                            <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4 w-175px" data-kt-menu="true">
                                                 <div class="menu-item px-3">
-                                                    <a href="#modalExpediente"
-                                                    wire:click="cargarExpediente({{ $item->id_expediente }})" 
-                                                    class="menu-link px-3" data-bs-toggle="modal" 
-                                                    data-bs-target="#modalExpediente">
+                                                    <a href="#modalExpediente" wire:click="cargarExpediente({{ $item->id_expediente }}, 3)" class="menu-link px-3" data-bs-toggle="modal" data-bs-target="#modalExpediente">
+                                                        Detalle
+                                                    </a>
+                                                </div>
+                                                <div class="menu-item px-3">
+                                                    <a href="#modalExpediente" wire:click="cargarExpediente({{ $item->id_expediente }}, 2)" class="menu-link px-3" data-bs-toggle="modal" data-bs-target="#modalExpediente">
                                                         Editar
+                                                    </a>
+                                                </div>
+                                                <div class="menu-item px-3">
+                                                    <a href="#" class="menu-link px-3 text-start">
+                                                        Gestion de Admisión
+                                                    </a>
+                                                </div>
+                                                <div class="menu-item px-3">
+                                                    <a href="#" class="menu-link px-3 text-start">
+                                                        Vistas de Evaluación
                                                     </a>
                                                 </div>
                                             </div>
@@ -136,7 +189,7 @@
         </div>
     </div>
 
-    {{-- Modal Sede --}}
+    {{-- Modal Expediente --}}
     <div wire:ignore.self class="modal fade" id="modalExpediente" tabindex="-1" aria-labelledby="modalExpediente"
         aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
@@ -148,57 +201,137 @@
                 </div>
                 <div class="modal-body">
                     <form novalidate>
-                        <div class="row">
-                            <div class="mb-8 col-md-12">
+                        <div class="row g-5 {{ $modo == 3 ? 'mb-3' : '' }}">
+                            <div class="col-md-12">
                                 <label class="form-label">Expediente <span class="text-danger">*</span></label>
-                                <input wire:model="expediente" type="text" class="form-control @error('expediente') is-invalid  @enderror" placeholder="Ingrese el expediente">
+                                <input wire:model="expediente" type="text" class="form-control @error('expediente') is-invalid  @enderror" placeholder="Ingrese el expediente" @if($modo == 3) readonly @endif>
                                 @error('expediente') <span class="error text-danger" >{{ $message }}</span> @enderror
                             </div>
-                            <div class="mb-8 col-md-12">
+                            <div class="col-md-12">
                                 <label class="form-label">Texto de complemento del archivo </label>
-                                <input wire:model="complemento" type="text" class="form-control @error('complemento') is-invalid  @enderror" placeholder="Ingrese el nombre del archivo">
+                                <textarea wire:model="complemento" class="form-control @error('complemento') is-invalid  @enderror" placeholder="Ingrese el nombre del archivo" @if($modo == 3) readonly @endif></textarea>
                                 @error('complemento') <span class="error text-danger" >{{ $message }}</span> @enderror
                             </div>
-                            <div class="mb-8 col-md-12">
+                            <div class="col-md-12">
                                 <label class="form-label">Nombre del archivo <span class="text-danger">*</span></label>
-                                <input wire:model="nombre_archivo" type="text" class="form-control @error('nombre_archivo') is-invalid  @enderror" placeholder="Ingrese el nombre del archivo">
+                                <input wire:model="nombre_archivo" type="text" class="form-control @error('nombre_archivo') is-invalid  @enderror" placeholder="Ingrese el nombre del archivo" @if($modo == 3) readonly @endif>
                                 @error('nombre_archivo') <span class="error text-danger" >{{ $message }}</span> @enderror
                             </div>
-                            <div class="mb-8 col-md-12">
+                            <div class="@if($modo == 3) col-md-6 @else col-md-12 @endif">
                                 <label class="form-label">Requerido <span class="text-danger">*</span></label>
                                 <div class="d-flex align-items-center">
-                                    <div class="form-check form-check-custom form-check-success form-check-solid me-15">
-                                        <input class="form-check-input @error('requerido') is-invalid @enderror" type="radio" name="requerido" wire:model="requerido" value="1" id="requerido_si" style="cursor: pointer">
-                                        <span class="radio-label form-check-label" wire:click="$set('requerido', '1')" style="cursor: pointer; user-select: none;">Si</span>
-                                    </div>
-                                    <div class="form-check form-check-custom form-check-danger form-check-solid">
-                                        <input class="form-check-input @error('requerido') is-invalid @enderror" type="radio" name="requerido" wire:model="requerido" value="2" id="requerido_no" style="cursor: pointer">
-                                        <span class="radio-label form-check-label" wire:click="$set('requerido', '2')" style="cursor: pointer; user-select: none;">No</span>
-                                    </div>
+                                    @if($modo == 3)
+                                        @if($requerido == 1)
+                                            <span class="svg-icon svg-icon-2x svg-icon-success">
+                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
+                                                    <path d="M10.4343 12.4343L8.75 10.75C8.33579 10.3358 7.66421 10.3358 7.25 10.75C6.83579 11.1642 6.83579 11.8358 7.25 12.25L10.2929 15.2929C10.6834 15.6834 11.3166 15.6834 11.7071 15.2929L17.25 9.75C17.6642 9.33579 17.6642 8.66421 17.25 8.25C16.8358 7.83579 16.1642 7.83579 15.75 8.25L11.5657 12.4343C11.2533 12.7467 10.7467 12.7467 10.4343 12.4343Z" fill="currentColor"/>
+                                                </svg>
+                                            </span>
+                                            <span class="ms-1">Si</span>
+                                        @else
+                                            <span class="svg-icon svg-icon-2x svg-icon-danger">
+                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
+                                                    <rect x="7" y="15.3137" width="12" height="2" rx="1" transform="rotate(-45 7 15.3137)" fill="currentColor"/>
+                                                    <rect x="8.41422" y="7" width="12" height="2" rx="1" transform="rotate(45 8.41422 7)" fill="currentColor"/>
+                                                </svg>
+                                            </span>
+                                            <span class="ms-1">No</span>
+                                        @endif
+                                    @else
+                                        <div class="form-check form-check-custom form-check-success form-check-solid me-15">
+                                            <input class="form-check-input @error('requerido') is-invalid @enderror" type="radio" name="requerido" wire:model="requerido" value="1" id="requerido_si" style="cursor: pointer">
+                                            <span class="radio-label form-check-label" wire:click="$set('requerido', '1')" style="cursor: pointer; user-select: none;">Si</span>
+                                        </div>
+                                        <div class="form-check form-check-custom form-check-danger form-check-solid">
+                                            <input class="form-check-input @error('requerido') is-invalid @enderror" type="radio" name="requerido" wire:model="requerido" value="2" id="requerido_no" style="cursor: pointer">
+                                            <span class="radio-label form-check-label" wire:click="$set('requerido', '2')" style="cursor: pointer; user-select: none;">No</span>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
-                            <div class="mb-8 col-md-12">
+                            <div class="@if($modo == 3) col-md-6 @else col-md-12 @endif">
                                 <label class="form-label">Tipo de expediente <span class="text-danger">*</span></label>
-                                <select class="form-select @error('tipo') is-invalid  @enderror" wire:model="tipo">
-                                    <option value="" selected>Seleccione</option>
-                                    {{-- tipo => 0 = maestria y doctorado, 1 = maestria, 2 = doctorado --}}
-                                    <option value="0">Maestría y Doctorado</option>
-                                    <option value="1">Maestría</option>
-                                    <option value="2">Doctorado</option>
-                                </select>
-                                @error('tipo')
-                                    <span class="error text-danger" >{{ $message }}</span> 
-                                @enderror
+                                @if($modo == 3)
+                                    @switch($tipo)
+                                        @case(0)
+                                            <input type="text" class="form-control" value="Maestría y Doctorado" readonly>
+                                            @break
+                                        @case(1)
+                                            <input type="text" class="form-control" value="Maestría" readonly>
+                                            @break
+                                        @case(2)
+                                            <input type="text" class="form-control" value="Doctorado" readonly>
+                                            @break
+                                    @endswitch
+                                @else
+                                    <select class="form-select @error('tipo') is-invalid  @enderror" wire:model="tipo">
+                                        <option value="" selected>Seleccione</option>
+                                        {{-- tipo => 0 = maestria y doctorado, 1 = maestria, 2 = doctorado --}}
+                                        <option value="0">Maestría y Doctorado</option>
+                                        <option value="1">Maestría</option>
+                                        <option value="2">Doctorado</option>
+                                    </select>
+                                    @error('tipo')
+                                        <span class="error text-danger" >{{ $message }}</span> 
+                                    @enderror
+                                @endif
                             </div>
                         </div>
                     </form>
                 </div>
-                <div class="modal-footer col-12 d-flex justify-content-between">
-                    <button type="button" wire:click="limpiar()" class="btn btn-secondary hover-elevate-up" data-bs-dismiss="modal">Cancelar</button>                    
-                    <button type="button" wire:click="guardarExpediente()" class="btn btn-primary hover-elevate-up">Guardar</button>
-                </div>
+                @if($modo == 2)
+                    <div class="modal-footer col-12 d-flex justify-content-between">
+                        <button type="button" wire:click="limpiar()" class="btn btn-secondary hover-elevate-up" data-bs-dismiss="modal">Cancelar</button>                    
+                        <button type="button" wire:click="guardarExpediente()" class="btn btn-primary hover-elevate-up">Guardar</button>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
 
 </div>
+@push('scripts')
+    <script>
+        // filtro_expediente select2
+        $(document).ready(function () {
+            $('#filtro_expediente').select2({
+                placeholder: 'Seleccione',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando...";
+                    }
+                }
+            });
+            $('#filtro_expediente').on('change', function(){
+                @this.set('filtro_expediente', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#filtro_expediente').select2({
+                    placeholder: 'Seleccione',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando...";
+                        }
+                    }
+                });
+                $('#filtro_expediente').on('change', function(){
+                    @this.set('filtro_expediente', this.value);
+                });
+            });
+        });
+    </script>
+@endpush
