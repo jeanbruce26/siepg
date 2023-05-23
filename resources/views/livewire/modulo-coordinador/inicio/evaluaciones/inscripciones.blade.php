@@ -192,15 +192,15 @@
                                                 <td align="center">
                                                     @if ($evaluacion)
                                                         @if ($evaluacion->evaluacion_estado == 1)
-                                                            <span class="badge badge-warning fs-6">
+                                                            <span class="badge badge-warning fs-6 px-3 py-2">
                                                                 Pendiente
                                                             </span>
                                                         @elseif ($evaluacion->evaluacion_estado == 2)
-                                                            <span class="badge badge-success fs-6">
+                                                            <span class="badge badge-success fs-6 px-3 py-2">
                                                                 Admitido
                                                             </span>
                                                         @elseif ($evaluacion->evaluacion_estado == 3)
-                                                            <span class="badge badge-danger fs-6">
+                                                            <span class="badge badge-danger fs-6 px-3 py-2">
                                                                 No Admitido
                                                             </span>
                                                         @endif

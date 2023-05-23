@@ -38,8 +38,8 @@
                         <span class="menu-heading fw-bold text-uppercase fs-6">Menu</span>
                     </div>
                 </div>
-                {{-- <div class="menu-item">
-                    <a class="menu-link {{ request()->is('plataforma/expedientes') ? 'active' : '' }}" href="">
+                <div class="menu-item">
+                    <a class="menu-link {{ request()->is('coordinador/docentes') ? 'active' : '' }}" href="{{ route('coordinador.docentes') }}">
                         <span class="menu-icon">
                             <span class="svg-icon svg-icon-2">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -48,9 +48,11 @@
                                 </svg>
                             </span>
                         </span>
-                        <span class="menu-title" style="font-weight: 700;">Inscripciones</span>
+                        <span class="menu-title fw-semibold fs-5">
+                            Gestión de Docentes
+                        </span>
                     </a>
-                </div> --}}
+                </div>
                 {{-- <div class="menu-item">
                     <a class="menu-link {{ request()->is('area-contable/pagos') ? 'active' : '' }}" href="{{ route('contable.pago') }}">
                         <span class="menu-icon">

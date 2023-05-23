@@ -1,12 +1,12 @@
 <div id="kt_app_content" class="app-content flex-column-fluid mt-5">
     <div id="kt_app_content_container" class="app-container container-fluid">
         {{-- alerta para que el usuario sepa que datos puede modificar --}}
-        <div class="alert bg-light-primary border border-primary d-flex alig-items-center p-5 mb-5">
+        <div class="alert bg-light-primary border border-3 border-primary d-flex align-items-center p-5 mb-5">
             <span class="svg-icon svg-icon-2hx svg-icon-primary me-4">
-                <i class="las la-exclamation-circle fs-2 text-primary"></i>
+                <i class="las la-exclamation-circle fs-1 text-primary"></i>
             </span>
             <div class="d-flex flex-column">
-                <span class="fw-bold">
+                <span class="fw-bold fs-5">
                     Nota: Solo se podrán modificar los datos personales.
                 </span>
             </div>
@@ -47,7 +47,7 @@
                                 </div>
                             </div>
                             <div class="d-flex my-4">
-                                <button class="btn btn-sm btn-primary me-2" wire:click="editar_perfil">
+                                <button class="btn btn-primary me-2" wire:click="editar_perfil">
                                     Editar Perfil
                                 </button>
                             </div>

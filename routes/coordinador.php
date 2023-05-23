@@ -32,3 +32,6 @@ Route::get('/reportes/{id_programa}/proceso/{id_admision}/maestria', [Coordinado
 
 // ruta para ir a la pagina de evalaucion de entrevista
 Route::get('/reportes/{id_programa}/proceso/{id_admision}/doctorado', [CoordinadorController::class, 'reporte_doctorado'])->middleware(['auth.usuario', 'verificar.usuario.coordinador'])->name('coordinador.reporte-doctorado');
+
+// ruta para ir a la pagina de gestion de docentes
+Route::get('/docentes', [CoordinadorController::class, 'docentes'])->middleware(['auth.usuario', 'verificar.usuario.coordinador'])->name('coordinador.docentes');
