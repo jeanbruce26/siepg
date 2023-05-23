@@ -77,36 +77,38 @@
             <div class="row mb-5 mb-xl-10">
                 <div class="col-md-12 mb-md-5 mb-xl-10">
                     {{-- alerta de fecha de actualizacion de expedientes --}}
-                    @if ($admision->admision_fecha_fin_inscripcion < date('Y-m-d'))
-                        <div class="alert bg-light-danger border border-danger d-flex alig-items-center p-5 mb-5">
-                            <span class="svg-icon svg-icon-2hx svg-icon-danger me-4">
-                                <i class="las la-exclamation-circle fs-2 text-danger"></i>
-                            </span>
-                            <div class="d-flex flex-column">
-                                <span class="fw-bold">
-                                    La fecha limite para actualizar sus expedientes ha expirado
+                    @if (!$admitido)
+                        @if ($admision->admision_fecha_fin_inscripcion < date('Y-m-d'))
+                            <div class="alert bg-light-danger border border-3 border-danger d-flex align-items-center p-5 mb-5">
+                                <span class="svg-icon svg-icon-2xl svg-icon-danger me-4">
+                                    <i class="las la-exclamation-circle fs-1 text-danger"></i>
                                 </span>
+                                <div class="d-flex flex-column">
+                                    <span class="fw-bold fs-5">
+                                        La fecha limite para actualizar sus expedientes ha expirado
+                                    </span>
+                                </div>
                             </div>
-                        </div>
-                    @else
-                        <div class="alert bg-light-warning border border-warning d-flex alig-items-center p-5 mb-5">
-                            <span class="svg-icon svg-icon-2hx svg-icon-warning me-4">
-                                <i class="las la-exclamation-triangle fs-2 text-warning"></i>
-                            </span>
-                            <div class="d-flex flex-column">
-                                <span class="fw-bold">
-                                    Recuerde que la fecha limite para actualizar sus expedientes es el {{ $fecha_fin_admision }}
+                        @else
+                            <div class="alert bg-light-warning border border-3 border-warning d-flex align-items-center p-5 mb-5">
+                                <span class="svg-icon svg-icon-2hx svg-icon-warning me-4">
+                                    <i class="las la-exclamation-circle fs-1 text-warning"></i>
                                 </span>
+                                <div class="d-flex flex-column">
+                                    <span class="fw-bold fs-5">
+                                        Recuerde que la fecha limite para actualizar sus expedientes es el {{ $fecha_fin_admision }}
+                                    </span>
+                                </div>
                             </div>
-                        </div>
+                        @endif
                     @endif
                     {{-- alerta para que el usuario sepa de donde abrir los expedientes --}}
-                    <div class="alert bg-light-primary border border-primary d-flex alig-items-center p-5 mb-5">
+                    <div class="alert bg-light-primary border border-3 border-primary d-flex align-items-center p-5 mb-5">
                         <span class="svg-icon svg-icon-2hx svg-icon-primary me-4">
-                            <i class="las la-exclamation-circle fs-2 text-primary"></i>
+                            <i class="las la-exclamation-circle fs-1 text-primary"></i>
                         </span>
                         <div class="d-flex flex-column">
-                            <span class="fw-bold">
+                            <span class="fw-bold fs-5">
                                 Nota: Para abrir los expedientes debe hacer click en el nombre de cada uno de los expedientes
                             </span>
                         </div>
@@ -115,14 +117,20 @@
                     <div class="card shadow-sm mb-5">
                         <div class="table-responsive">
                             <table class="table table-hover align-middle table-rounded border mb-0 gy-5 gs-5">
-                                <thead>
-                                    <tr class="fw-bold fs-6 text-gray-800 border-bottom-2 border-gray-200">
+                                <thead class="bg-light-warning">
+                                    <tr class="fw-bold fs-5 text-gray-900 border-bottom-2 border-gray-200">
                                         <th>Expedientes</th>
                                         <th>Estado</th>
-                                        <th>Fecha de Entrega</th>
-                                        @if ($inscripcion->programa_proceso->admision->id_admision == $admision->id_admision)
-                                            @if ($admision->admision_fecha_fin_inscripcion >= date('Y-m-d'))
-                                            <th></th>
+                                        <th class="col-md-3">Fecha de Entrega</th>
+                                        @if ($admitido)
+                                            @if ($mostrar_acciones_expediente == true)
+                                                <th></th>
+                                            @endif
+                                        @else
+                                            @if ($inscripcion->programa_proceso->admision->id_admision == $admision->id_admision)
+                                                @if ($admision->admision_fecha_fin_inscripcion >= date('Y-m-d'))
+                                                <th></th>
+                                                @endif
                                             @endif
                                         @endif
                                     </tr>
@@ -135,23 +143,33 @@
                                                 @if($item2->id_expediente_admision == $item->id_expediente_admision)
                                                 <tr>
                                                     <td>
-                                                        <a href="{{ asset($item->expediente_inscripcion_url) }}" target="_blank" class="text-gray-800">
+                                                        <a href="{{ asset($item->expediente_inscripcion_url) }}" target="_blank" class="text-gray-800 fw-semibold">
                                                             {{ $item->expediente_admision->expediente->expediente }}
                                                         </a>
                                                     </td>
                                                     <td>
-                                                        <span class="badge badge-success">Entregado</span>
+                                                        <span class="badge badge-success fs-6">Entregado</span>
                                                     </td>
                                                     <td>
                                                         {{ date('d/m/Y', strtotime($item->expediente_inscripcion_fecha)) }}
                                                     </td>
-                                                    @if ($inscripcion->programa_proceso->admision->id_admision == $admision->id_admision)
-                                                        @if ($admision->admision_fecha_fin_inscripcion >= date('Y-m-d'))
-                                                        <td class="text-end">
-                                                            <a href="#modal_expediente" wire:click="cargar_expediente_inscripcion({{ $item->id_expediente_inscripcion }})" class="btn btn-light-primary btn-sm hover-scale" data-bs-toggle="modal" data-bs-target="#modal_expediente">
-                                                                Editar
-                                                            </a>
-                                                        </td>
+                                                    @if ($admitido)
+                                                        @if ($mostrar_acciones_expediente == true)
+                                                            <td class="text-end">
+                                                                <a href="#modal_expediente" wire:click="cargar_expediente_inscripcion({{ $item->id_expediente_inscripcion }})" class="btn btn-light-primary btn-sm hover-scale" data-bs-toggle="modal" data-bs-target="#modal_expediente">
+                                                                    Editar
+                                                                </a>
+                                                            </td>
+                                                        @endif
+                                                    @else
+                                                        @if ($inscripcion->programa_proceso->admision->id_admision == $admision->id_admision)
+                                                            @if ($admision->admision_fecha_fin_inscripcion >= date('Y-m-d'))
+                                                                <td class="text-end">
+                                                                    <a href="#modal_expediente" wire:click="cargar_expediente_inscripcion({{ $item->id_expediente_inscripcion }})" class="btn btn-light-primary btn-sm hover-scale" data-bs-toggle="modal" data-bs-target="#modal_expediente">
+                                                                        Editar
+                                                                    </a>
+                                                                </td>
+                                                            @endif
                                                         @endif
                                                     @endif
                                                 </tr>
@@ -165,23 +183,33 @@
                                             @endif
                                             @if ($valor == 0)
                                                 <tr>
-                                                    <td class="text-gray-800">
+                                                    <td class="text-gray-800 fw-semibold">
                                                         @php $expediente = App\Models\Expediente::find($item2->id_expediente); @endphp
                                                         {{ $expediente->expediente }}
                                                     </td>
                                                     <td>
-                                                        <span class="badge badge-danger">No Entregado</span>
+                                                        <span class="badge badge-danger fs-6 ">No Entregado</span>
                                                     </td>
                                                     <td>
                                                         Sin fecha
                                                     </td>
-                                                    @if ($inscripcion->programa_proceso->admision->id_admision == $admision->id_admision)
-                                                        @if ($admision->admision_fecha_fin_inscripcion >= date('Y-m-d'))
-                                                        <td class="text-end">
-                                                            <a href="#modal_expediente" wire:click="cargar_expediente({{ $item2->id_expediente_admision }})" class="btn btn-light-success btn-sm hover-scale" data-bs-toggle="modal" data-bs-target="#modal_expediente">
-                                                                Agregar
-                                                            </a>
-                                                        </td>
+                                                    @if ($admitido)
+                                                        @if ($mostrar_acciones_expediente == true)
+                                                            <td class="text-end">
+                                                                <a href="#modal_expediente" wire:click="cargar_expediente({{ $item2->id_expediente_admision }})" class="btn btn-light-success btn-sm hover-scale" data-bs-toggle="modal" data-bs-target="#modal_expediente">
+                                                                    Agregar
+                                                                </a>
+                                                            </td>
+                                                        @endif
+                                                    @else
+                                                        @if ($inscripcion->programa_proceso->admision->id_admision == $admision->id_admision)
+                                                            @if ($admision->admision_fecha_fin_inscripcion >= date('Y-m-d'))
+                                                                <td class="text-end">
+                                                                    <a href="#modal_expediente" wire:click="cargar_expediente({{ $item2->id_expediente_admision }})" class="btn btn-light-success btn-sm hover-scale" data-bs-toggle="modal" data-bs-target="#modal_expediente">
+                                                                        Agregar
+                                                                    </a>
+                                                                </td>
+                                                            @endif
                                                         @endif
                                                     @endif
                                                 </tr>
@@ -205,8 +233,14 @@
                     <h3 class="modal-title">
                         {{ $titulo_modal }}
                     </h3>
-                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close" wire:click="limpiar_expediente">
-                        <i class="bi bi-x fs-1"></i>
+                    <div class="btn btn-icon btn-sm btn-active-light-danger ms-2" wire:click="limpiar_expediente" data-bs-dismiss="modal" aria-label="Close">
+                        <span class="svg-icon svg-icon-2hx">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor"/>
+                                <rect x="7" y="15.3137" width="12" height="2" rx="1" transform="rotate(-45 7 15.3137)" fill="currentColor"/>
+                                <rect x="8.41422" y="7" width="12" height="2" rx="1" transform="rotate(45 8.41422 7)" fill="currentColor"/>
+                            </svg>
+                        </span>
                     </div>
                 </div>
                 <div class="modal-body">

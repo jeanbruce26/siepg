@@ -56,12 +56,12 @@
             <div class="row mb-5 mb-xl-10">
                 <div class="col-md-12 mb-md-5 mb-xl-10">
                     {{-- alerta --}}
-                    <div class="alert bg-light-primary border border-primary d-flex alig-items-center p-5 mb-5">
+                    <div class="alert bg-light-primary border border-3 border-primary d-flex align-items-center p-5 mb-5">
                         <span class="svg-icon svg-icon-2hx svg-icon-primary me-4">
-                            <i class="las la-exclamation-circle fs-2 text-primary"></i>
+                            <i class="las la-exclamation-circle fs-1 text-primary"></i>
                         </span>
                         <div class="d-flex flex-column">
-                            <span class="fw-bold">
+                            <span class="fw-bold fs-6">
                                 El dato mostrado de Inscripción es el total del proceso de admisión actual.
                             </span>
                         </div>

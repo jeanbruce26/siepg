@@ -56,13 +56,13 @@
             <div class="row mb-5 mb-xl-10">
                 <div class="col-md-12 mb-md-5 mb-xl-10">
                     {{-- alerta --}}
-                    <div class="alert bg-light-primary border border-primary d-flex alig-items-center p-5 mb-5">
+                    <div class="alert bg-light-primary border border-3 border-primary d-flex align-items-center p-5 mb-5">
                         <span class="svg-icon svg-icon-2hx svg-icon-primary me-4">
-                            <i class="las la-exclamation-circle fs-2 text-primary"></i>
+                            <i class="las la-exclamation-circle fs-1 text-primary"></i>
                         </span>
                         <div class="d-flex flex-column">
-                            <span class="fw-bold">
-                                A continuación se muestran los pagos registrados en el sistema. Vas a poder ver el detalle de cada pago, así como también el estado de cada uno de ellos.
+                            <span class="fw-bold fs-6">
+                                A continuación se muestran los pagos registrados en el sistema. Podrá ver el detalle de cada pago, así como también el estado de cada uno de ellos.
                             </span>
                         </div>
                     </div>
@@ -73,11 +73,11 @@
                                 <div class="d-flex align-items-center mb-5">
                                     <div class="col-md-4 pe-3"></div>
                                     <div class="col-md-4 px-3">
-                                        <select class="form-select" wire:model="filtro_canal_pago" data-control="select2" id="filtro_canal_pago" data-placeholder="Seleccione el canal de pago">
+                                        <select class="form-select" wire:model="filtro_concepto_pago" data-control="select2" id="filtro_concepto_pago" data-placeholder="Seleccione el concepto de pago">
                                             <option></option>
                                             <option value="all">Mostrar todos los pagos</option>
-                                            @foreach ($canal_pagos as $item)
-                                                <option value="{{ $item->id_canal_pago }}">Pago en {{ $item->canal_pago }}</option>
+                                            @foreach ($concepto_pagos as $item)
+                                                <option value="{{ $item->id_concepto_pago }}">Concepto de {{ $item->concepto_pago }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -86,14 +86,14 @@
                                     </div>
                                 </div>
                                 <table class="table table-hover table-rounded align-middle table-row-bordered border mb-0 gy-4 gs-4">
-                                    <thead>
-                                        <tr class="fw-bold fs-6 text-gray-800 border-bottom-2 border-gray-200">
+                                    <thead class="bg-light-warning">
+                                        <tr class="fw-bold fs-5 text-gray-800 border-bottom-2 border-gray-200">
                                             <th>ID</th>
                                             <th>Numero Documento</th>
                                             <th>Numero Operacion</th>
                                             <th>Monto</th>
                                             <th>Fecha</th>
-                                            <th>Canal de Pago</th>
+                                            <th>Concepto de Pago</th>
                                             <th>Estado</th>
                                             <th class="text-end">Acciones</th>
                                         </tr>
@@ -111,21 +111,23 @@
                                                     {{ $item->pago_operacion }}
                                                 </td>
                                                 <td>
-                                                    S/. {{ $item->pago_monto }}
+                                                    S/. {{ number_format($item->pago_monto, 2, ',', '.') }}
                                                 </td>
                                                 <td>
                                                     {{ date('d/m/Y', strtotime($item->pago_fecha)) }}
                                                 </td>
                                                 <td>
-                                                    {{ $item->canal_pago->canal_pago }}
+                                                    Concepto de {{ $item->concepto_pago->concepto_pago }}
                                                 </td>
                                                 <td>
                                                     @if ($item->pago_verificacion == 2)
-                                                        <span class="badge badge-success">Validado</span>
+                                                        <span class="badge badge-success fs-6">Validado</span>
                                                     @elseif ($item->pago_verificacion == 1)
-                                                        <span class="badge badge-warning">No Verificado</span>
-                                                    @else
-                                                        <span class="badge badge-danger">Observado</span>
+                                                        <span class="badge badge-warning fs-6">No Verificado</span>
+                                                    @elseif ($item->pago_verificacion == 0 && $item->pago_estado == 0)
+                                                        <span class="badge badge-danger fs-6">Rechazado</span>
+                                                    @elseif ($item->pago_verificacion == 0 && $item->pago_estado == 1)
+                                                        <span class="badge badge-danger fs-6">Observado</span>
                                                     @endif
                                                 </td>
                                                 <td class="text-end">
@@ -151,6 +153,22 @@
                                         @endforelse
                                     </tbody>
                                 </table>
+                                @if ($pagos->hasPages())
+                                    <div class="d-flex justify-content-between mt-5">
+                                        <div class="d-flex align-items-center text-gray-700">
+                                            Mostrando {{ $pagos->firstItem() }} - {{ $pagos->lastItem() }} de {{ $pagos->total()}} registros
+                                        </div>
+                                        <div>
+                                            {{ $pagos->links() }}
+                                        </div>
+                                    </div>
+                                @else
+                                    <div class="d-flex justify-content-between mt-5">
+                                        <div class="d-flex align-items-center text-gray-700">
+                                            Mostrando {{ $pagos->firstItem() }} - {{ $pagos->lastItem() }} de {{ $pagos->total()}} registros
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -182,14 +200,14 @@
                                 </a>
                             </label>
                             <div class="form-control">
-                                <img src="{{ asset($voucher) }}" alt="voucher"  class="img-fluid rounded">
+                                <img src="{{ asset($voucher) }}" alt="voucher" class="img-fluid rounded">
                             </div>
                         </div>
                         <div class="">
                             <label for="observacion" class="form-label">
                                 Observacion
                             </label>
-                            <textarea class="form-control @error('observacion') is-invalid @enderror" id="observacion" wire:model="observacion" rows="4"></textarea>
+                            <textarea class="form-control @error('observacion') is-invalid @enderror" id="observacion" wire:model="observacion" rows="3"></textarea>
                             @error('observacion')
                                 <div class="text-danger">
                                     {{ $message }}
@@ -198,13 +216,21 @@
                         </div>
                     </form>
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer d-flex justify-content-between align-items-center">
                     <button type="button" class="btn btn-light" data-bs-dismiss="modal" wire:click="limpiar">
                         Cerrar
                     </button>
-                    <button type="button" wire:click="observar_pago" class="btn btn-danger" wire:loading.attr="disabled">
+                    <button type="button" wire:click="rechazar_pago" class="btn btn-danger" wire:loading.attr="disabled">
+                        <div wire:loading.remove wire:target="rechazar_pago">
+                            Rechazar
+                        </div>
+                        <div wire:loading wire:target="rechazar_pago">
+                            Procesando...
+                        </div>
+                    </button>
+                    <button type="button" wire:click="observar_pago" class="btn btn-warning" wire:loading.attr="disabled">
                         <div wire:loading.remove wire:target="observar_pago">
-                            Observar Pago
+                            Observar
                         </div>
                         <div wire:loading wire:target="observar_pago">
                             Procesando...
@@ -212,7 +238,7 @@
                     </button>
                     <button type="button" wire:click="validar_pago" class="btn btn-primary" wire:loading.attr="disabled">
                         <div wire:loading.remove wire:target="validar_pago">
-                            Validar Pago
+                            Validar
                         </div>
                         <div wire:loading wire:target="validar_pago">
                             Procesando...
@@ -225,10 +251,10 @@
 </div>
 @push('scripts')
     <script>
-        // filtro_canal_pago select2
+        // filtro_concepto_pago select2
         $(document).ready(function () {
-            $('#filtro_canal_pago').select2({
-                placeholder: 'Seleccione su canal de pago',
+            $('#filtro_concepto_pago').select2({
+                placeholder: 'Seleccione su concepto de pago',
                 allowClear: true,
                 width: '100%',
                 selectOnClose: true,
@@ -241,12 +267,12 @@
                     }
                 }
             });
-            $('#filtro_canal_pago').on('change', function(){
-                @this.set('filtro_canal_pago', this.value);
+            $('#filtro_concepto_pago').on('change', function(){
+                @this.set('filtro_concepto_pago', this.value);
             });
             Livewire.hook('message.processed', (message, component) => {
-                $('#filtro_canal_pago').select2({
-                    placeholder: 'Seleccione su canal de pago',
+                $('#filtro_concepto_pago').select2({
+                    placeholder: 'Seleccione su concepto de pago',
                     allowClear: true,
                     width: '100%',
                     selectOnClose: true,
@@ -259,8 +285,8 @@
                         }
                     }
                 });
-                $('#filtro_canal_pago').on('change', function(){
-                    @this.set('filtro_canal_pago', this.value);
+                $('#filtro_concepto_pago').on('change', function(){
+                    @this.set('filtro_concepto_pago', this.value);
                 });
             });
         });

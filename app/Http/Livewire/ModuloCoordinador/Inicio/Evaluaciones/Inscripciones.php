@@ -4,22 +4,39 @@ namespace App\Http\Livewire\ModuloCoordinador\Inicio\Evaluaciones;
 
 use App\Models\Admision;
 use App\Models\Evaluacion;
+use App\Models\ExpedienteAdmision;
+use App\Models\ExpedienteInscripcion;
 use App\Models\Inscripcion;
+use App\Models\Persona;
 use App\Models\Programa;
 use App\Models\Puntaje;
 use App\Models\TrabajadorTipoTrabajador;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Session;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class Inscripciones extends Component
 {
+    use WithPagination; // para la paginacion del componente de livewire
+
     public $id_programa; // es el id del programa que se esta consultando
     public $programa; // es el programa que se esta consultando
     public $id_admision; // es el id de la admision que se esta consultando
     public $admision; // es la admision que se esta consultando
-    public $inscripciones; // es el listado de inscripciones del programa
     public $puntaje_model; // es el modelo de puntaje que se esta consultando
     public $puntaje_alerta; // es el puntaje de alerta que se esta consultando
+
+    // variables del modal
+    public $title_modal = 'Información del Postulante'; // titulo del modal
+    public $nombre_completo; // nombre completo del postulante
+    public $documento; // dni del postulante
+    public $correo; // correo del postulante
+    public $celular; // telefono del postulante
+    public $especialidad; // especialidad del postulante
+    public $grado_academico; // grado academico del postulante
+    public $expedientes; // listado de expedientes del postulante
+    public $expedientes_model; // modelo de la tabla expediente
 
     public $search = ''; // Variable para la busqueda
 
@@ -261,9 +278,54 @@ class Inscripciones extends Component
         }
     }
 
+    public function detalle_evaluacion(Inscripcion $inscripcion)
+    {
+        $persona = Persona::where('id_persona', $inscripcion->id_persona)->first();
+        $expedientes_inscripcion = ExpedienteInscripcion::where('id_inscripcion', $inscripcion->id_inscripcion)->orderBy('id_expediente_admision', 'asc')->get();
+        $expediente_admision = ExpedienteAdmision::join('expediente', 'expediente.id_expediente', '=', 'expediente_admision.id_expediente')
+                                                ->where('expediente_admision.id_admision', $this->id_admision)
+                                                ->where(function($query) use ($inscripcion){
+                                                    $query->where('expediente.expediente_tipo', 0)
+                                                        ->orWhere('expediente.expediente_tipo', $inscripcion->inscripcion_tipo_programa);
+                                                })
+                                                ->get();
+
+        // Utilizamos el método map() para recorrer la colección $expediente_admision y realizar la comparación con cada $expediente_inscripcion.
+        // Si se encuentra una coincidencia, se agrega la columna "estado" con el valor "enviado" al objeto $expediente.
+        // De lo contrario, se agrega la columna "estado" con el valor "no enviado".
+        // Finalmente, se devuelve la colección $expedientes_comparados con la nueva columna agregada.
+        $this->expedientes = $expediente_admision->map(
+                function ($expediente) use ($expedientes_inscripcion)
+                {
+                    $expediente_inscripcion = $expedientes_inscripcion->firstWhere('id_expediente_admision', $expediente->id_expediente_admision);
+
+                    if ($expediente_inscripcion)
+                    {
+                        $expediente->estado = 1;
+                        $expediente->expediente_inscripcion_url = $expediente_inscripcion->expediente_inscripcion_url;
+                    }
+                    else
+                    {
+                        $expediente->estado = 0;
+                        $expediente->expediente_inscripcion_url = null;
+                    }
+
+                    return $expediente;
+                }
+            );
+
+        // Asignamos los valores a las variables que se mostrarán en la vista.
+        $this->nombre_completo = $persona->nombre_completo;
+        $this->documento = $persona->numero_documento;
+        $this->correo = $persona->correo;
+        $this->celular = $persona->celular;
+        $this->especialidad = $persona->especialidad_carrera;
+        $this->grado_academico = $persona->grado_academico->grado_academico;
+    }
+
     public function render()
     {
-        $this->inscripciones = Inscripcion::join('programa_proceso', 'programa_proceso.id_programa_proceso', '=', 'inscripcion.id_programa_proceso')
+        $inscripciones = Inscripcion::join('programa_proceso', 'programa_proceso.id_programa_proceso', '=', 'inscripcion.id_programa_proceso')
                                         ->join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
                                         ->join('programa', 'programa.id_programa', '=', 'programa_plan.id_programa')
                                         ->join('persona', 'persona.id_persona', '=', 'inscripcion.id_persona')
@@ -274,7 +336,7 @@ class Inscripciones extends Component
                                                 ->orWhere('persona.numero_documento', 'like', '%' . $this->search . '%');
                                         })
                                         ->orderBy('persona.nombre_completo', 'asc')
-                                        ->get();
+                                        ->paginate(50);
         $evaluaciones = Evaluacion::join('inscripcion', 'inscripcion.id_inscripcion', '=', 'evaluacion.id_inscripcion')
                                     ->join('programa_proceso', 'programa_proceso.id_programa_proceso', '=', 'inscripcion.id_programa_proceso')
                                     ->join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
@@ -289,6 +351,7 @@ class Inscripciones extends Component
                                     ->orderBy('persona.nombre_completo', 'asc')
                                     ->get();
         return view('livewire.modulo-coordinador.inicio.evaluaciones.inscripciones', [
+            'inscripciones' => $inscripciones,
             'evaluaciones' => $evaluaciones
         ]);
     }

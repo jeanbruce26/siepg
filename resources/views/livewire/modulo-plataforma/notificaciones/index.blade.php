@@ -16,27 +16,50 @@
         </div>
     </div>
     <div class="card-body hover-scroll-overlay-y">
-        @if ($observaciones->count() > 0)
+        @if ($observaciones)
             @foreach ($observaciones as $item2)
                 <a href="{{ route('plataforma.pago') }}">
-                    <div class="bg-opacity-15 bg-info d-flex flex-column shadow flex-sm-row p-5 mb-5 hover-scale rounded-3">
+                    <div class="@if($item2->pago_observacion_estado == 1) bg-opacity-15 bg-info @else bg-opacity-25 bg-danger @endif  d-flex flex-column shadow flex-sm-row p-5 mb-5 hover-scale rounded-3">
                         <div class="d-flex flex-column w-100">
                             <div class="d-flex justify-content-between align-items-center w-100">
                                 <div class="fs-5 fw-bold text-dark">
-                                    Observación de Pago
+                                    @if($item2->pago_observacion_estado == 1)
+                                        Observación <br>Pago de {{ $item2->pago->concepto_pago->concepto_pago }}
+                                    @else
+                                        Pago de {{ $item2->pago->concepto_pago->concepto_pago }} rechazado.
+                                    @endif
                                 </div>
-                                <div class="text-muted fs-6">
+                                <div class="text-muted">
                                     {{ Carbon\Carbon::parse($item2->pago_observacion_creacion)->diffForHumans() }}
                                 </div>
                             </div>
-                            <span class="text-dark">
+                            <span class="text-dark mt-2">
                                 -> {{ $item2->pago_observacion }}
                             </span>
                         </div>
                     </div>
                 </a>
             @endforeach
-        @else
+        @endif
+        @if($validaciones)
+            @foreach ($validaciones as $item2)
+                <a style="cursor: pointer" wire:click="leer_pago_validado({{ $item2->id_pago }})">
+                    <div class="bg-opacity-25 bg-success d-flex flex-column shadow flex-sm-row p-5 mb-5 hover-scale rounded-3">
+                        <div class="d-flex flex-column w-100">
+                            <div class="d-flex flex-column justify-content-center w-100">
+                                <div class="fs-5 fw-bold text-dark">
+                                    Pago de {{ $item2->concepto_pago->concepto_pago }} Validado
+                                </div>
+                                <div class="text-muted">
+                                    {{ Carbon\Carbon::parse($item2->pago_fecha)->diffForHumans() }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            @endforeach
+        @endif
+        @if($observaciones->count() == 0 && $validaciones->count() == 0)
             <div class="alert bg-light-secondary d-flex flex-column shadow flex-sm-row p-5 mb-5 hover-scale">
                 <div class="d-flex flex-column pe-0 pe-sm-10">
                     <span class="text-muted fs-5">
