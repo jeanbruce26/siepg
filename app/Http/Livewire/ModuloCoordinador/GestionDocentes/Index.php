@@ -169,7 +169,11 @@ class Index extends Component
         $this->nombre = $this->trabajador->trabajador_nombre;
         $apellidos = explode(' ', $this->trabajador->trabajador_apellido);
         $this->apellido_paterno = $apellidos[0];
-        $this->apellido_materno = isset($apellidos[1]) ? $apellidos[1] : '';
+        if (count($apellidos) > 1) {
+            $this->apellido_materno = implode(' ', array_slice($apellidos, 1));
+        } else {
+            $this->apellido_materno = '';
+        }
         $this->correo_electronico = $this->trabajador->trabajador_correo;
         $this->direccion = $this->trabajador->trabajador_direccion;
         $this->grado_academico = $tipo == 'edit' ? $this->trabajador->id_grado_academico : ($tipo == 'show' ? $this->trabajador->grado_academico->grado_academico : '');
@@ -354,11 +358,9 @@ class Index extends Component
 
             // editamos el usuario
             $usuario = Usuario::where('id_trabajador_tipo_trabajador', $trabajador_tipo_trabajador->id_trabajador_tipo_trabajador)->first();
-            $usuario->usuario_nombre = 'DOCENTE - ' . $this->trabajador->trabajador_nombre_completo;
-            $usuario->usuario_correo = $this->trabajador->trabajador_correo;
+            $usuario->usuario_nombre = 'DOCENTE - ' . $trabajador->trabajador_nombre_completo;
+            $usuario->usuario_correo = $this->correo_electronico;
             $usuario->usuario_password = Hash::make($this->documento_identidad);
-            $usuario->id_trabajador_tipo_trabajador = $trabajador_tipo_trabajador->id_trabajador_tipo_trabajador;
-            $usuario->usuario_estado = 2; // 0 = Inactivo | 1 = Activo | 2 = Asignado
             $usuario->save();
 
             // emitir alerta para mostrar mensaje de éxito

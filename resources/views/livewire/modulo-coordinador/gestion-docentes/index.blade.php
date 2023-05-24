@@ -224,8 +224,8 @@
                                                     <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-150px py-4"
                                                         data-kt-menu="true">
                                                         <div class="menu-item px-3">
-                                                            <a href="#modal_docente" wire:click="cargar_docente({{ $item->id_docente }}, 'show')" class="menu-link px-3 fs-6" data-bs-toggle="modal"
-                                                                data-bs-target="#modal_docente">
+                                                            <a href="#modal_docente_detalle" wire:click="cargar_docente({{ $item->id_docente }}, 'show')" class="menu-link px-3 fs-6" data-bs-toggle="modal"
+                                                                data-bs-target="#modal_docente_detalle">
                                                                 Detalle
                                                             </a>
                                                         </div>
@@ -308,224 +308,141 @@
 
                 <div class="modal-body">
                     <form autocomplete="off" class="row g-5">
-                        @if ($modo != 'show')
-                            <div class="col-md-6">
-                                <label for="documento_identidad" class="required form-label">
-                                    Documento de Identidad
-                                </label>
-                                <input type="number" wire:model="documento_identidad"
-                                    class="form-control @error('documento_identidad') is-invalid @enderror"
-                                    placeholder="12345678" id="documento_identidad" />
-                                @error('documento_identidad')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                            <div class="col-md-6">
-                                <label for="nombre" class="required form-label">
-                                    Nombre
-                                </label>
-                                <input type="text" wire:model="nombre"
-                                    class="form-control @error('nombre') is-invalid @enderror"
-                                    placeholder="Ingrese el nombre del docente" id="nombre" />
-                                @error('nombre')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                            <div class="col-md-6">
-                                <label for="apellido_paterno" class="required form-label">
-                                    Apellido Paterno
-                                </label>
-                                <input type="text" wire:model="apellido_paterno"
-                                    class="form-control @error('apellido_paterno') is-invalid @enderror"
-                                    placeholder="Ingrese el apellido paterno del docente" id="apellido_paterno" />
-                                @error('apellido_paterno')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                            <div class="col-md-6">
-                                <label for="apellido_materno" class="required form-label">
-                                    Apellido Materno
-                                </label>
-                                <input type="text" wire:model="apellido_materno"
-                                    class="form-control @error('apellido_materno') is-invalid @enderror"
-                                    placeholder="Ingrese el apellido materno del docente" id="apellido_materno" />
-                                @error('apellido_materno')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                            <div class="col-md-6">
-                                <label for="correo_electronico" class="required form-label">
-                                    Correo Electrónico
-                                </label>
-                                <input type="email" wire:model="correo_electronico"
-                                    class="form-control @error('correo_electronico') is-invalid @enderror"
-                                    placeholder="docente@unu.edu.pe" id="correo_electronico" />
-                                @error('correo_electronico')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                            <div class="col-md-6">
-                                <label for="direccion" class="required form-label">
-                                    Dirección
-                                </label>
-                                <input type="text" wire:model="direccion"
-                                    class="form-control @error('direccion') is-invalid @enderror"
-                                    placeholder="Jr. Nombre 123" id="direccion" />
-                                @error('direccion')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                            <div class="col-md-6">
-                                <label for="grado_academico" class="required form-label">
-                                    Grado Académico
-                                </label>
-                                <select class="form-select @error('grado_academico') is-invalid @enderror"
-                                    wire:model="grado_academico" id="grado_academico" data-control="select2"
-                                    data-placeholder="Seleccione su grado académico" data-allow-clear="true"
-                                    data-dropdown-parent="#modal_docente">
-                                    <option></option>
-                                    @foreach ($grados_academicos as $item)
-                                        <option value="{{ $item->id_grado_academico }}">{{ $item->grado_academico }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('grado_academico')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                            <div class="col-md-6">
-                                <label for="tipo_docente" class="required form-label">
-                                    Tipo de Docente
-                                </label>
-                                <select class="form-select @error('tipo_docente') is-invalid @enderror"
-                                    wire:model="tipo_docente" id="tipo_docente" data-control="select2"
-                                    data-placeholder="Seleccione su tipo de docente" data-allow-clear="true"
-                                    data-dropdown-parent="#modal_docente">
-                                    <option></option>
-                                    @foreach ($tipos_docentes as $item)
-                                        <option value="{{ $item->id_tipo_docente }}">{{ $item->tipo_docente }}</option>
-                                    @endforeach
-                                </select>
-                                @error('tipo_docente')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                            @if ($mostrar_curriculum == true)
-                                <div class="col-md-12">
-                                    <label for="curriculum_vitae" class="required form-label">
-                                        Curriculum Vitae
-                                    </label>
-                                    <input type="file" wire:model="curriculum_vitae"
-                                        class="form-control @error('curriculum_vitae') is-invalid @enderror"
-                                        id="upload{{ $iteration }}" accept="application/pdf" />
-                                    <span class="form-text text-muted mt-2 fst-italic">
-                                        Nota: El currivulum vitae debe ser en formato PDF y no debe superar los 10MB. <br>
-                                    </span>
-                                    @error('curriculum_vitae')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            @endif
+                        <div class="col-md-6">
+                            <label for="documento_identidad" class="required form-label">
+                                Documento de Identidad
+                            </label>
+                            <input type="number" wire:model="documento_identidad"
+                                class="form-control @error('documento_identidad') is-invalid @enderror"
+                                placeholder="12345678" id="documento_identidad" />
+                            @error('documento_identidad')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="col-md-6">
+                            <label for="nombre" class="required form-label">
+                                Nombre
+                            </label>
+                            <input type="text" wire:model="nombre"
+                                class="form-control @error('nombre') is-invalid @enderror"
+                                placeholder="Ingrese el nombre del docente" id="nombre" />
+                            @error('nombre')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="col-md-6">
+                            <label for="apellido_paterno" class="required form-label">
+                                Apellido Paterno
+                            </label>
+                            <input type="text" wire:model="apellido_paterno"
+                                class="form-control @error('apellido_paterno') is-invalid @enderror"
+                                placeholder="Ingrese el apellido paterno del docente" id="apellido_paterno" />
+                            @error('apellido_paterno')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="col-md-6">
+                            <label for="apellido_materno" class="required form-label">
+                                Apellido Materno
+                            </label>
+                            <input type="text" wire:model="apellido_materno"
+                                class="form-control @error('apellido_materno') is-invalid @enderror"
+                                placeholder="Ingrese el apellido materno del docente" id="apellido_materno" />
+                            @error('apellido_materno')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="col-md-6">
+                            <label for="correo_electronico" class="required form-label">
+                                Correo Electrónico
+                            </label>
+                            <input type="email" wire:model="correo_electronico"
+                                class="form-control @error('correo_electronico') is-invalid @enderror"
+                                placeholder="docente@unu.edu.pe" id="correo_electronico" />
+                            @error('correo_electronico')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="col-md-6">
+                            <label for="direccion" class="required form-label">
+                                Dirección
+                            </label>
+                            <input type="text" wire:model="direccion"
+                                class="form-control @error('direccion') is-invalid @enderror"
+                                placeholder="Jr. Nombre 123" id="direccion" />
+                            @error('direccion')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="col-md-6">
+                            <label for="grado_academico" class="required form-label">
+                                Grado Académico
+                            </label>
+                            <select class="form-select @error('grado_academico') is-invalid @enderror"
+                                wire:model="grado_academico" id="grado_academico" data-control="select2"
+                                data-placeholder="Seleccione su grado académico" data-allow-clear="true"
+                                data-dropdown-parent="#modal_docente">
+                                <option></option>
+                                @foreach ($grados_academicos as $item)
+                                    <option value="{{ $item->id_grado_academico }}">{{ $item->grado_academico }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('grado_academico')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="col-md-6">
+                            <label for="tipo_docente" class="required form-label">
+                                Tipo de Docente
+                            </label>
+                            <select class="form-select @error('tipo_docente') is-invalid @enderror"
+                                wire:model="tipo_docente" id="tipo_docente" data-control="select2"
+                                data-placeholder="Seleccione su tipo de docente" data-allow-clear="true"
+                                data-dropdown-parent="#modal_docente">
+                                <option></option>
+                                @foreach ($tipos_docentes as $item)
+                                    <option value="{{ $item->id_tipo_docente }}">{{ $item->tipo_docente }}</option>
+                                @endforeach
+                            </select>
+                            @error('tipo_docente')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        @if ($mostrar_curriculum == true)
                             <div class="col-md-12">
-                                <label for="foto_perfil" class="@if($modo == 'create') required @endif form-label">
-                                    Foto de Perfil
+                                <label for="curriculum_vitae" class="required form-label">
+                                    Curriculum Vitae
                                 </label>
-                                <input type="file" wire:model="foto_perfil"
-                                    class="form-control @error('foto_perfil') is-invalid @enderror"
-                                    id="upload{{ $iteration }}" accept="image/jpeg, image/png, image/jpg" />
+                                <input type="file" wire:model="curriculum_vitae"
+                                    class="form-control @error('curriculum_vitae') is-invalid @enderror"
+                                    id="upload{{ $iteration }}" accept="application/pdf" />
                                 <span class="form-text text-muted mt-2 fst-italic">
-                                    Nota: La foto de perfil debe ser imagen en formato JPG, JPEG, PNG y no debe superar los
-                                    2MB. <br>
+                                    Nota: El currivulum vitae debe ser en formato PDF y no debe superar los 10MB. <br>
                                 </span>
-                                @error('foto_perfil')
+                                @error('curriculum_vitae')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
-                            </div>
-                        @else
-                            <div class="col-md-12 px-md-15">
-                                <div class="d-flex justify-content-center align-items-center gap-2">
-                                    <div>
-                                        @if ($item->trabajador_perfil_url)
-                                            <img src="{{ asset($item->trabajador_perfil_url) }}" alt="foto de perfil" class="w-150px h-150px rounded object-cover">
-                                        @else
-                                            <img src="{{ asset('assets/media/avatars/blank.png') }}" alt="foto de perfil" class="w-150px h-150px rounded">
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-12 mb-3 px-md-15">
-                                <div class="row mb-3">
-                                    <span class="col-4 fw-semibold text-gray-600 fs-5">
-                                        Apellidos y Nombres
-                                    </span>
-                                    <span class="col-1 fw-semibold text-gray-600 fs-5">
-                                        :
-                                    </span>
-                                    <span class="col-7 fw-bold text-gray-900 fs-5">
-                                        {{ $apellido_paterno }} {{ $apellido_materno }}, {{ $nombre }}
-                                    </span>
-                                </div>
-                                <div class="row mb-3">
-                                    <span class="col-4 fw-semibold text-gray-600 fs-5">
-                                        Documento de Identidad
-                                    </span>
-                                    <span class="col-1 fw-semibold text-gray-600 fs-5">
-                                        :
-                                    </span>
-                                    <span class="col-7 fw-bold text-gray-900 fs-5">
-                                        {{ $documento_identidad }}
-                                    </span>
-                                </div>
-                                <div class="row mb-3">
-                                    <span class="col-4 fw-semibold text-gray-600 fs-5">
-                                        Correo Electrónico
-                                    </span>
-                                    <span class="col-1 fw-semibold text-gray-600 fs-5">
-                                        :
-                                    </span>
-                                    <span class="col-7 fw-bold text-gray-900 fs-5">
-                                        {{ $correo_electronico }}
-                                    </span>
-                                </div>
-                                <div class="row mb-3">
-                                    <span class="col-4 fw-semibold text-gray-600 fs-5">
-                                        Dirección
-                                    </span>
-                                    <span class="col-1 fw-semibold text-gray-600 fs-5">
-                                        :
-                                    </span>
-                                    <span class="col-7 fw-bold text-gray-900 fs-5">
-                                        {{ $direccion }}
-                                    </span>
-                                </div>
-                                <div class="row mb-3">
-                                    <span class="col-4 fw-semibold text-gray-600 fs-5">
-                                        Grado Académico
-                                    </span>
-                                    <span class="col-1 fw-semibold text-gray-600 fs-5">
-                                        :
-                                    </span>
-                                    <span class="col-7 fw-bold text-gray-900 fs-5">
-                                        {{ $grado_academico }}
-                                    </span>
-                                </div>
-                                <div class="row mb-3">
-                                    <span class="col-4 fw-semibold text-gray-600 fs-5">
-                                        Tipo de Docente
-                                    </span>
-                                    <span class="col-1 fw-semibold text-gray-600 fs-5">
-                                        :
-                                    </span>
-                                    <span class="col-7 fw-bold text-gray-900 fs-5">
-                                        {{ $tipo_docente }}
-                                    </span>
-                                </div>
                             </div>
                         @endif
+                        <div class="col-md-12">
+                            <label for="foto_perfil" class="@if($modo == 'create') required @endif form-label">
+                                Foto de Perfil
+                            </label>
+                            <input type="file" wire:model="foto_perfil"
+                                class="form-control @error('foto_perfil') is-invalid @enderror"
+                                id="upload{{ $iteration }}" accept="image/jpeg, image/png, image/jpg" />
+                            <span class="form-text text-muted mt-2 fst-italic">
+                                Nota: La foto de perfil debe ser imagen en formato JPG, JPEG, PNG y no debe superar los
+                                2MB. <br>
+                            </span>
+                            @error('foto_perfil')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
                     </form>
                 </div>
 
-                @if ($modo != 'show')
                 <div class="modal-footer">
                     <button type="button" class="btn btn-light" data-bs-dismiss="modal"
                         wire:click="limpiar_modal">Cerrar</button>
@@ -539,7 +456,118 @@
                         </div>
                     </button>
                 </div>
-                @endif
+            </div>
+        </div>
+    </div>
+    <div wire:ignore.self class="modal fade" tabindex="-1" id="modal_docente_detalle">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">
+                        {{ $title_modal }}
+                    </h2>
+
+                    <div class="btn btn-icon btn-sm btn-active-light-danger ms-2" data-bs-dismiss="modal"
+                        aria-label="Close">
+                        <span class="svg-icon svg-icon-2hx">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <rect opacity="0.3" x="2" y="2" width="20" height="20"
+                                    rx="5" fill="currentColor" />
+                                <rect x="7" y="15.3137" width="12" height="2" rx="1"
+                                    transform="rotate(-45 7 15.3137)" fill="currentColor" />
+                                <rect x="8.41422" y="7" width="12" height="2" rx="1"
+                                    transform="rotate(45 8.41422 7)" fill="currentColor" />
+                            </svg>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="modal-body">
+                    <form autocomplete="off" class="row g-5">
+                        <div class="col-md-12 px-md-15">
+                            <div class="d-flex justify-content-center align-items-center gap-2">
+                                <div>
+                                    @if ($trabajador)
+                                        @if ($trabajador->trabajador_perfil_url)
+                                            <img src="{{ asset($trabajador->trabajador_perfil_url) }}" alt="foto de perfil" class="w-150px h-150px rounded object-cover">
+                                        @else
+                                            <img src="{{ asset('assets/media/avatars/blank.png') }}" alt="foto de perfil" class="w-150px h-150px rounded">
+                                        @endif
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 mb-3 px-md-15">
+                            <div class="row mb-3">
+                                <span class="col-4 fw-semibold text-gray-600 fs-5">
+                                    Apellidos y Nombres
+                                </span>
+                                <span class="col-1 fw-semibold text-gray-600 fs-5">
+                                    :
+                                </span>
+                                <span class="col-7 fw-bold text-gray-900 fs-5">
+                                    {{ $apellido_paterno }} {{ $apellido_materno }}, {{ $nombre }}
+                                </span>
+                            </div>
+                            <div class="row mb-3">
+                                <span class="col-4 fw-semibold text-gray-600 fs-5">
+                                    Documento de Identidad
+                                </span>
+                                <span class="col-1 fw-semibold text-gray-600 fs-5">
+                                    :
+                                </span>
+                                <span class="col-7 fw-bold text-gray-900 fs-5">
+                                    {{ $documento_identidad }}
+                                </span>
+                            </div>
+                            <div class="row mb-3">
+                                <span class="col-4 fw-semibold text-gray-600 fs-5">
+                                    Correo Electrónico
+                                </span>
+                                <span class="col-1 fw-semibold text-gray-600 fs-5">
+                                    :
+                                </span>
+                                <span class="col-7 fw-bold text-gray-900 fs-5">
+                                    {{ $correo_electronico }}
+                                </span>
+                            </div>
+                            <div class="row mb-3">
+                                <span class="col-4 fw-semibold text-gray-600 fs-5">
+                                    Dirección
+                                </span>
+                                <span class="col-1 fw-semibold text-gray-600 fs-5">
+                                    :
+                                </span>
+                                <span class="col-7 fw-bold text-gray-900 fs-5">
+                                    {{ $direccion }}
+                                </span>
+                            </div>
+                            <div class="row mb-3">
+                                <span class="col-4 fw-semibold text-gray-600 fs-5">
+                                    Grado Académico
+                                </span>
+                                <span class="col-1 fw-semibold text-gray-600 fs-5">
+                                    :
+                                </span>
+                                <span class="col-7 fw-bold text-gray-900 fs-5">
+                                    {{ $grado_academico }}
+                                </span>
+                            </div>
+                            <div class="row mb-3">
+                                <span class="col-4 fw-semibold text-gray-600 fs-5">
+                                    Tipo de Docente
+                                </span>
+                                <span class="col-1 fw-semibold text-gray-600 fs-5">
+                                    :
+                                </span>
+                                <span class="col-7 fw-bold text-gray-900 fs-5">
+                                    {{ $tipo_docente }}
+                                </span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
