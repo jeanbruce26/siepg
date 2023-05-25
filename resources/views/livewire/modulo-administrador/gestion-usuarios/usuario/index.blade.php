@@ -65,11 +65,11 @@
                             <table class="table table-hover table-rounded border gy-4 gs-4 mb-0 align-middle">
                                 <thead class="bg-light-primary">
                                     <tr align="center" class="fw-bold fs-5 text-gray-800 border-bottom-2 border-gray-200">
-                                        <th>#</th>
-                                        <th>Username</th>
-                                        <th>Correo</th>
-                                        <th>Estado</th>
-                                        <th>Acciones</th>
+                                        <th scope="col" class="col-md-1">ID</th>
+                                        <th scope="col">Username</th>
+                                        <th scope="col">Correo</th>
+                                        <th scope="col" class="col-md-1">Estado</th>
+                                        <th scope="col" class="col-md-2">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -80,18 +80,18 @@
                                         <td>{{ $item->usuario_correo }}</td>
                                         <td align="center">
                                             @if ($item->usuario_estado == 1)
-                                                <span style="cursor: pointer;" wire:click="cargarAlerta({{ $item->id_usuario }})" class="badge text-bg-primary text-light hover-elevate-down">Activo <span class="pulse-ring"></span></span>
+                                                <span style="cursor: pointer;" wire:click="cargarAlerta({{ $item->id_usuario }})" class="badge text-bg-primary text-light hover-elevate-down px-3 py-2">Activo</span>
                                             @endif
                                             @if ($item->usuario_estado == 2)
-                                                <span style="cursor: pointer;" wire:click="cargarAlerta({{ $item->id_usuario }})" class="badge text-bg-success text-light hover-elevate-down">Asignado <span class="pulse-ring"></span></span>
+                                                <span style="cursor: pointer;" wire:click="cargarAlerta({{ $item->id_usuario }})" class="badge text-bg-success text-light hover-elevate-down px-3 py-2">Asignado</span>
                                             @endif
                                             @if ($item->usuario_estado == 0)
-                                                <span style="cursor: pointer;" wire:click="cargarAlerta({{ $item->id_usuario }})" class="badge text-bg-danger text-light hover-elevate-down">Inactivo <span class="pulse-ring"></span></span>
+                                                <span style="cursor: pointer;" wire:click="cargarAlerta({{ $item->id_usuario }})" class="badge text-bg-danger text-light hover-elevate-down px-3 py-2">Inactivo</span>
                                             @endif
                                         </td>
 
                                         <td align="center">
-                                            <a href="#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" data-kt-menu-flip="top-end">
+                                            <a class="btn btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary btn-sm" data-bs-toggle="dropdown">
                                                 Actions
                                                 <span class="svg-icon fs-5 m-0">
                                                     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -102,7 +102,7 @@
                                                     </svg>
                                                 </span>
                                             </a>
-                                            <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
+                                            <div class="dropdown-menu dropdown-menu-end menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
                                                 <div class="menu-item px-3">
                                                     <a href="#modalUsuario"
                                                     wire:click="cargarUsuario({{ $item->id_usuario }})" 

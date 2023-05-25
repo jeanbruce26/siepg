@@ -41,6 +41,8 @@ class Index extends Component
     public function modo()
     {
         $this->modo = 1;
+        $this->titulo = 'Crear Usuario';
+        $this->limpiar();
     }
 
     public function limpiar()

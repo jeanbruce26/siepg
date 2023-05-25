@@ -108,7 +108,7 @@ class Index extends Component
 
     //Mostar modal de confirmacion para cambiar el estado del expediente
     public function cargarAlertaEstado($id)
-    {        
+    {   
         $expedi = Expediente::find($id);//Buscamos el expediente por el id
         $this->alertaConfirmacion('¿Estás seguro?',"¿Desea cambiar el estado del expediente $expedi->expediente?",'question','Modificar','Cancelar','primary','danger','cambiarEstado',$id);
     }

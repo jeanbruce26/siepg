@@ -55,14 +55,14 @@
                                         <td align="center">{{ $item->admision_año }}</td>
                                         <td align="center">
                                             @if ($item->admision_estado == 1)
-                                                <span style="cursor: pointer;" wire:click="cargarAlerta({{ $item->id_admision }})" class="badge text-bg-success text-light hover-elevate-down">Activo<span class="pulse-ring"></span></span>
+                                                <span style="cursor: pointer;" wire:click="cargarAlerta({{ $item->id_admision }})" class="badge text-bg-success text-light hover-elevate-down px-3 py-2">Activo</span>
                                             @else
-                                                <span style="cursor: pointer;" wire:click="cargarAlerta({{ $item->id_admision }})" class="badge text-bg-danger text-light hover-elevate-down">Inactivo <span class="pulse-ring"></span></span>
+                                                <span style="cursor: pointer;" wire:click="cargarAlerta({{ $item->id_admision }})" class="badge text-bg-danger text-light hover-elevate-down px-3 py-2">Inactivo</span>
                                             @endif
                                         </td>
                                         <td align="center">
-                                            <a href="#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" data-kt-menu-flip="top-end">
-                                                Actions
+                                            <a class="btn btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary btn-sm" data-bs-toggle="dropdown">
+                                                Acciones
                                                 <span class="svg-icon fs-5 m-0">
                                                     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                                         <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -72,7 +72,7 @@
                                                     </svg>
                                                 </span>
                                             </a>
-                                            <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
+                                            <div class="dropdown-menu dropdown-menu-end menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
                                                 <div class="menu-item px-3">
                                                     <a href="#modalAdmision"
                                                     wire:click="cargarAdmision({{ $item->id_admision }})" 
@@ -101,7 +101,7 @@
     {{-- Modal Usuario --}}
     <div wire:ignore.self class="modal fade" id="modalAdmision" tabindex="-1" aria-labelledby="modalAdmision"
         aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">{{ $titulo }}</h5>
