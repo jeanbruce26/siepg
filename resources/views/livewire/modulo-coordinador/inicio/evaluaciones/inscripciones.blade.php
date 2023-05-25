@@ -41,16 +41,16 @@
                 <div class="d-flex align-items-center text-center gap-2 gap-lg-3 ms-5">
                     @if ($inscripciones->count() == $evaluaciones->count())
                         @if ($programa->programa_tipo == 1)
-                            <a href="{{ route('coordinador.reporte-maestria', ['id_programa' => $id_programa, 'id_admision' => $id_admision]) }}" target="_blank" class="btn btn-info btn-sm">
+                            <a href="{{ route('coordinador.reporte-maestria', ['id_programa' => $id_programa, 'id_admision' => $id_admision]) }}" target="_blank" class="btn btn-info fw-bold">
                                 Generar Acta de Evaluación
                             </a>
                         @else
-                            <a href="{{ route('coordinador.reporte-doctorado', ['id_programa' => $id_programa, 'id_admision' => $id_admision]) }}" target="_blank" class="btn btn-info btn-sm">
+                            <a href="{{ route('coordinador.reporte-doctorado', ['id_programa' => $id_programa, 'id_admision' => $id_admision]) }}" target="_blank" class="btn btn-info fw-bold">
                                 Generar Acta de Evaluación
                             </a>
                         @endif
                     @else
-                        <button type="button" class="btn btn-info btn-sm" disabled>
+                        <button type="button" class="btn btn-info fw-bold" disabled>
                             Generar Acta de Evaluación
                         </button>
                     @endif
@@ -192,15 +192,15 @@
                                                 <td align="center">
                                                     @if ($evaluacion)
                                                         @if ($evaluacion->evaluacion_estado == 1)
-                                                            <span class="badge badge-warning fs-6">
+                                                            <span class="badge badge-warning fs-6 px-3 py-2">
                                                                 Pendiente
                                                             </span>
                                                         @elseif ($evaluacion->evaluacion_estado == 2)
-                                                            <span class="badge badge-success fs-6">
+                                                            <span class="badge badge-success fs-6 px-3 py-2">
                                                                 Admitido
                                                             </span>
                                                         @elseif ($evaluacion->evaluacion_estado == 3)
-                                                            <span class="badge badge-danger fs-6">
+                                                            <span class="badge badge-danger fs-6 px-3 py-2">
                                                                 No Admitido
                                                             </span>
                                                         @endif

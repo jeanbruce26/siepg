@@ -196,4 +196,8 @@ class CoordinadorController extends Controller
         return $pdf->stream('acta-evaluacion-doctorado-'.$fecha2.'.pdf');
     }
 
+    public function docentes()
+    {
+        return view('modulo-coordinador.gestion-docentes.index');
+    }
 }

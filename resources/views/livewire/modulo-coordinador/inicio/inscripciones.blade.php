@@ -39,7 +39,7 @@
             </div>
             <div class="d-flex flex-stack">
                 <div class="d-flex align-items-center text-center gap-2 gap-lg-3 ms-5">
-                    <button type="button" class="btn btn-secondary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+                    <button type="button" class="btn btn-secondary fw-bold" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
                         <span class="svg-icon svg-icon-3">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path opacity="0.3" d="M10 4H21C21.6 4 22 4.4 22 5V7H10V4Z" fill="currentColor"/>
@@ -56,7 +56,7 @@
                             </a>
                         </div> --}}
                         <div class="menu-item px-3">
-                            <a wire:click="export_excel" style="cursor: pointer;" class="menu-link px-3">
+                            <a wire:click="export_excel" style="cursor: pointer;" class="menu-link px-3 fs-5">
                                 Exportar a Excel
                             </a>
                         </div>
@@ -76,12 +76,12 @@
             <div class="row mb-5 mb-xl-10">
                 <div class="col-md-12 mb-md-5 mb-xl-10">
                     {{-- alerta --}}
-                    <div class="alert bg-light-primary border border-primary d-flex alig-items-center p-5 mb-5">
+                    <div class="alert bg-light-primary border border-3 border-primary d-flex align-items-center p-5 mb-5">
                         <span class="svg-icon svg-icon-2hx svg-icon-primary me-4 d-flex align-items-center">
-                            <i class="las la-exclamation-circle fs-2 text-primary"></i>
+                            <i class="las la-exclamation-circle fs-1 text-primary"></i>
                         </span>
                         <div class="d-flex flex-column gap-2">
-                            <span class="fw-bold">
+                            <span class="fw-bold fs-5">
                                 Los datos se pueden ordenar de forma "ascendente" o "descendente" haciendo click en el encabezado de la columna.
                             </span>
                         </div>
@@ -105,9 +105,9 @@
                                         <input type="search" wire:model="search" class="form-control w-100" placeholder="Buscar..."/>
                                     </div>
                                 </div>
-                                <table class="table table-hover table-rounded align-middle table-row-bordered border mb-0 gy-4 gs-4">
+                                <table class="table table-hover table-rounded align-middle table-row-bordered border mb-0 gy-5 gs-5">
                                     <thead class="bg-light-warning">
-                                        <tr class="fw-bold fs-6 text-gray-800 border-bottom-2 border-gray-200">
+                                        <tr class="fw-bold fs-5 text-gray-800 border-bottom-2 border-gray-200">
                                             <th @if ($sort_nombre == 'id_inscripcion')
                                                     @if ($sort_direccion == 'asc')
                                                         class="table-sort-asc"
@@ -143,7 +143,7 @@
                                     </thead>
                                     <tbody>
                                         @forelse ($inscripciones as $item)
-                                            <tr>
+                                            <tr class="fs-6">
                                                 <td class="fw-bold">
                                                     {{ $item->id_inscripcion }}
                                                 </td>
