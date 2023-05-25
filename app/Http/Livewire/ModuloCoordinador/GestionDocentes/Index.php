@@ -463,14 +463,12 @@ class Index extends Component
     public function render()
     {
         $docentes = Docente::join('trabajador', 'docente.id_trabajador', '=', 'trabajador.id_trabajador')
-                                ->join('tipo_docente', 'docente.id_tipo_docente', '=', 'tipo_docente.id_tipo_docente')
                                 ->join('grado_academico', 'trabajador.id_grado_academico', '=', 'grado_academico.id_grado_academico')
                                 ->where(function ($query) {
                                     $query->where('trabajador.trabajador_nombre_completo', 'like', '%' . $this->search . '%')
                                         ->orWhere('trabajador.trabajador_numero_documento', 'like', '%' . $this->search . '%')
                                         ->orWhere('trabajador.trabajador_correo', 'like', '%' . $this->search . '%')
-                                        ->orWhere('grado_academico.grado_academico', 'like', '%' . $this->search . '%')
-                                        ->orWhere('tipo_docente.tipo_docente', 'like', '%' . $this->search . '%');
+                                        ->orWhere('grado_academico.grado_academico', 'like', '%' . $this->search . '%');
                                 })
                                 ->where('trabajador.id_grado_academico', $this->grado_academico_data == null ? '!=' : '=', $this->grado_academico_data)
                                 ->where('docente.id_tipo_docente', $this->tipo_docente_data == null ? '!=' : '=', $this->tipo_docente_data)
