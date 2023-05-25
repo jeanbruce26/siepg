@@ -24,7 +24,6 @@ class Index extends Component
     use WithFileUploads;
     use WithPagination;
     
-    protected $paginationTheme = 'bootstrap';
     protected $queryString = [
         'search' => ['except' => ''],
         'mostrar' => ['except' => '10']
@@ -1094,7 +1093,7 @@ class Index extends Component
         if($this->tipo == 'all'){
             $trabajadores = TrabajadorModel::where('trabajador_nombre','LIKE',"%{$this->search}%")
                     ->orWhere('trabajador_apellido','LIKE',"%{$this->search}%")
-                    ->orWhere('id_grado_academico','LIKE',"%{$this->search}%")
+                    // ->orWhere('id_grado_academico','LIKE',"%{$this->search}%")
                     ->orderBy('id_trabajador','DESC')
                     ->paginate($this->mostrar);
         }else{
@@ -1105,8 +1104,8 @@ class Index extends Component
                 })
                 ->where(function($query) use ($buscar){
                     $query->where('trabajador.trabajador_nombre','LIKE',"%{$buscar}%")
-                        ->orWhere('trabajador.trabajador_apellido','LIKE',"%{$buscar}%")
-                        ->orWhere('trabajador.id_grado_academico','LIKE',"%{$buscar}%");
+                        ->orWhere('trabajador.trabajador_apellido','LIKE',"%{$buscar}%");
+                        // ->orWhere('trabajador.id_grado_academico','LIKE',"%{$buscar}%");
                     })
                 ->orderBy('id_trabajador_tipo_trabajador','DESC')
                 ->paginate($this->mostrar);

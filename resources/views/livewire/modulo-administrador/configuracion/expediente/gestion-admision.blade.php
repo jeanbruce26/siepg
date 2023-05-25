@@ -15,7 +15,15 @@
                         <li class="breadcrumb-item">
                             <span class="bullet bg-gray-400 w-5px h-2px"></span>
                         </li>
-                        <li class="breadcrumb-item text-muted">Expediente / Gestión de Admisión</li>
+                        <li class="breadcrumb-item text-muted">
+                            <a href="{{ route('administrador.expediente') }}" class="text-muted text-hover-primary">
+                                Expediente
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <span class="bullet bg-gray-400 w-5px h-2px"></span>
+                        </li>
+                        <li class="breadcrumb-item text-muted">Gestión de Admisión</li>
                     </ul>
                 </div>
                 <div class="d-flex align-items-center gap-2 gap-lg-3">
@@ -89,13 +97,43 @@
                                         </td>
                                     </tr>
                                     @empty
-                                        <div class="text-center p-3 text-muted">
-                                            <span>No hay resultados para la busqueda "<strong>{{ $search }}</strong>"</span>
-                                        </div>
+                                        @if ($search != '')
+                                            <tr>
+                                                <td colspan="7" class="text-center text-muted">
+                                                    No se encontraron resultados para la busqueda
+                                                    "{{ $search }}"
+                                                </td>
+                                            </tr>
+                                        @else
+                                            <tr>
+                                                <td colspan="7" class="text-center text-muted">
+                                                    No hay registros
+                                                </td>
+                                            </tr>
+                                        @endif
                                     @endforelse
                                 </tbody>
                             </table>
                         </div>
+                        {{-- paginacion de la tabla --}}
+                        @if ($expedienteAdmisionModel->hasPages())
+                            <div class="d-flex justify-content-between mt-5">
+                                <div class="d-flex align-items-center text-gray-700">
+                                    Mostrando {{ $expedienteAdmisionModel->firstItem() }} - {{ $expedienteAdmisionModel->lastItem() }} de
+                                    {{ $expedienteAdmisionModel->total() }} registros
+                                </div>
+                                <div>
+                                    {{ $expedienteAdmisionModel->links() }}
+                                </div>
+                            </div>
+                        @else
+                            <div class="d-flex justify-content-between mt-5">
+                                <div class="d-flex align-items-center text-gray-700">
+                                    Mostrando {{ $expedienteAdmisionModel->firstItem() }} - {{ $expedienteAdmisionModel->lastItem() }} de
+                                    {{ $expedienteAdmisionModel->total() }} registros
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>

@@ -46,21 +46,51 @@
                                 </thead>
                                 <tbody>
                                     @forelse ($inscripcion_pagos as $item)
-                                    <tr>
-                                        <td align="center" class="fw-bold fs-5">{{ $item->id_inscripcion }}</td>
-                                        <td>{{ $item->persona->apellido_paterno }} {{ $item->persona->apellido_materno }}, {{ $item->persona->nombre }} - {{ $item->persona->numero_documento }}</td>
-                                        <td align="center">S/. {{ $item->pago->pago_monto }}</td>
-                                        <td align="center">{{ $item->pago->canal_pago->canal_pago }}</td>
-                                        <td align="center">{{ $item->pago->concepto_pago->concepto_pago }}</td>
-                                    </tr>
+                                        <tr>
+                                            <td align="center" class="fw-bold fs-5">{{ $item->id_inscripcion }}</td>
+                                            <td>{{ $item->persona->apellido_paterno }} {{ $item->persona->apellido_materno }}, {{ $item->persona->nombre }} - {{ $item->persona->numero_documento }}</td>
+                                            <td align="center">S/. {{ $item->pago->pago_monto }}</td>
+                                            <td align="center">{{ $item->pago->canal_pago->canal_pago }}</td>
+                                            <td align="center">{{ $item->pago->concepto_pago->concepto_pago }}</td>
+                                        </tr>
                                     @empty
-                                        <div class="text-center p-3 text-muted">
-                                            <span>No hay resultados para la busqueda "<strong>{{ $search }}</strong>"</span>
-                                        </div>
+                                        @if ($search != '')
+                                            <tr>
+                                                <td colspan="7" class="text-center text-muted">
+                                                    No se encontraron resultados para la busqueda
+                                                    "{{ $search }}"
+                                                </td>
+                                            </tr>
+                                        @else
+                                            <tr>
+                                                <td colspan="7" class="text-center text-muted">
+                                                    No hay registros
+                                                </td>
+                                            </tr>
+                                        @endif
                                     @endforelse
                                 </tbody>
                             </table>
                         </div>
+                        {{-- paginacion de la tabla --}}
+                        @if ($inscripcion_pagos->hasPages())
+                            <div class="d-flex justify-content-between mt-5">
+                                <div class="d-flex align-items-center text-gray-700">
+                                    Mostrando {{ $inscripcion_pagos->firstItem() }} - {{ $inscripcion_pagos->lastItem() }} de
+                                    {{ $inscripcion_pagos->total() }} registros
+                                </div>
+                                <div>
+                                    {{ $inscripcion_pagos->links() }}
+                                </div>
+                            </div>
+                        @else
+                            <div class="d-flex justify-content-between mt-5">
+                                <div class="d-flex align-items-center text-gray-700">
+                                    Mostrando {{ $inscripcion_pagos->firstItem() }} - {{ $inscripcion_pagos->lastItem() }} de
+                                    {{ $inscripcion_pagos->total() }} registros
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>

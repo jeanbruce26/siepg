@@ -4,9 +4,11 @@ namespace App\Http\Livewire\ModuloAdministrador\GestionPagos\CanalPago;
 
 use App\Models\CanalPago;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class Index extends Component
 {
+    use WithPagination;
 
     public $search = '';
     public $titulo = 'Crear Canal de Pago';
@@ -151,7 +153,8 @@ class Index extends Component
         //Realizamos la busqueda de los datos y los ordenamos de forma descendente
         $canalPagoModel = CanalPago::where('id_canal_pago','LIKE',"%{$buscar}%")
                         ->orWhere('canal_pago','LIKE',"%{$buscar}%")
-                        ->orderBy('id_canal_pago','DESC')->get();
+                        ->orderBy('id_canal_pago','DESC')
+                        ->paginate(10);
         return view('livewire.modulo-administrador.gestion-pagos.canal-pago.index',[
             'canalPagoModel' => $canalPagoModel,
         ]);

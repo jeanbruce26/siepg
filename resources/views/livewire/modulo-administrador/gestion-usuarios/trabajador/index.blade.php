@@ -77,7 +77,7 @@
                                     @php
                                         $num = 1;
                                     @endphp
-                                    @foreach ($trabajadores as $item)
+                                    @forelse ($trabajadores as $item)
                                         <tr>
                                             <td align="center" class="fs-5">
                                                 @if ($num < 10)
@@ -236,21 +236,44 @@
                                         @php
                                             $num++;
                                         @endphp
-                                    @endforeach
+                                    @empty
+                                        @if ($search != '')
+                                            <tr>
+                                                <td colspan="7" class="text-center text-muted">
+                                                    No se encontraron resultados para la busqueda
+                                                    "{{ $search }}"
+                                                </td>
+                                            </tr>
+                                        @else
+                                            <tr>
+                                                <td colspan="7" class="text-center text-muted">
+                                                    No hay registros
+                                                </td>
+                                            </tr>
+                                        @endif
+                                    @endforelse
                                 </tbody>
                             </table>
-                            @if ($trabajadores->count())
-                                <div class="mt-2 d-flex justify-content-end text-muted">
+                        </div>
+                        {{-- paginacion de la tabla --}}
+                        @if ($trabajadores->hasPages())
+                            <div class="d-flex justify-content-between mt-5">
+                                <div class="d-flex align-items-center text-gray-700">
+                                    Mostrando {{ $trabajadores->firstItem() }} - {{ $trabajadores->lastItem() }} de
+                                    {{ $trabajadores->total() }} registros
+                                </div>
+                                <div>
                                     {{ $trabajadores->links() }}
                                 </div>
-                            @else
-                                <div class="text-center p-3 text-muted">
-                                    <span>No hay resultados para la busqueda "<strong>{{ $search }}</strong>" en la
-                                        pagina <strong>{{ $page }}</strong> al mostrar
-                                        <strong>{{ $mostrar }}</strong> por pagina</span>
+                            </div>
+                        @else
+                            <div class="d-flex justify-content-between mt-5">
+                                <div class="d-flex align-items-center text-gray-700">
+                                    Mostrando {{ $trabajadores->firstItem() }} - {{ $trabajadores->lastItem() }} de
+                                    {{ $trabajadores->total() }} registros
                                 </div>
-                            @endif
-                        </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
 

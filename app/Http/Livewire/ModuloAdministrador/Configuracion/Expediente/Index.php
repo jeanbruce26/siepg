@@ -6,9 +6,11 @@ use App\Models\Expediente;
 use App\Models\ExpedienteAdmision;
 use Livewire\Component;
 use Illuminate\Support\Str;
+use Livewire\WithPagination;
 
 class Index extends Component
 {
+    use WithPagination;
 
     public $search = '';
     public $titulo = 'Crear Expediente';
@@ -223,11 +225,13 @@ class Index extends Component
                                     $query->where('expediente','LIKE',"%{$this->search}%")
                                         ->orWhere('expediente.id_expediente','LIKE',"%{$this->search}%");
                                 })
-                                ->orderBy('expediente.id_expediente','desc')->get();
+                                ->orderBy('expediente.id_expediente','desc')
+                                ->paginate(10);
         }else{
             $expedienteModel = Expediente::where('id_expediente','LIKE',"%{$buscar}%")
                                 ->orwhere('expediente','LIKE',"%{$buscar}%")
-                                ->orderBy('expediente.id_expediente','desc')->get();
+                                ->orderBy('expediente.id_expediente','desc')
+                                ->paginate(10);
         }
 
         return view('livewire.modulo-administrador.configuracion.expediente.index',[

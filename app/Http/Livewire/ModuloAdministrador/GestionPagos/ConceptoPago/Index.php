@@ -4,9 +4,12 @@ namespace App\Http\Livewire\ModuloAdministrador\GestionPagos\ConceptoPago;
 
 use App\Models\ConceptoPago;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class Index extends Component
 {
+    use WithPagination;
+
     public $search = '';
     public $titulo = 'Crear Concepto de Pago';
     public $modo = 1; //1=new | 2=update
@@ -170,7 +173,8 @@ class Index extends Component
         $buscar = $this->search;
         $conceptoPagoModel = ConceptoPago::where('id_concepto_pago','LIKE',"%{$buscar}%")
                         ->orWhere('concepto_pago','LIKE',"%{$buscar}%")
-                        ->orderBy('id_concepto_pago','DESC')->get();
+                        ->orderBy('id_concepto_pago','DESC')
+                        ->paginate(10);
         return view('livewire.modulo-administrador.gestion-pagos.concepto-pago.index', [
             'conceptoPagoModel' => $conceptoPagoModel,
         ]);

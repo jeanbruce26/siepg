@@ -6,9 +6,11 @@ use App\Models\Admision;
 use App\Models\Admitido;
 use App\Models\Evaluacion;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class Index extends Component
 {
+    use WithPagination;
 
     public $admisiones, $admision, $id_admision, $filtro_proceso, $proceso; // Variables para la tabla de admisiones
     public $admitidos; // Variables para la tabla de admitidos

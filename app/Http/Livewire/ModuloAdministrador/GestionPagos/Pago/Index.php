@@ -15,8 +15,6 @@ class Index extends Component
 
     use WithPagination;
     
-    // Definimos el tema que se usará para la paginación "Bootstrap"
-    protected $paginationTheme = 'bootstrap';
     // Para poder agregar los parámetros de búsqueda en la URL 
     protected $queryString = [
         'search' => ['except' => '']
@@ -266,7 +264,8 @@ class Index extends Component
                 ->orWhere('pago_documento','LIKE',"%{$buscar}%")
                 ->orWhere('pago_operacion','LIKE',"%{$buscar}%")
                 ->orWhere('id_pago','LIKE',"%{$buscar}%")
-                ->orderBy('id_pago','DESC')->paginate(200);
+                ->orderBy('id_pago','DESC')
+                ->paginate(200);
         $canalPago = CanalPago::all();
         $conceptoPago = ConceptoPago::all();
         return view('livewire.modulo-administrador.gestion-pagos.pago.index', [

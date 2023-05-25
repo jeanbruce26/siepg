@@ -85,13 +85,43 @@
                                         </td>
                                     </tr>
                                     @empty
-                                        <div class="text-center p-3 text-muted">
-                                            <span>No hay resultados para la busqueda "<strong>{{ $search }}</strong>"</span>
-                                        </div>
+                                        @if ($search != '')
+                                            <tr>
+                                                <td colspan="7" class="text-center text-muted">
+                                                    No se encontraron resultados para la busqueda
+                                                    "{{ $search }}"
+                                                </td>
+                                            </tr>
+                                        @else
+                                            <tr>
+                                                <td colspan="7" class="text-center text-muted">
+                                                    No hay registros
+                                                </td>
+                                            </tr>
+                                        @endif
                                     @endforelse
                                 </tbody>
                             </table>
                         </div>
+                        {{-- paginacion de la tabla --}}
+                        @if ($conceptoPagoModel->hasPages())
+                            <div class="d-flex justify-content-between mt-5">
+                                <div class="d-flex align-items-center text-gray-700">
+                                    Mostrando {{ $conceptoPagoModel->firstItem() }} - {{ $conceptoPagoModel->lastItem() }} de
+                                    {{ $conceptoPagoModel->total() }} registros
+                                </div>
+                                <div>
+                                    {{ $conceptoPagoModel->links() }}
+                                </div>
+                            </div>
+                        @else
+                            <div class="d-flex justify-content-between mt-5">
+                                <div class="d-flex align-items-center text-gray-700">
+                                    Mostrando {{ $conceptoPagoModel->firstItem() }} - {{ $conceptoPagoModel->lastItem() }} de
+                                    {{ $conceptoPagoModel->total() }} registros
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
