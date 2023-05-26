@@ -4,7 +4,7 @@
             <div id="kt_app_toolbar_container" class="app-container container-fluid d-flex flex-stack">
                 <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
                     <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
-                        Expediente
+                        Gestión de Admisión - {{ $expedienteModel->expediente }}
                     </h1>
                     <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                         <li class="breadcrumb-item text-muted">
@@ -15,11 +15,19 @@
                         <li class="breadcrumb-item">
                             <span class="bullet bg-gray-400 w-5px h-2px"></span>
                         </li>
-                        <li class="breadcrumb-item text-muted">Expediente</li>
+                        <li class="breadcrumb-item text-muted">
+                            <a href="{{ route('administrador.expediente') }}" class="text-muted text-hover-primary">
+                                Expediente
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <span class="bullet bg-gray-400 w-5px h-2px"></span>
+                        </li>
+                        <li class="breadcrumb-item text-muted">Gestión de Admisión</li>
                     </ul>
                 </div>
                 <div class="d-flex align-items-center gap-2 gap-lg-3">
-                    <a href="#modalExpediente" wire:click="modo()" class="btn btn-primary btn-sm hover-elevate-up" data-bs-toggle="modal" data-bs-target="#modalExpediente">Nuevo</a>
+                    <a href="#modalExpedienteAdmision" wire:click="modo()" class="btn btn-primary btn-sm hover-elevate-up" data-bs-toggle="modal" data-bs-target="#modalExpedienteAdmision">Nuevo</a>
                 </div>
             </div>
         </div>
@@ -30,39 +38,14 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-5">
                             <div class="me-1">
-                                <a class="btn btn-sm btn-light-primary me-3 fw-bold" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start">
-                                    <span class="svg-icon svg-icon-6 svg-icon-muted me-1">
+                                <a href="{{ route('administrador.expediente') }}" class="btn btn-secondary btn-sm hover-elevate-up d-flex justify-content-center align-items-center">
+                                    <span class="svg-icon svg-icon-muted svg-icon-7">
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M19.0759 3H4.72777C3.95892 3 3.47768 3.83148 3.86067 4.49814L8.56967 12.6949C9.17923 13.7559 9.5 14.9582 9.5 16.1819V19.5072C9.5 20.2189 10.2223 20.7028 10.8805 20.432L13.8805 19.1977C14.2553 19.0435 14.5 18.6783 14.5 18.273V13.8372C14.5 12.8089 14.8171 11.8056 15.408 10.964L19.8943 4.57465C20.3596 3.912 19.8856 3 19.0759 3Z" fill="currentColor" />
+                                            <path d="M17.6 4L9.6 12L17.6 20H13.6L6.3 12.7C5.9 12.3 5.9 11.7 6.3 11.3L13.6 4H17.6Z" fill="currentColor"/>
                                         </svg>
                                     </span>
-                                    Filtro
+                                    Regresar
                                 </a>
-                                <div class="menu menu-sub menu-sub-dropdown w-250px w-md-300px" data-kt-menu="true" id="menu_expediente" wire:ignore.self>
-                                    <div class="px-7 py-5">
-                                        <div class="fs-5 text-dark fw-bold">
-                                            Opciones de filtrado
-                                        </div>
-                                    </div>
-                                    <div class="separator border-gray-200"></div>
-                                    <div class="px-7 py-5">
-                                        <div class="mb-10">
-                                            <label class="form-label fw-semibold">Tipo de Expediente:</label>
-                                            <div>
-                                                <select class="form-select" wire:model="filtro_expediente" id="filtro_expediente"  data-control="select2" data-placeholder="Seleccione">
-                                                    <option></option>
-                                                    <option value="0">Maestría y Doctorado</option>
-                                                    <option value="1">Maestría</option>
-                                                    <option value="2">Doctorado</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="d-flex justify-content-end">
-                                            <button type="button" wire:click="resetear_filtro" class="btn btn-sm btn-light btn-active-light-primary me-2" data-kt-menu-dismiss="true">Resetear</button>
-                                            <button type="button" class="btn btn-sm btn-primary" data-kt-menu-dismiss="true" wire:click="filtrar">Aplicar</button>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
 
                             <div class="ms-2">
@@ -75,37 +58,21 @@
                                 <thead class="bg-light-primary">
                                     <tr align="center" class="fw-bold fs-5 text-gray-800 border-bottom-2 border-gray-200">
                                         <th scope="col" class="col-md-1">ID</th>
-                                        <th>Expediente</th>
-                                        <th scope="col" class="col-md-2">Tipo</th>
+                                        <th>Admisión</th>
                                         <th scope="col" class="col-md-2">Estado</th>
                                         <th scope="col" class="col-md-2">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse ($expedienteModel as $item)
+                                    @forelse ($expedienteAdmisionModel as $item)
                                     <tr>
-                                        <td align="center" class="fw-bold fs-5">{{ $item->id_expediente }}</td>
-                                        <td>{{ $item->expediente }}</td>
+                                        <td align="center" class="fw-bold fs-5">{{ $item->id_expediente_admision }}</td>
+                                        <td align="center">{{ $item->admision }}</td>
                                         <td align="center">
-                                            {{-- tipo => 0 = maestria y doctorado, 1 = maestria, 2 = doctorado --}}
-                                            @switch($item->expediente_tipo)
-                                                @case(0)
-                                                    <span class="badge badge-light-primary">Maestría y Doctorado</span>
-                                                    @break
-                                                @case(1)
-                                                    <span class="badge badge-light-primary">Maestría</span>
-
-                                                    @break
-                                                @case(2)
-                                                    <span class="badge badge-light-primary">Doctorado</span>
-                                                    @break
-                                            @endswitch
-                                        </td>
-                                        <td align="center">
-                                            @if ($item->expediente_estado == 1)
-                                                <span style="cursor: pointer;" wire:click="cargarAlertaEstado({{ $item->id_expediente }})" class="badge text-bg-success text-light hover-elevate-down px-3 py-2">Activo</span></span>
+                                            @if ($item->expediente_admision_estado == 1)
+                                                <span style="cursor: pointer;" wire:click="cargarAlertaEstado({{ $item->id_expediente_admision }})" class="badge text-bg-success text-light hover-elevate-down px-3 py-2">Activo</span>
                                             @else
-                                                <span style="cursor: pointer;" wire:click="cargarAlertaEstado({{ $item->id_expediente }})" class="badge text-bg-danger text-light hover-elevate-down px-3 py-2">Inactivo</span></span>
+                                                <span style="cursor: pointer;" wire:click="cargarAlertaEstado({{ $item->id_expediente_admision }})" class="badge text-bg-danger text-light hover-elevate-down px-3 py-2">Inactivo</span></span>
                                             @endif
                                         </td>
                                         <td align="center">
@@ -120,25 +87,10 @@
                                                     </svg>
                                                 </span>
                                             </a>
-                                            <div class="dropdown-menu dropdown-menu-end menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4 w-175px" data-kt-menu="true">
+                                            <div class="dropdown-menu dropdown-menu-end menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
                                                 <div class="menu-item px-3">
-                                                    <a href="#modalExpediente" wire:click="cargarExpediente({{ $item->id_expediente }}, 3)" class="menu-link px-3" data-bs-toggle="modal" data-bs-target="#modalExpediente">
-                                                        Detalle
-                                                    </a>
-                                                </div>
-                                                <div class="menu-item px-3">
-                                                    <a href="#modalExpediente" wire:click="cargarExpediente({{ $item->id_expediente }}, 2)" class="menu-link px-3" data-bs-toggle="modal" data-bs-target="#modalExpediente">
+                                                    <a href="#modalExpedienteAdmision" wire:click="cargarExpedienteAdmision({{ $item->id_expediente_admision }})" class="menu-link px-3" data-bs-toggle="modal" data-bs-target="#modalExpedienteAdmision">
                                                         Editar
-                                                    </a>
-                                                </div>
-                                                <div class="menu-item px-3">
-                                                    <a href="{{ route('administrador.expediente.gestion-admision', $item->id_expediente) }}" class="menu-link px-3 text-start">
-                                                        Gestion de Admisión
-                                                    </a>
-                                                </div>
-                                                <div class="menu-item px-3">
-                                                    <a href="{{ route('administrador.expediente.gestion-vistas-evaluacion', $item->id_expediente) }}" class="menu-link px-3 text-start">
-                                                        Gestión de Vistas para Evaluación
                                                     </a>
                                                 </div>
                                             </div>
@@ -164,21 +116,21 @@
                             </table>
                         </div>
                         {{-- paginacion de la tabla --}}
-                        @if ($expedienteModel->hasPages())
+                        @if ($expedienteAdmisionModel->hasPages())
                             <div class="d-flex justify-content-between mt-5">
                                 <div class="d-flex align-items-center text-gray-700">
-                                    Mostrando {{ $expedienteModel->firstItem() }} - {{ $expedienteModel->lastItem() }} de
-                                    {{ $expedienteModel->total() }} registros
+                                    Mostrando {{ $expedienteAdmisionModel->firstItem() }} - {{ $expedienteAdmisionModel->lastItem() }} de
+                                    {{ $expedienteAdmisionModel->total() }} registros
                                 </div>
                                 <div>
-                                    {{ $expedienteModel->links() }}
+                                    {{ $expedienteAdmisionModel->links() }}
                                 </div>
                             </div>
                         @else
                             <div class="d-flex justify-content-between mt-5">
                                 <div class="d-flex align-items-center text-gray-700">
-                                    Mostrando {{ $expedienteModel->firstItem() }} - {{ $expedienteModel->lastItem() }} de
-                                    {{ $expedienteModel->total() }} registros
+                                    Mostrando {{ $expedienteAdmisionModel->firstItem() }} - {{ $expedienteAdmisionModel->lastItem() }} de
+                                    {{ $expedienteAdmisionModel->total() }} registros
                                 </div>
                             </div>
                         @endif
@@ -189,7 +141,7 @@
     </div>
 
     {{-- Modal Expediente --}}
-    <div wire:ignore.self class="modal fade" id="modalExpediente" tabindex="-1" aria-labelledby="modalExpediente"
+    {{-- <div wire:ignore.self class="modal fade" id="modalExpedienteAdmision" tabindex="-1" aria-labelledby="modalExpedienteAdmision"
         aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
             <div class="modal-content">
@@ -267,7 +219,6 @@
                                 @else
                                     <select class="form-select @error('tipo') is-invalid  @enderror" wire:model="tipo">
                                         <option value="" selected>Seleccione</option>
-                                        {{-- tipo => 0 = maestria y doctorado, 1 = maestria, 2 = doctorado --}}
                                         <option value="0">Maestría y Doctorado</option>
                                         <option value="1">Maestría</option>
                                         <option value="2">Doctorado</option>
@@ -288,49 +239,6 @@
                 @endif
             </div>
         </div>
-    </div>
+    </div> --}}
 
 </div>
-@push('scripts')
-    <script>
-        // filtro_expediente select2
-        $(document).ready(function () {
-            $('#filtro_expediente').select2({
-                placeholder: 'Seleccione',
-                allowClear: true,
-                width: '100%',
-                selectOnClose: true,
-                language: {
-                    noResults: function () {
-                        return "No se encontraron resultados";
-                    },
-                    searching: function () {
-                        return "Buscando...";
-                    }
-                }
-            });
-            $('#filtro_expediente').on('change', function(){
-                @this.set('filtro_expediente', this.value);
-            });
-            Livewire.hook('message.processed', (message, component) => {
-                $('#filtro_expediente').select2({
-                    placeholder: 'Seleccione',
-                    allowClear: true,
-                    width: '100%',
-                    selectOnClose: true,
-                    language: {
-                        noResults: function () {
-                            return "No se encontraron resultados";
-                        },
-                        searching: function () {
-                            return "Buscando...";
-                        }
-                    }
-                });
-                $('#filtro_expediente').on('change', function(){
-                    @this.set('filtro_expediente', this.value);
-                });
-            });
-        });
-    </script>
-@endpush

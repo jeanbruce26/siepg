@@ -57,4 +57,8 @@ Route::get('/plan', [PlanController::class, 'index'])->middleware(['auth.usuario
 //Ruta para ir a la vista de Sede en Configuracion
 Route::get('/sede', [SedeController::class, 'index'])->middleware(['auth.usuario'])->name('administrador.sede');
 //Ruta para ir a la vista de Expediente en Configuracion
-Route::get('/expediente', [ExpedienteController::class, 'index'])->middleware(['auth.usuario'])->name('administrador.expediente'); // No hay controlador
+Route::get('/expediente', [ExpedienteController::class, 'index'])->middleware(['auth.usuario'])->name('administrador.expediente');
+//Ruta para ir a la vista de Gestion de Admision de Expediente en Configuracion | Esta ruta de la vista está dentro de la vista de expediente
+Route::get('/expediente/{id}/gestion-admision', [ExpedienteController::class, 'admision'])->middleware(['auth.usuario'])->name('administrador.expediente.gestion-admision');
+//Ruta para ir a la vista de Gestion de Vistas para Evaluación de Expediente en Configuracion | Esta ruta de la vista está dentro de la vista de expediente
+Route::get('/expediente/{id}/gestion-vistas-evaluacion', [ExpedienteController::class, 'evaluacion'])->middleware(['auth.usuario'])->name('administrador.expediente.gestion-vistas-evaluacion');

@@ -47,9 +47,8 @@
                                         <th scope="col">Fecha</th>
                                         {{-- <th scope="col">Canal de Pago</th> --}}
                                         <th scope="col">Concepto</th>
-                                        <th scope="col" class="col-md-2">Estado</th>
-                                        <th scope="col" class="col-md-1">Voucher</th>
-                                        <th scope="col" class="col-md-1">Acciones</th>
+                                        <th scope="col" class="col-md-1">Estado</th>
+                                        <th scope="col" class="col-md-2">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -64,21 +63,18 @@
                                             <td align="center">{{ $item->concepto_pago->concepto_pago }}</td>
                                             <td align="center">
                                                 @if ($item->pago_estado == 1)
-                                                    <span class="badge badge-warning text-light">Pagado</span>
+                                                    <span class="badge badge-light-warning">Pagado</span>
                                                 @else
                                                     @if($item->pago_estado == 2)
-                                                        <span class="badge badge-info text-light">Verificado</span>
+                                                        <span class="badge badge-light-info">Verificado</span>
                                                     @else
-                                                        <span class="badge badge-success text-light">Inscrito</span>
+                                                        <span class="badge badge-light-success">Inscrito</span>
                                                     @endif
                                                 @endif
                                             </td>
                                             <td align="center">
-                                                <a href="#modalPago" wire:click="modo()" class="btn btn-primary btn-sm hover-elevate-up" data-bs-toggle="modal" data-bs-target="#modalPago">Ver</a>
-                                            </td>
-                                            <td align="center">
-                                                <a href="#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" data-kt-menu-flip="top-end">
-                                                    Actions
+                                                <a class="btn btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary btn-sm" data-bs-toggle="dropdown">
+                                                    Acciones
                                                     <span class="svg-icon fs-5 m-0">
                                                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                                             <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -88,7 +84,7 @@
                                                         </svg>
                                                     </span>
                                                 </a>
-                                                <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
+                                                <div class="dropdown-menu dropdown-menu-end menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
                                                     <div class="menu-item px-3">
                                                         <a href="#modalPago"
                                                         wire:click="cargarIdPago({{ $item->id_pago }})" 
@@ -109,14 +105,44 @@
                                                 @endif
                                             </td>
                                         </tr>
-                                    @empty
-                                        <div class="text-center p-3 text-muted">
-                                            <span>No hay resultados para la busqueda "<strong>{{ $search }}</strong>"</span>
-                                        </div>
+                                        @empty
+                                        @if ($search != '')
+                                            <tr>
+                                                <td colspan="7" class="text-center text-muted">
+                                                    No se encontraron resultados para la busqueda
+                                                    "{{ $search }}"
+                                                </td>
+                                            </tr>
+                                        @else
+                                            <tr>
+                                                <td colspan="7" class="text-center text-muted">
+                                                    No hay registros
+                                                </td>
+                                            </tr>
+                                        @endif
                                     @endforelse
                                 </tbody>
                             </table>
                         </div>
+                        {{-- paginacion de la tabla --}}
+                        @if ($pago_model->hasPages())
+                            <div class="d-flex justify-content-between mt-5">
+                                <div class="d-flex align-items-center text-gray-700">
+                                    Mostrando {{ $pago_model->firstItem() }} - {{ $pago_model->lastItem() }} de
+                                    {{ $pago_model->total() }} registros
+                                </div>
+                                <div>
+                                    {{ $pago_model->links() }}
+                                </div>
+                            </div>
+                        @else
+                            <div class="d-flex justify-content-between mt-5">
+                                <div class="d-flex align-items-center text-gray-700">
+                                    Mostrando {{ $pago_model->firstItem() }} - {{ $pago_model->lastItem() }} de
+                                    {{ $pago_model->total() }} registros
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>

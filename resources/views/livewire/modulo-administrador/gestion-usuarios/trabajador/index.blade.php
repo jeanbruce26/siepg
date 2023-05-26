@@ -1,57 +1,33 @@
 <div>
     
-    <!--begin::Content wrapper-->
     <div class="d-flex flex-column flex-column-fluid">
-        <!--begin::Toolbar-->
         <div id="kt_app_toolbar" class="app-toolbar py-3 py-lg-6">
-            <!--begin::Toolbar container-->
             <div id="kt_app_toolbar_container" class="app-container container-fluid d-flex flex-stack">
-                <!--begin::Page title-->
                 <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
-                    <!--begin::Title-->
                     <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
                         Trabajador
                     </h1>
-                    <!--end::Title-->
-                    <!--begin::Breadcrumb-->
                     <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
-                        <!--begin::Item-->
                         <li class="breadcrumb-item text-muted">
                             <a href="{{ route('administrador.dashboard') }}" class="text-muted text-hover-primary">
                                 Dashboard
                             </a>
                         </li>
-                        <!--end::Item-->
-                        <!--begin::Item-->
                         <li class="breadcrumb-item">
                             <span class="bullet bg-gray-400 w-5px h-2px"></span>
                         </li>
-                        <!--end::Item-->
-                        <!--begin::Item-->
                         <li class="breadcrumb-item text-muted">Trabajador</li>
-                        <!--end::Item-->
                     </ul>
-                    <!--end::Breadcrumb-->
                 </div>
-                <!--end::Page title-->
-                <!--begin::Actions-->
                 <div class="d-flex align-items-center gap-2 gap-lg-3">
-                    <!--begin::Primary button-->
                     <a href="#" class="btn btn-primary btn-sm hover-elevate-up">Nuevo</a>
-                    <!--end::Primary button-->
                 </div>
-                <!--end::Actions-->
             </div>
-            <!--end::Toolbar container-->
         </div>
-        <!--end::Toolbar-->
         
-        <!--begin::Content-->
         <div id="kt_app_content" class="app-content flex-column-fluid">
-            <!--begin::Content container-->
             <div id="kt_app_content_container" class="app-container container-fluid pt-5">
 
-                <!--begin::Row-->
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-5">
@@ -87,21 +63,21 @@
                             <table class="table table-hover table-rounded border gy-4 gs-4 mb-0 align-middle">
                                 <thead class="bg-light-primary">
                                     <tr align="center" class="fw-bold fs-5 text-gray-800 border-bottom-2 border-gray-200">
-                                        <th>#</th>
-                                        <th>Documento</th>
-                                        <th>Nombres</th>
-                                        <th>Grado</th>
-                                        <th>Correo</th>
-                                        <th>Tipo</th>
-                                        <th>Estado</th>
-                                        <th>Acciones</th>
+                                        <th scope="col" class="col-md-1">ID</th>
+                                        <th scope="col">Documento</th>
+                                        <th scope="col">Nombres</th>
+                                        <th scope="col">Grado</th>
+                                        <th scope="col">Correo</th>
+                                        <th scope="col">Tipo</th>
+                                        <th scope="col" class="col-md-1">Estado</th>
+                                        <th scope="col" class="col-md-2">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @php
                                         $num = 1;
                                     @endphp
-                                    @foreach ($trabajadores as $item)
+                                    @forelse ($trabajadores as $item)
                                         <tr>
                                             <td align="center" class="fs-5">
                                                 @if ($num < 10)
@@ -198,15 +174,15 @@
                                                 @if ($item->trabajador_estado == 1)
                                                     <span style="cursor: pointer;"
                                                         wire:click="cargarAlerta({{ $item->id_trabajador }})"
-                                                        class="badge text-bg-primary text-light">Activo</span>
+                                                        class="badge text-bg-primary text-light px-3 py-2">Activo</span>
                                                 @else
                                                     <span style="cursor: pointer;"
                                                         wire:click="cargarAlerta({{ $item->id_trabajador }})"
-                                                        class="badge text-bg-danger text-light">Inactivo</span>
+                                                        class="badge text-bg-danger text-light px-3 py-2">Inactivo</span>
                                                 @endif
                                             </td>
                                             <td align="center">
-                                                <a href="#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" data-kt-menu-flip="top-end">
+                                                <a class="btn btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary btn-sm" data-bs-toggle="dropdown">
                                                     Actions
                                                     <span class="svg-icon fs-5 m-0">
                                                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -217,9 +193,7 @@
                                                         </svg>
                                                     </span>
                                                 </a>
-                                                <!--begin::Menu-->
-                                                <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
-                                                    <!--begin::Menu item-->
+                                                <div class="dropdown-menu dropdown-menu-end menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
                                                     <div class="menu-item px-3">
                                                         <a href="#modalTra"
                                                         wire:click="cargarTrabajador({{ $item->id_trabajador }})" 
@@ -228,9 +202,7 @@
                                                             Editar
                                                         </a>
                                                     </div>
-                                                    <!--end::Menu item-->
                                                     @if ($item->trabajador_estado == 1)
-                                                        <!--begin::Menu item-->
                                                         <div class="menu-item px-3">
                                                             <a href="#modalAsignar"
                                                             wire:click="cargarTrabajadorId({{ $item->id_trabajador }},1)" class="menu-link px-3" data-bs-toggle="modal" 
@@ -238,9 +210,7 @@
                                                                 Asignar
                                                             </a>
                                                         </div>
-                                                        <!--end::Menu item-->
                                                         @if ($tra_tipo_tra->count() != 0)
-                                                            <!--begin::Menu item-->
                                                             <div class="menu-item px-3">
                                                                 <a href="#modaldDesAsignar"
                                                                 wire:click="cargarTrabajadorId({{ $item->id_trabajador }},2)" 
@@ -250,10 +220,8 @@
                                                                     Desasignar
                                                                 </a>
                                                             </div>
-                                                            <!--end::Menu item-->
                                                         @endif
                                                     @endif
-                                                    <!--begin::Menu item-->
                                                     <div class="menu-item px-3">
                                                         <a  href="#modalInfo"
                                                         wire:click="cargarInfoTrabajador({{ $item->id_trabajador }})"
@@ -262,37 +230,55 @@
                                                             Datalle
                                                         </a>
                                                     </div>
-                                                    <!--end::Menu item-->
                                                 </div>
-                                                <!--end::Menu-->
                                             </td>
                                         </tr>
                                         @php
                                             $num++;
                                         @endphp
-                                    @endforeach
+                                    @empty
+                                        @if ($search != '')
+                                            <tr>
+                                                <td colspan="7" class="text-center text-muted">
+                                                    No se encontraron resultados para la busqueda
+                                                    "{{ $search }}"
+                                                </td>
+                                            </tr>
+                                        @else
+                                            <tr>
+                                                <td colspan="7" class="text-center text-muted">
+                                                    No hay registros
+                                                </td>
+                                            </tr>
+                                        @endif
+                                    @endforelse
                                 </tbody>
                             </table>
-                            @if ($trabajadores->count())
-                                <div class="mt-2 d-flex justify-content-end text-muted">
+                        </div>
+                        {{-- paginacion de la tabla --}}
+                        @if ($trabajadores->hasPages())
+                            <div class="d-flex justify-content-between mt-5">
+                                <div class="d-flex align-items-center text-gray-700">
+                                    Mostrando {{ $trabajadores->firstItem() }} - {{ $trabajadores->lastItem() }} de
+                                    {{ $trabajadores->total() }} registros
+                                </div>
+                                <div>
                                     {{ $trabajadores->links() }}
                                 </div>
-                            @else
-                                <div class="text-center p-3 text-muted">
-                                    <span>No hay resultados para la busqueda "<strong>{{ $search }}</strong>" en la
-                                        pagina <strong>{{ $page }}</strong> al mostrar
-                                        <strong>{{ $mostrar }}</strong> por pagina</span>
+                            </div>
+                        @else
+                            <div class="d-flex justify-content-between mt-5">
+                                <div class="d-flex align-items-center text-gray-700">
+                                    Mostrando {{ $trabajadores->firstItem() }} - {{ $trabajadores->lastItem() }} de
+                                    {{ $trabajadores->total() }} registros
                                 </div>
-                            @endif
-                        </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
-                <!--end::Row-->
 
             </div>
-            <!--end::Content container-->
         </div>
-        <!--end::Content-->
 
         {{-- Modal Trabajador --}}
         <div wire:ignore.self class="modal fade" id="modalTra" tabindex="-1" aria-labelledby="modalTra"
@@ -874,6 +860,5 @@
             </div>
         </div>
     </div>
-    <!--end::Content wrapper-->
 
 </div>

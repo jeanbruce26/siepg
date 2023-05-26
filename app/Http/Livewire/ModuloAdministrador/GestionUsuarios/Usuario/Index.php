@@ -12,7 +12,6 @@ class Index extends Component
 {
     use WithPagination;
 
-    protected $paginationTheme = 'bootstrap';
     protected $queryString = [
         'search' => ['except' => '']
     ];
@@ -41,6 +40,8 @@ class Index extends Component
     public function modo()
     {
         $this->modo = 1;
+        $this->titulo = 'Crear Usuario';
+        $this->limpiar();
     }
 
     public function limpiar()

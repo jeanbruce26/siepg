@@ -4,10 +4,12 @@ namespace App\Http\Livewire\ModuloAdministrador\Configuracion\Sede;
 
 use App\Models\Sede;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class Index extends Component
 {
-    protected $paginationTheme = 'bootstrap';
+    use WithPagination;
+    
     protected $queryString = [
         'search' => ['except' => '']
     ];
@@ -143,7 +145,7 @@ class Index extends Component
     {
         $sede_model = Sede::where('sede', 'like', '%' . $this->search . '%')
             ->orderBy('sede', 'desc')
-            ->get();
+            ->paginate(10);
 
         return view('livewire.modulo-administrador.configuracion.sede.index',[
             'sede_model' => $sede_model
