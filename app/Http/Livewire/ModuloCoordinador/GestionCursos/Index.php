@@ -34,6 +34,7 @@ class Index extends Component
     public $id_curso_programa_proceso; // Variable para almacenar el id del curso_programa_proceso
     public $docentes; // Variable para almacenar el docente
     public $docente; // Variable para almacenar el docente del formulario del modal
+    public $id_docente_curso; // Variable para almacenar el id del docente_curso
 
     // variables para los filtros
     public $filtro_proceso; // Variable para almacenar el proceso
@@ -56,6 +57,11 @@ class Index extends Component
         'programa_data' => ['except' => ''],
         'filtro_ciclo' => ['except' => ''],
         'ciclo_data' => ['except' => ''],
+    ];
+
+    protected $listeners = [ // Eventos
+        'cambiar_estado_docente_curso' => 'cambiar_estado_docente_curso',
+        'eliminar_docente_asignado' => 'eliminar_docente_asignado',
     ];
 
     public function updated($propertyName) // Método que se ejecuta al modificar una variable
@@ -134,7 +140,7 @@ class Index extends Component
         $this->id_curso_programa_proceso = $curso_programa_proceso->id_curso_programa_proceso; // Se almacena el id del curso_programa_proceso
         $this->curso = $curso_programa_proceso->curso; // Se almacena el curso
         $this->id_curso = $curso_programa_proceso->curso->id_curso; // Se almacena el id del curso
-        $this->docentes = DocenteCurso::where('id_curso_programa_proceso', $this->id_curso_programa_proceso)->where('docente_curso_estado', 1)->get(); // Se almacena el docente
+        $this->docentes = DocenteCurso::where('id_curso_programa_proceso', $this->id_curso_programa_proceso)->get(); // Se almacena el docente
     }
 
     public function asignar_docente()
@@ -181,7 +187,97 @@ class Index extends Component
         ]);
 
         // Se actualiza la lista de docentes
-        $this->docentes = DocenteCurso::where('id_curso_programa_proceso', $this->id_curso_programa_proceso)->where('docente_curso_estado', 1)->get(); // Se almacena el docente
+        $this->docentes = DocenteCurso::where('id_curso_programa_proceso', $this->id_curso_programa_proceso)->get(); // Se almacena el docente
+    }
+
+    public function alerta_cambiar_estado(DocenteCurso $docente_curso)
+    {
+        $this->id_docente_curso = $docente_curso->id_docente_curso;
+        // emitir alerta para poder modificar el estado del docente
+        $this->dispatchBrowserEvent('alerta_cambiar_estado_docente_curso', [
+            'title' => '¡Advertencia!',
+            'text' => '¿Está seguro que desea cambiar el estado del docente en el curso asignado?',
+            'icon' => 'question',
+            'showCancelButton' => true,
+            'confirmButtonText' => 'Aceptar',
+            'cancelButtonText' => 'Cancelar',
+            'confirmButtonColor' => 'primary',
+            'cancelButtonColor' => 'danger',
+            'metodo' => 'cambiar_estado_docente_curso',
+        ]);
+    }
+
+    public function cambiar_estado_docente_curso()
+    {
+        $docente_curso = DocenteCurso::find($this->id_docente_curso);
+
+        if ($docente_curso->docente_curso_estado == 1)
+        {
+            $docente_curso->docente_curso_estado = 0;
+            $docente_curso->save();
+
+            // emitir alerta para mostrar mensaje de éxito
+            $this->dispatchBrowserEvent('alerta_curso', [
+                'title' => '¡Éxito!',
+                'text' => 'Docente desactivado correctamente del curso.',
+                'icon' => 'success',
+                'confirmButtonText' => 'Aceptar',
+                'color' => 'success'
+            ]);
+        }
+        else if ($docente_curso->docente_curso_estado == 0)
+        {
+            $docente_curso->docente_curso_estado = 1;
+            $docente_curso->save();
+
+            // emitir alerta para mostrar mensaje de éxito
+            $this->dispatchBrowserEvent('alerta_curso', [
+                'title' => '¡Éxito!',
+                'text' => 'Docente activado correctamente en el curso.',
+                'icon' => 'success',
+                'confirmButtonText' => 'Aceptar',
+                'color' => 'success'
+            ]);
+        }
+
+        // Se actualiza la lista de docentes
+        $this->docentes = DocenteCurso::where('id_curso_programa_proceso', $this->id_curso_programa_proceso)->get(); // Se almacena el docente
+    }
+
+    public function alerta_eliminar_docente_asignado(DocenteCurso $docente_curso)
+    {
+        $this->id_docente_curso = $docente_curso->id_docente_curso;
+        // emitir alerta para poder modificar el estado del docente
+        $this->dispatchBrowserEvent('alerta_cambiar_estado_docente_curso', [
+            'title' => '¡Advertencia!',
+            'text' => '¿Está seguro que desea eliminar el docente del curso asignado?, una vez eliminado no podrá recuperarlo.',
+            'icon' => 'question',
+            'showCancelButton' => true,
+            'confirmButtonText' => 'Aceptar',
+            'cancelButtonText' => 'Cancelar',
+            'confirmButtonColor' => 'primary',
+            'cancelButtonColor' => 'danger',
+            'metodo' => 'eliminar_docente_asignado',
+        ]);
+    }
+
+    public function eliminar_docente_asignado()
+    {
+        // eliminar docente
+        $docente_curso = DocenteCurso::find($this->id_docente_curso);
+        $docente_curso->delete();
+
+        // emitir alerta para mostrar mensaje de éxito
+        $this->dispatchBrowserEvent('alerta_curso', [
+            'title' => '¡Éxito!',
+            'text' => 'Docente eliminado correctamente del curso asignado.',
+            'icon' => 'success',
+            'confirmButtonText' => 'Aceptar',
+            'color' => 'success'
+        ]);
+
+        // Se actualiza la lista de docentes
+        $this->docentes = DocenteCurso::where('id_curso_programa_proceso', $this->id_curso_programa_proceso)->get(); // Se almacena el docente
     }
 
     public function render()

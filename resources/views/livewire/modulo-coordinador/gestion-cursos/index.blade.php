@@ -314,7 +314,7 @@
         </div>
     </div>
     <div wire:ignore.self class="modal fade" tabindex="-1" id="modal_asignacion_docente">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
                     <h2 class="modal-title">
@@ -409,6 +409,8 @@
                                         <th>Apellido y Nombres</th>
                                         <th>Correo Electrónico</th>
                                         <th>Grado Académico</th>
+                                        <th>Estado</th>
+                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody class="fw-semibold text-gray-700">
@@ -419,7 +421,7 @@
                                                     {{ $item->docente->trabajador->trabajador_numero_documento }}
                                                 </td>
                                                 <td class="fs-6 text-uppercase">
-                                                    {{ $item->docente->trabajador->trabajador_apellido }} {{ $item->docente->trabajador->trabajador_nombre }}
+                                                    {{ $item->docente->trabajador->trabajador_apellido }}, {{ $item->docente->trabajador->trabajador_nombre }}
                                                 </td>
                                                 <td class="fs-6">
                                                     {{ $item->docente->trabajador->trabajador_correo }}
@@ -428,6 +430,54 @@
                                                     <span class="badge badge-light-info fs-6 px-3 py-2">
                                                         {{ $item->docente->trabajador->grado_academico->grado_academico }}
                                                     </span>
+                                                </td>
+                                                <td class="fs-6">
+                                                    @if ($item->docente_curso_estado == 1)
+                                                        <span class="badge badge-primary fs-6 px-3 py-2"
+                                                            wire:click="alerta_cambiar_estado({{ $item->id_docente_curso }})"
+                                                            style="cursor: pointer;">
+                                                            Activo
+                                                        </span>
+                                                    @else
+                                                        <span class="badge badge-danger fs-6 px-3 py-2"
+                                                            wire:click="alerta_cambiar_estado({{ $item->id_docente_curso }})"
+                                                            style="cursor: pointer;">
+                                                            Inactivo
+                                                        </span>
+                                                    @endif
+                                                </td>
+                                                <td class="fs-6">
+                                                    <button type="button"
+                                                        class="btn btn-flex btn-center fw-bold btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary hover-scale"
+                                                        data-bs-toggle="dropdown">
+                                                        Acciones
+                                                        <span class="svg-icon fs-5 rotate-180 ms-2 me-0 m-0">
+                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                xmlns:xlink="http://www.w3.org/1999/xlink"
+                                                                width="24px" height="24px" viewBox="0 0 24 24"
+                                                                version="1.1">
+                                                                <g stroke="none" stroke-width="1" fill="none"
+                                                                    fill-rule="evenodd">
+                                                                    <polygon points="0 0 24 0 24 24 0 24"></polygon>
+                                                                    <path
+                                                                        d="M6.70710678,15.7071068 C6.31658249,16.0976311 5.68341751,16.0976311 5.29289322,15.7071068 C4.90236893,15.3165825 4.90236893,14.6834175 5.29289322,14.2928932 L11.2928932,8.29289322 C11.6714722,7.91431428 12.2810586,7.90106866 12.6757246,8.26284586 L18.6757246,13.7628459 C19.0828436,14.1360383 19.1103465,14.7686056 18.7371541,15.1757246 C18.3639617,15.5828436 17.7313944,15.6103465 17.3242754,15.2371541 L12.0300757,10.3841378 L6.70710678,15.7071068 Z"
+                                                                        fill="currentColor" fill-rule="nonzero"
+                                                                        transform="translate(12.000003, 11.999999) rotate(-180.000000) translate(-12.000003, -11.999999)">
+                                                                    </path>
+                                                                </g>
+                                                            </svg>
+                                                        </span>
+                                                    </button>
+                                                    <div class="dropdown-menu dropdown-menu-end menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-6 w-175px py-4"
+                                                        data-kt-menu="true">
+                                                        <div class="menu-item px-3">
+                                                            <a style="cursor: pointer;"
+                                                                wire:click="alerta_eliminar_docente_asignado({{ $item->id_docente_curso }})"
+                                                                class="menu-link px-3 fs-6">
+                                                                Eliminar Docente
+                                                            </a>
+                                                        </div>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         @empty
@@ -447,7 +497,7 @@
         </div>
     </div>
     <div wire:ignore.self class="modal fade" tabindex="-1" id="modal_curso_detalle">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
                     <h2 class="modal-title">
@@ -568,6 +618,7 @@
                                                 <th>Apellido y Nombres</th>
                                                 <th>Correo Electrónico</th>
                                                 <th>Grado Académico</th>
+                                                <th>Estado</th>
                                             </tr>
                                         </thead>
                                         <tbody class="fw-semibold text-gray-700">
@@ -578,7 +629,7 @@
                                                             {{ $item->docente->trabajador->trabajador_numero_documento }}
                                                         </td>
                                                         <td class="fs-6 text-uppercase">
-                                                            {{ $item->docente->trabajador->trabajador_apellido }} {{ $item->docente->trabajador->trabajador_nombre }}
+                                                            {{ $item->docente->trabajador->trabajador_apellido }}, {{ $item->docente->trabajador->trabajador_nombre }}
                                                         </td>
                                                         <td class="fs-6">
                                                             {{ $item->docente->trabajador->trabajador_correo }}
@@ -587,6 +638,21 @@
                                                             <span class="badge badge-light-info fs-6 px-3 py-2">
                                                                 {{ $item->docente->trabajador->grado_academico->grado_academico }}
                                                             </span>
+                                                        </td>
+                                                        <td class="fs-6">
+                                                            @if ($item->docente_curso_estado == 1)
+                                                                <span class="badge badge-primary fs-6 px-3 py-2"
+                                                                    wire:click="alerta_cambiar_estado({{ $item->id_docente_curso }})"
+                                                                    style="cursor: pointer;">
+                                                                    Activo
+                                                                </span>
+                                                            @else
+                                                                <span class="badge badge-danger fs-6 px-3 py-2"
+                                                                    wire:click="alerta_cambiar_estado({{ $item->id_docente_curso }})"
+                                                                    style="cursor: pointer;">
+                                                                    Inactivo
+                                                                </span>
+                                                            @endif
                                                         </td>
                                                     </tr>
                                                 @empty
