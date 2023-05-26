@@ -35,3 +35,6 @@ Route::get('/reportes/{id_programa}/proceso/{id_admision}/doctorado', [Coordinad
 
 // ruta para ir a la pagina de gestion de docentes
 Route::get('/docentes', [CoordinadorController::class, 'docentes'])->middleware(['auth.usuario', 'verificar.usuario.coordinador'])->name('coordinador.docentes');
+
+// ruta para ir a la pagina de gestion de cursos
+Route::get('/cursos', [CoordinadorController::class, 'cursos'])->middleware(['auth.usuario', 'verificar.usuario.coordinador'])->name('coordinador.cursos');

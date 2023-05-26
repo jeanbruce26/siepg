@@ -200,4 +200,9 @@ class CoordinadorController extends Controller
     {
         return view('modulo-coordinador.gestion-docentes.index');
     }
+
+    public function cursos()
+    {
+        return view('modulo-coordinador.gestion-cursos.index');
+    }
 }

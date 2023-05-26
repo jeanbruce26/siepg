@@ -319,7 +319,9 @@
                                                     {{ $item->trabajador_correo }}
                                                 </td>
                                                 <td class="fs-6">
-                                                    {{ $item->grado_academico }}
+                                                    <span class="badge badge-light-info fs-6 px-3 py-2">
+                                                        {{ $item->grado_academico }}
+                                                    </span>
                                                 </td>
                                                 <td class="fs-6">
                                                     @if ($item->docente_estado == 1)
