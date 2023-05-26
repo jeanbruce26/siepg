@@ -14,7 +14,7 @@ class DocenteCurso extends Model
     protected $fillable = [
         'id_docente_curso',
         'id_docente',
-        'id_curso_programa_plan',
+        'id_curso_programa_proceso',
         'docente_curso_fecha_creacion',
         'docente_curso_estado'
     ];
@@ -27,9 +27,9 @@ class DocenteCurso extends Model
         return $this->belongsTo(Docente::class, 'id_docente');
     }
 
-    // curso programa plan
-    public function curso_programa_plan()
+    // curso programa proceso
+    public function curso_programa_proceso()
     {
-        return $this->belongsTo(CursoProgramaPlan::class, 'id_curso_programa_plan');
+        return $this->belongsTo(CursoProgramaProceso::class, 'id_curso_programa_proceso');
     }
 }
