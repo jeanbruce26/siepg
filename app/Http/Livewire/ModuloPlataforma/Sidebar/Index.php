@@ -13,6 +13,7 @@ class Index extends Component
 
     protected $listeners = [
         'actualizar_sidebar' => 'render',
+        'update_avatar' => 'render',
     ];
 
     public function toggle_sidebar()

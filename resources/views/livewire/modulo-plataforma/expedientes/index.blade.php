@@ -141,14 +141,14 @@
                                         @if ($expedientes)
                                             @foreach ($expedientes as $item)
                                                 @if($item2->id_expediente_admision == $item->id_expediente_admision)
-                                                <tr>
+                                                <tr class="fs-6">
                                                     <td>
                                                         <a href="{{ asset($item->expediente_inscripcion_url) }}" target="_blank" class="text-gray-800 fw-semibold">
                                                             {{ $item->expediente_admision->expediente->expediente }}
                                                         </a>
                                                     </td>
                                                     <td>
-                                                        <span class="badge badge-success fs-6">Entregado</span>
+                                                        <span class="badge badge-primary fs-6 px-3 py-2">Entregado</span>
                                                     </td>
                                                     <td>
                                                         {{ date('d/m/Y', strtotime($item->expediente_inscripcion_fecha)) }}
@@ -156,7 +156,7 @@
                                                     @if ($admitido)
                                                         @if ($mostrar_acciones_expediente == true)
                                                             <td class="text-end">
-                                                                <a href="#modal_expediente" wire:click="cargar_expediente_inscripcion({{ $item->id_expediente_inscripcion }})" class="btn btn-light-primary btn-sm hover-scale" data-bs-toggle="modal" data-bs-target="#modal_expediente">
+                                                                <a href="#modal_expediente" wire:click="cargar_expediente_inscripcion({{ $item->id_expediente_inscripcion }})" class="btn btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary hover-scale" data-bs-toggle="modal" data-bs-target="#modal_expediente">
                                                                     Editar
                                                                 </a>
                                                             </td>
@@ -165,7 +165,7 @@
                                                         @if ($inscripcion->programa_proceso->admision->id_admision == $admision->id_admision)
                                                             @if ($admision->admision_fecha_fin_inscripcion >= date('Y-m-d'))
                                                                 <td class="text-end">
-                                                                    <a href="#modal_expediente" wire:click="cargar_expediente_inscripcion({{ $item->id_expediente_inscripcion }})" class="btn btn-light-primary btn-sm hover-scale" data-bs-toggle="modal" data-bs-target="#modal_expediente">
+                                                                    <a href="#modal_expediente" wire:click="cargar_expediente_inscripcion({{ $item->id_expediente_inscripcion }})" class="btn btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary hover-scale" data-bs-toggle="modal" data-bs-target="#modal_expediente">
                                                                         Editar
                                                                     </a>
                                                                 </td>
@@ -182,13 +182,13 @@
                                                 </tr>
                                             @endif
                                             @if ($valor == 0)
-                                                <tr>
+                                                <tr class="fs-6">
                                                     <td class="text-gray-800 fw-semibold">
                                                         @php $expediente = App\Models\Expediente::find($item2->id_expediente); @endphp
                                                         {{ $expediente->expediente }}
                                                     </td>
                                                     <td>
-                                                        <span class="badge badge-danger fs-6 ">No Entregado</span>
+                                                        <span class="badge badge-danger fs-6 px-3 py-2">No Entregado</span>
                                                     </td>
                                                     <td>
                                                         Sin fecha
@@ -196,7 +196,7 @@
                                                     @if ($admitido)
                                                         @if ($mostrar_acciones_expediente == true)
                                                             <td class="text-end">
-                                                                <a href="#modal_expediente" wire:click="cargar_expediente({{ $item2->id_expediente_admision }})" class="btn btn-light-success btn-sm hover-scale" data-bs-toggle="modal" data-bs-target="#modal_expediente">
+                                                                <a href="#modal_expediente" wire:click="cargar_expediente({{ $item2->id_expediente_admision }})" class="btn btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary hover-scale" data-bs-toggle="modal" data-bs-target="#modal_expediente">
                                                                     Agregar
                                                                 </a>
                                                             </td>
@@ -205,7 +205,7 @@
                                                         @if ($inscripcion->programa_proceso->admision->id_admision == $admision->id_admision)
                                                             @if ($admision->admision_fecha_fin_inscripcion >= date('Y-m-d'))
                                                                 <td class="text-end">
-                                                                    <a href="#modal_expediente" wire:click="cargar_expediente({{ $item2->id_expediente_admision }})" class="btn btn-light-success btn-sm hover-scale" data-bs-toggle="modal" data-bs-target="#modal_expediente">
+                                                                    <a href="#modal_expediente" wire:click="cargar_expediente({{ $item2->id_expediente_admision }})" class="btn btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary hover-scale" data-bs-toggle="modal" data-bs-target="#modal_expediente">
                                                                         Agregar
                                                                     </a>
                                                                 </td>

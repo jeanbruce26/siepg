@@ -78,7 +78,7 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($pagos as $item)
-                                    <tr>
+                                    <tr class="fs-6">
                                         <td>
                                             {{ $item->id_pago }}
                                         </td>
@@ -96,22 +96,22 @@
                                         </td>
                                         <td>
                                             @if ($item->pago_verificacion == 1)
-                                                <span class="badge badge-warning fs-6">Pendiente</span>
+                                                <span class="badge badge-warning fs-6 px-3 py-2">Pendiente</span>
                                             @elseif ($item->pago_verificacion == 2)
-                                                <span class="badge badge-success fs-6">Validado</span>
+                                                <span class="badge badge-success fs-6 px-3 py-2">Validado</span>
                                             @elseif ($item->pago_verificacion == 0 && $item->pago_estado == 0)
-                                                    <span class="badge badge-danger fs-6">Rechazado</span>
+                                                    <span class="badge badge-danger fs-6 px-3 py-2">Rechazado</span>
                                             @elseif ($item->pago_verificacion == 0)
-                                                <span class="badge badge-danger fs-6">Observado</span>
+                                                <span class="badge badge-danger fs-6 px-3 py-2">Observado</span>
                                             @endif
                                         </td>
                                         <td class="text-end">
                                             @if ($item->pago_verificacion != 2)
-                                                <a href="#modal_pago_plataforma" wire:click="cargar_pago({{ $item->id_pago }})" class="btn btn-light-primary btn-sm hover-scale" data-bs-toggle="modal" data-bs-target="#modal_pago_plataforma">
+                                                <a href="#modal_pago_plataforma" wire:click="cargar_pago({{ $item->id_pago }})" class="btn btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary hover-scale" data-bs-toggle="modal" data-bs-target="#modal_pago_plataforma">
                                                     Editar
                                                 </a>
                                             @else
-                                                <a href="#modal_pago_plataforma" wire:click="cargar_pago({{ $item->id_pago }})" class="btn btn-light-primary btn-sm hover-scale disabled" data-bs-toggle="modal" data-bs-target="#modal_pago_plataforma">
+                                                <a href="#modal_pago_plataforma" wire:click="cargar_pago({{ $item->id_pago }})" class="btn btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary hover-scale disabled" data-bs-toggle="modal" data-bs-target="#modal_pago_plataforma">
                                                     Editar
                                                 </a>
                                             @endif
