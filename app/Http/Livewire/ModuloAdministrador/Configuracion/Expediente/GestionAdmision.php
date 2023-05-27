@@ -13,12 +13,14 @@ class GestionAdmision extends Component
     use WithPagination;
 
     public $search = '';//Variable de busqueda
-    public $titulo = 'Agregar Admisión del Expediente - ';//Titulo del modal
+    public $titulo = 'Agregar Admisión del Expediente';//Titulo del modal
 
     //Variables del modelo de expediente admision
-    public $id_expediente;
+    public $id_expediente;//Variable para el id del expediente. Esta variable ya se encuentra cargada en este componente
     public $id_admision;
     public $expediente_admision_estado;
+
+    public $modo = 1;//Variable para cambiar el modo del formulario | 1 = agregar | 2 = modificar
 
     protected $listeners = ['render', 'cambiarEstado'];//Escuchar evento para que se actualice el componente
 
@@ -33,8 +35,16 @@ class GestionAdmision extends Component
     //Limpiar los campos del formulario del modal
     public function limpiar()
     {
-        $this->resetErrorBag();
-        $this->reset('id_admision');
+        $this->resetErrorBag();//Limpiar los errores
+        $this->reset('id_admision');//Limpiar el campo de admision
+        $this->modo = 1;//Asignamos el modo de agregar
+    }
+
+    public function modo()
+    {
+        $this->limpiar();
+        $this->modo = 1;
+        $this->titulo = 'Agregar Admisión del Expediente';//Asignamos el titulo 
     }
 
     //Alerta de confirmacion
@@ -69,8 +79,7 @@ class GestionAdmision extends Component
     public function cargarAlertaEstado($id_expediente_admision)
     {
         $expedienteAdmision = ExpedienteAdmision::find($id_expediente_admision);//Buscamos el expediente admision por su id
-        $expedi = Expediente::find($id_expediente_admision);//Buscamos el expediente por el id del expediente admision
-        $this->alertaConfirmacion('¿Estás seguro?','¿Desea cambiar el estado del admisión "'.$expedienteAdmision->admision->admision.'" del expediente "'.$expedi->expediente.'"?','question','Modificar','Cancelar','primary','danger','cambiarEstado',$id_expediente_admision);
+        $this->alertaConfirmacion('¿Estás seguro?','¿Desea cambiar el estado del admisión "'.$expedienteAdmision->admision->admision.'" del expediente?','question','Modificar','Cancelar','primary','danger','cambiarEstado',$id_expediente_admision);
     }
 
     //Cambiar el estado del expediente
@@ -86,12 +95,72 @@ class GestionAdmision extends Component
 
         $admi = Admision::find($expedienteAdmision->id_admision);//Buscamos el admision por su id del expediente admision
         //Mostrar alerta de confirmacion de cambio de estado
-        $this->alertaExpedienteAdmision('¡Éxito!', 'El estado del admisión "'.$admi->admision.'" del expediente "'.$expedienteAdmision->expediente->expediente.'" ha sido actualizado satisfactoriamente.', 'success', 'Aceptar', 'success');
+        $this->alertaExpedienteAdmision('¡Éxito!', 'El estado del admisión "'.$admi->admision.'" del expediente ha sido actualizado satisfactoriamente.', 'success', 'Aceptar', 'success');
+    }
+
+    public function cargarExpedienteAdmision($id_expediente_admision)
+    {
+        $this->limpiar();//Limpiamos los campos del formulario
+        $this->modo = 2;//Cambiamos el modo a modificar
+        $expedienteAdmision = ExpedienteAdmision::find($id_expediente_admision);//Buscamos el expediente admision por su id
+        $this->titulo = 'Modificar Admisión del Expediente';//Asignamos el titulo del modal
+        $this->id_expediente = $expedienteAdmision->id_expediente;//Asignamos el id del expediente
+        $this->id_admision = $expedienteAdmision->id_admision;//Asignamos el id del admision
+    }
+
+    public function guardarExpedienteAdmision()
+    {
+        $this->validate([
+            'id_admision' => 'required|numeric',
+        ]);
+
+        $expedienteAdmision = ExpedienteAdmision::where('id_expediente',$this->id_expediente)//Buscamos el expediente admision por el id del expediente
+                                                ->where('id_admision',$this->id_admision)//Buscamos el expediente admision por el id del admision
+                                                ->first();
+
+        //Validamos el modo del modal
+        if ($this->modo == 1) {//Si el modo es 1 (agregar), creamos un nuevo expediente admision
+            if ($expedienteAdmision) {//Validamos si el expediente admision ya existe
+                $this->alertaExpedienteAdmision('¡Error!', 'El admisión ya se encuentra registrado en el expediente.', 'danger', 'Aceptar', 'danger');
+            } else {//Si el expediente admision no existe, lo creamos
+                $expedienteAdmision = new ExpedienteAdmision();//Nueva instancia del modelo de expediente admision
+                $expedienteAdmision->id_expediente = $this->id_expediente;//Asignamos el id del expediente
+                $expedienteAdmision->id_admision = $this->id_admision;//Asignamos el id del admision
+                $expedienteAdmision->expediente_admision_estado = 1;//Asignamos el estado del expediente admision
+                $expedienteAdmision->save();//Guardamos el expediente admision
+
+                $admi = Admision::find($this->id_admision);//Buscamos el admision por su id
+                $expedi = Expediente::find($this->id_expediente);//Buscamos el expediente por su id
+                //Mostrar alerta de confirmacion de registro
+                $this->alertaExpedienteAdmision('¡Éxito!', 'El admisión "'.$admi->admision.'" ha sido registrado satisfactoriamente en el expediente "'.$expedi->expediente.'".', 'success', 'Aceptar', 'success');
+                $this->limpiar();
+            }
+        } else {//Si el modo es 2 (modificar), modificamos el expediente admision
+            if ($expedienteAdmision) {//Validamos si el expediente admision ya existe
+                $this->alertaExpedienteAdmision('¡Información!', 'El admisión ya se encuentra registrado en el expediente.', 'info', 'Aceptar', 'info');
+            } else {//Si el expediente admision no existe, lo modificamos
+                $expedienteAdmision = ExpedienteAdmision::find($this->id_expediente);//Buscamos el expediente admision por su id
+                $expedienteAdmision->id_admision = $this->id_admision;
+                $expedienteAdmision->save();
+                $admi = Admision::find($this->id_admision);//Buscamos el admision por su id
+                $expedi = Expediente::find($this->id_expediente);//Buscamos el expediente por su id
+                //Mostrar alerta de confirmacion de modificacion
+                $this->alertaExpedienteAdmision('¡Éxito!', 'El admisión "'.$admi->admision.'" ha sido modificado satisfactoriamente en el expediente "'.$expedi->expediente.'".', 'success', 'Aceptar', 'success');
+                $this->limpiar();
+            }
+        }
+
+        //Cerramos el modal
+        $this->dispatchBrowserEvent('modal', [
+            'titleModal' => '#modalExpedienteAdmision',
+        ]);
     }
 
     public function render()
     {
         $buscar = $this->search;//Asignamos a la variable buscar, el valor del campo de busqueda
+        $admisionModel = Admision::all();//Cargamos todos los admisiones para mostrarlos un select
+        $validarSelect = ExpedienteAdmision::all();//Cargamos todos los expediente admisiones para validar si ya existe un admision en el expediente
         $expedienteModel = Expediente::where('id_expediente',$this->id_expediente)->first();
         $expedienteAdmisionModel = ExpedienteAdmision::join('admision','admision.id_admision','=','expediente_admision.id_admision')
                                         ->where('expediente_admision.id_expediente',$this->id_expediente)
@@ -101,6 +170,8 @@ class GestionAdmision extends Component
                                         ->paginate(10);
 
         return view('livewire.modulo-administrador.configuracion.expediente.gestion-admision',[
+            'admisionModel' => $admisionModel,
+            'validarSelect' => $validarSelect,
             'expedienteModel' => $expedienteModel,
             'expedienteAdmisionModel' => $expedienteAdmisionModel,
         ]);

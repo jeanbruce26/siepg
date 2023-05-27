@@ -141,9 +141,9 @@
     </div>
 
     {{-- Modal Expediente --}}
-    {{-- <div wire:ignore.self class="modal fade" id="modalExpedienteAdmision" tabindex="-1" aria-labelledby="modalExpedienteAdmision"
+    <div wire:ignore.self class="modal fade" id="modalExpedienteAdmision" tabindex="-1" aria-labelledby="modalExpedienteAdmision"
         aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-dialog  modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">{{ $titulo }}</h5>
@@ -152,93 +152,34 @@
                 </div>
                 <div class="modal-body">
                     <form novalidate>
-                        <div class="row g-5 {{ $modo == 3 ? 'mb-3' : '' }}">
-                            <div class="col-md-12">
-                                <label class="form-label">Expediente <span class="text-danger">*</span></label>
-                                <input wire:model="expediente" type="text" class="form-control @error('expediente') is-invalid  @enderror" placeholder="Ingrese el expediente" @if($modo == 3) readonly @endif>
-                                @error('expediente') <span class="error text-danger" >{{ $message }}</span> @enderror
-                            </div>
-                            <div class="col-md-12">
-                                <label class="form-label">Texto de complemento del archivo </label>
-                                <textarea wire:model="complemento" class="form-control @error('complemento') is-invalid  @enderror" placeholder="Ingrese el nombre del archivo" @if($modo == 3) readonly @endif></textarea>
-                                @error('complemento') <span class="error text-danger" >{{ $message }}</span> @enderror
-                            </div>
-                            <div class="col-md-12">
-                                <label class="form-label">Nombre del archivo <span class="text-danger">*</span></label>
-                                <input wire:model="nombre_archivo" type="text" class="form-control @error('nombre_archivo') is-invalid  @enderror" placeholder="Ingrese el nombre del archivo" @if($modo == 3) readonly @endif>
-                                @error('nombre_archivo') <span class="error text-danger" >{{ $message }}</span> @enderror
-                            </div>
-                            <div class="@if($modo == 3) col-md-6 @else col-md-12 @endif">
-                                <label class="form-label">Requerido <span class="text-danger">*</span></label>
-                                <div class="d-flex align-items-center">
-                                    @if($modo == 3)
-                                        @if($requerido == 1)
-                                            <span class="svg-icon svg-icon-2x svg-icon-success">
-                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
-                                                    <path d="M10.4343 12.4343L8.75 10.75C8.33579 10.3358 7.66421 10.3358 7.25 10.75C6.83579 11.1642 6.83579 11.8358 7.25 12.25L10.2929 15.2929C10.6834 15.6834 11.3166 15.6834 11.7071 15.2929L17.25 9.75C17.6642 9.33579 17.6642 8.66421 17.25 8.25C16.8358 7.83579 16.1642 7.83579 15.75 8.25L11.5657 12.4343C11.2533 12.7467 10.7467 12.7467 10.4343 12.4343Z" fill="currentColor"/>
-                                                </svg>
-                                            </span>
-                                            <span class="ms-1">Si</span>
-                                        @else
-                                            <span class="svg-icon svg-icon-2x svg-icon-danger">
-                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
-                                                    <rect x="7" y="15.3137" width="12" height="2" rx="1" transform="rotate(-45 7 15.3137)" fill="currentColor"/>
-                                                    <rect x="8.41422" y="7" width="12" height="2" rx="1" transform="rotate(45 8.41422 7)" fill="currentColor"/>
-                                                </svg>
-                                            </span>
-                                            <span class="ms-1">No</span>
-                                        @endif
-                                    @else
-                                        <div class="form-check form-check-custom form-check-success form-check-solid me-15">
-                                            <input class="form-check-input @error('requerido') is-invalid @enderror" type="radio" name="requerido" wire:model="requerido" value="1" id="requerido_si" style="cursor: pointer">
-                                            <span class="radio-label form-check-label" wire:click="$set('requerido', '1')" style="cursor: pointer; user-select: none;">Si</span>
-                                        </div>
-                                        <div class="form-check form-check-custom form-check-danger form-check-solid">
-                                            <input class="form-check-input @error('requerido') is-invalid @enderror" type="radio" name="requerido" wire:model="requerido" value="2" id="requerido_no" style="cursor: pointer">
-                                            <span class="radio-label form-check-label" wire:click="$set('requerido', '2')" style="cursor: pointer; user-select: none;">No</span>
-                                        </div>
-                                    @endif
-                                </div>
-                            </div>
+                        <div class="row g-5 {{ $modo == 3 ? 'mb-3' : '' }}">                            
                             <div class="@if($modo == 3) col-md-6 @else col-md-12 @endif">
                                 <label class="form-label">Tipo de expediente <span class="text-danger">*</span></label>
-                                @if($modo == 3)
-                                    @switch($tipo)
-                                        @case(0)
-                                            <input type="text" class="form-control" value="Maestría y Doctorado" readonly>
-                                            @break
-                                        @case(1)
-                                            <input type="text" class="form-control" value="Maestría" readonly>
-                                            @break
-                                        @case(2)
-                                            <input type="text" class="form-control" value="Doctorado" readonly>
-                                            @break
-                                    @endswitch
-                                @else
-                                    <select class="form-select @error('tipo') is-invalid  @enderror" wire:model="tipo">
-                                        <option value="" selected>Seleccione</option>
-                                        <option value="0">Maestría y Doctorado</option>
-                                        <option value="1">Maestría</option>
-                                        <option value="2">Doctorado</option>
-                                    </select>
-                                    @error('tipo')
-                                        <span class="error text-danger" >{{ $message }}</span> 
-                                    @enderror
-                                @endif
+                                <select class="form-select @error('id_admision') is-invalid  @enderror" wire:model="id_admision">
+                                    <option value="" selected>Seleccione</option>
+                                    @foreach ($admisionModel as $item)
+                                        @php
+                                            $isAssigned = $validarSelect->contains('id_admision', $item->id_admision);
+                                        @endphp
+                                        {{-- @if($isAssigned == false)
+                                            <option value="{{$item->id_admision}}">{{$item->admision}}</option>
+                                        @endif --}}
+                                        <option value="{{$item->id_admision}}" {{$isAssigned ? 'disabled' : ''}} class="{{$isAssigned ? 'text-gray-400' : ''}}">{{$item->admision}}</option>
+                                    @endforeach
+                                </select>
+                                @error('id_admision')
+                                    <span class="error text-danger" >{{ $message }}</span> 
+                                @enderror
                             </div>
                         </div>
                     </form>
                 </div>
-                @if($modo == 2)
-                    <div class="modal-footer col-12 d-flex justify-content-between">
-                        <button type="button" wire:click="limpiar()" class="btn btn-secondary hover-elevate-up" data-bs-dismiss="modal">Cancelar</button>                    
-                        <button type="button" wire:click="guardarExpediente()" class="btn btn-primary hover-elevate-up">Guardar</button>
-                    </div>
-                @endif
+                <div class="modal-footer col-12 d-flex justify-content-between">
+                    <button type="button" wire:click="limpiar()" class="btn btn-secondary hover-elevate-up" data-bs-dismiss="modal">Cancelar</button>                    
+                    <button type="button" wire:click="guardarExpedienteAdmision()" class="btn btn-primary hover-elevate-up">Guardar</button>
+                </div>
             </div>
         </div>
-    </div> --}}
+    </div>
 
 </div>
