@@ -27,20 +27,20 @@
             </button>
         </div>
         <div class="app-navbar-item ms-2 ms-md-4" id="kt_header_user_menu_toggle">
-            {{-- <div class="text-end d-none d-sm-flex flex-column justify-content-center me-3">
-                <span class="">
+            <div class="text-end d-none d-sm-flex flex-column justify-content-center me-3">
+                <span class="fw-medium text-gray-700">
                     @if ($admitido)
                         {{ $admitido->admitido_codigo }}
                     @else
                         {{ $persona->numero_documento }}
                     @endif
                 </span>
-                <a href="{{ route('plataforma.perfil') }}" class="text-gray-800 fs-5 fw-bold d-block">
+                <a href="{{ route('plataforma.perfil') }}" class="text-gray-800 fs-4 fw-bold d-block">
                     @php $nombre = explode(' ', $persona->nombre); @endphp
                     {{ ucwords(strtolower($nombre[0])) }} {{ ucwords(strtolower($persona->apellido_paterno)) }}
                 </a>
-            </div> --}}
-            <div class="cursor-pointer symbol symbol-30px symbol-md-40px"
+            </div>
+            <div class="cursor-pointer symbol symbol-35px symbol-md-45px"
                 data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-attach="parent"
                 data-kt-menu-placement="bottom-end">
                 @if ($usuario->usuario_estudiante_perfil_url)

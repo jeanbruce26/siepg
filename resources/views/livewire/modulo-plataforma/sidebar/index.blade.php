@@ -13,8 +13,7 @@
         <div id="kt_app_sidebar_toggle"
             class="app-sidebar-toggle btn btn-icon btn-shadow btn-sm btn-color-muted btn-active-color-primary body-bg h-30px w-30px position-absolute top-50 start-100 translate-middle rotate"
             data-kt-toggle="true" data-kt-toggle-state="active" data-kt-toggle-target="body"
-            data-kt-toggle-name="app-sidebar-minimize"
-            wire:click="toggle_sidebar">
+            data-kt-toggle-name="app-sidebar-minimize">
             <span class="svg-icon svg-icon-2 rotate-180">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                     xmlns="http://www.w3.org/2000/svg">
@@ -28,40 +27,6 @@
             </span>
         </div>
     </div>
-    @if ($mostrar_perfil == true)
-    <div class="aside-toolbar flex-column-auto px-8 border-bottom border-2" id="kt_aside_toolbar">
-        <div class="aside-user d-flex align-items-sm-center justify-content-center py-8">
-            <div class="symbol symbol-70px">
-                @if ($usuario->usuario_estudiante_perfil_url)
-                    <img src="{{ asset($usuario->usuario_estudiante_perfil_url) }}" alt="avatar" class="shadow-sm"/>
-                @else
-                    <img src="{{ asset('assets/media/avatars/blank.png') }}" alt="avatar" class="shadow-sm"/>
-                @endif
-            </div>
-            <div class="aside-user-info flex-row-fluid flex-wrap ms-5">
-                <div class="d-flex">
-                    <div class="flex-grow-1 me-2">
-                        <span class="fs-4 text-gray-800 fw-bold">
-                            @php $nombre = explode(' ', $persona->nombre); @endphp
-                            {{ ucwords(strtolower($nombre[0])) }} {{ ucwords(strtolower($persona->apellido_paterno)) }}
-                        </span>
-                        <span class="text-gray-600 fw-semibold d-block fs-6 mb-1">
-                            @if ($admitido)
-                                {{ $admitido->admitido_codigo }}
-                            @else
-                                {{ $usuario->usuario_estudiante }}
-                            @endif
-                        </span>
-                        <div class="d-flex align-items-center text-success fw-semibold mt-0 fs-7">
-                            <span class="bullet bullet-dot bg-success me-2"></span>
-                            en linea
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    @endif
     <div class="app-sidebar-menu overflow-hidden flex-column-fluid">
         <div id="kt_app_sidebar_menu_wrapper" class="app-sidebar-wrapper hover-scroll-overlay-y my-5"
             data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-height="auto"

@@ -9,17 +9,9 @@ use Livewire\Component;
 
 class Index extends Component
 {
-    public $mostrar_perfil = true; // variable para mostrar el perfil del usuario
-
     protected $listeners = [
         'actualizar_sidebar' => 'render',
-        'update_avatar' => 'render',
     ];
-
-    public function toggle_sidebar()
-    {
-        $this->mostrar_perfil = !$this->mostrar_perfil;
-    }
 
     public function render()
     {
