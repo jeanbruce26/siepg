@@ -18,7 +18,7 @@
         </div>
     </div>
     <div id="kt_app_content" class="app-content flex-column-fluid">
-        <div id="kt_app_content_container" class="app-container container-fluid">
+        <div id="kt_app_content_container" class="app-container container-fluid d-flex flex-stack">
             <div class="row mb-5 mb-xl-10">
                 <div class="col-md-12 mb-md-5 mb-xl-10">
                     {{-- alerta para que el usuario sepa de donde abrir los expedientes --}}

@@ -30,12 +30,12 @@
                                 </svg>
                             </span>
                         </span>
-                        <span class="menu-title fs-6">Inicio</span>
+                        <span class="menu-title fs-4">Inicio</span>
                     </a>
                 </div>
                 <div class="menu-item pt-5">
                     <div class="menu-content">
-                        <span class="menu-heading fw-bold text-uppercase fs-7">Menu</span>
+                        <span class="menu-heading fw-bold text-uppercase fs-5">Menu</span>
                     </div>
                 </div>
                 <div class="menu-item">
@@ -48,7 +48,7 @@
                                 </svg>
                             </span>
                         </span>
-                        <span class="menu-title fs-6">Inscripciones</span>
+                        <span class="menu-title fs-4">Inscripciones</span>
                     </a>
                 </div>
                 <div class="menu-item">
@@ -61,7 +61,7 @@
                                 </svg>
                             </span>
                         </span>
-                        <span class="menu-title fs-6">Pagos</span>
+                        <span class="menu-title fs-4">Pagos</span>
                     </a>
                 </div>
                 {{-- <div data-kt-menu-trigger="click" class="menu-item menu-accordion">

@@ -47,7 +47,7 @@
                             </div>
                             <div class="col-md-7">
                                 @if ($constancia->constancia_ingreso_url)
-                                    <embed src="{{ asset($constancia->constancia_ingreso_url) }}" class="rounded" type="application/pdf" width="100%" height="500px" />
+                                    <embed src="{{ asset($constancia->constancia_ingreso_url) }}" class="rounded" type="application/pdf" width="100%" height="600px" />
                                 @else
                                     <div class="card card-body shadow-sm bg-light-info border border-3 border-info d-flex flex-column justify-content-center align-items-center" style="height: 500px">
                                         <div class="bg-body px-10 py-5 rounded-4 mx-auto mb-5">

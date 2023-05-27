@@ -9,13 +9,21 @@ use Livewire\Component;
 
 class Index extends Component
 {
+    public $mostrar_perfil = true; // variable para mostrar el perfil del usuario
+
     protected $listeners = [
         'actualizar_sidebar' => 'render',
     ];
 
+    public function toggle_sidebar()
+    {
+        $this->mostrar_perfil = !$this->mostrar_perfil;
+    }
+
     public function render()
     {
-        $persona = Persona::where('numero_documento', auth('plataforma')->user()->usuario_estudiante)->first(); // persona del usuario logueado
+        $usuario = auth('plataforma')->user(); // obtenemos el usuario autenticado en la plataforma
+        $persona = Persona::where('numero_documento', $usuario->usuario_estudiante)->first(); // obtenemos la persona del usuario autenticado en la plataforma
         $inscripcion_ultima = Inscripcion::where('id_persona', $persona->id_persona)->orderBy('id_inscripcion', 'desc')->first(); // inscripcion del usuario logueado
         $evaluacion = $inscripcion_ultima->evaluacion; // evaluacion de la inscripcion del usuario logueado
         $constancia = null;
@@ -33,6 +41,8 @@ class Index extends Component
             $admitido = null;
         }
         return view('livewire.modulo-plataforma.sidebar.index', [
+            'usuario' => $usuario,
+            'persona' => $persona,
             'inscripcion_ultima' => $inscripcion_ultima,
             'evaluacion' => $evaluacion,
             'admitido' => $admitido,

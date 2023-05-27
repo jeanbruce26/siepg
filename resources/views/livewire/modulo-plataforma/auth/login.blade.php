@@ -47,6 +47,7 @@
                             Ingresar
                         </div>
                         <div wire:loading wire:target="ingresar_plataforma">
+                            Ingresando...
                             <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
                         </div>
                     </button>
