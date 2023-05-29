@@ -4,7 +4,7 @@
             <div id="kt_app_toolbar_container" class="app-container container-fluid d-flex flex-stack">
                 <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
                     <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
-                        Gestión de Vistas para Evaluación - {{ $expedienteModel->expediente }}
+                        Gestión de Tipo de Seguimiento - {{ $expedienteModel->expediente }}
                     </h1>
                     <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                         <li class="breadcrumb-item text-muted">
@@ -59,7 +59,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse ($expedienteEvaluacionModel as $item)
+                                    {{-- @forelse ($expedienteEvaluacionModel as $item)
                                     <tr>
                                         <td align="center" class="fw-bold fs-5">{{ $item->id_expediente_tipo_evaluacion }}</td>
                                         <td >
@@ -105,12 +105,12 @@
                                                 No hay registros
                                             </td>
                                         </tr>
-                                    @endforelse
+                                    @endforelse --}}
                                 </tbody>
                             </table>
                         </div>
                         {{-- paginacion de la tabla --}}
-                        @if ($expedienteEvaluacionModel->hasPages())
+                        {{-- @if ($expedienteEvaluacionModel->hasPages())
                             <div class="d-flex justify-content-between mt-5">
                                 <div class="d-flex align-items-center text-gray-700">
                                     Mostrando {{ $expedienteEvaluacionModel->firstItem() }} - {{ $expedienteEvaluacionModel->lastItem() }} de
@@ -127,7 +127,7 @@
                                     {{ $expedienteEvaluacionModel->total() }} registros
                                 </div>
                             </div>
-                        @endif
+                        @endif --}}
                     </div>
                 </div>
             </div>
@@ -135,7 +135,7 @@
     </div>
 
     {{-- Modal Expediente --}}
-    <div wire:ignore.self class="modal fade" id="modalExpedienteVistasEva" tabindex="-1" aria-labelledby="modalExpedienteVistasEva"
+    {{-- <div wire:ignore.self class="modal fade" id="modalExpedienteVistasEva" tabindex="-1" aria-labelledby="modalExpedienteVistasEva"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
@@ -177,6 +177,6 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
 </div>

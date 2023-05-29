@@ -156,14 +156,11 @@
                             <div class="@if($modo == 3) col-md-6 @else col-md-12 @endif">
                                 <label class="form-label">Tipo de expediente <span class="text-danger">*</span></label>
                                 <select class="form-select @error('id_admision') is-invalid  @enderror" wire:model="id_admision">
-                                    <option value="" selected>Seleccione</option>
+                                    <option value="null" selected>Seleccione</option>
                                     @foreach ($admisionModel as $item)
                                         @php
-                                            $isAssigned = $validarSelect->contains('id_admision', $item->id_admision);
+                                            $isAssigned = $validarSelect->where('id_expediente', $id_expediente)->contains('id_admision', $item->id_admision);
                                         @endphp
-                                        {{-- @if($isAssigned == false)
-                                            <option value="{{$item->id_admision}}">{{$item->admision}}</option>
-                                        @endif --}}
                                         <option value="{{$item->id_admision}}" {{$isAssigned ? 'disabled' : ''}} class="{{$isAssigned ? 'text-gray-400' : ''}}">{{$item->admision}}</option>
                                     @endforeach
                                 </select>

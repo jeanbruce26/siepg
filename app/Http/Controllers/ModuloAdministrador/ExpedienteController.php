@@ -27,4 +27,12 @@ class ExpedienteController extends Controller
             'id_expediente' => $id_expediente
         ]);
     }
+
+    public function seguimiento($id)
+    {
+        $id_expediente = $id;
+        return view('modulo-administrador.configuracion.expediente.gestion-tipo-seguimiento', [
+            'id_expediente' => $id_expediente
+        ]);
+    }
 }

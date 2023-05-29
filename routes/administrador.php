@@ -62,3 +62,5 @@ Route::get('/expediente', [ExpedienteController::class, 'index'])->middleware(['
 Route::get('/expediente/{id}/gestion-admision', [ExpedienteController::class, 'admision'])->middleware(['auth.usuario'])->name('administrador.expediente.gestion-admision');
 //Ruta para ir a la vista de Gestion de Vistas para Evaluación de Expediente en Configuracion | Esta ruta de la vista está dentro de la vista de expediente
 Route::get('/expediente/{id}/gestion-vistas-evaluacion', [ExpedienteController::class, 'evaluacion'])->middleware(['auth.usuario'])->name('administrador.expediente.gestion-vistas-evaluacion');
+//Ruta para ir a la vista de GEstion de Tipo de Seguimiento de Expediente en Configuracion | Esta ruta de la vista está dentro de la vista de expediente
+Route::get('/expediente/{id}/gestion-tipo-seguimiento', [ExpedienteController::class, 'seguimiento'])->middleware(['auth.usuario'])->name('administrador.expediente.gestion-tipo-seguimiento');
