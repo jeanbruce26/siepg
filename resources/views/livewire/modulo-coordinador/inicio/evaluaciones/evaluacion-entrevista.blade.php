@@ -65,12 +65,14 @@
                         </div>
                     </div>
                     {{-- alerta --}}
-                    <div class="alert bg-light-warning border-warning d-flex align-items-center p-5 mb-5">
-                        <span class="svg-icon svg-icon-2hx svg-icon-warning me-4 d-flex align-items-center">
-                            <i class="las la-exclamation-circle fs-2 text-warning"></i>
-                        </span>
+                    <div class="alert bg-light-warning border-warning border-3 d-flex align-items-center p-5 mb-5">
+                        <i class="ki-duotone ki-information-2 fs-2qx me-4 text-warning">
+                            <i class="path1"></i>
+                            <i class="path2"></i>
+                            <i class="path3"></i>
+                        </i>
                         <div class="d-flex flex-column gap-2">
-                            <span class="fw-bold">
+                            <span class="fw-bold fs-5">
                                 Nota: Si el postulante no se presenta a la entrevista, se debe colocar "0" (cero) en todos los campos.
                             </span>
                         </div>

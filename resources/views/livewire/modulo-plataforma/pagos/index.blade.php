@@ -26,17 +26,19 @@
         <div id="kt_app_content_container" class="app-container container-fluid">
             <div class="row mb-5 mb-xl-10">
                 <div class="col-md-12 mb-md-5 mb-xl-10">
-                    {{-- alerta para que el usuario sepa de donde abrir los expedientes --}}
-                    {{-- <div class="alert bg-light-primary border border-primary d-flex alig-items-center p-5 mb-5">
-                        <span class="svg-icon svg-icon-2hx svg-icon-primary me-4">
-                            <i class="las la-exclamation-circle fs-2 text-primary"></i>
-                        </span>
+                    {{-- alerta  --}}
+                    <div class="alert bg-light-primary border border-3 border-primary d-flex align-items-center p-5 mb-5">
+                        <i class="ki-duotone ki-information-5 fs-2qx me-4 text-primary">
+                            <i class="path1"></i>
+                            <i class="path2"></i>
+                            <i class="path3"></i>
+                        </i>
                         <div class="d-flex flex-column">
-                            <span class="fw-bold">
-                                Nota: Para abrir los expedientes debe hacer click en el nombre de cada uno de los expedientes
+                            <span class="fw-bold fs-5">
+                                Acontinuación se muestra la lista de sus pagos realizados en la plataforma, el cual podrá filtrar por concepto de pago.
                             </span>
                         </div>
-                    </div> --}}
+                    </div>
                     {{-- header de la tabla --}}
                     <div class="card p-4 mb-5">
                         <div class="d-flex flex-column flex-md-row align-items-center w-100">
@@ -115,7 +117,7 @@
                                         </tr>
                                     </thead>
                                     <tbody class="fw-semibold text-gray-700">
-                                        @foreach ($pagos as $item)
+                                        @forelse ($pagos as $item)
                                         <tr class="fs-6">
                                             <td>
                                                 {{ $item->id_pago }}
@@ -155,7 +157,19 @@
                                                 @endif
                                             </td>
                                         </tr>
-                                        @endforeach
+                                        @empty
+                                        <tr class="fs-6">
+                                            <td colspan="7" class="text-center">
+                                                <div class="text-muted py-5">
+                                                    @if ($search == '')
+                                                        No se encontraron resultados
+                                                    @elseif($search)
+                                                        No hay resultados de la busqueda "{{ $search }}"
+                                                    @endif
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        @endforelse
                                     </tbody>
                                 </table>
                             </div>

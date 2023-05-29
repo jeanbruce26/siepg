@@ -80,9 +80,11 @@
                     @if (!$admitido)
                         @if ($admision->admision_fecha_fin_inscripcion < date('Y-m-d'))
                             <div class="alert bg-light-danger border border-3 border-danger d-flex align-items-center p-5 mb-5">
-                                <span class="svg-icon svg-icon-2xl svg-icon-danger me-4">
-                                    <i class="las la-exclamation-circle fs-1 text-danger"></i>
-                                </span>
+                                <i class="ki-duotone ki-information-2 fs-2qx me-4 text-danger">
+                                    <i class="path1"></i>
+                                    <i class="path2"></i>
+                                    <i class="path3"></i>
+                                </i>
                                 <div class="d-flex flex-column">
                                     <span class="fw-bold fs-5">
                                         La fecha limite para actualizar sus expedientes ha expirado
@@ -91,9 +93,11 @@
                             </div>
                         @else
                             <div class="alert bg-light-warning border border-3 border-warning d-flex align-items-center p-5 mb-5">
-                                <span class="svg-icon svg-icon-2hx svg-icon-warning me-4">
-                                    <i class="las la-exclamation-circle fs-1 text-warning"></i>
-                                </span>
+                                <i class="ki-duotone ki-information-2 fs-2qx me-4 text-warning">
+                                    <i class="path1"></i>
+                                    <i class="path2"></i>
+                                    <i class="path3"></i>
+                                </i>
                                 <div class="d-flex flex-column">
                                     <span class="fw-bold fs-5">
                                         Recuerde que la fecha limite para actualizar sus expedientes es el {{ $fecha_fin_admision }}
@@ -104,9 +108,11 @@
                     @endif
                     {{-- alerta para que el usuario sepa de donde abrir los expedientes --}}
                     <div class="alert bg-light-primary border border-3 border-primary d-flex align-items-center p-5 mb-5">
-                        <span class="svg-icon svg-icon-2hx svg-icon-primary me-4">
-                            <i class="las la-exclamation-circle fs-1 text-primary"></i>
-                        </span>
+                        <i class="ki-duotone ki-information-5 fs-2qx me-4 text-primary">
+                            <i class="path1"></i>
+                            <i class="path2"></i>
+                            <i class="path3"></i>
+                        </i>
                         <div class="d-flex flex-column">
                             <span class="fw-bold fs-5">
                                 Nota: Para abrir los expedientes debe hacer click en el nombre de cada uno de los expedientes
