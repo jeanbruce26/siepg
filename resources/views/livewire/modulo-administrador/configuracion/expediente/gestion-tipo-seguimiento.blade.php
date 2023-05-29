@@ -23,11 +23,11 @@
                         <li class="breadcrumb-item">
                             <span class="bullet bg-gray-400 w-5px h-2px"></span>
                         </li>
-                        <li class="breadcrumb-item text-muted">Gestión de Vistas para Evaluación</li>
+                        <li class="breadcrumb-item text-muted">Gestión de Tipo de Seguimiento</li>
                     </ul>
                 </div>
                 <div class="d-flex align-items-center gap-2 gap-lg-3">
-                    <a href="#modalExpedienteVistasEva" wire:click="modo()" class="btn btn-primary btn-sm hover-elevate-up" data-bs-toggle="modal" data-bs-target="#modalExpedienteVistasEva">Nuevo</a>
+                    <a href="#modalExpedienteTipoSeguimiento" wire:click="modo()" class="btn btn-primary btn-sm hover-elevate-up" data-bs-toggle="modal" data-bs-target="#modalExpedienteTipoSeguimiento">Nuevo</a>
                 </div>
             </div>
         </div>
@@ -53,7 +53,7 @@
                                 <thead class="bg-light-primary">
                                     <tr align="center" class="fw-bold fs-5 text-gray-800 border-bottom-2 border-gray-200">
                                         <th scope="col" class="col-md-1">ID</th>
-                                        <th>Vista de Evaluación</th>
+                                        <th>Tipo de Seguimiento</th>
                                         <th scope="col" class="col-md-2">Estado</th>
                                         <th scope="col" class="col-md-2">Acciones</th>
                                     </tr>
@@ -92,7 +92,7 @@
                                             </a>
                                             <div class="dropdown-menu dropdown-menu-end menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
                                                 <div class="menu-item px-3">
-                                                    <a href="#modalExpedienteVistasEva" wire:click="cargarVistasEvaluacion({{ $item->id_expediente_tipo_evaluacion }})" class="menu-link px-3" data-bs-toggle="modal" data-bs-target="#modalExpedienteVistasEva">
+                                                    <a href="#modalExpedienteTipoSeguimiento" wire:click="cargarVistasEvaluacion({{ $item->id_expediente_tipo_evaluacion }})" class="menu-link px-3" data-bs-toggle="modal" data-bs-target="#modalExpedienteTipoSeguimiento">
                                                         Editar
                                                     </a>
                                                 </div>
@@ -135,7 +135,7 @@
     </div>
 
     {{-- Modal Expediente --}}
-    {{-- <div wire:ignore.self class="modal fade" id="modalExpedienteVistasEva" tabindex="-1" aria-labelledby="modalExpedienteVistasEva"
+    {{-- <div wire:ignore.self class="modal fade" id="modalExpedienteTipoSeguimiento" tabindex="-1" aria-labelledby="modalExpedienteTipoSeguimiento"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">

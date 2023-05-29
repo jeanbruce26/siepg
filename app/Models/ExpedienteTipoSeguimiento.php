@@ -14,7 +14,7 @@ class ExpedienteTipoSeguimiento extends Model
     protected $fillable = [
         'id_expediente_tipo_seguimiento',
         'id_expediente',
-        'tipo_seguimiento',
+        'id_tipo_seguimiento',
         'expediente_tipo_seguimiento_estado'
     ];
 
@@ -23,5 +23,10 @@ class ExpedienteTipoSeguimiento extends Model
     public function expediente()
     {
         return $this->belongsTo(Expediente::class, 'id_expediente', 'id_expediente');
+    }
+
+    public function tipo_seguimiento()
+    {
+        return $this->belongsTo(TipoSeguimiento::class, 'id_tipo_seguimiento', 'id_tipo_seguimiento');
     }
 }
