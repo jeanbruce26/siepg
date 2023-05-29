@@ -57,11 +57,13 @@
                 <div class="col-md-12 mb-md-5 mb-xl-10">
                     {{-- alerta --}}
                     <div class="alert bg-light-primary border border-3 border-primary d-flex align-items-center p-5 mb-5">
-                        <span class="svg-icon svg-icon-2hx svg-icon-primary me-4">
-                            <i class="las la-exclamation-circle fs-1 text-primary"></i>
-                        </span>
+                        <i class="ki-duotone ki-information-5 fs-2qx me-4 text-primary">
+                            <i class="path1"></i>
+                            <i class="path2"></i>
+                            <i class="path3"></i>
+                        </i>
                         <div class="d-flex flex-column">
-                            <span class="fw-bold fs-6">
+                            <span class="fw-bold fs-5">
                                 A continuación se muestran los pagos registrados en el sistema. Podrá ver el detalle de cada pago, así como también el estado de cada uno de ellos.
                             </span>
                         </div>
@@ -126,7 +128,7 @@
                                                         <span class="badge badge-warning fs-6">No Verificado</span>
                                                     @elseif ($item->pago_verificacion == 0 && $item->pago_estado == 0)
                                                         <span class="badge badge-danger fs-6">Rechazado</span>
-                                                    @elseif ($item->pago_verificacion == 0 && $item->pago_estado == 1)
+                                                    @elseif ($item->pago_verificacion == 0 && ($item->pago_estado == 1 || $item->pago_estado == 2))
                                                         <span class="badge badge-danger fs-6">Observado</span>
                                                     @endif
                                                 </td>

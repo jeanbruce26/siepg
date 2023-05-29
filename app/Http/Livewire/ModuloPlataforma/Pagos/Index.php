@@ -30,6 +30,17 @@ class Index extends Component
     public $button_modal = 'Registrar Pago'; // variable para el boton del modal de registro
     public $terminos_condiciones_pagos = false; // variable para los terminos y condiciones de los pagos
 
+    // variables para el filtro
+    public $search = '';
+    public $filtro_concepto_pago; // variable para el filtro de concepto de pago
+    public $concepto_pago_data; // variable para el concepto de pago
+
+    protected $queryString = [ // variables de la url
+        'search' => ['except' => ''],
+        'filtro_concepto_pago' => ['except' => ''],
+        'concepto_pago_data' => ['except' => ''],
+    ];
+
     protected $listeners = [
         'guardar_pago' => 'guardar_pago',
     ]; // listener para mostrar alertas
@@ -68,6 +79,21 @@ class Index extends Component
                 'terminos_condiciones_pagos' => 'nullable'
             ]);
         }
+    }
+
+    public function aplicar_filtro()
+    {
+        $this->resetPage();
+        $this->concepto_pago_data = $this->filtro_concepto_pago;
+    }
+
+    public function resetear_filtro()
+    {
+        $this->resetPage();
+        $this->reset([
+            'filtro_concepto_pago',
+            'concepto_pago_data'
+        ]);
     }
 
     public function modo()
@@ -486,7 +512,12 @@ class Index extends Component
     public function render()
     {
         $canal_pagos = CanalPago::where('canal_pago_estado', 1)->get();
-        $pagos = Pago::where('pago_documento', auth('plataforma')->user()->usuario_estudiante)
+        $pagos = Pago::where(function ($query) {
+                            $query->where('pago_operacion', 'like', '%' . $this->search . '%')
+                                ->orWhere('id_pago', 'like', '%' . $this->search . '%');
+                        })
+                        ->where('pago_documento', auth('plataforma')->user()->usuario_estudiante)
+                        ->where('id_concepto_pago', $this->concepto_pago_data ? '=' : '!=', $this->concepto_pago_data)
                         ->orderBy('id_pago', 'desc')
                         ->paginate(5); // pagos del usuario logueado
         $persona = Persona::where('numero_documento', auth('plataforma')->user()->usuario_estudiante)->first(); // persona del usuario logueado

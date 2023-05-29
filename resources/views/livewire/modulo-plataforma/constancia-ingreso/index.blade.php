@@ -29,7 +29,10 @@
                             <div class="col-md-5">
                                 <div class="card card-body shadow-sm">
                                     <div class="bg-light-info px-10 py-5 rounded-4 mx-auto mb-5">
-                                        <i class="bi bi-file-pdf text-info" style="font-size: 4rem;"></i>
+                                        <i class="ki-duotone ki-document fs-5x text-info">
+                                            <i class="path1"></i>
+                                            <i class="path2"></i>
+                                        </i>
                                     </div>
                                     <h2 class="card-title mb-5 text-center">
                                         Constancia de Ingreso
@@ -47,11 +50,15 @@
                             </div>
                             <div class="col-md-7">
                                 @if ($constancia->constancia_ingreso_url)
-                                    <embed src="{{ asset($constancia->constancia_ingreso_url) }}" class="rounded" type="application/pdf" width="100%" height="500px" />
+                                    <embed src="{{ asset($constancia->constancia_ingreso_url) }}" class="rounded" type="application/pdf" width="100%" height="600px" />
                                 @else
                                     <div class="card card-body shadow-sm bg-light-info border border-3 border-info d-flex flex-column justify-content-center align-items-center" style="height: 500px">
                                         <div class="bg-body px-10 py-5 rounded-4 mx-auto mb-5">
-                                            <i class="bi bi-info-square text-info" style="font-size: 4rem;"></i>
+                                            <i class="ki-duotone ki-information-3 fs-5x text-info">
+                                                <i class="path1"></i>
+                                                <i class="path2"></i>
+                                                <i class="path3"></i>
+                                            </i>
                                         </div>
                                         <h4 class="card-title mb-5 text-center">
                                             Genere su Constancia de Ingreso para que le apareza el PDF aqui.
@@ -63,9 +70,11 @@
                     @else
                         {{-- alerta --}}
                         <div class="alert bg-light-primary border border-3 border-primary d-flex align-items-center p-5 mb-5">
-                            <span class="svg-icon-primary me-4">
-                                <i class="las la-exclamation-circle fs-1 text-primary"></i>
-                            </span>
+                            <i class="ki-duotone ki-information-5 fs-2qx me-4 text-primary">
+                                <i class="path1"></i>
+                                <i class="path2"></i>
+                                <i class="path3"></i>
+                            </i>
                             <div class="d-flex flex-column">
                                 <span class="fw-bold fs-5">
                                     ¡Atención!
@@ -78,7 +87,11 @@
                         {{-- alerta de verificacion de pago --}}
                         <div class="card card-body shadow-sm bg-light-info border border-3 border-info d-flex flex-column justify-content-center align-items-center" style="height: 400px">
                             <div class="bg-body px-10 py-5 rounded-4 mx-auto mb-5">
-                                <i class="bi bi-exclamation-square text-info" style="font-size: 5rem;"></i>
+                                <i class="ki-duotone ki-information-3 fs-5x text-info">
+                                    <i class="path1"></i>
+                                    <i class="path2"></i>
+                                    <i class="path3"></i>
+                                </i>
                             </div>
                             <h3 class="card-title mb-5 text-center">
                                 Su Pago por Concepto de Constancia de Ingreso aún no ha sido verificado. <br>Espere a que sea verificado para poder generar su constancia de ingreso.

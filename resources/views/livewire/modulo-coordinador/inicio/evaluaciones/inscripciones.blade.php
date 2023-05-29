@@ -64,9 +64,11 @@
                 <div class="col-md-12 mb-md-5 mb-xl-10">
                     {{-- alerta --}}
                     <div class="alert bg-light-primary border border-3 border-primary d-flex align-items-center p-5 mb-5">
-                        <span class="svg-icon svg-icon-2hx svg-icon-primary me-4 d-flex align-items-center">
-                            <i class="las la-exclamation-circle fs-1 text-primary"></i>
-                        </span>
+                        <i class="ki-duotone ki-information-5 fs-2qx me-4 text-primary">
+                            <i class="path1"></i>
+                            <i class="path2"></i>
+                            <i class="path3"></i>
+                        </i>
                         <div class="d-flex flex-column gap-2">
                             @if ($programa->programa_tipo == 1)
                                 <span class="fw-bold fs-5">

@@ -28,19 +28,19 @@
         </div>
         <div class="app-navbar-item ms-2 ms-md-4" id="kt_header_user_menu_toggle">
             <div class="text-end d-none d-sm-flex flex-column justify-content-center me-3">
-                <span class="">
+                <span class="fw-medium text-gray-700">
                     @if ($admitido)
                         {{ $admitido->admitido_codigo }}
                     @else
                         {{ $persona->numero_documento }}
                     @endif
                 </span>
-                <a href="{{ route('plataforma.perfil') }}" class="text-gray-800 fs-7 fw-bold d-block">
-                    {{ ucwords(strtolower($persona->nombre)) }} {{ ucwords(strtolower($persona->apellido_paterno)) }}
-                    {{ ucwords(strtolower($persona->apellido_materno)) }}
+                <a href="{{ route('plataforma.perfil') }}" class="text-gray-800 fs-4 fw-bold d-block">
+                    @php $nombre = explode(' ', $persona->nombre); @endphp
+                    {{ ucwords(strtolower($nombre[0])) }} {{ ucwords(strtolower($persona->apellido_paterno)) }}
                 </a>
             </div>
-            <div class="cursor-pointer symbol symbol-30px symbol-md-40px"
+            <div class="cursor-pointer symbol symbol-35px symbol-md-45px"
                 data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-attach="parent"
                 data-kt-menu-placement="bottom-end">
                 @if ($usuario->usuario_estudiante_perfil_url)
@@ -61,13 +61,11 @@
                             @endif
                         </div>
                         <div class="d-flex flex-column">
-                            <div class="fw-bold d-flex align-items-center fs-5">
-                                {{ ucwords(strtolower($persona->nombre)) }}
-                                {{ ucwords(strtolower($persona->apellido_paterno)) }}
-                                {{ ucwords(strtolower($persona->apellido_materno)) }}
-                                {{-- <span class="badge badge-light-success fw-bold fs-8 px-2 py-1 ms-2">Pro</span> --}}
+                            <div class="fw-bold d-flex align-items-center fs-4">
+                                @php $nombre = explode(' ', $persona->nombre); @endphp
+                                {{ ucwords(strtolower($nombre[0])) }} {{ ucwords(strtolower($persona->apellido_paterno)) }}
                             </div>
-                            <span style="cursor: pointer;" class="fw-semibold text-muted text-hover-primary fs-7">
+                            <span class="fw-semibold text-muted fs-5">
                                 @if ($admitido)
                                     {{ $admitido->admitido_codigo }}
                                 @else

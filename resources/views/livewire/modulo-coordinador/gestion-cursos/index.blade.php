@@ -401,6 +401,19 @@
                         <span class="col-12 fw-bold text-gray-700 fs-3">
                             DOCENTES ASIGNADOS
                         </span>
+                        {{-- alerta --}}
+                        <div  class="col-12">
+                            <div class="alert bg-light-primary border border-3 border-primary d-flex align-items-center p-5 mb-0">
+                                <span class="svg-icon svg-icon-2hx svg-icon-primary me-4 d-flex align-items-center">
+                                    <i class="las la-exclamation-circle fs-1 text-primary"></i>
+                                </span>
+                                <div class="d-flex flex-column gap-2">
+                                    <span class="fw-bold fs-5">
+                                        Para desactivar o activar un docente, haga click en el botón <span class="badge badge-danger px-3 py-2 fs-6">Inactivo</span> o <span class="badge badge-primary px-3 py-2 fs-6">Activo</span> respectivamente.
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
                         <div class="table-responsive">
                             <table class="table table-hover align-middle table-rounded border mb-0 gy-5 gs-5">
                                 <thead class="bg-light-warning">

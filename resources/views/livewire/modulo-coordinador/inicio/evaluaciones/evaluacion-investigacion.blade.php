@@ -64,7 +64,7 @@
                             </div>
                         </div>
                     </div>
-                    {{-- card monto de pagos --}}
+                    {{-- card --}}
                     <div class="card shadow-sm">
                         <div class="card-body mb-0">
                             <div class="table-responsive">

@@ -152,7 +152,7 @@
         </div>
     </div>
     <div class="app-navbar-item ms-1 ms-md-3" id="kt_header_user_menu_toggle">
-        <div class="cursor-pointer symbol symbol-30px symbol-md-40px"
+        <div class="cursor-pointer symbol symbol-35px symbol-md-45px"
             data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-attach="parent"
             data-kt-menu-placement="bottom-end">
             @if ($trabajador->trabajador_perfil_url)

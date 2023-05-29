@@ -66,12 +66,14 @@
                     </div>
                     {{-- alerta declaracion de regularizacion de constancia de la SUNEDU --}}
                     @if ($expediente_inscripcion_seguimiento->count() > 0)
-                        <div class="alert bg-light-danger border-danger d-flex alig-items-center p-5 mb-5">
-                            <span class="svg-icon svg-icon-2hx svg-icon-danger me-4 d-flex align-items-center">
-                                <i class="las la-exclamation-triangle fs-2 text-danger"></i>
-                            </span>
+                        <div class="alert bg-light-danger border-danger border-3 d-flex alig-items-center p-5 mb-5">
+                            <i class="ki-duotone ki-information-2 fs-2qx me-4 text-danger">
+                                <i class="path1"></i>
+                                <i class="path2"></i>
+                                <i class="path3"></i>
+                            </i>
                             <div class="d-flex flex-column gap-2">
-                                <span class="fw-bold">
+                                <span class="fw-bold fs-5">
                                     Observacion: Alumno con declaracion de regulización de constancia en lina de la SUNEDU.
                                 </span>
                             </div>
@@ -100,12 +102,14 @@
                         @endforeach
                     </div>
                     {{-- alerta --}}
-                    <div class="alert bg-light-warning border-warning d-flex align-items-center p-5 mb-5">
-                        <span class="svg-icon svg-icon-2hx svg-icon-warning me-4 d-flex align-items-center">
-                            <i class="las la-exclamation-circle fs-2 text-warning"></i>
-                        </span>
+                    <div class="alert bg-light-warning border-warning border-3 d-flex align-items-center p-5 mb-5">
+                        <i class="ki-duotone ki-information-2 fs-2qx me-4 text-warning">
+                            <i class="path1"></i>
+                            <i class="path2"></i>
+                            <i class="path3"></i>
+                        </i>
                         <div class="d-flex flex-column gap-2">
-                            <span class="fw-bold">
+                            <span class="fw-bold fs-5">
                                 Nota: Si el postulante no cuenta con su Grado Académico "Bachiller" en caso de Maestria o "Magister" en caso de Doctorado, se debe evaluar con puntaje "0" (cero) o dar click en el boton "Evaluar Cero".
                             </span>
                         </div>

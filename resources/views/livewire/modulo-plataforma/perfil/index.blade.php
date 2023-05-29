@@ -16,7 +16,7 @@
                 </ul>
             </div>
             <div class="d-flex align-items-center gap-2 gap-lg-3">
-                <a href="#modal_perfil" class="btn btn-sm fw-bold btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modal_perfil">
+                <a href="#modal_perfil" class="btn fw-bold btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modal_perfil">
                     Editar Perfil
                 </a>
             </div>
@@ -28,9 +28,11 @@
                 <div class="col-md-12 mb-md-5 mb-xl-10">
                     {{-- alerta para que el usuario sepa que datos puede modificar --}}
                     <div class="alert bg-light-primary border border-3 border-primary d-flex align-items-center p-5 mb-5">
-                        <span class="svg-icon svg-icon-2hx svg-icon-primary me-4">
-                            <i class="las la-exclamation-circle fs-1 text-primary"></i>
-                        </span>
+                        <i class="ki-duotone ki-information-5 fs-2qx me-4 text-primary">
+                            <i class="path1"></i>
+                            <i class="path2"></i>
+                            <i class="path3"></i>
+                        </i>
                         <div class="d-flex flex-column">
                             <span class="fw-bold fs-5">
                                 Solo se podrán modificar los siguientes datos: foto de perfil y contraseña.
