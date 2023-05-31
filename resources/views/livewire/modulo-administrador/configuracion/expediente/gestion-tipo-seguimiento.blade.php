@@ -47,6 +47,10 @@
                                     Regresar
                                 </a>
                             </div>
+                            <div class="ms-2">
+                                <input class="form-control form-control-sm text-muted" type="search" wire:model="search"
+                                    placeholder="Buscar...">
+                            </div>
                         </div>
                         <div class="table-responsive">
                             <table class="table table-hover table-rounded border gy-4 gs-4 mb-0 align-middle">
@@ -59,23 +63,15 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {{-- @forelse ($expedienteEvaluacionModel as $item)
+                                    @forelse ($expedienteTipoSeguimientoModel as $item)
                                     <tr>
-                                        <td align="center" class="fw-bold fs-5">{{ $item->id_expediente_tipo_evaluacion }}</td>
-                                        <td >
-                                            @if($item->expediente_tipo_evaluacion == '1')
-                                                <span>Evaluación de Expediente</span>
-                                            @elseif($item->expediente_tipo_evaluacion == '2')
-                                                <span>Evaluación de Tema Tentativo de Tesis</span>
-                                            @elseif($item->expediente_tipo_evaluacion == '3')
-                                                <span>Evaluación de Entrevista</span>
-                                            @endif
-                                        </td>
+                                        <td align="center" class="fw-bold fs-5">{{ $item->id_expediente_tipo_seguimiento }}</td>
+                                        <td>{{ $item->tipo_seguimiento }}</td>
                                         <td align="center">
-                                            @if ($item->expediente_tipo_evaluacion_estado == 1)
-                                                <span style="cursor: pointer;" wire:click="cargarAlertaEstado({{ $item->id_expediente_tipo_evaluacion }})" class="badge text-bg-success text-light hover-elevate-down px-3 py-2">Activo</span>
+                                            @if ($item->expediente_tipo_seguimiento_estado == 1)
+                                                <span style="cursor: pointer;" wire:click="cargarAlertaEstado({{ $item->id_expediente_tipo_seguimiento }})" class="badge text-bg-success text-light hover-elevate-down px-3 py-2">Activo</span>
                                             @else
-                                                <span style="cursor: pointer;" wire:click="cargarAlertaEstado({{ $item->id_expediente_tipo_evaluacion }})" class="badge text-bg-danger text-light hover-elevate-down px-3 py-2">Inactivo</span></span>
+                                                <span style="cursor: pointer;" wire:click="cargarAlertaEstado({{ $item->id_expediente_tipo_seguimiento }})" class="badge text-bg-danger text-light hover-elevate-down px-3 py-2">Inactivo</span></span>
                                             @endif
                                         </td>
                                         <td align="center">
@@ -92,7 +88,7 @@
                                             </a>
                                             <div class="dropdown-menu dropdown-menu-end menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
                                                 <div class="menu-item px-3">
-                                                    <a href="#modalExpedienteTipoSeguimiento" wire:click="cargarVistasEvaluacion({{ $item->id_expediente_tipo_evaluacion }})" class="menu-link px-3" data-bs-toggle="modal" data-bs-target="#modalExpedienteTipoSeguimiento">
+                                                    <a href="#modalExpedienteTipoSeguimiento" wire:click="cargarTipoSeguimiento({{ $item->id_expediente_tipo_seguimiento }})" class="menu-link px-3" data-bs-toggle="modal" data-bs-target="#modalExpedienteTipoSeguimiento">
                                                         Editar
                                                     </a>
                                                 </div>
@@ -100,34 +96,43 @@
                                         </td>
                                     </tr>
                                     @empty
-                                        <tr>
-                                            <td colspan="7" class="text-center text-muted">
-                                                No hay registros
-                                            </td>
-                                        </tr>
-                                    @endforelse --}}
+                                        @if ($search != '')
+                                            <tr>
+                                                <td colspan="7" class="text-center text-muted">
+                                                    No se encontraron resultados para la busqueda
+                                                    "{{ $search }}"
+                                                </td>
+                                            </tr>
+                                        @else
+                                            <tr>
+                                                <td colspan="7" class="text-center text-muted">
+                                                    No hay registros
+                                                </td>
+                                            </tr>
+                                        @endif
+                                    @endforelse
                                 </tbody>
                             </table>
                         </div>
                         {{-- paginacion de la tabla --}}
-                        {{-- @if ($expedienteEvaluacionModel->hasPages())
+                        @if ($expedienteTipoSeguimientoModel->hasPages())
                             <div class="d-flex justify-content-between mt-5">
                                 <div class="d-flex align-items-center text-gray-700">
-                                    Mostrando {{ $expedienteEvaluacionModel->firstItem() }} - {{ $expedienteEvaluacionModel->lastItem() }} de
-                                    {{ $expedienteEvaluacionModel->total() }} registros
+                                    Mostrando {{ $expedienteTipoSeguimientoModel->firstItem() }} - {{ $expedienteTipoSeguimientoModel->lastItem() }} de
+                                    {{ $expedienteTipoSeguimientoModel->total() }} registros
                                 </div>
                                 <div>
-                                    {{ $expedienteEvaluacionModel->links() }}
+                                    {{ $expedienteTipoSeguimientoModel->links() }}
                                 </div>
                             </div>
                         @else
                             <div class="d-flex justify-content-between mt-5">
                                 <div class="d-flex align-items-center text-gray-700">
-                                    Mostrando {{ $expedienteEvaluacionModel->firstItem() }} - {{ $expedienteEvaluacionModel->lastItem() }} de
-                                    {{ $expedienteEvaluacionModel->total() }} registros
+                                    Mostrando {{ $expedienteTipoSeguimientoModel->firstItem() }} - {{ $expedienteTipoSeguimientoModel->lastItem() }} de
+                                    {{ $expedienteTipoSeguimientoModel->total() }} registros
                                 </div>
                             </div>
-                        @endif --}}
+                        @endif
                     </div>
                 </div>
             </div>
@@ -135,7 +140,7 @@
     </div>
 
     {{-- Modal Expediente --}}
-    {{-- <div wire:ignore.self class="modal fade" id="modalExpedienteTipoSeguimiento" tabindex="-1" aria-labelledby="modalExpedienteTipoSeguimiento"
+    <div wire:ignore.self class="modal fade" id="modalExpedienteTipoSeguimiento" tabindex="-1" aria-labelledby="modalExpedienteTipoSeguimiento"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
@@ -148,23 +153,14 @@
                     <form novalidate>
                         <div class="row g-5">                            
                             <div class="col-md-12">
-                                <label class="form-label">Tipo de expediente <span class="text-danger">*</span></label>
-                                <select class="form-select @error('tipo_evaluacion') is-invalid  @enderror" wire:model="tipo_evaluacion">
+                                <label class="form-label">Tipo de Seguimiento <span class="text-danger">*</span></label>
+                                <select class="form-select @error('tipo_seguimiento') is-invalid  @enderror" wire:model="tipo_seguimiento">
                                     <option value="null" selected>Seleccione</option>
-                                    <option value="1" {{$validarTipoEvaluacion->where('id_expediente', $id_expediente)->contains('expediente_tipo_evaluacion', 1) ? 'disabled' : ''}} 
-                                        class="{{$validarTipoEvaluacion->where('id_expediente', $id_expediente)->contains('expediente_tipo_evaluacion', 1) ? 'text-gray-400' : ''}}">
-                                        Evaluación de Expediente
-                                    </option>
-                                    <option value="2" {{$validarTipoEvaluacion->where('id_expediente', $id_expediente)->contains('expediente_tipo_evaluacion', 2) ? 'disabled' : ''}} 
-                                        class="{{$validarTipoEvaluacion->where('id_expediente', $id_expediente)->contains('expediente_tipo_evaluacion', 2) ? 'text-gray-400' : ''}}">
-                                        Evaluación de Tema Tentativo de Tesis
-                                    </option>
-                                    <option value="3" {{$validarTipoEvaluacion->where('id_expediente', $id_expediente)->contains('expediente_tipo_evaluacion', 3) ? 'disabled' : ''}} 
-                                        class="{{$validarTipoEvaluacion->where('id_expediente', $id_expediente)->contains('expediente_tipo_evaluacion', 3) ? 'text-gray-400' : ''}}">
-                                        Evaluación de Entrevista
-                                    </option>
+                                    @foreach ($tipoSeguimientoModel as $item)
+                                        <option value="{{ $item->id_tipo_seguimiento }}">{{ $item->tipo_seguimiento }}</option>
+                                    @endforeach
                                 </select>
-                                @error('tipo_evaluacion')
+                                @error('tipo_seguimiento')
                                     <span class="error text-danger" >{{ $message }}</span> 
                                 @enderror
                             </div>
@@ -173,10 +169,10 @@
                 </div>
                 <div class="modal-footer col-12 d-flex justify-content-between">
                     <button type="button" wire:click="limpiar()" class="btn btn-secondary hover-elevate-up" data-bs-dismiss="modal">Cancelar</button>                    
-                    <button type="button" wire:click="guardarExpedienteTipoEvaluacion()" class="btn btn-primary hover-elevate-up">Guardar</button>
+                    <button type="button" wire:click="guardarTipoSeguimiento()" class="btn btn-primary hover-elevate-up">Guardar</button>
                 </div>
             </div>
         </div>
-    </div> --}}
+    </div>
 
 </div>
