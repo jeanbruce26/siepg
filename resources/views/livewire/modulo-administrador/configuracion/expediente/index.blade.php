@@ -141,6 +141,11 @@
                                                         Gestión de Vistas para Evaluación
                                                     </a>
                                                 </div>
+                                                <div class="menu-item px-3">
+                                                    <a href="{{ route('administrador.expediente.gestion-tipo-seguimiento', $item->id_expediente) }}" class="menu-link px-3 text-start">
+                                                        Gestión de Tipo de Seguimiento
+                                                    </a>
+                                                </div>
                                             </div>
                                         </td>
                                     </tr>
@@ -266,7 +271,7 @@
                                     @endswitch
                                 @else
                                     <select class="form-select @error('tipo') is-invalid  @enderror" wire:model="tipo">
-                                        <option value="" selected>Seleccione</option>
+                                        <option value="null" selected>Seleccione</option>
                                         {{-- tipo => 0 = maestria y doctorado, 1 = maestria, 2 = doctorado --}}
                                         <option value="0">Maestría y Doctorado</option>
                                         <option value="1">Maestría</option>
@@ -280,7 +285,7 @@
                         </div>
                     </form>
                 </div>
-                @if($modo == 2)
+                @if($modo == 2 || $modo == 1)
                     <div class="modal-footer col-12 d-flex justify-content-between">
                         <button type="button" wire:click="limpiar()" class="btn btn-secondary hover-elevate-up" data-bs-dismiss="modal">Cancelar</button>                    
                         <button type="button" wire:click="guardarExpediente()" class="btn btn-primary hover-elevate-up">Guardar</button>

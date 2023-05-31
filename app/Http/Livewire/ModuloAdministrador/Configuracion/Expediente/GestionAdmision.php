@@ -5,6 +5,7 @@ namespace App\Http\Livewire\ModuloAdministrador\Configuracion\Expediente;
 use App\Models\Admision;
 use App\Models\Expediente;
 use App\Models\ExpedienteAdmision;
+use App\Models\ExpedienteInscripcion;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -14,13 +15,13 @@ class GestionAdmision extends Component
 
     public $search = '';//Variable de busqueda
     public $titulo = 'Agregar Admisión del Expediente';//Titulo del modal
+    public $modo = 1;//Variable para cambiar el modo del formulario | 1 = agregar | 2 = modificar
 
     //Variables del modelo de expediente admision
+    public $id_expediente_admision;//Variable para el id del expediente admision
     public $id_expediente;//Variable para el id del expediente. Esta variable ya se encuentra cargada en este componente
     public $id_admision;
     public $expediente_admision_estado;
-
-    public $modo = 1;//Variable para cambiar el modo del formulario | 1 = agregar | 2 = modificar
 
     protected $listeners = ['render', 'cambiarEstado'];//Escuchar evento para que se actualice el componente
 
@@ -40,6 +41,7 @@ class GestionAdmision extends Component
         $this->modo = 1;//Asignamos el modo de agregar
     }
 
+    //Mostrar modal de agregar expediente admision
     public function modo()
     {
         $this->limpiar();
@@ -106,6 +108,7 @@ class GestionAdmision extends Component
         $this->titulo = 'Modificar Admisión del Expediente';//Asignamos el titulo del modal
         $this->id_expediente = $expedienteAdmision->id_expediente;//Asignamos el id del expediente
         $this->id_admision = $expedienteAdmision->id_admision;//Asignamos el id del admision
+        $this->id_expediente_admision = $expedienteAdmision->id_expediente_admision;//Asignamos el id del expediente admision
     }
 
     public function guardarExpedienteAdmision()
@@ -121,7 +124,7 @@ class GestionAdmision extends Component
         //Validamos el modo del modal
         if ($this->modo == 1) {//Si el modo es 1 (agregar), creamos un nuevo expediente admision
             if ($expedienteAdmision) {//Validamos si el expediente admision ya existe
-                $this->alertaExpedienteAdmision('¡Error!', 'El admisión ya se encuentra registrado en el expediente.', 'danger', 'Aceptar', 'danger');
+                $this->alertaExpedienteAdmision('¡Error!', 'El admisión ya se encuentra registrado en el expediente.', 'error', 'Aceptar', 'danger');
             } else {//Si el expediente admision no existe, lo creamos
                 $expedienteAdmision = new ExpedienteAdmision();//Nueva instancia del modelo de expediente admision
                 $expedienteAdmision->id_expediente = $this->id_expediente;//Asignamos el id del expediente
@@ -132,20 +135,31 @@ class GestionAdmision extends Component
                 $admi = Admision::find($this->id_admision);//Buscamos el admision por su id
                 $expedi = Expediente::find($this->id_expediente);//Buscamos el expediente por su id
                 //Mostrar alerta de confirmacion de registro
-                $this->alertaExpedienteAdmision('¡Éxito!', 'El admisión "'.$admi->admision.'" ha sido registrado satisfactoriamente en el expediente "'.$expedi->expediente.'".', 'success', 'Aceptar', 'success');
+                $this->alertaExpedienteAdmision('¡Éxito!', 'El admisión del expediente "'.$expedi->expediente.'" ha sido registrado satisfactoriamente.', 'success', 'Aceptar', 'success');
                 $this->limpiar();
             }
         } else {//Si el modo es 2 (modificar), modificamos el expediente admision
             if ($expedienteAdmision) {//Validamos si el expediente admision ya existe
-                $this->alertaExpedienteAdmision('¡Información!', 'El admisión ya se encuentra registrado en el expediente.', 'info', 'Aceptar', 'info');
+                $this->alertaExpedienteAdmision('¡Información!', 'No se registraron cambios en el admisión del expediente.', 'info', 'Aceptar', 'info');
             } else {//Si el expediente admision no existe, lo modificamos
-                $expedienteAdmision = ExpedienteAdmision::find($this->id_expediente);//Buscamos el expediente admision por su id
+                $expedienteAdmision = ExpedienteAdmision::find($this->id_expediente_admision);//Buscamos el expediente admision por su id
+                //validamos si el expediente admision a sido usado en la tabla de expediente inscripcion
+                $expedienteInscripcion = ExpedienteInscripcion::where('id_expediente_admision',$expedienteAdmision->id_expediente_admision)->first();//Buscamos el expediente inscripcion por el id del expediente admision
+                if ($expedienteInscripcion) {//Si el expediente admision a sido usado en la tabla de expediente inscripcion, no se puede modificar
+                    $expedienteModel = Expediente::where('id_expediente',$this->id_expediente)->first();
+                    $this->alertaExpedienteAdmision('¡Error!', 'El admisión del expediente "'. $expedienteModel->expediente .'" no se puede modificar porque ya ha sido usado en una inscripción.', 'error', 'Aceptar', 'danger');
+                    //Cerramos el modal
+                    $this->dispatchBrowserEvent('modal', [
+                        'titleModal' => '#modalExpedienteAdmision',
+                    ]);
+                    return;
+                }
                 $expedienteAdmision->id_admision = $this->id_admision;
                 $expedienteAdmision->save();
                 $admi = Admision::find($this->id_admision);//Buscamos el admision por su id
                 $expedi = Expediente::find($this->id_expediente);//Buscamos el expediente por su id
                 //Mostrar alerta de confirmacion de modificacion
-                $this->alertaExpedienteAdmision('¡Éxito!', 'El admisión "'.$admi->admision.'" ha sido modificado satisfactoriamente en el expediente "'.$expedi->expediente.'".', 'success', 'Aceptar', 'success');
+                $this->alertaExpedienteAdmision('¡Éxito!', 'El admisión del expediente "'.$expedi->expediente.'" ha sido modificado satisfactoriamente.', 'success', 'Aceptar', 'success');
                 $this->limpiar();
             }
         }
