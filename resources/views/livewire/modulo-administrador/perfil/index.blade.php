@@ -225,14 +225,16 @@
                             <button type="button" wire:click="cancelar" class="btn btn-secondary">
                                 Cancelar
                             </button>
-                            <button type="button" wire:click="guardar_perfil" class="btn btn-primary" wire:loading.attr="disabled">
-                                <div wire:loading.remove wire:target="guardar_perfil">
-                                    Guardar
-                                </div>
-                                <div wire:loading wire:target="guardar_perfil">
-                                    <span class="spinner-border spinner-border-sm align-middle me-2"></span>
-                                    Guardando...
-                                </div>
+                            <button type="button" wire:click="guardar_perfil" class="btn btn-primary" wire:loading.attr="disabled" wire:loading.remove wire:target="guardar_perfil, perfil">
+                                Guardar
+                            </button>
+                            <button type="button" wire:click="guardar_perfil" class="btn btn-primary" wire:loading.attr="disabled" wire:loading wire:target="guardar_perfil">
+                                <span class="spinner-border spinner-border-sm align-middle me-2"></span>
+                                Guardando...
+                            </button>
+                            <button type="button" wire:click="guardar_perfil" class="btn btn-primary" wire:loading.attr="disabled" wire:loading wire:target="perfil">
+                                <span class="spinner-border spinner-border-sm align-middle me-2"></span>
+                                Cargando...
                             </button>
                         </div>
                         @endif

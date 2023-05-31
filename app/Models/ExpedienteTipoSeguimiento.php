@@ -20,11 +20,13 @@ class ExpedienteTipoSeguimiento extends Model
 
     public $timestamps = false;
 
+    // modelo expediente
     public function expediente()
     {
         return $this->belongsTo(Expediente::class, 'id_expediente', 'id_expediente');
     }
 
+    // modelo tipo_seguimiento
     public function tipo_seguimiento()
     {
         return $this->belongsTo(TipoSeguimiento::class, 'id_tipo_seguimiento', 'id_tipo_seguimiento');

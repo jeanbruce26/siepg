@@ -45,7 +45,7 @@
                                 <img src="{{ asset('assets/media/auth/bg-login-posgrado.jpg') }}" class="object-fit-cover rounded-4 h-200px h-md-275px h-lg-350px" width="100%" alt="portada unu">
                                 <div class="object-fit-cover rounded-4 bg-success opacity-20 h-200px h-md-275px h-lg-350px position-absolute top-0 start-0" style="width: 100%;"></div>
                                 <div class="position-absolute" style="top: 50%; left: 50%; transform: translate(-50%, 0%);">
-                                    <img src="@if ($usuario->usuario_estudiante_perfil_url) {{ asset($usuario->usuario_estudiante_perfil_url) }} @else {{ asset('assets/media/avatars/blank.png') }} @endif" class="rounded-circle shadow w-150px w-md-250px h-150px h-md-250px" alt="vista previa perfil">
+                                    <img src="@if ($usuario->usuario_estudiante_perfil_url) {{ asset($usuario->usuario_estudiante_perfil_url) }} @else {{ asset('assets/media/avatars/blank.png') }} @endif" class="object-fit-cover rounded-circle shadow w-150px w-md-250px h-150px h-md-250px" alt="vista previa perfil">
                                 </div>
                             </div>
                             <br><br>
@@ -126,7 +126,7 @@
                             </label>
                             <input type="file" class="form-control" wire:model="perfil" accept=".png, .jpg, .jpeg" id="upload{{ $iteration }}">
                             <div class="image-input image-input-outline mt-3">
-                                <img src="@if($perfil) {{ asset($perfil->temporaryUrl()) }} @elseif($usuario->usuario_estudiante_perfil_url) {{ asset($usuario->usuario_estudiante_perfil_url) }} @else {{ asset('assets/media/avatars/blank.png') }} @endif" class="image-input-wrapper w-125px h-125px" alt="vista previa perfil">
+                                <img src="@if($perfil) {{ asset($perfil->temporaryUrl()) }} @elseif($usuario->usuario_estudiante_perfil_url) {{ asset($usuario->usuario_estudiante_perfil_url) }} @else {{ asset('assets/media/avatars/blank.png') }} @endif" class="object-fit-cover image-input-wrapper w-125px h-125px" alt="vista previa perfil">
                             </div>
                             <div class="form-text">Formato de imagen:  png, jpg, jpeg.</div>
                             @error('perfil')
@@ -157,13 +157,22 @@
                     <button type="button" class="btn btn-light" data-bs-dismiss="modal" wire:click="limpiar_perfil">
                         Cerrar
                     </button>
-                    <button type="button" wire:click="actualizar_perfil" class="btn btn-primary" style="width: 160px" wire:loading.attr="disabled">
-                        <div wire:loading.remove wire:target="actualizar_perfil">
-                            Actualizar Datos
-                        </div>
-                        <div wire:loading wire:target="actualizar_perfil">
-                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
-                        </div>
+                    <button
+                        type="button"
+                        wire:click="actualizar_perfil"
+                        class="btn btn-primary"
+                        style="width: 160px"
+                        wire:loading.attr="disabled"
+                        wire:loading.remove
+                        wire:target="actualizar_perfil, perfil"
+                    >
+                        Actualizar Datos
+                    </button>
+                    <button type="button" class="btn btn-primary" style="width: 160px" wire:loading wire:target="actualizar_perfil" disabled>
+                        <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                    </button>
+                    <button type="button" class="btn btn-primary" style="width: 160px" wire:loading wire:target="perfil" disabled>
+                        <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
                     </button>
                 </div>
             </div>

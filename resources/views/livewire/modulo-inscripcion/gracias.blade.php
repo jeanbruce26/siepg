@@ -9,10 +9,12 @@
         </span>
     </div>
     {{-- alerta --}}
-    <div class="alert bg-light-primary border border-primary d-flex align-items-center gap-2 mt-5 p-5">
-        <span class="svg-icon svg-icon-2hx svg-icon-primary me-3">
-            <i class="fa-sharp fa-solid fa-circle-info fs-1 text-primary"></i>
-        </span>
+    <div class="alert bg-light-primary border border-3 border-primary d-flex align-items-center gap-2 mt-5 p-5">
+        <i class="ki-duotone ki-information-5 fs-2qx me-4 text-primary">
+            <i class="path1"></i>
+            <i class="path2"></i>
+            <i class="path3"></i>
+        </i>
         <div class="d-flex flex-column">
             <h4 class="mb-0">
                 Su ficha de inscripción ha sido enviado a su correo electrónico y se encuentra disponible para descargarlo a continuación.

@@ -16,8 +16,8 @@ class TipoSeguimiento extends Model
         'tipo_seguimiento',
         'tipo_seguimiento_titulo',
         'tipo_seguimiento_descripcion',
-        'tipo_seguimiento_estado',
-        'tipo_seguimiento_fecha_creacion'
+        'tipo_seguimiento_fecha_creacion',
+        'tipo_seguimiento_estado'
     ];
 
     public $timestamps = false;

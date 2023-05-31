@@ -34,8 +34,8 @@
                 </div>
                 @if (session()->has('message'))
                     <div class="mt-5">
-                        <div class="alert alert-danger d-flex align-items-center p-5">
-                            <span class="fw-bold text-center">
+                        <div class="alert alert-danger border border-3 border-danger d-flex align-items-center p-5">
+                            <span class="fw-bold text-center fs-5">
                                 {{ session('message') }}
                             </span>
                         </div>

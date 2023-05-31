@@ -14,11 +14,13 @@
                 </ul>
             </div>
             @if ($admitido)
-            <div class="d-flex align-items-center gap-2 gap-lg-3">
-                <a href="#modal_pago_plataforma" wire:click="modo" class="btn fw-bold btn-primary" data-bs-toggle="modal" data-bs-target="#modal_pago_plataforma">
-                    Nuevo Pago
-                </a>
-            </div>
+                @if ($admision->admision_fecha_inicio_matricula <= date('Y-m-d') && $admision->admision_fecha_fin_matricula_extemporanea >= date('Y-m-d'))
+                    <div class="d-flex align-items-center gap-2 gap-lg-3">
+                        <a href="#modal_pago_plataforma" wire:click="modo" class="btn fw-bold btn-primary" data-bs-toggle="modal" data-bs-target="#modal_pago_plataforma">
+                            Nuevo Pago
+                        </a>
+                    </div>
+                @endif
             @endif
         </div>
     </div>
@@ -44,7 +46,7 @@
                         <div class="d-flex flex-column flex-md-row align-items-center w-100">
                             <div class="col-md-4 pe-md-3 mb-2 mb-md-0">
                                 <button type="button" class="btn btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary btn-center fw-bold w-100px w-md-125px"
-                                    data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+                                    data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start">
                                     <span class="svg-icon svg-icon-3 me-1">
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                             xmlns="http://www.w3.org/2000/svg">

@@ -53,17 +53,54 @@
                     <div class="card shadow-sm mb-5">
                         <div class="px-8 py-5 mb-0 d-flex justify-content-between align-items-center">
                             <div class="d-flex align-items-center gap-3">
-                                <i class="las la-user-tie fs-1"></i>
+                                <i class="ki-duotone ki-user-tick fs-2x">
+                                    <i class="path1"></i>
+                                    <i class="path2"></i>
+                                    <i class="path3"></i>
+                                </i>
                                 <span class="fs-5">Postulante:</span>
                                 <span class="fw-bold fs-5">{{ ucwords(strtolower($persona->nombre_completo)) }}</span>
                             </div>
                             <div class="d-flex align-items-center gap-3">
-                                <i class="las la-calendar-alt fs-1"></i>
+                                <i class="ki-duotone ki-calendar-tick fs-2x">
+                                    <i class="path1"></i>
+                                    <i class="path2"></i>
+                                    <i class="path3"></i>
+                                    <i class="path4"></i>
+                                    <i class="path5"></i>
+                                    <i class="path6"></i>
+                                </i>
                                 <span class="fs-5">Fecha de Evaluación:</span>
                                 <span class="fw-bold fs-5">{{ $evaluacion->fecha_expediente ? date('d/m/Y', strtotime($evaluacion->fecha_expediente)) : date('d/m/Y', strtotime(today())) }}</span>
                             </div>
                         </div>
                     </div>
+                    @if ($expedientes)
+                        {{-- card de exediente --}}
+                        <div class="row g-5 mb-5">
+                            @foreach ($expedientes as $item)
+                                @php $expediente_tipo_evaluacion = App\Models\ExpedienteTipoEvaluacion::where('expediente_tipo_evaluacion', 3)->where('id_expediente', $item->id_expediente)->first(); @endphp
+                                @if ($expediente_tipo_evaluacion)
+                                    <div class="col-xl-4 col-lg-6 col-md-6">
+                                        <div class="card shadow-sm bg-info bg-opacity-20 h-100">
+                                            <div class="card-body mb-0 d-flex flex-column justify-content-center">
+                                                <div class="text-center mb-5">
+                                                    <span class="fs-4 fs-md-3 fw-bold text-gray-800">
+                                                        {{ $item->expediente }}
+                                                    </span>
+                                                </div>
+                                                <div>
+                                                    <a href="{{ asset($item->expediente_inscripcion_url) }}" target="_blank" class="btn btn-info w-100 hover-scale">
+                                                        Abrir Expediente
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+                            @endforeach
+                        </div>
+                    @endif
                     {{-- alerta --}}
                     <div class="alert bg-light-warning border-warning border-3 d-flex align-items-center p-5 mb-5">
                         <i class="ki-duotone ki-information-2 fs-2qx me-4 text-warning">
