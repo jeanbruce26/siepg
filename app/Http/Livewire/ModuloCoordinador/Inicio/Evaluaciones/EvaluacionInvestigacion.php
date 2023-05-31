@@ -7,6 +7,7 @@ use App\Models\Evaluacion;
 use App\Models\EvaluacionInvestigacionItem;
 use App\Models\EvaluacionInvestigacion as EvaluacionInvestigacionModel;
 use App\Models\EvaluacionObservacion;
+use App\Models\ExpedienteInscripcion;
 use App\Models\Programa;
 use App\Models\Puntaje;
 use App\Models\TrabajadorTipoTrabajador;
@@ -229,8 +230,21 @@ class EvaluacionInvestigacion extends Component
     {
         // obtenemos los datos de la evaluacion de investigacion
         $evaluacion_investigacion = EvaluacionInvestigacionItem::where('id_tipo_evaluacion', $this->evaluacion->id_tipo_evaluacion)->get();
+
+        // buscamos los expedientes de la inscripcion
+        $expedientes = ExpedienteInscripcion::join('expediente_admision', 'expediente_inscripcion.id_expediente_admision', 'expediente_admision.id_expediente_admision')
+                        ->join('expediente', 'expediente_admision.id_expediente', 'expediente.id_expediente')
+                        ->where('expediente_inscripcion.id_inscripcion',$this->inscripcion->id_inscripcion)
+                        ->where(function($query){
+                            $query->where('expediente.expediente_tipo', 0)
+                                ->orWhere('expediente.expediente_tipo', $this->inscripcion->inscripcion_tipo_programa);
+                        })
+                        ->orderBy('expediente.id_expediente', 'asc')
+                        ->get();
+
         return view('livewire.modulo-coordinador.inicio.evaluaciones.evaluacion-investigacion', [
             'evaluacion_investigacion' => $evaluacion_investigacion,
+            'expedientes' => $expedientes,
         ]);
     }
 }

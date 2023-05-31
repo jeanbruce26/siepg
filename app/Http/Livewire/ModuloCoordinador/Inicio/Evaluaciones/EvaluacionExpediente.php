@@ -342,6 +342,7 @@ class EvaluacionExpediente extends Component
                             $query->where('expediente.expediente_tipo', 0)
                                 ->orWhere('expediente.expediente_tipo', $this->inscripcion->inscripcion_tipo_programa);
                         })
+                        ->orderBy('expediente.id_expediente', 'asc')
                         ->get();
 
         // obtenemos los datos de la evaluacion del expediente
