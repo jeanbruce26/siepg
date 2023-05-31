@@ -41,8 +41,8 @@
                             {{-- header de la tabla --}}
                             <div class="d-flex flex-column flex-md-row align-items-center mb-5 w-100">
                                 <div class="col-md-4 pe-md-3 mb-2 mb-md-0">
-                                    <button type="button" class="btn btn-light-primary btn-center fw-bold w-100px w-md-125px"
-                                        data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+                                    <button type="button" class="btn btn btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary btn-center fw-bold w-100px w-md-125px"
+                                        data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start">
                                         <span class="svg-icon svg-icon-3 me-1">
                                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                                 xmlns="http://www.w3.org/2000/svg">
@@ -314,7 +314,7 @@
         </div>
     </div>
     <div wire:ignore.self class="modal fade" tabindex="-1" id="modal_asignacion_docente">
-        <div class="modal-dialog modal-xl">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
                     <h2 class="modal-title">
@@ -510,7 +510,7 @@
         </div>
     </div>
     <div wire:ignore.self class="modal fade" tabindex="-1" id="modal_curso_detalle">
-        <div class="modal-dialog modal-xl">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
                     <h2 class="modal-title">

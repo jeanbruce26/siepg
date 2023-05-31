@@ -14,6 +14,8 @@ class Matricula extends Model
     protected $fillable = [
         'id_matricula',
         'matricula_codigo',
+        'matricula_proceso',
+        'matricula_year',
         'matricula_ficha_url',
         'matricula_fecha_creacion',
         'matricula_estado',

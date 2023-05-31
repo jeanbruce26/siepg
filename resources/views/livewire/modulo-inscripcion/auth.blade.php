@@ -68,11 +68,25 @@
                 </div>
                 <div class="col-md-12">
                     <div class="text-center mt-3">
-                        <a href="#modal_registro_pago" wire:click="cargar_registro_pago"
-                            class="btn btn-success hover-scale w-50" data-bs-toggle="modal"
-                            data-bs-target="#modal_registro_pago">
-                            REGISTRAR PAGO
-                        </a>
+                        @if ($fecha_inicio_inscripcion <= date('Y-m-d') && $fecha_final_inscripcion >= date('Y-m-d'))
+                            <a
+                                href="#modal_registro_pago"
+                                wire:click="cargar_registro_pago"
+                                class="btn btn-success hover-scale w-50"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modal_registro_pago"
+                                >
+                                REGISTRAR PAGO
+                            </a>
+                        @else
+                            <button
+                                type="button"
+                                wire:click="alerta_registro_pago"
+                                class="btn btn-success hover-scale w-50"
+                                >
+                                REGISTRAR PAGO
+                            </button>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -280,11 +294,14 @@
                     <button type="button" wire:click="registrar_pago" class="btn btn-primary" style="width: 150px"
                         @if ($voucher == null) disabled @endif wire:loading.attr="disabled"
                         wire:target="registrar_pago">
-                        <div wire:loading.remove wire:target="registrar_pago">
+                        <div wire:loading.remove wire:target="registrar_pago, voucher">
                             Registrar Pago
                         </div>
                         <div wire:loading wire:target="registrar_pago">
                             Procesando...
+                        </div>
+                        <div wire:loading wire:target="voucher">
+                            Cargando...
                         </div>
                     </button>
                 </div>

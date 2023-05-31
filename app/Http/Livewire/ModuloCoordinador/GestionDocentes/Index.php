@@ -15,7 +15,8 @@ use Livewire\WithPagination;
 
 class Index extends Component
 {
-    use WithPagination; // Trait de paginación
+    use WithPagination; // trait para paginacion
+    protected $paginationTheme = 'bootstrap'; // tema de paginacion
     use WithFileUploads; // Trait de carga de archivos
 
     public $search = ''; // Variable para almacenar la búsqueda

@@ -18,6 +18,7 @@ use App\Models\Modalidad;
 use App\Models\Pago;
 use App\Models\Persona;
 use App\Models\ProgramaProceso;
+use App\Models\TipoSeguimiento;
 use App\Models\Ubigeo;
 use App\Models\Universidad;
 use App\Models\UsuarioEstudiante;
@@ -714,12 +715,14 @@ class Registro extends Component
         $universidad_array = Universidad::where('universidad_estado', 1)->get();
         $grado_academico_array = GradoAcademico::where('grado_academico_estado', 1)->get();
         $genero_array = Genero::where('genero_estado', 1)->get();
+        $tipo_seguimiento_constancia_sunedu = TipoSeguimiento::where('id_tipo_seguimiento', 1)->first();
         return view('livewire.modulo-inscripcion.registro', [
             'estado_civil_array' => $estado_civil_array,
             'tipo_discapacidad_array' => $tipo_discapacidad_array,
             'universidad_array' => $universidad_array,
             'grado_academico_array' => $grado_academico_array,
-            'genero_array' => $genero_array
+            'genero_array' => $genero_array,
+            'tipo_seguimiento_constancia_sunedu' => $tipo_seguimiento_constancia_sunedu
         ]);
     }
 }

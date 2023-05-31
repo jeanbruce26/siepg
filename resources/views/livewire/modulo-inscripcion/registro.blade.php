@@ -1,14 +1,16 @@
 <div>
     {{-- alerta --}}
-    <div class="alert bg-light-primary border border-primary d-flex align-items-center gap-2 p-5">
-        <span class="svg-icon svg-icon-2hx svg-icon-primary me-3">
-            <i class="fa-sharp fa-solid fa-circle-info fs-1 text-primary"></i>
-        </span>
+    <div class="alert bg-light-primary border border-3 border-primary d-flex align-items-center gap-2 p-5">
+        <i class="ki-duotone ki-information-5 fs-2qx me-4 text-primary">
+            <i class="path1"></i>
+            <i class="path2"></i>
+            <i class="path3"></i>
+        </i>
         <div class="d-flex flex-column">
-            <h4 class="mb-1 text-dark">
+            <h4 class="mb-1 text-dark fs-4">
                 Nota
             </h4>
-            <span class="fw-mediun">
+            <span class="fw-medium fs-5">
                 Al terminar con el registro de sus datos espere un momento, ya que se estará generando su ficha de inscripción.
             </span>
         </div>
@@ -434,22 +436,26 @@
         @endif
         {{-- formulario paso 3 --}}
         @if ($paso === 3)
-            {{-- alerta --}}
-            <div class="alert bg-light-danger border border-danger d-flex align-items-center gap-2 p-5 mb-8 mt-3">
-                <span class="svg-icon svg-icon-2hx svg-icon-primary me-3">
-                    <div class="form-check form-check-custom form-check-primary">
-                        <input class="form-check-input" type="checkbox" wire:model="check_expediente" />
+            @if ($tipo_seguimiento_constancia_sunedu)
+                @if ($tipo_seguimiento_constancia_sunedu->tipo_seguimiento_estado == 1)
+                    {{-- alerta --}}
+                    <div class="alert bg-light-danger border border-3 border-danger d-flex align-items-center gap-2 p-5 mb-8 mt-3">
+                        <span class="svg-icon svg-icon-2hx svg-icon-primary me-3">
+                            <div class="form-check form-check-custom form-check-primary">
+                                <input class="form-check-input" type="checkbox" wire:model="check_expediente" />
+                            </div>
+                        </span>
+                        <div class="d-flex flex-column">
+                            <h4 class="mb-1 text-dark">
+                                ¡Importante! - La casilla debe ser marcada sólo si no cumple con el requisito de constancia de registro de la SUNEDU.
+                            </h4>
+                            <span class="fw-mediun">
+                                En caso de no disponer de mi constancia de registro de la SUNEDU, presentaré un documento que acredite que se encuentra en trámite (resolución de grado, grado academico, entre otros).
+                            </span>
+                        </div>
                     </div>
-                </span>
-                <div class="d-flex flex-column">
-                    <h4 class="mb-1 text-dark">
-                        ¡Importante! - La casilla debe ser marcada sólo si no cumple con el requisito de constancia de registro de la SUNEDU.
-                    </h4>
-                    <span class="fw-mediun">
-                        En caso de no disponer de mi constancia de registro de la SUNEDU, presentaré un documento que acredite que se encuentra en trámite (resolución de grado, grado academico, entre otros).
-                    </span>
-                </div>
-            </div>
+                @endif
+            @endif
             {{-- expedientes --}}
             <div class="card shadow-sm mt-5">
                 <div class="card-header">
@@ -467,7 +473,7 @@
                     </div>
                     <div class="table-responsive">
                         <table class="table mb-0 align-middle table-rounded table-hover border gy-5 gs-5 gx-5">
-                            <thead>
+                            <thead class="bg-light-warning">
                                 <tr class="fw-semibold fs-6 text-gray-800 border-bottom border-gray-200">
                                     <th colspan="3" class="fw-bold fs-4">Documentos</th>
                                 </tr>
@@ -484,13 +490,13 @@
                                         </td>
                                         <td align="center" class="col-md-2">
                                             @if ($exped_inscripcion)
-                                            <span class="badge badge-primary">Enviado</span>
+                                            <span class="badge badge-primary px-3 py-2 fs-6">Enviado</span>
                                             @else
-                                            <span class="badge badge-danger">No enviado</span>
+                                            <span class="badge badge-danger px-3 py-2 fs-6">No enviado</span>
                                             @endif
                                         </td>
                                         <td align="center" class="col-md-2">
-                                            <a href="#modal_registro_expediente" wire:click="cargar_modal_expediente({{ $item->id_expediente_admision }})" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal_registro_expediente">
+                                            <a href="#modal_registro_expediente" wire:click="cargar_modal_expediente({{ $item->id_expediente_admision }})" class="btn btn-primary hover-scale" data-bs-toggle="modal" data-bs-target="#modal_registro_expediente">
                                                 Subir
                                             </a>
                                         </td>
@@ -562,11 +568,14 @@
                     <button type="button" class="btn btn-light" data-bs-dismiss="modal" wire:click="limpiar_modal_expediente">
                         Cerrar
                     </button>
-                    <button type="button" wire:click="registrar_expediente" wire:loading.remove wire:target="registrar_expediente" class="btn btn-primary" @if($expediente == null) disabled @endif>
+                    <button type="button" wire:click="registrar_expediente" wire:loading.remove wire:target="registrar_expediente, expediente" class="btn btn-primary" @if($expediente == null) disabled @endif>
                         Registrar Expediente
                     </button>
-                    <button wire:loading wire:target="registrar_expediente" class="btn btn-primary" type="button" disabled>
+                    <button type="button" wire:loading wire:target="registrar_expediente" class="btn btn-primary" disabled>
                         Procesando...
+                    </button>
+                    <button type="button" wire:loading wire:target="expediente" class="btn btn-primary" disabled>
+                        Cargando...
                     </button>
                 </div>
             </div>

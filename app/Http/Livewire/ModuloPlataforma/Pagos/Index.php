@@ -523,9 +523,14 @@ class Index extends Component
         $persona = Persona::where('numero_documento', auth('plataforma')->user()->usuario_estudiante)->first(); // persona del usuario logueado
         $inscripcion_ultima = Inscripcion::where('id_persona', $persona->id_persona)->orderBy('id_inscripcion', 'desc')->first(); // inscripcion del usuario logueado
         $evaluacion = $inscripcion_ultima->evaluacion; // evaluacion de la inscripcion del usuario logueado
+        $admision = null;
         if($evaluacion)
         {
             $this->admitido = $persona->admitido->where('id_evaluacion', $evaluacion->id_evaluacion)->first(); // admitido de la inscripcion del usuario logueado
+            if($this->admitido)
+            {
+                $admision = $this->admitido->programa_proceso->admision; // admision del admitido del usuario logueado
+            }
         }
         else
         {
@@ -537,7 +542,8 @@ class Index extends Component
             'canal_pagos' => $canal_pagos,
             'pagos' => $pagos,
             'canales_pagos' => $canales_pagos,
-            'conceptos_pagos' => $conceptos_pagos
+            'conceptos_pagos' => $conceptos_pagos,
+            'admision' => $admision
         ]);
     }
 }

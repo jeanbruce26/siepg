@@ -31,7 +31,7 @@ class Login extends Component
 
         if(!$usuario) // verificamos si no existe el usuario o si sus credenciales son incorrectas
         {
-            session()->flash('message', 'Usuario o contraseña incorrectos');
+            session()->flash('message', 'Credenciales incorrectas');
             return redirect()->back();
         }
         else

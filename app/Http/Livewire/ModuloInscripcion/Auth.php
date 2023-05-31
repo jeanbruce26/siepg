@@ -179,19 +179,30 @@ class Auth extends Component
                 $pago->id_concepto_pago = 1;
                 $pago->save();
 
-                //  obtener el ultimo codigo de inscripcion
+                //  obtener el ultimo codigo de inscripcion y creamos el nuevo codigo de acuerdo al año y convocatoria del proceso de admision
+                $admision_año = Admision::where('admision_estado', 1)->first()->admision_año;
+                $admision_año = substr($admision_año, -2);
+                $admision_convocatoria = Admision::where('admision_estado', 1)->first()->admision_convocatoria;
+
                 $ultimo_codifo_inscripcion = Inscripcion::orderBy('inscripcion_codigo','DESC')->first();
                 if($ultimo_codifo_inscripcion == null)
                 {
-                    $codigo_inscripcion = 'IN0001';
+                    $codigo_inscripcion = 'IN' . $admision_año . $admision_convocatoria . '00001';
                 }
                 else
                 {
                     $codigo_inscripcion = $ultimo_codifo_inscripcion->inscripcion_codigo;
-                    $codigo_inscripcion = substr($codigo_inscripcion, 2, 6);
-                    $codigo_inscripcion = intval($codigo_inscripcion) + 1;
-                    $codigo_inscripcion = str_pad($codigo_inscripcion, 4, "0", STR_PAD_LEFT);
-                    $codigo_inscripcion = 'IN'.$codigo_inscripcion;
+                    if(substr($codigo_inscripcion, 2, 2) != $admision_año || substr($codigo_inscripcion, 4, 1) != $admision_convocatoria )
+                    {
+                        $codigo_inscripcion = 'IN' . $admision_año . $admision_convocatoria . '00001';
+                    }
+                    else
+                    {
+                        $codigo_inscripcion = substr($codigo_inscripcion, 5, 5);
+                        $codigo_inscripcion = intval($codigo_inscripcion) + 1;
+                        $codigo_inscripcion = str_pad($codigo_inscripcion, 5, "0", STR_PAD_LEFT);
+                        $codigo_inscripcion = 'IN' . $admision_año . $admision_convocatoria . $codigo_inscripcion;
+                    }
                 }
 
                 // crear la inscripcion
@@ -278,19 +289,30 @@ class Auth extends Component
             $pago->id_concepto_pago = 1;
             $pago->save();
 
-            //  obtener el ultimo codigo de inscripcion
+            //  obtener el ultimo codigo de inscripcion y creamos el nuevo codigo de acuerdo al año y convocatoria del proceso de admision
+            $admision_año = Admision::where('admision_estado', 1)->first()->admision_año;
+            $admision_año = substr($admision_año, -2);
+            $admision_convocatoria = Admision::where('admision_estado', 1)->first()->admision_convocatoria;
+
             $ultimo_codifo_inscripcion = Inscripcion::orderBy('inscripcion_codigo','DESC')->first();
             if($ultimo_codifo_inscripcion == null)
             {
-                $codigo_inscripcion = 'IN0001';
+                $codigo_inscripcion = 'IN' . $admision_año . $admision_convocatoria . '00001';
             }
             else
             {
                 $codigo_inscripcion = $ultimo_codifo_inscripcion->inscripcion_codigo;
-                $codigo_inscripcion = substr($codigo_inscripcion, 2, 6);
-                $codigo_inscripcion = intval($codigo_inscripcion) + 1;
-                $codigo_inscripcion = str_pad($codigo_inscripcion, 4, "0", STR_PAD_LEFT);
-                $codigo_inscripcion = 'IN'.$codigo_inscripcion;
+                if(substr($codigo_inscripcion, 2, 2) != $admision_año || substr($codigo_inscripcion, 4, 1) != $admision_convocatoria )
+                {
+                    $codigo_inscripcion = 'IN' . $admision_año . $admision_convocatoria . '00001';
+                }
+                else
+                {
+                    $codigo_inscripcion = substr($codigo_inscripcion, 5, 5);
+                    $codigo_inscripcion = intval($codigo_inscripcion) + 1;
+                    $codigo_inscripcion = str_pad($codigo_inscripcion, 5, "0", STR_PAD_LEFT);
+                    $codigo_inscripcion = 'IN' . $admision_año . $admision_convocatoria . $codigo_inscripcion;
+                }
             }
 
             // crear la inscripcion
@@ -301,30 +323,30 @@ class Auth extends Component
             $inscripcion->save();
         }
 
-        // Si el concepto de pago es "Inscripción", creamos su inscripción
-        if($pago->id_concepto_pago == 1){
-            //  obtener el ultimo codigo de inscripcion
-            $ultimo_codifo_inscripcion = Inscripcion::orderBy('inscripcion_codigo','DESC')->first();
-            if($ultimo_codifo_inscripcion == null)
-            {
-                $codigo_inscripcion = 'IN0001';
-            }else
-            {
-                $codigo_inscripcion = $ultimo_codifo_inscripcion->inscripcion_codigo;
-                $codigo_inscripcion = substr($codigo_inscripcion, 2, 6);
-                $codigo_inscripcion = intval($codigo_inscripcion) + 1;
-                $codigo_inscripcion = str_pad($codigo_inscripcion, 4, "0", STR_PAD_LEFT);
-                $codigo_inscripcion = 'IN'.$codigo_inscripcion;
-            }
+        // // Si el concepto de pago es "Inscripción", creamos su inscripción
+        // if($pago->id_concepto_pago == 1){
+        //     //  obtener el ultimo codigo de inscripcion
+        //     $ultimo_codifo_inscripcion = Inscripcion::orderBy('inscripcion_codigo','DESC')->first();
+        //     if($ultimo_codifo_inscripcion == null)
+        //     {
+        //         $codigo_inscripcion = 'IN0001';
+        //     }else
+        //     {
+        //         $codigo_inscripcion = $ultimo_codifo_inscripcion->inscripcion_codigo;
+        //         $codigo_inscripcion = substr($codigo_inscripcion, 2, 6);
+        //         $codigo_inscripcion = intval($codigo_inscripcion) + 1;
+        //         $codigo_inscripcion = str_pad($codigo_inscripcion, 4, "0", STR_PAD_LEFT);
+        //         $codigo_inscripcion = 'IN'.$codigo_inscripcion;
+        //     }
 
-            // crear la inscripcion
-            $inscripcion = new Inscripcion();
-            $inscripcion->inscripcion_codigo = $codigo_inscripcion;
-            $inscripcion->inscripcion_estado = 1;
-            $inscripcion->id_pago = $pago->id_pago;
-            $inscripcion->id_programa_proceso = null;
-            $inscripcion->save();
-        }
+        //     // crear la inscripcion
+        //     $inscripcion = new Inscripcion();
+        //     $inscripcion->inscripcion_codigo = $codigo_inscripcion;
+        //     $inscripcion->inscripcion_estado = 1;
+        //     $inscripcion->id_pago = $pago->id_pago;
+        //     $inscripcion->id_programa_proceso = null;
+        //     $inscripcion->save();
+        // }
 
         // cerrar modal de registro de pago
         $this->dispatchBrowserEvent('modal_registro_pago', [
@@ -341,6 +363,18 @@ class Auth extends Component
             'icon' => 'success',
             'confirmButtonText' => 'Aceptar',
             'color' => 'success'
+        ]);
+    }
+
+    public function alerta_registro_pago()
+    {
+        $admision = Admision::where('admision_estado', 1)->first();
+        $this->dispatchBrowserEvent('registro_pago', [
+            'title' => '¡Error!',
+            'text' => 'El registro de pagos para el proceso de inscripcion ' . $admision->admision .' se encuentra cerrado.',
+            'icon' => 'error',
+            'confirmButtonText' => 'Cerrar',
+            'color' => 'danger'
         ]);
     }
 
@@ -429,9 +463,15 @@ class Auth extends Component
     public function render()
     {
         $canales_pagos = CanalPago::where('canal_pago_estado', 1)->get();
+        $admision = Admision::where('admision_estado', 1)->first();
+
+        $fecha_inicio_inscripcion = date('Y-m-d',strtotime($admision->admision_fecha_inicio_inscripcion)); // fecha de inicio de inscripcion
+        $fecha_final_inscripcion = date('Y-m-d',strtotime($admision->admision_fecha_fin_inscripcion)); // fecha de fin de inscripcion
 
         return view('livewire.modulo-inscripcion.auth', [
-            'canales_pagos' => $canales_pagos
+            'canales_pagos' => $canales_pagos,
+            'fecha_inicio_inscripcion' => $fecha_inicio_inscripcion,
+            'fecha_final_inscripcion' => $fecha_final_inscripcion
         ]);
     }
 }
