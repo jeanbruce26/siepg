@@ -11,6 +11,7 @@ use Livewire\WithPagination;
 class GestionVistasEvaluacion extends Component
 {
     use WithPagination;
+    protected $paginationTheme = 'bootstrap';//paginacion de bootstrap
 
     public $titulo = 'Agregar Vista de Evaluación';//Titulo del modal
     public $modo = 1;//Variable para cambiar el modo del formulario | 1 = agregar | 2 = modificar

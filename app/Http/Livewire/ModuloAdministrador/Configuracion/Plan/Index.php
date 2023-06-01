@@ -11,8 +11,8 @@ class Index extends Component
 {
 
     use WithPagination;
+    protected $paginationTheme = 'bootstrap';//paginacion de bootstrap
     
-    protected $paginationTheme = 'bootstrap';
     protected $queryString = [
         'search' => ['except' => '']
     ];

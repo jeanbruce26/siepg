@@ -11,6 +11,7 @@ use Livewire\WithPagination;
 class GestionTipoSeguimiento extends Component
 {
     use WithPagination;//Paginacion
+    protected $paginationTheme = 'bootstrap';//paginacion de bootstrap
     
     public $search;//Variable de busqueda
     public $titulo = "Agregar Tipo de Seguimiento";//titulo del modal

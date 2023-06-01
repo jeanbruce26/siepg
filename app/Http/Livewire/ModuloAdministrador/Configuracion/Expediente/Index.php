@@ -3,7 +3,6 @@
 namespace App\Http\Livewire\ModuloAdministrador\Configuracion\Expediente;
 
 use App\Models\Expediente;
-use App\Models\ExpedienteAdmision;
 use Livewire\Component;
 use Illuminate\Support\Str;
 use Livewire\WithPagination;
@@ -11,6 +10,7 @@ use Livewire\WithPagination;
 class Index extends Component
 {
     use WithPagination;
+    protected $paginationTheme = 'bootstrap';//paginacion de bootstrap
 
     public $search = '';
     public $titulo = 'Crear Expediente';

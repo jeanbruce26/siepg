@@ -12,6 +12,7 @@ use Livewire\WithPagination;
 class GestionAdmision extends Component
 {
     use WithPagination;
+    protected $paginationTheme = 'bootstrap';//paginacion de bootstrap
 
     public $search = '';//Variable de busqueda
     public $titulo = 'Agregar Admisión del Expediente';//Titulo del modal

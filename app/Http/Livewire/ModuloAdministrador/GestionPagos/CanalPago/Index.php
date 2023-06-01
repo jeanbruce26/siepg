@@ -9,6 +9,7 @@ use Livewire\WithPagination;
 class Index extends Component
 {
     use WithPagination;
+    protected $paginationTheme = 'bootstrap';//paginacion de bootstrap
 
     public $search = '';
     public $titulo = 'Crear Canal de Pago';
