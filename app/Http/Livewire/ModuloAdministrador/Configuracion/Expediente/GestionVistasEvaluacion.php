@@ -91,18 +91,18 @@ class GestionVistasEvaluacion extends Component
     public function cambiarEstado($id_expediente_tipo_evaluacion)
     {
         $expedienteTipoEvaluacionModel = ExpedienteTipoEvaluacion::where('id_expediente_tipo_evaluacion',$id_expediente_tipo_evaluacion)->first();
-        if($expedienteTipoEvaluacionModel->expediente_tipo_evaluacion_estado == 1){
+        if($expedienteTipoEvaluacionModel->expediente_tipo_evaluacion_estado == 1){//Si el estado es 1 (Activo) se cambia a 0 (Inactivo)
             $expedienteTipoEvaluacionModel->expediente_tipo_evaluacion_estado = 0;
-        }else if($expedienteTipoEvaluacionModel->expediente_tipo_evaluacion_estado == 0){
+        }else if($expedienteTipoEvaluacionModel->expediente_tipo_evaluacion_estado == 0){//Si el estado es 0 (Inactivo) se cambia a 1 (Activo)
             $expedienteTipoEvaluacionModel->expediente_tipo_evaluacion_estado = 1;
         }
         $expedienteTipoEvaluacionModel->save();
 
-        if($expedienteTipoEvaluacionModel->expediente_tipo_evaluacion == 1){
+        if($expedienteTipoEvaluacionModel->expediente_tipo_evaluacion == 1){//Si el tipo de evaluacion es 1 (Evaluacion de Expediente)
             $nombreEvalucion = 'Evaluación de Expediente';
-        }else if($expedienteTipoEvaluacionModel->expediente_tipo_evaluacion == 2){
+        }else if($expedienteTipoEvaluacionModel->expediente_tipo_evaluacion == 2){//Si el tipo de evaluacion es 2 (Evaluacion de Tema Tentativo de Tesis)
             $nombreEvalucion = 'Evaluación de Tema Tentativo de Tesis';
-        }else if($expedienteTipoEvaluacionModel->expediente_tipo_evaluacion == 3){
+        }else if($expedienteTipoEvaluacionModel->expediente_tipo_evaluacion == 3){//Si el tipo de evaluacion es 3 (Evaluacion de Entrevista)
             $nombreEvalucion = 'Evaluación de Entrevista';
         }
 

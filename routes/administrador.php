@@ -12,6 +12,7 @@ use App\Http\Controllers\ModuloAdministrador\PagoController;
 use App\Http\Controllers\ModuloAdministrador\PlanController;
 use App\Http\Controllers\ModuloAdministrador\ProgramaController;
 use App\Http\Controllers\ModuloAdministrador\SedeController;
+use App\Http\Controllers\ModuloAdministrador\TipoSeguimientoController;
 use App\Http\Controllers\ModuloAdministrador\TrabajadorController;
 use App\Http\Controllers\ModuloAdministrador\UsuarioTrabajadorController;
 use Illuminate\Support\Facades\Route;
@@ -64,3 +65,5 @@ Route::get('/expediente/{id}/gestion-admision', [ExpedienteController::class, 'a
 Route::get('/expediente/{id}/gestion-vistas-evaluacion', [ExpedienteController::class, 'evaluacion'])->middleware(['auth.usuario'])->name('administrador.expediente.gestion-vistas-evaluacion');
 //Ruta para ir a la vista de GEstion de Tipo de Seguimiento de Expediente en Configuracion | Esta ruta de la vista está dentro de la vista de expediente
 Route::get('/expediente/{id}/gestion-tipo-seguimiento', [ExpedienteController::class, 'seguimiento'])->middleware(['auth.usuario'])->name('administrador.expediente.gestion-tipo-seguimiento');
+//Ruta para ir a la vista de Tipo de Seguimiento en Configuracion
+Route::get('/tipo-seguimiento', [TipoSeguimientoController::class, 'index'])->middleware(['auth.usuario'])->name('administrador.tipo-seguimiento');
