@@ -78,19 +78,17 @@ class Index extends Component
         
         $sede_model = Sede::all();
         $facultad_model = Facultad::all();
-        $programaModel = Programa::where('programa', 'like', '%'.$buscar.'%')
-            ->orWhere('id_programa', 'like', '%'.$buscar.'%')
-            ->orWhere('programa_iniciales', 'like', '%'.$buscar.'%')
-            ->orWhere('subprograma', 'like', '%'.$buscar.'%')
-            ->orWhere('mencion', 'like', '%'.$buscar.'%')
-            ->orWhere('codigo_sunedu', 'like', '%'.$buscar.'%')
-            ->orWhere('id_sunedu', 'like', '%'.$buscar.'%')
-            ->orWhere('id_modalidad', 'like', '%'.$buscar.'%')
-            ->orWhere('id_facultad', 'like', '%'.$buscar.'%')
-            ->orWhere('id_sede', 'like', '%'.$buscar.'%')
-            ->orWhere('programa_tipo', 'like', '%'.$buscar.'%')
-            ->orderBy('id_programa', 'desc')
-            ->paginate(10);
+        $programaModel = Programa::Join('sede', 'programa.id_sede', '=', 'sede.id_sede')
+                                ->Join('facultad', 'programa.id_facultad', '=', 'facultad.id_facultad')
+                                ->Join('modalidad', 'programa.id_modalidad', '=', 'modalidad.id_modalidad')
+                                ->where('programa', 'like', '%'.$buscar.'%')
+                                ->orWhere('id_programa', 'like', '%'.$buscar.'%')
+                                ->orWhere('subprograma', 'like', '%'.$buscar.'%')
+                                ->orWhere('mencion', 'like', '%'.$buscar.'%')
+                                ->orWhere('modalidad', 'like', '%'.$buscar.'%')
+                                ->orWhere('sede', 'like', '%'.$buscar.'%')
+                                ->orderBy('id_programa', 'desc')
+                                ->paginate(10);
 
         return view('livewire.modulo-administrador.configuracion.programa.index', [
             'programaModel' => $programaModel,

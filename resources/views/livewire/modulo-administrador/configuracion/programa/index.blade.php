@@ -29,7 +29,7 @@
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-5">
-                            {{-- <div class="me-1">
+                            <div class="me-1">
                                 <a class="btn btn-sm btn-light-primary me-3 fw-bold" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start">
                                     <span class="svg-icon svg-icon-6 svg-icon-muted me-1">
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -49,7 +49,7 @@
                                         <div class="mb-10">
                                             <label class="form-label fw-semibold">Tipo de Expediente:</label>
                                             <div>
-                                                <select class="form-select" wire:model="filtro_expediente" id="filtro_expediente"  data-control="select2" data-placeholder="Seleccione">
+                                                <select class="form-select" wire:model="filtro_programa" id="filtro_programa"  data-control="select2" data-placeholder="Seleccione">
                                                     <option></option>
                                                     <option value="0">Maestría y Doctorado</option>
                                                     <option value="1">Maestría</option>
@@ -63,7 +63,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div> --}}
+                            </div>
 
                             <div class="ms-2">
                                 <input class="form-control form-control-sm text-muted" type="search" wire:model="search"
@@ -75,34 +75,31 @@
                                 <thead class="bg-light-primary">
                                     <tr align="center" class="fw-bold fs-5 text-gray-800 border-bottom-2 border-gray-200">
                                         <th scope="col" class="col-md-1">ID</th>
-                                        <th scope="col">Código SUNEDU</th>
-                                        <th>Programas</th>
-                                        <th scope="col" class="col-md-2">Tipo</th>
-                                        <th scope="col" class="col-md-2">Estado</th>
+                                        <th scope="col">Programas</th>
+                                        <th scope="col">Modalidad</th>
+                                        <th scope="col" class="col-md-1">Sede</th>
+                                        <th scope="col">Estado</th>
                                         <th scope="col" class="col-md-2">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @forelse ($programaModel as $item)
-                                    {{-- <tr>
-                                        <td align="center" class="fw-bold fs-5">{{ $item->id_expediente }}</td>
-                                        <td>{{ $item->expediente }}</td>
-                                        <td align="center">
-                                            @switch($item->expediente_tipo)
-                                                @case(0)
-                                                    <span class="badge badge-light-primary px-3 py-2">Maestría y Doctorado</span>
-                                                    @break
-                                                @case(1)
-                                                    <span class="badge badge-light-primary px-3 py-2">Maestría</span>
-
-                                                    @break
-                                                @case(2)
-                                                    <span class="badge badge-light-primary px-3 py-2">Doctorado</span>
-                                                    @break
-                                            @endswitch
+                                    <tr>
+                                        <td align="center" class="fw-bold fs-5">{{ $item->id_programa }}</td>
+                                        <td> {{ $item->programa }} EN 
+                                            {{ $item->subprograma }} 
+                                            @if($item->mencion)
+                                                CON MENCION EN {{ $item->mencion }}
+                                            @endif
                                         </td>
                                         <td align="center">
-                                            @if ($item->expediente_estado == 1)
+                                            <span class="badge badge-light-primary px-3 py-2">{{ $item->modalidad }}</span>
+                                        </td>
+                                        <td align="center">
+                                            {{ $item->sede }}
+                                        </td>
+                                        <td align="center">
+                                            @if ($item->programa_estado == 1)
                                                 <span style="cursor: pointer;" wire:click="cargarAlertaEstado({{ $item->id_expediente }})" class="badge text-bg-success text-light hover-elevate-down px-3 py-2">Activo</span></span>
                                             @else
                                                 <span style="cursor: pointer;" wire:click="cargarAlertaEstado({{ $item->id_expediente }})" class="badge text-bg-danger text-light hover-elevate-down px-3 py-2">Inactivo</span></span>
@@ -131,24 +128,9 @@
                                                         Editar
                                                     </a>
                                                 </div>
-                                                <div class="menu-item px-3">
-                                                    <a href="{{ route('administrador.expediente.gestion-admision', $item->id_expediente) }}" class="menu-link px-3 text-start">
-                                                        Gestion de Admisión
-                                                    </a>
-                                                </div>
-                                                <div class="menu-item px-3">
-                                                    <a href="{{ route('administrador.expediente.gestion-vistas-evaluacion', $item->id_expediente) }}" class="menu-link px-3 text-start">
-                                                        Gestión de Vistas para Evaluación
-                                                    </a>
-                                                </div>
-                                                <div class="menu-item px-3">
-                                                    <a href="{{ route('administrador.expediente.gestion-tipo-seguimiento', $item->id_expediente) }}" class="menu-link px-3 text-start">
-                                                        Gestión de Tipo de Seguimiento
-                                                    </a>
-                                                </div>
                                             </div>
                                         </td>
-                                    </tr> --}}
+                                    </tr>
                                     @empty
                                         @if ($search != '')
                                             <tr>
@@ -295,11 +277,11 @@
     </div> --}}
 
 </div>
-{{-- @push('scripts')
+@push('scripts')
     <script>
-        // filtro_expediente select2
+        // filtro_programa select2
         $(document).ready(function () {
-            $('#filtro_expediente').select2({
+            $('#filtro_programa').select2({
                 placeholder: 'Seleccione',
                 allowClear: true,
                 width: '100%',
@@ -313,11 +295,11 @@
                     }
                 }
             });
-            $('#filtro_expediente').on('change', function(){
-                @this.set('filtro_expediente', this.value);
+            $('#filtro_programa').on('change', function(){
+                @this.set('filtro_programa', this.value);
             });
             Livewire.hook('message.processed', (message, component) => {
-                $('#filtro_expediente').select2({
+                $('#filtro_programa').select2({
                     placeholder: 'Seleccione',
                     allowClear: true,
                     width: '100%',
@@ -331,10 +313,10 @@
                         }
                     }
                 });
-                $('#filtro_expediente').on('change', function(){
-                    @this.set('filtro_expediente', this.value);
+                $('#filtro_programa').on('change', function(){
+                    @this.set('filtro_programa', this.value);
                 });
             });
         });
     </script>
-@endpush --}}
+@endpush
