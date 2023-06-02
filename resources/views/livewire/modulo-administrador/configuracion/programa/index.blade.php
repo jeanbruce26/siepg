@@ -42,7 +42,7 @@
                                     <div class="px-7 py-5">
                                         <div class="fs-5 text-dark fw-bold">
                                             Opciones de filtrado
-                                        </div>
+                                        </div> 
                                     </div>
                                     <div class="separator border-gray-200"></div>
                                     <div class="px-7 py-5">

@@ -47,7 +47,7 @@ class Index extends Component
     {
         $this->validateOnly($propertyName, [
             'año' => 'required|numeric',
-            'convocatoria' => 'nullable|string',
+            'convocatoria' => 'nullable|numeric',
             'fecha_inicio_inscripcion' => 'required|date',
             'fecha_fin_inscripcion' => 'required|date',
             'fecha_inicio_expediente' => 'required|date',
@@ -177,7 +177,7 @@ class Index extends Component
             //Validamos los campos que se van a crear
             $this->validate([
                 'año' => 'required|numeric',
-                'convocatoria' => 'nullable|string',
+                'convocatoria' => 'nullable|numeric',
                 'fecha_inicio_inscripcion' => 'required|date',
                 'fecha_fin_inscripcion' => 'required|date',
                 'fecha_inicio_expediente' => 'required|date',
@@ -221,7 +221,7 @@ class Index extends Component
             //Validamos los campos que se van a actualizar
             $this->validate([
                 'año' => 'required|numeric',
-                'convocatoria' => 'nullable|string',
+                'convocatoria' => 'nullable|numeric',
                 'fecha_inicio_inscripcion' => 'required|date',
                 'fecha_fin_inscripcion' => 'required|date',
                 'fecha_inicio_expediente' => 'required|date',
