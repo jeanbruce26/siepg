@@ -46,14 +46,23 @@
                                     </div>
                                     <div class="separator border-gray-200"></div>
                                     <div class="px-7 py-5">
-                                        <div class="mb-10">
-                                            <label class="form-label fw-semibold">Tipo de Expediente:</label>
+                                        <div class="mb-5">
+                                            <label class="form-label fw-semibold">Tipo de Programa:</label>
                                             <div>
                                                 <select class="form-select" wire:model="filtro_programa" id="filtro_programa"  data-control="select2" data-placeholder="Seleccione">
                                                     <option></option>
-                                                    <option value="0">Maestría y Doctorado</option>
                                                     <option value="1">Maestría</option>
                                                     <option value="2">Doctorado</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="mb-10">
+                                            <label class="form-label fw-semibold">Modalidad:</label>
+                                            <div>
+                                                <select class="form-select" wire:model="filtro_modalidad" id="filtro_modalidad" data-control="select2" data-placeholder="Seleccione">
+                                                    <option></option>
+                                                    <option value="1">Presencial</option>
+                                                    <option value="2">Virtual</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -100,9 +109,9 @@
                                         </td>
                                         <td align="center">
                                             @if ($item->programa_estado == 1)
-                                                <span style="cursor: pointer;" wire:click="cargarAlertaEstado({{ $item->id_expediente }})" class="badge text-bg-success text-light hover-elevate-down px-3 py-2">Activo</span></span>
+                                                <span style="cursor: pointer;" wire:click="cargarAlertaEstado({{ $item->id_programa }})" class="badge text-bg-success text-light hover-elevate-down px-3 py-2">Activo</span></span>
                                             @else
-                                                <span style="cursor: pointer;" wire:click="cargarAlertaEstado({{ $item->id_expediente }})" class="badge text-bg-danger text-light hover-elevate-down px-3 py-2">Inactivo</span></span>
+                                                <span style="cursor: pointer;" wire:click="cargarAlertaEstado({{ $item->id_programa }})" class="badge text-bg-danger text-light hover-elevate-down px-3 py-2">Inactivo</span></span>
                                             @endif
                                         </td>
                                         <td align="center">
@@ -315,6 +324,45 @@
                 });
                 $('#filtro_programa').on('change', function(){
                     @this.set('filtro_programa', this.value);
+                });
+            });
+        });
+
+        $(document).ready(function () {
+            $('#filtro_modalidad').select2({
+                placeholder: 'Seleccione',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando...";
+                    }
+                }
+            });
+            $('#filtro_modalidad').on('change', function(){
+                @this.set('filtro_modalidad', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#filtro_modalidad').select2({
+                    placeholder: 'Seleccione',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando...";
+                        }
+                    }
+                });
+                $('#filtro_modalidad').on('change', function(){
+                    @this.set('filtro_modalidad', this.value);
                 });
             });
         });

@@ -48,12 +48,6 @@ class Index extends Component
         ]);
     }
 
-    //Formatear el nombre del archivo a slug para que no tenga espacios ni caracteres especiales, en formato de url
-    public function updatedTipoDocumento($value)
-    {
-        $this->nombre_archivo = Str::slug($value);
-    }
-
     //Limpiar los campos del formulario y resetear el modo
     public function modo()
     {
