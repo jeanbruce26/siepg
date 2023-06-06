@@ -16,7 +16,11 @@ class Index extends Component
     protected $paginationTheme = 'bootstrap';
     
     protected $queryString = [
-        'search' => ['except' => '']
+        'search' => ['except' => ''],
+        'modalidadFiltro' => ['except' => ''],
+        'facultadFiltro' => ['except' => ''],
+        'sedeFiltro' => ['except' => ''],
+        'tipoProgramaFiltro' => ['except' => ''],
     ];
 
     public $search = '';
@@ -25,9 +29,13 @@ class Index extends Component
 
     //Variables para el filtro de programas
     public $tipoProgramaFiltro;//Para la busqueda de programas por tipo
-    public $filtro_programa;//Para el filtro de programas por tipo
+    public $filtro_tipo_programa;//Para el filtro de programas por tipo
     public $modalidadFiltro;//Para la busqueda de programas por modalidad
     public $filtro_modalidad;//Para el filtro de programas por modalidad
+    public $facultadFiltro;//Para la busqueda de programas por facultad
+    public $filtro_facultad;//Para el filtro de programas por facultad
+    public $sedeFiltro;//Para la busqueda de programas por Sede
+    public $filtro_sede;//Para el filtro de programas por Sede
 
     //Valiables de los modelos de Programa
     public $id_programa;
@@ -115,15 +123,19 @@ class Index extends Component
         $this->alertaConfirmacion('¿Estás seguro?',"¿Desea cambiar el estado del programa de $nombre?",'question','Modificar','Cancelar','primary','danger','cambiarEstado',$id);
     }
 
+    //Limpiamos los filtros
     public function resetear_filtro()
     {
-        $this->reset('tipoProgramaFiltro', 'filtro_programa', 'modalidadFiltro', 'filtro_modalidad');
+        $this->reset('tipoProgramaFiltro', 'filtro_tipo_programa', 'modalidadFiltro', 'filtro_modalidad', 'facultadFiltro', 'filtro_facultad', 'sedeFiltro', 'filtro_facultad');
     }
 
+    //Asignamos los filtros
     public function filtrar()
     {
-        $this->tipoProgramaFiltro = $this->filtro_programa;
+        $this->tipoProgramaFiltro = $this->filtro_tipo_programa;
         $this->modalidadFiltro = $this->filtro_modalidad;
+        $this->facultadFiltro = $this->filtro_facultad;
+        $this->sedeFiltro = $this->filtro_sede;
     }
 
     //Cambiar el estado del programa
@@ -165,20 +177,22 @@ class Index extends Component
     }
     
     public function render()
-    {
-        $buscar = $this->search;
-        
+    {        
         $sede_model = Sede::all();
         $facultad_model = Facultad::all();
+
         $programaModel = Programa::Join('sede', 'programa.id_sede', '=', 'sede.id_sede')
                                 ->Join('facultad', 'programa.id_facultad', '=', 'facultad.id_facultad')
                                 ->Join('modalidad', 'programa.id_modalidad', '=', 'modalidad.id_modalidad')
-                                ->where('programa', 'like', '%'.$buscar.'%')
-                                ->orWhere('id_programa', 'like', '%'.$buscar.'%')
-                                ->orWhere('subprograma', 'like', '%'.$buscar.'%')
-                                ->orWhere('mencion', 'like', '%'.$buscar.'%')
-                                ->orWhere('modalidad', 'like', '%'.$buscar.'%')
-                                ->orWhere('sede', 'like', '%'.$buscar.'%')
+                                ->where(function ($query){
+                                    $query->where('programa', 'like', '%'.$this->search.'%')
+                                    ->orWhere('subprograma', 'like', '%'.$this->search.'%')
+                                    ->orWhere('mencion', 'like', '%'.$this->search.'%');
+                                })
+                                ->where('modalidad.id_modalidad', $this->modalidadFiltro == null ? '!=' : '=', $this->modalidadFiltro)
+                                ->where('facultad.id_facultad', $this->facultadFiltro == null ? '!=' : '=', $this->facultadFiltro)
+                                ->where('sede.id_sede', $this->sedeFiltro == null ? '!=' : '=', $this->sedeFiltro)
+                                ->where('programa.programa_tipo', $this->tipoProgramaFiltro == null ? '!=' : '=', $this->tipoProgramaFiltro)
                                 ->orderBy('id_programa', 'desc')
                                 ->paginate(10);
 

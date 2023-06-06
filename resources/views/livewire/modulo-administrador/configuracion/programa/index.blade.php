@@ -49,20 +49,42 @@
                                         <div class="mb-5">
                                             <label class="form-label fw-semibold">Tipo de Programa:</label>
                                             <div>
-                                                <select class="form-select" wire:model="filtro_programa" id="filtro_programa"  data-control="select2" data-placeholder="Seleccione">
+                                                <select class="form-select" wire:model="filtro_tipo_programa" id="filtro_tipo_programa"  data-control="select2" data-placeholder="Seleccione">
                                                     <option></option>
                                                     <option value="1">Maestría</option>
                                                     <option value="2">Doctorado</option>
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="mb-10">
+                                        <div class="mb-5">
                                             <label class="form-label fw-semibold">Modalidad:</label>
                                             <div>
                                                 <select class="form-select" wire:model="filtro_modalidad" id="filtro_modalidad" data-control="select2" data-placeholder="Seleccione">
                                                     <option></option>
                                                     <option value="1">Presencial</option>
                                                     <option value="2">Virtual</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="mb-5">
+                                            <label class="form-label fw-semibold">Sede:</label>
+                                            <div>
+                                                <select class="form-select" wire:model="filtro_sede" id="filtro_sede" data-control="select2" data-placeholder="Seleccione">
+                                                    <option></option>
+                                                    @foreach ($sede_model as $item)
+                                                        <option value="{{ $item->id_sede }}">{{ $item->sede }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="mb-10">
+                                            <label class="form-label fw-semibold">Facultad:</label>
+                                            <div>
+                                                <select class="form-select" wire:model="filtro_facultad" id="filtro_facultad" data-control="select2" data-placeholder="Seleccione">
+                                                    <option></option>
+                                                    @foreach ($facultad_model as $item)
+                                                        <option value="{{ $item->id_facultad }}">{{ $item->facultad }}</option>
+                                                    @endforeach
                                                 </select>
                                             </div>
                                         </div>
@@ -184,7 +206,7 @@
         </div>
     </div>
 
-    {{-- Modal Expediente --}}
+    {{-- Modal Programa --}}
     {{-- <div wire:ignore.self class="modal fade" id="modalPrograma" tabindex="-1" aria-labelledby="modalPrograma"
         aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
@@ -288,9 +310,9 @@
 </div>
 @push('scripts')
     <script>
-        // filtro_programa select2
+        // filtro_tipo_programa select2
         $(document).ready(function () {
-            $('#filtro_programa').select2({
+            $('#filtro_tipo_programa').select2({
                 placeholder: 'Seleccione',
                 allowClear: true,
                 width: '100%',
@@ -304,11 +326,11 @@
                     }
                 }
             });
-            $('#filtro_programa').on('change', function(){
-                @this.set('filtro_programa', this.value);
+            $('#filtro_tipo_programa').on('change', function(){
+                @this.set('filtro_tipo_programa', this.value);
             });
             Livewire.hook('message.processed', (message, component) => {
-                $('#filtro_programa').select2({
+                $('#filtro_tipo_programa').select2({
                     placeholder: 'Seleccione',
                     allowClear: true,
                     width: '100%',
@@ -322,12 +344,13 @@
                         }
                     }
                 });
-                $('#filtro_programa').on('change', function(){
-                    @this.set('filtro_programa', this.value);
+                $('#filtro_tipo_programa').on('change', function(){
+                    @this.set('filtro_tipo_programa', this.value);
                 });
             });
         });
 
+        //Filtro de modalidad select2
         $(document).ready(function () {
             $('#filtro_modalidad').select2({
                 placeholder: 'Seleccione',
@@ -363,6 +386,86 @@
                 });
                 $('#filtro_modalidad').on('change', function(){
                     @this.set('filtro_modalidad', this.value);
+                });
+            });
+        });
+
+        //Filtro de Facultad select2
+        $(document).ready(function () {
+            $('#filtro_facultad').select2({
+                placeholder: 'Seleccione',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando...";
+                    }
+                }
+            });
+            $('#filtro_facultad').on('change', function(){
+                @this.set('filtro_facultad', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#filtro_facultad').select2({
+                    placeholder: 'Seleccione',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando...";
+                        }
+                    }
+                });
+                $('#filtro_facultad').on('change', function(){
+                    @this.set('filtro_facultad', this.value);
+                });
+            });
+        });
+
+        //Filtro de Sede de select2
+        $(document).ready(function () {
+            $('#filtro_sede').select2({
+                placeholder: 'Seleccione',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando...";
+                    }
+                }
+            });
+            $('#filtro_sede').on('change', function(){
+                @this.set('filtro_sede', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#filtro_sede').select2({
+                    placeholder: 'Seleccione',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando...";
+                        }
+                    }
+                });
+                $('#filtro_sede').on('change', function(){
+                    @this.set('filtro_sede', this.value);
                 });
             });
         });
