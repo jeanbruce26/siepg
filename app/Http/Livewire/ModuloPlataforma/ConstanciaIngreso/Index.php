@@ -5,6 +5,7 @@ namespace App\Http\Livewire\ModuloPlataforma\ConstanciaIngreso;
 use App\Models\Admitido;
 use App\Models\ConstanciaIngreso;
 use App\Models\Evaluacion;
+use App\Models\Pago;
 use App\Models\Persona;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -133,6 +134,11 @@ class Index extends Component
         $constancia->constancia_ingreso_url = $path . $nombre_pdf;
         $constancia->constancia_ingreso_fecha = Carbon::now();
         $constancia->save();
+
+        // editamos el estado del pago
+        $pago = Pago::where('id_pago', $constancia->id_pago)->first();
+        $pago->pago_estado = 2;
+        $pago->save();
 
         // emitir evento para recargar el modulo livewire
         $this->emit('recargar_vista');

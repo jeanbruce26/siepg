@@ -68,11 +68,6 @@ class Index extends Component
 
         // almacenar los datos
         $pago = Pago::find($this->id_pago);
-        if($pago->id_concepto_pago == 1){
-            $pago->pago_estado = 1;
-        }else{
-            $pago->pago_estado = 2;
-        }
         $pago->pago_verificacion = 2;
         $pago->save();
 

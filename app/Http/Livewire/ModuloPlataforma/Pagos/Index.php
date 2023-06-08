@@ -8,9 +8,11 @@ use App\Models\CanalPago;
 use App\Models\ConceptoPago;
 use App\Models\ConstanciaIngreso;
 use App\Models\Inscripcion;
+use App\Models\Matricula;
 use App\Models\Pago;
 use App\Models\PagoObservacion;
 use App\Models\Persona;
+use App\Models\ProgramaProcesoGrupo;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -24,7 +26,7 @@ class Index extends Component
     public $titulo_modal_pago = 'Registrar Pago'; // titulo del modal de pago
     public $id_pago; // variable para el id del pago
     public $admitido; // variable para el admitido
-    public $documento_identidad, $numero_operacion, $monto_operacion, $fecha_pago, $canal_pago, $concepto_pago, $voucher, $iteration = 0; // variables para el formulario del modal de registro
+    public $documento_identidad, $numero_operacion, $monto_operacion, $fecha_pago, $canal_pago, $concepto_pago, $voucher, $iteration = 0, $grupo; // variables para el formulario del modal de registro
     public $modo = 'create'; // variable para el modo de la vista
     public $activar_voucher = false; // variable para activar el voucher
     public $button_modal = 'Registrar Pago'; // variable para el boton del modal de registro
@@ -492,8 +494,11 @@ class Index extends Component
         $pago = Pago::find($id_pago);
         $admitido = $this->admitido;
 
+        // // generar codigo de matricula
+        // $codigo = 'M000000001';
+
         // si el pago es de concepto de constancia de ingreso
-        if($pago->id_concepto_pago == 2)
+        if( $pago->id_concepto_pago == 2 || $pago->id_concepto_pago == 4  || $pago->id_concepto_pago == 6 )
         {
             // registrar constancia de ingreso
             $constancia = new ConstanciaIngreso();
@@ -503,10 +508,78 @@ class Index extends Component
             $constancia->constancia_ingreso_estado = 1;
             $constancia->save();
 
-            // cambiar de estado
-            $pago->pago_estado = 2;
-            $pago->save();
+            if( $pago->id_concepto_pago == 2 )
+            {
+                // cambiar de estado
+                $pago->pago_estado = 2;
+                $pago->save();
+            }
         }
+        // if ( $pago->id_concepto_pago == 3 || $pago->id_concepto_pago == 5 )
+        // {
+        //     $matricula = Matricula::orderBy('id_matricula', 'desc')->first();
+        //     if ( $matricula )
+        //     {
+        //         $codigo = 'M' . str_pad($matricula->id_matricula + 1, 9, "0", STR_PAD_LEFT);
+        //     }
+        //     else
+        //     {
+        //         $codigo = 'M000000001';
+        //     }
+        //     // registrar matricula
+        //     $matricula = new Matricula();
+        //     $matricula->matricula_codigo = $codigo;
+        //     $matricula->matricula_proceso = $admitido->programa_proceso->admision->admision;
+        //     $matricula->matricula_year = date('Y-m-d');
+        //     $matricula->matricula_fecha_creacion = date('Y-m-d');
+        //     $matricula->matricula_estado = 1;
+        //     $matricula->id_admitido = $admitido->id_admitido;
+        //     $matricula->id_programa_proceso_grupo = $this->grupo;
+        //     $matricula->id_ciclo = 1;
+        //     $matricula->id_pago = $pago->id_pago;
+        //     $matricula->save();
+
+        //     // cambiar de estado
+        //     $pago->pago_estado = 2;
+        //     $pago->save();
+        // }
+        // if ( $pago->id_concepto_pago == 4  || $pago->id_concepto_pago == 6 )
+        // {
+        //     // registrar constancia de ingreso
+        //     $constancia = new ConstanciaIngreso();
+        //     $constancia->constancia_ingreso_fecha = date('Y-m-d');
+        //     $constancia->id_pago = $pago->id_pago;
+        //     $constancia->id_admitido = $admitido->id_admitido;
+        //     $constancia->constancia_ingreso_estado = 1;
+        //     $constancia->save();
+
+        //     // creamos el codigo de matricula
+        //     $matricula = Matricula::orderBy('id_matricula', 'desc')->first();
+        //     if ( $matricula )
+        //     {
+        //         $codigo = 'M' . str_pad($matricula->id_matricula + 1, 9, "0", STR_PAD_LEFT);
+        //     }
+        //     else
+        //     {
+        //         $codigo = 'M000000001';
+        //     }
+        //     // registrar matricula
+        //     $matricula = new Matricula();
+        //     $matricula->matricula_codigo = $codigo;
+        //     $matricula->matricula_proceso = $admitido->programa_proceso->admision->admision;
+        //     $matricula->matricula_year = date('Y-m-d');
+        //     $matricula->matricula_fecha_creacion = date('Y-m-d');
+        //     $matricula->matricula_estado = 1;
+        //     $matricula->id_admitido = $admitido->id_admitido;
+        //     $matricula->id_programa_proceso_grupo = $this->grupo;
+        //     $matricula->id_ciclo = 1;
+        //     $matricula->id_pago = $pago->id_pago;
+        //     $matricula->save();
+
+        //     // cambiar de estado
+        //     $pago->pago_estado = 2;
+        //     $pago->save();
+        // }
     }
 
     public function render()
@@ -524,12 +597,29 @@ class Index extends Component
         $inscripcion_ultima = Inscripcion::where('id_persona', $persona->id_persona)->orderBy('id_inscripcion', 'desc')->first(); // inscripcion del usuario logueado
         $evaluacion = $inscripcion_ultima->evaluacion; // evaluacion de la inscripcion del usuario logueado
         $admision = null;
+        $grupos = null;
+        $constancia_ingreso = null;
         if($evaluacion)
         {
             $this->admitido = $persona->admitido->where('id_evaluacion', $evaluacion->id_evaluacion)->first(); // admitido de la inscripcion del usuario logueado
             if($this->admitido)
             {
                 $admision = $this->admitido->programa_proceso->admision; // admision del admitido del usuario logueado
+                if ( $admision )
+                {
+                    $admision_actual = Admision::where('admision_estado', 1)->first(); // admision actual
+                    if ( $admision_actual )
+                    {
+                        if ( $admision->id_admision != $admision_actual->id_admision )
+                        {
+                            $admision = null;
+                        }
+                    }
+
+                    $grupos = ProgramaProcesoGrupo::where('id_programa_proceso', $this->admitido->id_programa_proceso)->get(); // grupos de la admision del usuario logueado
+
+                    $constancia_ingreso = ConstanciaIngreso::where('id_admitido', $this->admitido->id_admitido)->first(); // constancia de ingreso del usuario logueado
+                }
             }
         }
         else
@@ -543,7 +633,9 @@ class Index extends Component
             'pagos' => $pagos,
             'canales_pagos' => $canales_pagos,
             'conceptos_pagos' => $conceptos_pagos,
-            'admision' => $admision
+            'admision' => $admision,
+            'constancia_ingreso' => $constancia_ingreso,
+            'grupos' => $grupos,
         ]);
     }
 }
