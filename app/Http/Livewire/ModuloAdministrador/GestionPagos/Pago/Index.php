@@ -14,6 +14,7 @@ class Index extends Component
 {
 
     use WithPagination;
+    protected $paginationTheme = 'bootstrap';//paginacion de bootstrap
     
     // Para poder agregar los parámetros de búsqueda en la URL 
     protected $queryString = [

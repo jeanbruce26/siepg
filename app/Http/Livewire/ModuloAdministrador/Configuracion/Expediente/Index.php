@@ -3,7 +3,6 @@
 namespace App\Http\Livewire\ModuloAdministrador\Configuracion\Expediente;
 
 use App\Models\Expediente;
-use App\Models\ExpedienteAdmision;
 use Livewire\Component;
 use Illuminate\Support\Str;
 use Livewire\WithPagination;
@@ -11,6 +10,7 @@ use Livewire\WithPagination;
 class Index extends Component
 {
     use WithPagination;
+    protected $paginationTheme = 'bootstrap';//paginacion de bootstrap
 
     public $search = '';
     public $titulo = 'Crear Expediente';
@@ -46,12 +46,6 @@ class Index extends Component
             'requerido' => 'required|numeric',
             'tipo' => 'required|numeric',
         ]);
-    }
-
-    //Formatear el nombre del archivo a slug para que no tenga espacios ni caracteres especiales, en formato de url
-    public function updatedTipoDocumento($value)
-    {
-        $this->nombre_archivo = Str::slug($value);
     }
 
     //Limpiar los campos del formulario y resetear el modo

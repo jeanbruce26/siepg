@@ -23,6 +23,7 @@ class Index extends Component
 {
     use WithFileUploads;
     use WithPagination;
+    protected $paginationTheme = 'bootstrap';//paginacion de bootstrap
     
     protected $queryString = [
         'search' => ['except' => ''],

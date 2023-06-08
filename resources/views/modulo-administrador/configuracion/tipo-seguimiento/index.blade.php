@@ -2,31 +2,33 @@
 
 @section('content')
 
-@livewire('modulo-administrador.configuracion.programa.index')
+@livewire('modulo-administrador.configuracion.tipo-seguimiento.index')
 
 @endsection
 
 @section('javascript')
 <script>
+
     window.addEventListener('modal', event => {   
         $(event.detail.titleModal).modal('hide');
     })
 
     // Alerta para confirmacion
-	window.addEventListener('alerta-programa', event => {
+	window.addEventListener('alerta-tipo-seguimiento', event => {
         Swal.fire({
             title: event.detail.title,
             text: event.detail.text,
             icon: event.detail.icon,
             buttonsStyling: false,
+			confirmButtonClass: 'hover-elevate-up', // Hover para elevar boton al pasar el cursor
             confirmButtonText: event.detail.confirmButtonText,
             customClass: {
-                confirmButton: "btn btn-"+event.detail.color+" hover-elevate-up", // Color del boton de confirmación y Hover del boton de confirmación
+                confirmButton: "btn btn-"+event.detail.color, // Color del boton de confirmación
             }
         });
     });
 
-    //alerta 
+    //alerta
     window.addEventListener('alertaConfirmacion', event => {
         Swal.fire({
             title: event.detail.title,
@@ -41,9 +43,10 @@
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                Livewire.emitTo('modulo-administrador.configuracion.programa.index', event.detail.metodo, event.detail.id);
+                Livewire.emitTo('modulo-administrador.configuracion.tipo-seguimiento.index', event.detail.metodo, event.detail.id);
             }
         })
     })
+
 </script>
 @endsection

@@ -10,6 +10,7 @@ class Index extends Component
 {
 
     use WithPagination;
+    protected $paginationTheme = 'bootstrap';//paginacion de bootstrap
     
     protected $queryString = [
         'search' => ['except' => '']
@@ -46,7 +47,7 @@ class Index extends Component
     {
         $this->validateOnly($propertyName, [
             'año' => 'required|numeric',
-            'convocatoria' => 'nullable|string',
+            'convocatoria' => 'nullable|numeric',
             'fecha_inicio_inscripcion' => 'required|date',
             'fecha_fin_inscripcion' => 'required|date',
             'fecha_inicio_expediente' => 'required|date',
@@ -133,10 +134,16 @@ class Index extends Component
 
     public function cambiarEstado(Admision $admision)
     {
-        if ($admision->admision_estado == 1) {
+        if ($admision->admision_estado == 1) {//Si el estado del admision es 1 (activo) cambiar a 0 (inactivo)
             $admision->admision_estado = 0;
-        } else {
-            $admision->admision_estado = 1;
+        } else {//Si el estado del admision es 0 (inactivo) cambiar a 1 (activo)
+            //Validar si hay otro admision activo
+            if (Admision::where('admision_estado', 1)->count() > 0) {//Si hay otro admision activo
+                $this->alertaAdmision('¡Error!', 'Ya existe un proceso de admision activo.', 'error', 'Aceptar', 'danger');
+                return;
+            }else{//Si no hay otro admision activo
+                $admision->admision_estado = 1;//Cambiar el estado del admision a 1 (activo)
+            }
         }
         $admision->save();
 
@@ -170,7 +177,7 @@ class Index extends Component
             //Validamos los campos que se van a crear
             $this->validate([
                 'año' => 'required|numeric',
-                'convocatoria' => 'nullable|string',
+                'convocatoria' => 'nullable|numeric',
                 'fecha_inicio_inscripcion' => 'required|date',
                 'fecha_fin_inscripcion' => 'required|date',
                 'fecha_inicio_expediente' => 'required|date',
@@ -194,7 +201,7 @@ class Index extends Component
             }
             $admision->admision_año = $this->año;
             $admision->admision_convocatoria = $this->convocatoria;
-            $admision->admision_estado = 1;
+            $admision->admision_estado = 0;
             $admision->admision_fecha_inicio_inscripcion = $this->fecha_inicio_inscripcion;
             $admision->admision_fecha_fin_inscripcion = $this->fecha_fin_inscripcion;
             $admision->admision_fecha_inicio_expediente = $this->fecha_inicio_expediente;
@@ -214,7 +221,7 @@ class Index extends Component
             //Validamos los campos que se van a actualizar
             $this->validate([
                 'año' => 'required|numeric',
-                'convocatoria' => 'nullable|string',
+                'convocatoria' => 'nullable|numeric',
                 'fecha_inicio_inscripcion' => 'required|date',
                 'fecha_fin_inscripcion' => 'required|date',
                 'fecha_inicio_expediente' => 'required|date',
@@ -228,13 +235,6 @@ class Index extends Component
                 'fecha_fin_extemporanea' => 'required|date',
             ]);
 
-            $nombre_admision = "";
-            if($this->convocatoria == null){
-                $nombre_admision = 'ADMISION ' . $this->año;
-            }else{
-                $nombre_admision = 'ADMISION ' . $this->año . ' - ' . $this->convocatoria;
-            }
-
             $admision = Admision::find($this->id_admision);
 
             //Validar si se realizo algun cambio en los datos del proceso de admision
@@ -245,6 +245,7 @@ class Index extends Component
                 $admision->admision_fecha_fin_entrevista != $this->fecha_fin_entrevista || $admision->admision_fecha_resultados != $this->fecha_resultados ||
                 $admision->admision_fecha_inicio_matricula != $this->fecha_inicio_matricula || $admision->admision_fecha_fin_matricula != $this->fecha_fin_matricula ||
                 $admision->admision_fecha_inicio_matricula_extemporanea != $this->fecha_inicio_extemporanea || $admision->admision_fecha_fin_matricula_extemporanea != $this->fecha_fin_extemporanea){//Si se realizo algun cambio en los datos del proceso de admision
+                    //Validar si se ingreso una convocatoria con convocatoria o sin convocatoria para actualizar el nombre del proceso de admision
                     if($this->convocatoria == null){
                         $admision->admision = 'ADMISION ' . $this->año;
                     }else{

@@ -12,6 +12,7 @@ use Livewire\WithPagination;
 class GestionAdmision extends Component
 {
     use WithPagination;
+    protected $paginationTheme = 'bootstrap';//paginacion de bootstrap
 
     public $search = '';//Variable de busqueda
     public $titulo = 'Agregar Admisión del Expediente';//Titulo del modal
@@ -21,7 +22,7 @@ class GestionAdmision extends Component
     public $id_expediente_admision;//Variable para el id del expediente admision
     public $id_expediente;//Variable para el id del expediente. Esta variable ya se encuentra cargada en este componente
     public $id_admision;
-    public $expediente_admision_estado;
+    public $expediente_admision_estado;//Variable para el estado del expediente admision | 1 = activo | 0 = inactivo
 
     protected $listeners = ['render', 'cambiarEstado'];//Escuchar evento para que se actualice el componente
 
@@ -87,9 +88,9 @@ class GestionAdmision extends Component
     //Cambiar el estado del expediente
     public function cambiarEstado(ExpedienteAdmision $expedienteAdmision)
     {
-        if ($expedienteAdmision->expediente_admision_estado == 1) {//Si el estado es 1 (activo), cambiar a 2 (inactivo)
-            $expedienteAdmision->expediente_admision_estado = 2;
-        } else {//Si el estado es 2 (inactivo), cambiar a 1 (activo)
+        if ($expedienteAdmision->expediente_admision_estado == 1) {//Si el estado es 1 (activo), cambiar a 0 (inactivo)
+            $expedienteAdmision->expediente_admision_estado = 0;
+        } else {//Si el estado es 0 (inactivo), cambiar a 1 (activo)
             $expedienteAdmision->expediente_admision_estado = 1;
         }
 

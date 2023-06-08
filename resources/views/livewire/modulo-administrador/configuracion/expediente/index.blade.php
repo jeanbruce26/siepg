@@ -90,14 +90,14 @@
                                             {{-- tipo => 0 = maestria y doctorado, 1 = maestria, 2 = doctorado --}}
                                             @switch($item->expediente_tipo)
                                                 @case(0)
-                                                    <span class="badge badge-light-primary">Maestría y Doctorado</span>
+                                                    <span class="badge badge-light-primary px-3 py-2">Maestría y Doctorado</span>
                                                     @break
                                                 @case(1)
-                                                    <span class="badge badge-light-primary">Maestría</span>
+                                                    <span class="badge badge-light-primary px-3 py-2">Maestría</span>
 
                                                     @break
                                                 @case(2)
-                                                    <span class="badge badge-light-primary">Doctorado</span>
+                                                    <span class="badge badge-light-primary px-3 py-2">Doctorado</span>
                                                     @break
                                             @endswitch
                                         </td>

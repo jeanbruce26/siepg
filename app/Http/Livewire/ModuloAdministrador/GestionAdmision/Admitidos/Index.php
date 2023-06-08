@@ -12,6 +12,7 @@ use Livewire\WithPagination;
 class Index extends Component
 {
     use WithPagination;
+    protected $paginationTheme = 'bootstrap';//paginacion de bootstrap
 
     public $admisiones, $admision, $id_admision, $filtro_proceso, $proceso; // Variables para la tabla de admisiones
     public $admitidos; // Variables para la tabla de admitidos

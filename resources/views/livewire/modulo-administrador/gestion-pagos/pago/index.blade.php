@@ -63,12 +63,12 @@
                                             <td align="center">{{ $item->concepto_pago->concepto_pago }}</td>
                                             <td align="center">
                                                 @if ($item->pago_estado == 1)
-                                                    <span class="badge badge-light-warning">Pagado</span>
+                                                    <span class="badge badge-light-warning px-3 py-2">Pagado</span>
                                                 @else
                                                     @if($item->pago_estado == 2)
-                                                        <span class="badge badge-light-info">Verificado</span>
+                                                        <span class="badge badge-light-info px-3 py-2">Verificado</span>
                                                     @else
-                                                        <span class="badge badge-light-success">Inscrito</span>
+                                                        <span class="badge badge-light-success px-3 py-2">Inscrito</span>
                                                     @endif
                                                 @endif
                                             </td>

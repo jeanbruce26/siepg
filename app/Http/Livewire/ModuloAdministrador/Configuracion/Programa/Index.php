@@ -3,7 +3,6 @@
 namespace App\Http\Livewire\ModuloAdministrador\Configuracion\Programa;
 
 use App\Models\Facultad;
-use App\Models\Plan;
 use App\Models\Programa;
 use App\Models\Sede;
 use Livewire\Component;
@@ -13,53 +12,61 @@ class Index extends Component
 {
 
     use WithPagination;
-    
+    //paginacion de bootstrap
     protected $paginationTheme = 'bootstrap';
+    
     protected $queryString = [
-        'search' => ['except' => '']
+        'search' => ['except' => ''],
+        'modalidadFiltro' => ['except' => ''],
+        'facultadFiltro' => ['except' => ''],
+        'sedeFiltro' => ['except' => ''],
+        'tipoProgramaFiltro' => ['except' => ''],
     ];
 
     public $search = '';
     public $titulo = 'Crear Programa de Estudios';
-    public $id_plan;
+    public $modo = 1;//1 = Crear, 2 = Actualizar, 3 = Detalle
 
-    public $modo = 1;
+    //Variables para el filtro de programas
+    public $tipoProgramaFiltro;//Para la busqueda de programas por tipo
+    public $filtro_tipo_programa;//Para el filtro de programas por tipo
+    public $modalidadFiltro;//Para la busqueda de programas por modalidad
+    public $filtro_modalidad;//Para el filtro de programas por modalidad
+    public $facultadFiltro;//Para la busqueda de programas por facultad
+    public $filtro_facultad;//Para el filtro de programas por facultad
+    public $sedeFiltro;//Para la busqueda de programas por Sede
+    public $filtro_sede;//Para el filtro de programas por Sede
 
-    public $buscar_programa = 'all';
-    public $buscar_plan = 'all';
-
-    //modelos
-    public $programa_model_form;
-
-    //form
-    public $plan;
-    public $sede;
+    //Valiables de los modelos de Programa
+    public $id_programa;
+    public $programa_iniciales;
     public $programa;
-    public $programa_nombre;
-    public $facultad;
-    public $codigo_subprograma;
-    public $inicial_subprograma;
     public $subprograma;
-    public $id_subprograma;
-    public $codigo_mencion;
     public $mencion;
-    public $id_mencion;
-
-    public $mencion_antiguo;
+    public $id_sunedu;
+    public $codigo_sunedu;
+    public $id_modalidad;//1 = presencial, 2 = virtual
+    public $id_facultad;
+    public $id_sede;
+    public $programa_tipo;// 1 = Maestria, 2 = Doctorado
+    public $programa_estado;
 
     protected $listeners = ['render', 'cambiarEstado'];
 
     public function updated($propertyName)
     {
         $this->validateOnly($propertyName, [
-            'plan' => 'required|numeric',
-            'sede' => 'required|numeric',
-            'programa' => 'required|numeric',   
+            'programa_iniciales' => 'required, String, max:255',
+            'programa' => 'required, String, max:255',
+            'subprograma' => 'required, String, max:255',
+            'mencion' => 'nullable, String, max:255',
+            'id_sunedu' => 'required, numeric',
+            'codigo_sunedu' => 'nullable, String, max:255',
+            'id_modalidad' => 'required, numeric',
+            'id_facultad' => 'required, numeric',
+            'id_sede' => 'required, numeric',
+            'programa_tipo' => 'required, numeric',
         ]);
-
-        if($this->programa){
-            $this->programa_nombre = Programa::where('id_programa', $this->programa)->first()->descripcion_programa;
-        }
     }
 
     public function modo()
@@ -71,270 +78,126 @@ class Index extends Component
 
     public function limpiar()
     {
-        $this->resetErrorBag();
-        $this->reset('plan', 'sede', 'programa', 'programa_nombre', 'facultad', 'codigo_subprograma', 'inicial_subprograma', 'subprograma', 'codigo_mencion', 'mencion', 'titulo');
-        $this->modo = 1;
+        $this->resetErrorBag();//Elimina los mensajes de error de validacion
+        $this->reset('programa_iniciales, programa, subprograma, mencion, id_sunedu, codigo_sunedu, id_modalidad, id_facultad, id_sede, programa_tipo');//Limpiar todas las variables
+        $this->modo = 1;//1 = Crear, 2 = Actualizar, 3 = Detalle
     }
 
-    public function updatedSede($id_sede)
+    //Alerta de confirmacion
+    public function alertaConfirmacion($title, $text, $icon, $confirmButtonText, $cancelButtonText, $confimrColor, $cancelColor, $metodo, $id)
     {
-        $this->programa_model_form = Programa::where('id_sede', $id_sede)->get();
-    }
-
-    public function cargarAlerta($id)
-    {
-        $this->dispatchBrowserEvent('alertaConfirmacionPrograma', ['id' => $id]);
-    }
-
-    public function cambiarEstado(Mencion $mencion)
-    {
-        if ($mencion->mencion_estado == 1) {
-            $mencion->mencion_estado = 0;
-        } else {
-            $mencion->mencion_estado = 1;
-        }
-
-        $mencion->save();
-
-        $this->subirHistorial($mencion->mencion_estado,'Actualizacion de estado de programa','mencion');
-        // $this->dispatchBrowserEvent('notificacionPrograma', ['message' =>'Estado del programa actualizado satisfactoriamente.', 'color' => '#2eb867']);
-    }
-
-    public function cargarPrograma(Mencion $mencion, $modo)
-    {
-        $this->limpiar();
-        if($modo == 1){
-            $this->modo = 2;
-            $this->titulo = 'Editar Programa de Estudios';
-            $this->id_plan = $mencion->id_plan;
-            $this->plan = $mencion->id_plan;
-            $this->sede = $mencion->subprograma->programa->sede->cod_sede;
-            $this->programa_model_form = Programa::where('id_sede', $this->sede)->get();
-            $this->programa = $mencion->subprograma->programa->id_programa;
-            if($this->programa){
-                $this->programa_nombre = Programa::where('id_programa', $this->programa)->first()->descripcion_programa;
-            }
-            $this->facultad = $mencion->subprograma->facultad->facultad_id;
-            $this->subprograma = $mencion->subprograma->subprograma;
-            $this->id_subprograma = $mencion->subprograma->id_subprograma;
-            $this->codigo_subprograma = $mencion->subprograma->cod_subprograma;
-            $this->inicial_subprograma = $mencion->iniciales;
-            $this->codigo_mencion = $mencion->cod_mencion;
-            $this->mencion = $mencion->mencion;
-            $this->id_mencion = $mencion->id_mencion;
-        }
-        if($modo == 2){
-            $this->modo = 3;
-            $this->titulo = 'Copiar Programa de Estudios';
-            $this->id_plan = $mencion->id_plan;
-            $this->mencion_antiguo = $mencion->id_mencion;
-            $this->plan = $mencion->id_plan;
-            $this->sede = $mencion->subprograma->programa->sede->cod_sede;
-            $this->programa_model_form = Programa::where('id_sede', $this->sede)->get();
-            $this->programa = $mencion->subprograma->programa->id_programa;
-            if($this->programa){
-                $this->programa_nombre = Programa::where('id_programa', $this->programa)->first()->descripcion_programa;
-            }
-            $this->facultad = $mencion->subprograma->facultad->facultad_id;
-            // $this->subprograma_model_form = SubPrograma::where('id_programa', $this->programa)->get();
-            $this->codigo_subprograma = $mencion->subprograma->cod_subprograma;
-            $this->id_subprograma = $mencion->subprograma->id_subprograma;
-            $this->inicial_subprograma = $mencion->iniciales;
-            $this->subprograma = $mencion->subprograma->subprograma;
-            $this->codigo_mencion = $mencion->cod_mencion;
-            $this->mencion = $mencion->mencion;
-            $this->id_mencion = $mencion->id_mencion;
-        }
-    }
-
-    public function guardarPrograma()
-    {
-        $this->validate([
-            'plan' => 'required|numeric',
-            'sede' => 'required|numeric',
-            'programa' => 'required|numeric',
-            'facultad' => 'required|numeric',
-            'codigo_subprograma' => 'required|string',
-            'inicial_subprograma' => 'required|string',
-            'subprograma' => 'required|string',
-            'codigo_mencion' => 'nullable|string',
-            'mencion' => 'nullable|string',
+        $this->dispatchBrowserEvent('alertaConfirmacion', [
+            'title' => $title,
+            'text' => $text,
+            'icon' => $icon,
+            'confirmButtonText' => $confirmButtonText,
+            'cancelButtonText' => $cancelButtonText,
+            'confimrColor' => $confimrColor,
+            'cancelColor' => $cancelColor,
+            'metodo' => $metodo,
+            'id' => $id,
         ]);
-        
-        if($this->modo == 1){
-            $subprograma = new SubPrograma();
-            $subprograma->cod_subprograma = $this->codigo_subprograma;
-            $subprograma->subprograma = $this->subprograma;
-            $subprograma->id_programa = $this->programa;
-            $subprograma->facultad_id = $this->facultad;
-            $subprograma->estado = 1;
-            $subprograma->save();
-
-            $mencion = new Mencion();
-            $mencion->iniciales = $this->inicial_subprograma;
-            $mencion->cod_mencion = $this->codigo_mencion;
-            $mencion->mencion = $this->mencion;
-            $mencion->id_subprograma = $subprograma->id_subprograma;
-            $mencion->id_plan = $this->plan;
-            $mencion->mencion_estado = 1;
-            $mencion->save();
-
-            $this->subirHistorial($mencion->id_mencion,'Creacion de programa','mencion');
-            // $this->dispatchBrowserEvent('notificacionPrograma', ['message' =>'Programa creado satisfactoriamente.', 'color' => '#2eb867']);
-
-        }else if($this->modo == 2){
-            $subprograma = SubPrograma::find($this->id_subprograma);
-            $subprograma->cod_subprograma = $this->codigo_subprograma;
-            $subprograma->subprograma = $this->subprograma;
-            $subprograma->id_programa = $this->programa;
-            $subprograma->facultad_id = $this->facultad;
-            $subprograma->estado = 1;
-            $subprograma->save();
-
-            $mencion = Mencion::find($this->id_mencion);
-            $mencion->iniciales = $this->inicial_subprograma;
-            $mencion->cod_mencion = $this->codigo_mencion;
-            $mencion->mencion = $this->mencion;
-            $mencion->id_subprograma = $this->id_subprograma;
-            $mencion->id_plan = $this->plan;
-            $mencion->save();
-            
-            $this->subirHistorial($mencion->id_mencion,'Actualizacion de programa','mencion');
-            // $this->dispatchBrowserEvent('notificacionPrograma', ['message' =>'Programa actuaizado satisfactoriamente.', 'color' => '#2eb867']);
-
-        }else if($this->modo == 3){
-            $subprogram = SubPrograma::where('id_subprograma', $this->id_subprograma)
-                ->where('id_programa', $this->programa)
-                ->where('cod_subprograma', $this->codigo_subprograma)
-                ->where('subprograma', $this->subprograma)
-                ->where('facultad_id', $this->facultad)
-                ->first();
-
-            if($subprogram){
-                $mencion = new Mencion();
-                $mencion->iniciales = $this->inicial_subprograma;
-                if($this->codigo_mencion){
-                    $mencion->cod_mencion = $this->codigo_mencion;
-                }
-                if($this->mencion){
-                    $mencion->mencion = $this->mencion;
-                }
-                $mencion->id_subprograma = $subprogram->id_subprograma;
-                $mencion->id_plan = $this->plan;
-                $mencion->mencion_estado = 1;
-                $mencion->save();
-
-                $mencion_antiguo = Mencion::find($this->mencion_antiguo);
-                $mencion_antiguo->mencion_estado = 0;
-                $mencion_antiguo->save();
-
-                $this->subirHistorial($mencion->id_mencion,'Copia de programa para nuevo plan','mencion');
-            }else{
-                return back()->with(array('mensaje'=>'Error al ingresar los datos del programa.'));
-            }
-
-            // $this->dispatchBrowserEvent('notificacionPrograma', ['message' =>'Programa copiado satisfactoriamente.', 'color' => '#2eb867']);
-        }
-
-        $this->dispatchBrowserEvent('modalPrograma');
-
-        $this->limpiar();
     }
 
-    public function cargarVistaCurso($mencion_id){
-        // dd('mencion_id = ' . $mencion_id);
+    //Alertas de exito o error
+    public function alertaExpediente($title, $text, $icon, $confirmButtonText, $color)
+    {
+        $this->dispatchBrowserEvent('alerta-programa', [
+            'title' => $title,
+            'text' => $text,
+            'icon' => $icon,
+            'confirmButtonText' => $confirmButtonText,
+            'color' => $color
+        ]);
+    }
 
-        return redirect()->route('admin.programa.curso', $mencion_id);
+    //Mostar modal de confirmacion para cambiar el estado del programa
+    public function cargarAlertaEstado($id)
+    {   
+        $programa = Programa::findOrFail($id);//Busca el programa por su id
+        if($programa->mencion){
+            $nombre = $programa->programa . ' EN ' . $programa->subprograma . ' CON MENCION EN ' . $programa->mencion;//Concatena el nombre del programa
+        }else{
+            $nombre = $programa->programa . ' EN ' . $programa->subprograma;//Concatena el nombre del programa
+        }
+        $this->alertaConfirmacion('¿Estás seguro?',"¿Desea cambiar el estado del programa de $nombre?",'question','Modificar','Cancelar','primary','danger','cambiarEstado',$id);
+    }
+
+    //Limpiamos los filtros
+    public function resetear_filtro()
+    {
+        $this->reset('tipoProgramaFiltro', 'filtro_tipo_programa', 'modalidadFiltro', 'filtro_modalidad', 'facultadFiltro', 'filtro_facultad', 'sedeFiltro', 'filtro_facultad');
+    }
+
+    //Asignamos los filtros
+    public function filtrar()
+    {
+        $this->tipoProgramaFiltro = $this->filtro_tipo_programa;
+        $this->modalidadFiltro = $this->filtro_modalidad;
+        $this->facultadFiltro = $this->filtro_facultad;
+        $this->sedeFiltro = $this->filtro_sede;
+    }
+
+    //Cambiar el estado del programa
+    public function cambiarEstado(Programa $programa)
+    {
+        if ($programa->programa_estado == 1) {//Si el estado es 1 (activo), cambiar a 2 (inactivo)
+            $programa->programa_estado = 2;
+        } else {//Si el estado es 2 (inactivo), cambiar a 1 (activo)
+            $programa->programa_estado = 1;
+        }
+
+        $programa->save();//Actualizar el estado del programa
+
+        //Mostrar alerta de confirmacion de cambio de estado
+        $this->alertaExpediente('¡Éxito!', "El estado del programa $programa->programa ha sido actualizado satisfactoriamente.", 'success', 'Aceptar', 'success');
+    }
+
+    //Cargar los datos del expediente en el formulario para actualizar
+    public function cargarExpediente(Programa $programa, $modoTipo)
+    {
+        $this->limpiar();
+        $this->modo = $modoTipo;//Modo 2 = actualizar | Modo 3 = detalle
+
+        //Cargar el titulo del modal dependiendo del modo
+        $this->modo == 2 ? $this->titulo = 'Actualizar Programa' : $this->titulo = 'Detalle de Programa';
+
+        //Cargar los datos del programa en las variables
+        $this->id_programa = $programa->id_programa;
+        $this->programa_iniciales = $programa->programa_iniciales;
+        $this->programa = $programa->programa;
+        $this->subprograma = $programa->subprograma;
+        $this->mencion = $programa->mencion;
+        $this->id_sunedu = $programa->id_sunedu;
+        $this->codigo_sunedu = $programa->codigo_sunedu;
+        $this->id_modalidad = $programa->id_modalidad;
+        $this->id_facultad = $programa->id_facultad;
+        $this->id_sede = $programa->id_sede;
+        $this->programa_tipo = $programa->programa_tipo;
     }
     
     public function render()
-    {
-        $buscar_programa = $this->buscar_programa;
-        $buscar_plan = $this->buscar_plan;
-        $buscar = $this->search;
-
-        if ($buscar_programa == 'all' && $buscar_plan == 'all') {
-            $programas = Mencion::join('subprograma', 'mencion.id_subprograma', '=', 'subprograma.id_subprograma')
-                ->join('facultad', 'subprograma.facultad_id', '=', 'facultad.facultad_id')
-                ->join('programa', 'subprograma.id_programa', '=', 'programa.id_programa')
-                ->join('sede', 'programa.id_sede', '=', 'sede.cod_sede')
-                ->join('plan', 'mencion.id_plan', '=', 'plan.id_plan')
-                ->where('programa.descripcion_programa', 'LIKE', '%' . $this->search . '%')
-                ->orWhere('sede.sede', 'LIKE', '%' . $this->search . '%')
-                ->orWhere('subprograma.subprograma', 'LIKE', '%' . $this->search . '%')
-                ->orWhere('mencion.mencion', 'LIKE', '%' . $this->search . '%')
-                ->orWhere('programa.descripcion_programa', $this->buscar_programa)
-                ->orWhere('mencion.id_mencion', 'LIKE', '%' . $this->search . '%')
-                ->orderBy('mencion.id_mencion', 'DESC')
-                ->paginate(50);
-        }else if($buscar_programa != 'all' && $buscar_plan == 'all'){
-            $programas = Mencion::join('subprograma', 'mencion.id_subprograma', '=', 'subprograma.id_subprograma')
-                ->join('facultad', 'subprograma.facultad_id', '=', 'facultad.facultad_id')
-                ->join('programa', 'subprograma.id_programa', '=', 'programa.id_programa')
-                ->join('sede', 'programa.id_sede', '=', 'sede.cod_sede')
-                ->join('plan', 'mencion.id_plan', '=', 'plan.id_plan')
-                ->where(function($query) use ($buscar_programa){
-                    $query->where('programa.descripcion_programa',$buscar_programa);
-                })
-                ->where(function($query) use ($buscar){
-                    $query->where('programa.descripcion_programa', 'LIKE', '%' . $buscar . '%')
-                    ->orWhere('sede.sede', 'LIKE', '%' . $buscar . '%')
-                    ->orWhere('subprograma.subprograma', 'LIKE', '%' . $buscar . '%')
-                    ->orWhere('mencion.id_mencion', 'LIKE', '%' . $buscar . '%')
-                    ->orWhere('mencion.mencion', 'LIKE', '%' . $buscar . '%');
-                })
-                ->orderBy('mencion.id_mencion', 'DESC')
-                ->paginate(50);
-        }else if ($buscar_programa == 'all' && $buscar_plan != 'all') {
-            $programas = Mencion::join('subprograma', 'mencion.id_subprograma', '=', 'subprograma.id_subprograma')
-                ->join('facultad', 'subprograma.facultad_id', '=', 'facultad.facultad_id')
-                ->join('programa', 'subprograma.id_programa', '=', 'programa.id_programa')
-                ->join('sede', 'programa.id_sede', '=', 'sede.cod_sede')
-                ->join('plan', 'mencion.id_plan', '=', 'plan.id_plan')
-                ->where(function($query) use ($buscar_plan){
-                    $query->where('plan.id_plan',$buscar_plan);
-                })
-                ->where(function($query) use ($buscar){
-                    $query->where('programa.descripcion_programa', 'LIKE', '%' . $buscar . '%')
-                    ->orWhere('sede.sede', 'LIKE', '%' . $buscar . '%')
-                    ->orWhere('subprograma.subprograma', 'LIKE', '%' . $buscar . '%')
-                    ->orWhere('mencion.id_mencion', 'LIKE', '%' . $buscar . '%')
-                    ->orWhere('mencion.mencion', 'LIKE', '%' . $buscar . '%');
-                })
-                ->orderBy('mencion.id_mencion', 'DESC')
-                ->paginate(50);
-        }else if ($buscar_programa != 'all' && $buscar_plan != 'all') {
-            $programas = Mencion::join('subprograma', 'mencion.id_subprograma', '=', 'subprograma.id_subprograma')
-                ->join('facultad', 'subprograma.facultad_id', '=', 'facultad.facultad_id')
-                ->join('programa', 'subprograma.id_programa', '=', 'programa.id_programa')
-                ->join('sede', 'programa.id_sede', '=', 'sede.cod_sede')
-                ->join('plan', 'mencion.id_plan', '=', 'plan.id_plan')
-                ->where(function($query) use ($buscar_programa){
-                    $query->where('programa.descripcion_programa',$buscar_programa);
-                })
-                ->where(function($query) use ($buscar_plan){
-                    $query->where('plan.id_plan',$buscar_plan);
-                })
-                ->where(function($query) use ($buscar){
-                    $query->where('programa.descripcion_programa', 'LIKE', '%' . $buscar . '%')
-                    ->orWhere('sede.sede', 'LIKE', '%' . $buscar . '%')
-                    ->orWhere('subprograma.subprograma', 'LIKE', '%' . $buscar . '%')
-                    ->orWhere('mencion.id_mencion', 'LIKE', '%' . $buscar . '%')
-                    ->orWhere('mencion.mencion', 'LIKE', '%' . $buscar . '%');
-                })
-                ->orderBy('mencion.id_mencion', 'DESC')
-                ->paginate(50);
-        }
-        
-        $programa_model = Programa::groupBy('programa')->get();
-        $plan_model = Plan::where('estado',1)->groupBy('plan')->get();
+    {        
         $sede_model = Sede::all();
         $facultad_model = Facultad::all();
 
+        $programaModel = Programa::Join('sede', 'programa.id_sede', '=', 'sede.id_sede')
+                                ->Join('facultad', 'programa.id_facultad', '=', 'facultad.id_facultad')
+                                ->Join('modalidad', 'programa.id_modalidad', '=', 'modalidad.id_modalidad')
+                                ->where(function ($query){
+                                    $query->where('programa', 'like', '%'.$this->search.'%')
+                                    ->orWhere('subprograma', 'like', '%'.$this->search.'%')
+                                    ->orWhere('mencion', 'like', '%'.$this->search.'%');
+                                })
+                                ->where('modalidad.id_modalidad', $this->modalidadFiltro == null ? '!=' : '=', $this->modalidadFiltro)
+                                ->where('facultad.id_facultad', $this->facultadFiltro == null ? '!=' : '=', $this->facultadFiltro)
+                                ->where('sede.id_sede', $this->sedeFiltro == null ? '!=' : '=', $this->sedeFiltro)
+                                ->where('programa.programa_tipo', $this->tipoProgramaFiltro == null ? '!=' : '=', $this->tipoProgramaFiltro)
+                                ->orderBy('id_programa', 'desc')
+                                ->paginate(10);
+
         return view('livewire.modulo-administrador.configuracion.programa.index', [
-            'programas' => $programas,
-            'programa_model' => $programa_model,
-            'plan_model' => $plan_model,
+            'programaModel' => $programaModel,
             'sede_model' => $sede_model,
             'facultad_model' => $facultad_model,
         ]);
