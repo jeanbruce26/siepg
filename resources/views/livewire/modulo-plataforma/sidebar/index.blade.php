@@ -102,6 +102,20 @@
                         </a>
                     </div>
                 @endif
+                @if ( $constancia )
+                    <div class="menu-item">
+                        <a class="menu-link {{ request()->routeIs('plataforma.matriculas') ? 'active' : '' }}"
+                            href="{{ route('plataforma.matriculas') }}">
+                            <span class="menu-icon">
+                                <i class="ki-duotone ki-teacher fs-1   ">
+                                    <i class="path1"></i>
+                                    <i class="path2"></i>
+                                </i>
+                            </span>
+                            <span class="menu-title fw-semibold fs-4">Gestión de Matricula</span>
+                        </a>
+                    </div>
+                @endif
                 <div data-kt-menu-trigger="click"
                     class="menu-item menu-accordion {{ request()->is('plataforma/estado-cuenta') || request()->routeIs('plataforma.pago') ? 'show active' : '' }}">
                     <span class="menu-link">

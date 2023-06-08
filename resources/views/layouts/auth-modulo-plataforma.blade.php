@@ -65,7 +65,7 @@
 			<div class="d-flex flex-column flex-column-fluid flex-lg-row">
 				<div class="d-flex flex-center w-lg-50 pt-15 pt-lg-0 px-10">
 					<div class="d-flex flex-center flex-column">
-						<a href="#" class="mb-7">
+						<a href="https://www.unu.edu.pe/posgrado/index.php" target="_blank" class="mb-7">
 							<img alt="Logo" src="{{ asset('assets/media/logos/logo-pg.png') }}" height="90" />
 						</a>
 						<h2 class="text-white fw-bold m-0" style="font-size: 2rem">

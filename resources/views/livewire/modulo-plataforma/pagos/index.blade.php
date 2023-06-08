@@ -14,12 +14,15 @@
                 </ul>
             </div>
             @if ($admitido)
-                @if ($admision->admision_fecha_inicio_matricula <= date('Y-m-d') && $admision->admision_fecha_fin_matricula_extemporanea >= date('Y-m-d'))
-                    <div class="d-flex align-items-center gap-2 gap-lg-3">
-                        <a href="#modal_pago_plataforma" wire:click="modo" class="btn fw-bold btn-primary" data-bs-toggle="modal" data-bs-target="#modal_pago_plataforma">
-                            Nuevo Pago
-                        </a>
-                    </div>
+                {{-- verificamos si la admision existe y si es la activa a la que le pertenece al usuario admitido --}}
+                @if ($admision)
+                    @if ($admision->admision_fecha_inicio_matricula <= date('Y-m-d') && $admision->admision_fecha_fin_matricula_extemporanea >= date('Y-m-d'))
+                        <div class="d-flex align-items-center gap-2 gap-lg-3">
+                            <a href="#modal_pago_plataforma" wire:click="modo" class="btn fw-bold btn-primary" data-bs-toggle="modal" data-bs-target="#modal_pago_plataforma">
+                                Nuevo Pago
+                            </a>
+                        </div>
+                    @endif
                 @endif
             @endif
         </div>
@@ -279,7 +282,7 @@
                             <select class="form-select @error('concepto_pago') is-invalid @enderror" wire:model="concepto_pago" id="concepto_pago" data-control="select2" data-placeholder="Seleccione su concepto de pago" data-allow-clear="true" data-dropdown-parent="#modal_pago_plataforma">
                                 <option></option>
                                 @foreach ($conceptos_pagos as $item)
-                                <option value="{{ $item->id_concepto_pago }}" @if($item->id_concepto_pago == 1) disabled @endif>
+                                <option value="{{ $item->id_concepto_pago }}" @if($item->id_concepto_pago == 1) disabled @endif @if($constancia_ingreso && $item->id_concepto_pago == 2) disabled @endif>
                                     Concepto por {{ $item->concepto_pago }} - S/. {{ number_format($item->concepto_pago_monto, 2, ',', '.') }}
                                 </option>
                                 @endforeach
@@ -288,6 +291,29 @@
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
+                        @if ($grupos)
+                            @if ( $concepto_pago == 3 || $concepto_pago == 4 || $concepto_pago == 5 || $concepto_pago == 6 )
+                                <div class="col-md-12">
+                                    <label for="grupo" class="required form-label">
+                                        Grupo
+                                    </label>
+                                    <select class="form-select @error('grupo') is-invalid @enderror" wire:model="grupo" id="grupo" data-control="select2" data-placeholder="Seleccione su grupo" data-allow-clear="true" data-dropdown-parent="#modal_pago_plataforma">
+                                        <option></option>
+                                        @foreach ($grupos as $item)
+                                        @php
+                                            $contador_matriculados_grupos = App\Models\Matricula::where('id_programa_proceso_grupo', $item->id_programa_proceso_grupo)->where('id_ciclo', 1)->count();
+                                        @endphp
+                                        <option value="{{ $item->id_programa_proceso_grupo }}" @if($item->grupo_cantidad <= $contador_matriculados_grupos) disabled @endif>
+                                            GRUPO {{ $item->grupo_detalle }} - CUPOS: {{ $item->grupo_cantidad - $contador_matriculados_grupos }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                    @error('grupo')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            @endif
+                        @endif
                         <div class="col-md-12">
                             <label for="voucher" class="@if($modo == 'create') required @endif @if($activar_voucher == true) required @endif form-label">
                                 Voucher
@@ -410,6 +436,45 @@
                 });
                 $('#concepto_pago').on('change', function(){
                     @this.set('concepto_pago', this.value);
+                });
+            });
+        });
+        // grupo select2
+        $(document).ready(function () {
+            $('#grupo').select2({
+                placeholder: 'Seleccione su grupo',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando..";
+                    }
+                }
+            });
+            $('#grupo').on('change', function(){
+                @this.set('grupo', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#grupo').select2({
+                    placeholder: 'Seleccione su grupo',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando..";
+                        }
+                    }
+                });
+                $('#grupo').on('change', function(){
+                    @this.set('grupo', this.value);
                 });
             });
         });

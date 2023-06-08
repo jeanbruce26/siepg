@@ -14,7 +14,7 @@ class MatriculaCurso extends Model
     protected $fillable = [
         'id_matricula_curso',
         'id_matricula',
-        'id_curso_programa_plan',
+        'id_curso_programa_proceso',
         'matricula_curso_fecha_creacion',
         'matricula_curso_estado'
     ];

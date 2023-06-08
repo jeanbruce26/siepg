@@ -4,6 +4,7 @@ namespace App\Http\Livewire\ModuloAdministrador\GestionAdmision\Admitidos;
 
 use App\Models\Admision;
 use App\Models\Admitido;
+use App\Models\AdmitidoCiclo;
 use App\Models\Evaluacion;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -250,6 +251,13 @@ class Index extends Component
             $admitido->id_tipo_estudiante = 1;
             $admitido->admitido_estado = 1;
             $admitido->save();
+
+            // creamos al usuario admitido en el ciclo 1
+            $admitido_ciclo = new AdmitidoCiclo();
+            $admitido_ciclo->id_admitido = $admitido->id_admitido;
+            $admitido_ciclo->id_ciclo = 1;
+            $admitido_ciclo->admitido_ciclo_estado = 1;
+            $admitido_ciclo->save();
 
             // actualizamos el estado de la evaluacion a admitido
             $evaluacion = Evaluacion::find($item->id_evaluacion);

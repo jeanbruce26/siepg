@@ -173,11 +173,11 @@
                                             <th>#</th>
                                             <th>Código</th>
                                             <th>Nombre del Curso</th>
-                                            {{-- <th>Créditos</th> --}}
+                                            <th>Créditos</th>
                                             <th>Ciclo</th>
                                             <th>Proceso</th>
                                             <th>Plan</th>
-                                            <th>Estado</th>
+                                            {{-- <th>Estado</th> --}}
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -193,9 +193,9 @@
                                                 <td class="fs-6 text-uppercase">
                                                     {{ $item->curso_nombre }}
                                                 </td>
-                                                {{-- <td class="fs-6">
+                                                <td class="fs-6">
                                                     {{ $item->curso_credito }}
-                                                </td> --}}
+                                                </td>
                                                 <td class="fs-6">
                                                     <span class="badge badge-light-primary fs-6 px-3 py-2">
                                                         CICLO {{ $item->ciclo }}
@@ -211,7 +211,7 @@
                                                         PLAN {{ $item->plan }}
                                                     </span>
                                                 </td>
-                                                <td class="fs-6">
+                                                {{-- <td class="fs-6">
                                                     @if ($item->curso_programa_proceso_estado == 1)
                                                         <span class="badge badge-primary fs-6 px-3 py-2"
                                                             wire:click="alerta_cambiar_estado({{ $item->id_docente }})"
@@ -225,7 +225,7 @@
                                                             Inactivo
                                                         </span>
                                                     @endif
-                                                </td>
+                                                </td> --}}
                                                 <td class="text-center">
                                                     <button type="button"
                                                         class="btn btn-flex btn-center fw-bold btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary hover-scale"
