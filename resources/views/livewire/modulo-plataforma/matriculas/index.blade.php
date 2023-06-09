@@ -15,11 +15,15 @@
                     <li class="breadcrumb-item text-muted">Gestión de Matricula</li>
                 </ul>
             </div>
-            <div class="d-flex align-items-center gap-2 gap-lg-3">
-                <a href="#modal_matricula" class="btn fw-bold btn-primary" data-bs-toggle="modal" data-bs-target="#modal_matricula">
-                    Generar Matricula
-                </a>
-            </div>
+            @if ($admitido)
+                @if ($admitido->programa_proceso->admision->admision_fecha_inicio_matricula <= date('Y-m-d') && $admitido->programa_proceso->admision->admision_fecha_fin_matricula_extemporanea >= date('Y-m-d'))
+                    <div class="d-flex align-items-center gap-2 gap-lg-3">
+                        <a href="#modal_matricula" class="btn fw-bold btn-primary" data-bs-toggle="modal" data-bs-target="#modal_matricula">
+                            Generar Matricula
+                        </a>
+                    </div>
+                @endif
+            @endif
         </div>
     </div>
     <div id="kt_app_content" class="app-content flex-column-fluid">
@@ -43,7 +47,7 @@
                         </div>
                         {{-- lista de matriculas registradas --}}
                         @foreach ($matriculas as $item)
-                            <div class="accordion shadow-sm rounded rounded-3 hover-elevate-up" id="acordion_ciclos_{{ $item->id_matricula }}">
+                            <div wire:ignore.self class="accordion shadow-sm rounded rounded-3 hover-elevate-up" id="acordion_ciclos_{{ $item->id_matricula }}">
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="acordion_ciclos_{{ $item->id_matricula }}_header_{{ $item->id_matricula }}">
                                         <button class="accordion-button fs-1 py-8 btn-center collapsed" style="font-weight: 700" type="button"
