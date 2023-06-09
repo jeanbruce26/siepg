@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\ModuloAdministrador\Configuracion\Programa;
 
 use App\Models\Facultad;
+use App\Models\Modalidad;
 use App\Models\Programa;
 use App\Models\Sede;
 use Livewire\Component;
@@ -45,27 +46,32 @@ class Index extends Component
     public $mencion;
     public $id_sunedu;
     public $codigo_sunedu;
-    public $id_modalidad;//1 = presencial, 2 = virtual
-    public $id_facultad;
-    public $id_sede;
+    public $modalidad;//1 = presencial, 2 = virtual
+    public $facultad;
+    public $sede;
     public $programa_tipo;// 1 = Maestria, 2 = Doctorado
     public $programa_estado;
+
+    //Variables para mostrar en el modal de detalle
+    public $facultadDetalle;
+    public $sedeDetalle;
+    public $modalidadDetalle;
+
 
     protected $listeners = ['render', 'cambiarEstado'];
 
     public function updated($propertyName)
     {
         $this->validateOnly($propertyName, [
-            'programa_iniciales' => 'required, String, max:255',
-            'programa' => 'required, String, max:255',
-            'subprograma' => 'required, String, max:255',
-            'mencion' => 'nullable, String, max:255',
-            'id_sunedu' => 'required, numeric',
-            'codigo_sunedu' => 'nullable, String, max:255',
-            'id_modalidad' => 'required, numeric',
-            'id_facultad' => 'required, numeric',
-            'id_sede' => 'required, numeric',
-            'programa_tipo' => 'required, numeric',
+            'programa_iniciales' => 'required | string | max:255',
+            'subprograma' => 'required | string | max:255',
+            'mencion' => 'nullable | string | max:255',
+            'id_sunedu' => 'required | numeric',
+            'codigo_sunedu' => 'nullable | string | max:255',
+            'modalidad' => 'required | numeric',
+            'facultad' => 'required | numeric',
+            'sede' => 'required | numeric',
+            'programa_tipo' => 'required | numeric',
         ]);
     }
 
@@ -79,7 +85,7 @@ class Index extends Component
     public function limpiar()
     {
         $this->resetErrorBag();//Elimina los mensajes de error de validacion
-        $this->reset('programa_iniciales, programa, subprograma, mencion, id_sunedu, codigo_sunedu, id_modalidad, id_facultad, id_sede, programa_tipo');//Limpiar todas las variables
+        $this->reset('programa_iniciales', 'subprograma', 'mencion', 'id_sunedu', 'codigo_sunedu', 'modalidad', 'facultad', 'sede', 'programa_tipo');//Limpiar todas las variables
         $this->modo = 1;//1 = Crear, 2 = Actualizar, 3 = Detalle
     }
 
@@ -100,7 +106,7 @@ class Index extends Component
     }
 
     //Alertas de exito o error
-    public function alertaExpediente($title, $text, $icon, $confirmButtonText, $color)
+    public function alertaPrograma($title, $text, $icon, $confirmButtonText, $color)
     {
         $this->dispatchBrowserEvent('alerta-programa', [
             'title' => $title,
@@ -150,13 +156,13 @@ class Index extends Component
         $programa->save();//Actualizar el estado del programa
 
         //Mostrar alerta de confirmacion de cambio de estado
-        $this->alertaExpediente('¡Éxito!', "El estado del programa $programa->programa ha sido actualizado satisfactoriamente.", 'success', 'Aceptar', 'success');
+        $this->alertaPrograma('¡Éxito!', "El estado del programa $programa->programa ha sido actualizado satisfactoriamente.", 'success', 'Aceptar', 'success');
     }
 
     //Cargar los datos del expediente en el formulario para actualizar
-    public function cargarExpediente(Programa $programa, $modoTipo)
+    public function cargarPrograma(Programa $programa, $modoTipo)
     {
-        $this->limpiar();
+        // $this->limpiar();
         $this->modo = $modoTipo;//Modo 2 = actualizar | Modo 3 = detalle
 
         //Cargar el titulo del modal dependiendo del modo
@@ -170,16 +176,148 @@ class Index extends Component
         $this->mencion = $programa->mencion;
         $this->id_sunedu = $programa->id_sunedu;
         $this->codigo_sunedu = $programa->codigo_sunedu;
-        $this->id_modalidad = $programa->id_modalidad;
-        $this->id_facultad = $programa->id_facultad;
-        $this->id_sede = $programa->id_sede;
+        $this->modalidad = $programa->id_modalidad;
+        $this->facultad = $programa->id_facultad;
+        $this->sede = $programa->id_sede;
         $this->programa_tipo = $programa->programa_tipo;
+
+        //Variables para mostrar en el detalle
+        $this->facultadDetalle = $programa->facultad->facultad;
+        $this->sedeDetalle = $programa->sede->sede;
+        $this->modalidadDetalle = $programa->modalidad->modalidad;
+    }
+
+    //Guardar o actualizar el programa
+    public function guardarPrograma()
+    {
+        $this->validate([
+            'programa_iniciales' => 'required | string | max:255',
+            'subprograma' => 'required | string | max:255',
+            'mencion' => 'nullable | string | max:255',
+            'id_sunedu' => 'required | numeric | unique:programa,id_sunedu,'.$this->id_programa.',id_programa',
+            'codigo_sunedu' => 'nullable | string | max:255 | unique:programa,codigo_sunedu,'.$this->id_programa.',id_programa',
+            'modalidad' => 'required | numeric',
+            'facultad' => 'required | numeric',
+            'sede' => 'required | numeric',
+            'programa_tipo' => 'required | numeric',
+        ]);
+
+        if ($this->modo == 1) {//Si el modo es 1 (crear), crear el programa
+            //Validando que no exista el programa
+            $programa = Programa::where('programa_iniciales', $this->programa_iniciales)
+                                ->where('subprograma', $this->subprograma)
+                                ->where('mencion', $this->mencion)
+                                ->where('id_sunedu', $this->id_sunedu)
+                                ->where('codigo_sunedu', $this->codigo_sunedu)
+                                ->where('id_modalidad', $this->modalidad)
+                                ->where('id_facultad', $this->facultad)
+                                ->where('id_sede', $this->sede)
+                                ->where('programa_tipo', $this->programa_tipo)
+                                ->first();
+            if($programa){
+                $this->alertaPrograma('¡Error!', "El programa de $programa->programa EN $programa->subprograma ya se encuentra registrado.", 'error', 'Aceptar', 'danger');
+                $this->limpiar();
+                //Cerramos el modal
+                $this->dispatchBrowserEvent('modal', [
+                    'titleModal' => '#modalPrograma',
+                ]);
+                return;
+            }
+
+            //Validar que el id de sunedu o el codigo de sunedu no existan en otro programa
+            $programa = Programa::where('id_sunedu', $this->id_sunedu)
+                                ->orWhere('codigo_sunedu', $this->codigo_sunedu)
+                                ->first();
+            if($programa){
+                $this->alertaPrograma('¡Error!', "El ID de SUNEDU o el código de SUNEDU ya se encuentra registrado en otro programa.", 'error', 'Aceptar', 'danger');
+                return;
+            }
+
+
+            $programaModel = new Programa();
+            $programaModel->programa_iniciales = $this->programa_iniciales;
+            if($this->programa_tipo == 1){
+                $programaModel->programa = 'MAESTRIA';
+            }else{
+                $programaModel->programa = 'DOCTORADO';
+            }
+            $programaModel->subprograma = $this->subprograma;
+            $programaModel->mencion = $this->mencion;
+            $programaModel->id_sunedu = $this->id_sunedu;
+            $programaModel->codigo_sunedu = $this->codigo_sunedu;
+            $programaModel->id_modalidad = $this->modalidad;
+            $programaModel->id_facultad = $this->facultad;
+            $programaModel->id_sede = $this->sede;
+            $programaModel->programa_tipo = $this->programa_tipo;
+            $programaModel->programa_estado = 1;
+            $programaModel->save();
+
+            $this->alertaPrograma('¡Éxito!', "El programa de $programaModel->programa EN $programaModel->subprograma ha sido registrado satisfactoriamente.", 'success', 'Aceptar', 'success');
+            
+        } else {//Si el modo es 2 (actualizar), actualizar el programa
+            $programaModel = Programa::findOrFail($this->id_programa);
+
+            //Validando que no se hayan cambiado los datos del programa
+            $programa = Programa::where('programa_iniciales', $this->programa_iniciales)
+                                ->where('subprograma', $this->subprograma)
+                                ->where('mencion', $this->mencion)
+                                ->where('id_sunedu', $this->id_sunedu)
+                                ->where('codigo_sunedu', $this->codigo_sunedu)
+                                ->where('id_modalidad', $this->modalidad)
+                                ->where('id_facultad', $this->facultad)
+                                ->where('id_sede', $this->sede)
+                                ->where('programa_tipo', $this->programa_tipo)
+                                ->first();
+            if($programa){
+                $this->alertaPrograma('¡Información!', "No se registraron cambios en el programa de $programa->programa EN $programa->subprograma.", 'info', 'Aceptar', 'info');
+                $this->limpiar();
+                //Cerramos el modal
+                $this->dispatchBrowserEvent('modal', [
+                    'titleModal' => '#modalPrograma',
+                ]);
+                return;
+            }
+
+            //Validar que el id de sunedu o el codigo de sunedu no existan en otro programa
+            $programa = Programa::where('id_sunedu', $this->id_sunedu)
+                                ->orWhere('codigo_sunedu', $this->codigo_sunedu)
+                                ->first();
+            if($programa){
+                $this->alertaPrograma('¡Error!', "El ID de SUNEDU o el código de SUNEDU ya se encuentra registrado en otro programa.", 'error', 'Aceptar', 'danger');
+                return;
+            }
+            
+            $programaModel->programa_iniciales = $this->programa_iniciales;
+            if($this->programa_tipo == 1){
+                $programaModel->programa = 'MAESTRIA';
+            }else{
+                $programaModel->programa = 'DOCTORADO';
+            }
+            $programaModel->subprograma = $this->subprograma;
+            $programaModel->mencion = $this->mencion;
+            $programaModel->id_sunedu = $this->id_sunedu;
+            $programaModel->codigo_sunedu = $this->codigo_sunedu;
+            $programaModel->id_modalidad = $this->modalidad;
+            $programaModel->id_facultad = $this->facultad;
+            $programaModel->id_sede = $this->sede;
+            $programaModel->programa_tipo = $this->programa_tipo;
+            $programaModel->save();
+
+            $this->alertaPrograma('¡Éxito!', "El programa de $programaModel->programa EN $programaModel->subprograma ha sido actualizado satisfactoriamente.", 'success', 'Aceptar', 'success');
+        }
+        
+        $this->limpiar();
+        //Cerramos el modal
+        $this->dispatchBrowserEvent('modal', [
+            'titleModal' => '#modalPrograma',
+        ]);
     }
     
     public function render()
     {        
         $sede_model = Sede::all();
         $facultad_model = Facultad::all();
+        $modalidad_model = Modalidad::all();
 
         $programaModel = Programa::Join('sede', 'programa.id_sede', '=', 'sede.id_sede')
                                 ->Join('facultad', 'programa.id_facultad', '=', 'facultad.id_facultad')
@@ -200,6 +338,7 @@ class Index extends Component
             'programaModel' => $programaModel,
             'sede_model' => $sede_model,
             'facultad_model' => $facultad_model,
+            'modalidad_model' => $modalidad_model,
         ]);
     }
 }

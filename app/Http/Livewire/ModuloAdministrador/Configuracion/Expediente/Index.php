@@ -185,7 +185,7 @@ class Index extends Component
             $expediente->expediente_estado = 1;
             $expediente->save();
 
-            $this->alertaExpediente('¡Éxito!', "El Expediente $expediente->expediente ha sido creado satisfactoriamente.", 'success', 'Aceptar', 'success');
+            $this->alertaExpediente('¡Éxito!', "El Expediente $expediente->expediente ha sido registrado satisfactoriamente.", 'success', 'Aceptar', 'success');
 
         }else{//Modo 2 = actualizar expediente
             //Actualizar el expediente 

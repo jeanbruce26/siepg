@@ -150,12 +150,12 @@
                                             </a>
                                             <div class="dropdown-menu dropdown-menu-end menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4 w-175px" data-kt-menu="true">
                                                 <div class="menu-item px-3">
-                                                    <a href="#modalPrograma" wire:click="cargarExpediente({{ $item->id_expediente }}, 3)" class="menu-link px-3" data-bs-toggle="modal" data-bs-target="#modalPrograma">
+                                                    <a href="#modalPrograma" wire:click="cargarPrograma({{ $item->id_programa }}, 3)" class="menu-link px-3" data-bs-toggle="modal" data-bs-target="#modalPrograma">
                                                         Detalle
                                                     </a>
                                                 </div>
                                                 <div class="menu-item px-3">
-                                                    <a href="#modalPrograma" wire:click="cargarExpediente({{ $item->id_expediente }}, 2)" class="menu-link px-3" data-bs-toggle="modal" data-bs-target="#modalPrograma">
+                                                    <a href="#modalPrograma" wire:click="cargarPrograma({{ $item->id_programa }}, 2)" class="menu-link px-3" data-bs-toggle="modal" data-bs-target="#modalPrograma">
                                                         Editar
                                                     </a>
                                                 </div>
@@ -203,11 +203,11 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> 
     </div>
 
     {{-- Modal Programa --}}
-    {{-- <div wire:ignore.self class="modal fade" id="modalPrograma" tabindex="-1" aria-labelledby="modalPrograma"
+    <div wire:ignore.self class="modal fade" id="modalPrograma" tabindex="-1" aria-labelledby="modalPrograma"
         aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
             <div class="modal-content">
@@ -219,77 +219,123 @@
                 <div class="modal-body">
                     <form novalidate>
                         <div class="row g-5 {{ $modo == 3 ? 'mb-3' : '' }}">
-                            <div class="col-md-12">
-                                <label class="form-label">Expediente <span class="text-danger">*</span></label>
-                                <input wire:model="expediente" type="text" class="form-control @error('expediente') is-invalid  @enderror" placeholder="Ingrese el expediente" @if($modo == 3) readonly @endif>
-                                @error('expediente') <span class="error text-danger" >{{ $message }}</span> @enderror
-                            </div>
-                            <div class="col-md-12">
-                                <label class="form-label">Texto de complemento del archivo </label>
-                                <textarea wire:model="complemento" class="form-control @error('complemento') is-invalid  @enderror" placeholder="Ingrese el nombre del archivo" @if($modo == 3) readonly @endif></textarea>
-                                @error('complemento') <span class="error text-danger" >{{ $message }}</span> @enderror
-                            </div>
-                            <div class="col-md-12">
-                                <label class="form-label">Nombre del archivo <span class="text-danger">*</span></label>
-                                <input wire:model="nombre_archivo" type="text" class="form-control @error('nombre_archivo') is-invalid  @enderror" placeholder="Ingrese el nombre del archivo" @if($modo == 3) readonly @endif>
-                                @error('nombre_archivo') <span class="error text-danger" >{{ $message }}</span> @enderror
-                            </div>
-                            <div class="@if($modo == 3) col-md-6 @else col-md-12 @endif">
-                                <label class="form-label">Requerido <span class="text-danger">*</span></label>
-                                <div class="d-flex align-items-center">
-                                    @if($modo == 3)
-                                        @if($requerido == 1)
-                                            <span class="svg-icon svg-icon-2x svg-icon-success">
-                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
-                                                    <path d="M10.4343 12.4343L8.75 10.75C8.33579 10.3358 7.66421 10.3358 7.25 10.75C6.83579 11.1642 6.83579 11.8358 7.25 12.25L10.2929 15.2929C10.6834 15.6834 11.3166 15.6834 11.7071 15.2929L17.25 9.75C17.6642 9.33579 17.6642 8.66421 17.25 8.25C16.8358 7.83579 16.1642 7.83579 15.75 8.25L11.5657 12.4343C11.2533 12.7467 10.7467 12.7467 10.4343 12.4343Z" fill="currentColor"/>
-                                                </svg>
-                                            </span>
-                                            <span class="ms-1">Si</span>
-                                        @else
-                                            <span class="svg-icon svg-icon-2x svg-icon-danger">
-                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
-                                                    <rect x="7" y="15.3137" width="12" height="2" rx="1" transform="rotate(-45 7 15.3137)" fill="currentColor"/>
-                                                    <rect x="8.41422" y="7" width="12" height="2" rx="1" transform="rotate(45 8.41422 7)" fill="currentColor"/>
-                                                </svg>
-                                            </span>
-                                            <span class="ms-1">No</span>
-                                        @endif
-                                    @else
-                                        <div class="form-check form-check-custom form-check-success form-check-solid me-15">
-                                            <input class="form-check-input @error('requerido') is-invalid @enderror" type="radio" name="requerido" wire:model="requerido" value="1" id="requerido_si" style="cursor: pointer">
-                                            <span class="radio-label form-check-label" wire:click="$set('requerido', '1')" style="cursor: pointer; user-select: none;">Si</span>
-                                        </div>
-                                        <div class="form-check form-check-custom form-check-danger form-check-solid">
-                                            <input class="form-check-input @error('requerido') is-invalid @enderror" type="radio" name="requerido" wire:model="requerido" value="2" id="requerido_no" style="cursor: pointer">
-                                            <span class="radio-label form-check-label" wire:click="$set('requerido', '2')" style="cursor: pointer; user-select: none;">No</span>
-                                        </div>
-                                    @endif
-                                </div>
-                            </div>
-                            <div class="@if($modo == 3) col-md-6 @else col-md-12 @endif">
-                                <label class="form-label">Tipo de expediente <span class="text-danger">*</span></label>
+                            <div class="col-md-6">
+                                <label class="form-label">Programa <span class="text-danger">*</span></label>
                                 @if($modo == 3)
-                                    @switch($tipo)
-                                        @case(0)
-                                            <input type="text" class="form-control" value="Maestría y Doctorado" readonly>
-                                            @break
+                                    <input wire:model="programa" type="text" class="form-control" readonly>
+                                @else
+                                    <select class="form-select" wire:model="programa_tipo" id="programa_tipo" data-control="select2" data-placeholder="Seleccione">
+                                        <option></option>
+                                        <option value="1">MAESTRIA</option>
+                                        <option value="2">DOCTORADO</option>
+                                    </select>
+                                    @error('programa_tipo')
+                                        <span class="error text-danger" >{{ $message }}</span> 
+                                    @enderror
+                                @endif
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">
+                                    Iniciales 
+                                    @switch($programa_tipo)
                                         @case(1)
-                                            <input type="text" class="form-control" value="Maestría" readonly>
+                                            Maestría
                                             @break
                                         @case(2)
-                                            <input type="text" class="form-control" value="Doctorado" readonly>
+                                            Doctorado
+                                            @break
+                                        @default
+                                            ***
                                             @break
                                     @endswitch
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input wire:model="programa_iniciales" type="text" class="form-control @error('programa_iniciales') is-invalid  @enderror" placeholder="Ingrese el las iniciales del programas" @if($modo == 3) readonly @endif>
+                                @error('programa_iniciales') <span class="error text-danger" >{{ $message }}</span> @enderror
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label">
+                                    @switch($programa_tipo)
+                                        @case(1)
+                                            Maestría
+                                            @break
+                                        @case(2)
+                                            Doctorado
+                                            @break
+                                        @default
+                                            ***
+                                            @break
+                                    @endswitch
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input wire:model="subprograma" type="text" class="form-control @error('subprograma') is-invalid  @enderror" placeholder="Ingrese {{ $programa_tipo == 1 ? 'la maestría' : '' }}{{ $programa_tipo == 2 ? 'el doctorado' : '' }}" @if($modo == 3) readonly @endif>
+                                @error('subprograma') <span class="error text-danger" >{{ $message }}</span> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Meción </label>
+                                <input wire:model="mencion" type="text" class="form-control @error('mencion') is-invalid  @enderror" placeholder="{{ $modo == 3 ? 'Sin mención' : 'Ingrese la mención' }}" @if($modo == 3) readonly @endif>
+                                @error('mencion') <span class="error text-danger" >{{ $message }}</span> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Facultad <span class="text-danger">*</span></label>
+                                @if($modo == 3)
+                                    <input wire:model="facultadDetalle" type="text" class="form-control" readonly>
                                 @else
-                                    <select class="form-select @error('tipo') is-invalid  @enderror" wire:model="tipo">
-                                        <option value="null" selected>Seleccione</option>
-                                        <option value="0">Maestría y Doctorado</option>
-                                        <option value="1">Maestría</option>
-                                        <option value="2">Doctorado</option>
+                                    <select class="form-select" wire:model="facultad" id="facultad" data-control="select2" data-placeholder="Seleccione">
+                                        <option></option>
+                                        @foreach ($facultad_model as $item)
+                                            @if($item->facultad_estado == 1)
+                                                <option value="{{ $item->id_facultad }}">{{ $item->facultad }}</option>
+                                            @endif
+                                        @endforeach
                                     </select>
-                                    @error('tipo')
+                                    @error('facultad')
+                                        <span class="error text-danger" >{{ $message }}</span> 
+                                    @enderror
+                                @endif
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">ID SUNEDU <span class="text-danger">*</span></label>
+                                <input wire:model="id_sunedu" type="text" class="form-control @error('id_sunedu') is-invalid  @enderror" placeholder="Ingrese el ID de SUNEDU" @if($modo == 3) readonly @endif>
+                                @error('id_sunedu') <span class="error text-danger" >{{ $message }}</span> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Código SUNEDU</label>
+                                <input wire:model="codigo_sunedu" type="text" class="form-control @error('codigo_sunedu') is-invalid  @enderror" placeholder="{{ $modo == 3 ? 'Sin código de SUNEDU' : 'Ingrese el código de SUNEDU' }}" @if($modo == 3) readonly @endif>
+                                @error('codigo_sunedu') <span class="error text-danger" >{{ $message }}</span> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Modalidad <span class="text-danger">*</span></label>
+                                @if($modo == 3)
+                                    <input wire:model="modalidadDetalle" type="text" class="form-control" readonly>
+                                @else
+                                    <select class="form-select" wire:model="modalidad" id="modalidad" data-control="select2" data-placeholder="Seleccione">
+                                        <option></option>
+                                        @foreach ($modalidad_model as $item)
+                                            @if($item->modalidad_estado == 1)
+                                                <option value="{{ $item->id_modalidad }}">{{ $item->modalidad }}</option>
+                                            @endif
+                                        @endforeach
+                                    </select>
+                                    @error('modalidad')
+                                        <span class="error text-danger" >{{ $message }}</span> 
+                                    @enderror
+                                @endif
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Sede <span class="text-danger">*</span></label>
+                                @if($modo == 3)
+                                    <input wire:model="sedeDetalle" type="text" class="form-control" readonly>
+                                @else
+                                    <select class="form-select" wire:model="sede" id="sede" data-control="select2" data-placeholder="Seleccione">
+                                        <option></option>
+                                        @foreach ($sede_model as $item)
+                                            @if($item->sede_estado == 1)
+                                                <option value="{{ $item->id_sede }}">{{ $item->sede }}</option>
+                                            @endif
+                                        @endforeach
+                                    </select>
+                                    @error('sede')
                                         <span class="error text-danger" >{{ $message }}</span> 
                                     @enderror
                                 @endif
@@ -300,16 +346,17 @@
                 @if($modo == 2 || $modo == 1)
                     <div class="modal-footer col-12 d-flex justify-content-between">
                         <button type="button" wire:click="limpiar()" class="btn btn-secondary hover-elevate-up" data-bs-dismiss="modal">Cancelar</button>                    
-                        <button type="button" wire:click="guardarExpediente()" class="btn btn-primary hover-elevate-up">Guardar</button>
+                        <button type="button" wire:click="guardarPrograma()" class="btn btn-primary hover-elevate-up">Guardar</button>
                     </div>
                 @endif
             </div>
         </div>
-    </div> --}}
+    </div>
 
 </div>
 @push('scripts')
     <script>
+        //Select2 de Filtro
         // filtro_tipo_programa select2
         $(document).ready(function () {
             $('#filtro_tipo_programa').select2({
@@ -466,6 +513,167 @@
                 });
                 $('#filtro_sede').on('change', function(){
                     @this.set('filtro_sede', this.value);
+                });
+            });
+        });
+
+        //Select2 de Modal
+        //Filtro de programa_tipo de select2
+        $(document).ready(function () {
+            $('#programa_tipo').select2({
+                placeholder: 'Seleccione',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando...";
+                    }
+                }
+            });
+            $('#programa_tipo').on('change', function(){
+                @this.set('programa_tipo', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#programa_tipo').select2({
+                    placeholder: 'Seleccione',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando...";
+                        }
+                    }
+                });
+                $('#programa_tipo').on('change', function(){
+                    @this.set('programa_tipo', this.value);
+                });
+            });
+        });
+
+        //Filtro de facultad de select2
+        $(document).ready(function () {
+            $('#facultad').select2({
+                placeholder: 'Seleccione',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando...";
+                    }
+                }
+            });
+            $('#facultad').on('change', function(){
+                @this.set('facultad', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#facultad').select2({
+                    placeholder: 'Seleccione',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando...";
+                        }
+                    }
+                });
+                $('#facultad').on('change', function(){
+                    @this.set('facultad', this.value);
+                });
+            });
+        });
+
+        //Filtro de modalidad de select2
+        $(document).ready(function () {
+            $('#modalidad').select2({
+                placeholder: 'Seleccione',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando...";
+                    }
+                }
+            });
+            $('#modalidad').on('change', function(){
+                @this.set('modalidad', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#modalidad').select2({
+                    placeholder: 'Seleccione',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando...";
+                        }
+                    }
+                });
+                $('#modalidad').on('change', function(){
+                    @this.set('modalidad', this.value);
+                });
+            });
+        });
+
+        //Filtro de sede de select2
+        $(document).ready(function () {
+            $('#sede').select2({
+                placeholder: 'Seleccione',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando...";
+                    }
+                }
+            });
+            $('#sede').on('change', function(){
+                @this.set('sede', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#sede').select2({
+                    placeholder: 'Seleccione',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando...";
+                        }
+                    }
+                });
+                $('#sede').on('change', function(){
+                    @this.set('sede', this.value);
                 });
             });
         });

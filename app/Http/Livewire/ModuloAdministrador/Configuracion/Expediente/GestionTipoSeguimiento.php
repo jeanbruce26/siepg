@@ -113,7 +113,8 @@ class GestionTipoSeguimiento extends Component
         $this->tipo_seguimiento = $expedienteTipoSeguimiento->id_tipo_seguimiento;
     }
 
-    public function guardarTipoSeguimiento(){
+    public function guardarTipoSeguimiento()
+    {
         $this->validate([
             'tipo_seguimiento' => 'required|numeric',
         ]);
@@ -135,7 +136,7 @@ class GestionTipoSeguimiento extends Component
                 $expedienteTipoSeguimiento->save();
 
                 $tipoSeguimiento = TipoSeguimiento::find($this->tipo_seguimiento);
-                $this->alertaTipoSeguimiento('¡Éxito!', "El tipo de seguimiento $tipoSeguimiento->tipo_seguimiento ha sido agregado satisfactoriamente.", 'success', 'Aceptar', 'success');
+                $this->alertaTipoSeguimiento('¡Éxito!', "El tipo de seguimiento $tipoSeguimiento->tipo_seguimiento ha sido registrado satisfactoriamente.", 'success', 'Aceptar', 'success');
                 $this->limpiar();
             }
         }else{

@@ -160,7 +160,7 @@ class GestionAdmision extends Component
                 $admi = Admision::find($this->id_admision);//Buscamos el admision por su id
                 $expedi = Expediente::find($this->id_expediente);//Buscamos el expediente por su id
                 //Mostrar alerta de confirmacion de modificacion
-                $this->alertaExpedienteAdmision('¡Éxito!', 'El admisión del expediente "'.$expedi->expediente.'" ha sido modificado satisfactoriamente.', 'success', 'Aceptar', 'success');
+                $this->alertaExpedienteAdmision('¡Éxito!', 'El admisión del expediente "'.$expedi->expediente.'" ha sido actualizado satisfactoriamente.', 'success', 'Aceptar', 'success');
                 $this->limpiar();
             }
         }
