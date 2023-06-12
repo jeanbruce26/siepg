@@ -32,21 +32,21 @@
                             </span>
                         </div>
                     </div> --}}
-                    {{-- tabla de expedientes --}}
+                    {{-- slider de imagenes --}}
                     <div class="row">
-                        <div class="col-md-8 m-auto">
+                        <div class="col-md-6 m-auto">
                             <div class="card shadow-sm mb-5 rounded-3">
                                 <div id="carousel_inicio" class="carousel slide rounded-4" data-bs-ride="carousel">
                                     <div class="carousel-inner">
-                                        <div class="carousel-item active" data-bs-interval="5000">
-                                            <img src="{{ asset('assets/media/auth/bg-login-posgrado-admin-3.jpg') }}" class="d-block w-100 rounded-3" alt="...">
+                                        {{-- <div class="carousel-item active" data-bs-interval="5000">
+                                            <img src="{{ asset('assets/media/auth/bg-login-posgrado-admin-3.jpg') }}" class="w-100 rounded-3" alt="...">
                                         </div>
                                         <div class="carousel-item" data-bs-interval="5000">
-                                            <img src="{{ asset('assets/media/auth/bg-login-posgrado-admin-2.jpg') }}" class="d-block w-100 rounded-3" alt="...">
+                                            <img src="{{ asset('assets/media/auth/bg-login-posgrado-admin-2.jpg') }}" class="w-100 rounded-3" alt="...">
                                         </div>
                                         <div class="carousel-item" data-bs-interval="5000">
-                                            <img src="{{ asset('assets/media/auth/bg-login-posgrado-admin.jpg') }}" class="d-block w-100 rounded-3" alt="...">
-                                        </div>
+                                            <img src="{{ asset('assets/media/auth/bg-login-posgrado-admin.jpg') }}" class="w-100 rounded-3" alt="...">
+                                        </div> --}}
                                     </div>
                                     <button class="carousel-control-prev" type="button" data-bs-target="#carousel_inicio" data-bs-slide="prev">
                                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -60,10 +60,6 @@
                             </div>
                         </div>
                     </div>
-                    {{-- tabla de expedientes --}}
-                    {{-- <div class="card shadow-sm mb-5">
-                        asdasdasd
-                    </div> --}}
                 </div>
             </div>
         </div>

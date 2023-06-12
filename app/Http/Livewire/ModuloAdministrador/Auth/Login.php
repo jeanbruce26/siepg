@@ -91,14 +91,14 @@ class Login extends Component
                         if($tra_tipo_tra->id_tipo_trabajador == 1)
                         {
                             // si es un docente mostrar un mensaje de error ya que no tiene vista
-                            session()->flash('message', 'Usuario docente sin vista');
-                            return redirect()->back();
+                            auth('usuario')->login($usuario);
+                            return redirect()->route('docente.inicio');
                         }
                     }
                     else
                     {
                         // si el usuario logueado no tiene un trabajador asignado mostrar un mensaje de error
-                        session()->flash('message', 'Usuario sin trabajador asignado');
+                        session()->flash('message', 'Usuario no asignado');
                         return redirect()->back();
                     }
                 }

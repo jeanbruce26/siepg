@@ -13,6 +13,7 @@ class Index extends Component
     public $administrativo; // variable que almacena el administrativo del usuario logueado
     public $coordinador; // variable que almacena el administrativo del usuario logueado
     public $area_administrativa; // variable que almacena el area_administrativa del usuario logueado
+    public $docente; // variable que almacena el docente del usuario logueado
 
     protected $listeners = [
         'actualizar_perfil' => 'mount'
@@ -30,6 +31,7 @@ class Index extends Component
             $this->area_administrativa = $this->administrativo->area_administrativo; // asignamos el area_administrativa del usuario logueado a la variable area_administrativa
         }
         $this->coordinador = $this->trabajador->coordinador; // asignamos el coordinador del usuario logueado a la variable coordinador
+        $this->docente = $this->trabajador->docente; // asignamos el docente del usuario logueado a la variable docente
     }
 
     public function cerrar_sesion()
@@ -73,8 +75,7 @@ class Index extends Component
         }
         elseif ($docente && $this->tipo_trabajador->id_tipo_trabajador == 1)
         {
-            dd('docente');
-            // return redirect()->route('docente.perfil');
+            return redirect()->route('docente.perfil');
         }
     }
 
