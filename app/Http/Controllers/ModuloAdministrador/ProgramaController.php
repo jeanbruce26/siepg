@@ -11,4 +11,12 @@ class ProgramaController extends Controller
     {
         return view('modulo-administrador.configuracion.programa.index');
     }
+
+    public function plan_proceso($id)
+    {
+        $id_programa = $id;
+        return view('modulo-administrador.configuracion.programa.gestion-plan-proceso', [
+            'id_programa' => $id_programa
+        ]);
+    }
 }

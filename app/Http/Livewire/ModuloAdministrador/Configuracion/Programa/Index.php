@@ -50,7 +50,7 @@ class Index extends Component
     public $facultad;
     public $sede;
     public $programa_tipo;// 1 = Maestria, 2 = Doctorado
-    public $programa_estado;
+    public $programa_estado;// 1 = Activo, 0 = Inactivo
 
     //Variables para mostrar en el modal de detalle
     public $facultadDetalle;
@@ -147,8 +147,8 @@ class Index extends Component
     //Cambiar el estado del programa
     public function cambiarEstado(Programa $programa)
     {
-        if ($programa->programa_estado == 1) {//Si el estado es 1 (activo), cambiar a 2 (inactivo)
-            $programa->programa_estado = 2;
+        if ($programa->programa_estado == 1) {//Si el estado es 1 (activo), cambiar a 0 (inactivo)
+            $programa->programa_estado = 0;
         } else {//Si el estado es 2 (inactivo), cambiar a 1 (activo)
             $programa->programa_estado = 1;
         }

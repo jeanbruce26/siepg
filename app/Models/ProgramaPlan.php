@@ -20,6 +20,8 @@ class ProgramaPlan extends Model
         'programa_plan_estado',
     ];
 
+    public $timestamps = false;
+
     // programa
     public function programa(){
         return $this->belongsTo(Programa::class,'id_programa','id_programa');
