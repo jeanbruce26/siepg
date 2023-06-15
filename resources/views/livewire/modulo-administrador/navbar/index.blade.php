@@ -176,12 +176,15 @@
                         <div class="fw-bold d-flex align-items-center fs-5">
                             {{ $trabajador->trabajador_nombre_completo }}
                         </div>
-                        <span class="fw-semibold text-muted text-hover-primary fs-7">
+                        <span class="fw-semibold text-muted fs-7">
                             @if ($administrativo)
-                                {{ ucwords(strtolower($area_administrativa->area_administrativa)) }}
+                                {{ ucwords(strtolower($area_administrativa->area_administrativo)) }}
                             @endif
                             @if ($coordinador)
                                 {{ ucwords(strtolower($coordinador->facultad->facultad)) }}
+                            @endif
+                            @if ($docente)
+                                {{ ucwords(strtolower('Docente de la Escuela de Posgrado')) }}
                             @endif
                         </span>
                     </div>

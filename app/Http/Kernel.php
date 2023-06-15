@@ -72,5 +72,6 @@ class Kernel extends HttpKernel
         'auth.usuario.redirect.sesion' => \App\Http\Middleware\AuthUsuarioRedirectSesion::class,
         'verificar.usuario.contable' => \App\Http\Middleware\VerificationUsuarioContable::class,
         'verificar.usuario.coordinador' => \App\Http\Middleware\VerificationUsuarioCoordinador::class,
+        'verificar.usuario.docente' => \App\Http\Middleware\VerificationUsuarioDocente::class,
     ];
 }

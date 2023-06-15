@@ -294,7 +294,8 @@ class Index extends Component
             // Creamos su usuario y le asignamos su trabajador_tipo_trabajador
             $usuario = new Usuario();
             $usuario->usuario_nombre = 'DOCENTE - ' . $this->trabajador->trabajador_nombre_completo;
-            $usuario->usuario_correo = $this->trabajador->trabajador_correo;
+            $nombre = explode(' ', $this->trabajador->trabajador_nombre)[0];
+            $usuario->usuario_correo = strtolower($nombre) . '_' . strtolower(explode(' ', $this->apellido_paterno)[0]) . '@unu.edu.pe';
             $usuario->usuario_password = Hash::make($this->documento_identidad);
             $usuario->id_trabajador_tipo_trabajador = $trabajador_tipo_trabajador->id_trabajador_tipo_trabajador;
             $usuario->usuario_estado = 2; // 0 = Inactivo | 1 = Activo | 2 = Asignado
@@ -360,7 +361,8 @@ class Index extends Component
             // editamos el usuario
             $usuario = Usuario::where('id_trabajador_tipo_trabajador', $trabajador_tipo_trabajador->id_trabajador_tipo_trabajador)->first();
             $usuario->usuario_nombre = 'DOCENTE - ' . $trabajador->trabajador_nombre_completo;
-            $usuario->usuario_correo = $this->correo_electronico;
+            $nombre = explode(' ', $this->trabajador->trabajador_nombre)[0];
+            $usuario->usuario_correo = strtolower($nombre) . '_' . strtolower(explode(' ', $this->apellido_paterno)[0]) . '@unu.edu.pe';
             $usuario->usuario_password = Hash::make($this->documento_identidad);
             $usuario->save();
 
