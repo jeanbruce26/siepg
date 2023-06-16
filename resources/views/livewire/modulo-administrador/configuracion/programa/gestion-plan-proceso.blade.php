@@ -126,6 +126,11 @@
                                                         Editar
                                                     </a>
                                                 </div>
+                                                <div class="menu-item px-3">
+                                                    <a href="#modalProcesos" wire:click="cargarProcesos({{ $item->id_programa_plan }}, 2)" class="menu-link px-3" data-bs-toggle="modal" data-bs-target="#modalProcesos">
+                                                        Gestión de Procesos
+                                                    </a>
+                                                </div>
                                             </div>
                                         </td>
                                     </tr>
@@ -173,55 +178,95 @@
         </div> 
     </div>
 
-    {{-- Modal Programa --}}
-    <div wire:ignore.self class="modal fade" id="modalPlanProceso" tabindex="-1" aria-labelledby="modalPlanProceso"
-        aria-hidden="true">
+    {{-- Modal Plan del Programa --}}
+    <div wire:ignore.self class="modal fade" tabindex="-1" id="modalPlanProceso">
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">{{ $titulo }}</h5>
-                    <button type="button" wire:click="limpiar()" class="btn-close" data-bs-dismiss="modal"
-                        aria-label="Close"></button>
+                    <h3 class="modal-title">
+                        {{ $titulo }}
+                    </h3>
+                    <div class="btn btn-icon btn-sm btn-active-light-danger ms-2" data-bs-dismiss="modal"
+                        aria-label="Close">
+                        <span class="svg-icon svg-icon-2hx">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <rect opacity="0.3" x="2" y="2" width="20" height="20"
+                                    rx="5" fill="currentColor" />
+                                <rect x="7" y="15.3137" width="12" height="2" rx="1"
+                                    transform="rotate(-45 7 15.3137)" fill="currentColor" />
+                                <rect x="8.41422" y="7" width="12" height="2" rx="1"
+                                    transform="rotate(45 8.41422 7)" fill="currentColor" />
+                            </svg>
+                        </span>
+                    </div>
                 </div>
                 <div class="modal-body">
-                    <form novalidate>
-                        <div class="row g-5 {{ $modo == 3 ? 'mb-3' : '' }}">
-                            <div class="col-md-12">
-                                <label class="form-label">Código del programa @if($modo != 3) <span class="text-danger">*</span> @endif </label>
-                                <input wire:model="programa_codigo" type="text" class="form-control @error('programa_codigo') is-invalid  @enderror" placeholder="Ingrese el código del programa" @if($modo == 3) readonly @endif>
-                                @error('programa_codigo') <span class="error text-danger" >{{ $message }}</span> @enderror
-                            </div>
-                            <div class="col-md-12">
-                                <label class="form-label">Plan @if($modo != 3) <span class="text-danger">*</span> @endif </label>
-                                @if($modo == 3)
-                                    <input wire:model="plan_nombre" type="text" class="form-control" readonly>
-                                @else
-                                    <select class="form-select" wire:model="plan" value="Plan" data-control="select2" id="plan" data-placeholder="Seleccione">
-                                        <option></option>
-                                        @foreach ($planModel as $item)
-                                            <option value="{{ $item->id_plan }}">Plan {{ $item->plan }}</option>
-                                        @endforeach
-                                    </select>
-                                @endif
-                            </div>
-                            @if($modo ==3)
-                                <div class="col-md-12">
-                                    <label class="form-label">Fecha de creación del plan</label>
-                                    <input value="{{ date('d/m/Y h:i:s A', strtotime($programa_plan_creacion)) }}" type="text" class="form-control" readonly>
-                                </div>
+                    <form autocomplete="off" class="row g-5 {{ $modo == 3 ? 'mb-3' : '' }}">
+                        <div class="col-md-12">
+                            <label for="programa_codigo" class="{{ $modo != 3 ? 'required' : ''}} form-label">
+                                Código del Programa
+                            </label>
+                            <input type="text" wire:model="programa_codigo"
+                                class="form-control @error('programa_codigo') is-invalid @enderror"
+                                placeholder="Ingrese el código del programa" id="programa_codigo" @if($modo == 3) readonly @endif />
+                            @error('programa_codigo')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="col-md-12">
+                            <label for="plan" class="{{ $modo != 3 ? 'required' : ''}} form-label">
+                                Plan
+                            </label>
+                            @if($modo == 3)
+                                <input type="text" wire:model="plan_nombre" class="form-control" id="plan_nombre" readonly />
+                            @else
+                                <select class="form-select @error('plan') is-invalid @enderror"
+                                    wire:model="plan" id="plan" data-control="select2"
+                                    data-placeholder="Seleccione el Plan" data-allow-clear="true"
+                                    data-dropdown-parent="#modalPlanProceso">
+                                    <option></option>
+                                    @foreach ($planModel as $item)
+                                        <option value="{{ $item->id_plan }}">Pago realizado en
+                                            {{ $item->plan }}</option>
+                                    @endforeach
+                                </select>
+                                @error('plan')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             @endif
                         </div>
+                        @if($modo ==3)
+                            <div class="col-md-12">
+                                <label  for="programa_plan_creacion" class="form-label">Fecha de creación del plan</label>
+                                <input type="text" value="{{ date('d/m/Y h:i:s A', strtotime($programa_plan_creacion)) }}"
+                                    class="form-control" id="programa_plan_creacion" readonly />
+                            </div>
+                        @endif
+                        
                     </form>
                 </div>
-                @if($modo == 2 || $modo == 1)
-                    <div class="modal-footer col-12 d-flex justify-content-between">
-                        <button type="button" wire:click="limpiar()" class="btn btn-secondary hover-elevate-up" data-bs-dismiss="modal">Cancelar</button>                    
-                        <button type="button" wire:click="guardarProgramaPlan()" class="btn btn-primary hover-elevate-up">Guardar</button>
+                @if($modo != 3)
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal" wire:click="limpiar()">
+                            Cerrar
+                        </button>
+                        <button type="button" wire:click="guardarProgramaPlan" class="btn btn-primary" style="width: 150px" wire:loading.attr="disabled" wire:target="guardarProgramaPlan">
+                            <div wire:loading.remove wire:target="guardarProgramaPlan, voucher">
+                                Registrar Pago
+                            </div>
+                            <div wire:loading wire:target="guardarProgramaPlan">
+                                Procesando <span class="spinner-border spinner-border-sm align-middle ms-2">
+                            </div>
+                        </button>
                     </div>
                 @endif
             </div>
         </div>
     </div>
+
+    {{-- modal de Procesos del Plan --}}
+    
 
 </div>
 
