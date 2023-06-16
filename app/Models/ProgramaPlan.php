@@ -10,6 +10,7 @@ class ProgramaPlan extends Model
     use HasFactory;
 
     protected $primaryKey = 'id_programa_plan';
+    protected $dates = ['programa_plan_creacion'];
     protected $table = 'programa_plan';
     protected $fillable = [
         'id_programa_plan',

@@ -37,7 +37,7 @@
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <div class="d-flex justify-content-start align-items-center text-dark fw-bold">
-                            {{ $programaModel->programa }} EN  {{ $programaModel->subprograma }} 
+                            {{ $programaModel->programa }} EN  {{ $programaModel->subprograma }}
                             @if ($programaModel->mencion != null)
                                 CON MENCION EN {{ $programaModel->mencion }}
                             @endif
@@ -48,7 +48,7 @@
         </div>
 
         <div id="kt_app_content" class="app-content flex-column-fluid">
-            <div id="kt_app_content_container" class="app-container container-fluid pt-5">
+            <div id="kt_app_content_container" class="app-container container-fluid">
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-5">
@@ -117,12 +117,12 @@
                                             </a>
                                             <div class="dropdown-menu dropdown-menu-end menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4 w-175px" data-kt-menu="true">
                                                 <div class="menu-item px-3">
-                                                    <a href="#modalPlanProceso" wire:click="cargarPrograma({{ $item->id_programa_plan }}, 3)" class="menu-link px-3" data-bs-toggle="modal" data-bs-target="#modalPlanProceso">
+                                                    <a href="#modalPlanProceso" wire:click="cargarProgramaPlan({{ $item->id_programa_plan }}, 3)" class="menu-link px-3" data-bs-toggle="modal" data-bs-target="#modalPlanProceso">
                                                         Detalle
                                                     </a>
                                                 </div>
                                                 <div class="menu-item px-3">
-                                                    <a href="#modalPlanProceso" wire:click="cargarPrograma({{ $item->id_programa_plan }}, 2)" class="menu-link px-3" data-bs-toggle="modal" data-bs-target="#modalPlanProceso">
+                                                    <a href="#modalPlanProceso" wire:click="cargarProgramaPlan({{ $item->id_programa_plan }}, 2)" class="menu-link px-3" data-bs-toggle="modal" data-bs-target="#modalPlanProceso">
                                                         Editar
                                                     </a>
                                                 </div>
@@ -186,18 +186,37 @@
                 <div class="modal-body">
                     <form novalidate>
                         <div class="row g-5 {{ $modo == 3 ? 'mb-3' : '' }}">
-                            <div class="col-md-6">
-                                <label class="form-label">Programa <span class="text-danger">*</span></label>
-                                
+                            <div class="col-md-12">
+                                <label class="form-label">Código del programa @if($modo != 3) <span class="text-danger">*</span> @endif </label>
+                                <input wire:model="programa_codigo" type="text" class="form-control @error('programa_codigo') is-invalid  @enderror" placeholder="Ingrese el código del programa" @if($modo == 3) readonly @endif>
+                                @error('programa_codigo') <span class="error text-danger" >{{ $message }}</span> @enderror
                             </div>
-                            
+                            <div class="col-md-12">
+                                <label class="form-label">Plan @if($modo != 3) <span class="text-danger">*</span> @endif </label>
+                                @if($modo == 3)
+                                    <input wire:model="plan_nombre" type="text" class="form-control" readonly>
+                                @else
+                                    <select class="form-select" wire:model="plan" value="Plan" data-control="select2" id="plan" data-placeholder="Seleccione">
+                                        <option></option>
+                                        @foreach ($planModel as $item)
+                                            <option value="{{ $item->id_plan }}">Plan {{ $item->plan }}</option>
+                                        @endforeach
+                                    </select>
+                                @endif
+                            </div>
+                            @if($modo ==3)
+                                <div class="col-md-12">
+                                    <label class="form-label">Fecha de creación del plan</label>
+                                    <input value="{{ date('d/m/Y h:i:s A', strtotime($programa_plan_creacion)) }}" type="text" class="form-control" readonly>
+                                </div>
+                            @endif
                         </div>
                     </form>
                 </div>
                 @if($modo == 2 || $modo == 1)
                     <div class="modal-footer col-12 d-flex justify-content-between">
                         <button type="button" wire:click="limpiar()" class="btn btn-secondary hover-elevate-up" data-bs-dismiss="modal">Cancelar</button>                    
-                        <button type="button" wire:click="guardarPrograma()" class="btn btn-primary hover-elevate-up">Guardar</button>
+                        <button type="button" wire:click="guardarProgramaPlan()" class="btn btn-primary hover-elevate-up">Guardar</button>
                     </div>
                 @endif
             </div>
@@ -205,3 +224,48 @@
     </div>
 
 </div>
+
+@push('scripts')
+<script>
+    // plan select2
+    $(document).ready(function () {
+        $('#plan').select2({
+            placeholder: 'Seleccione',
+            allowClear: true,
+            width: '100%',
+            selectOnClose: true,
+            language: {
+                noResults: function () {
+                    return "No se encontraron resultados";
+                },
+                searching: function () {
+                    return "Buscando..";
+                }
+            }
+        });
+        $('#plan').on('change', function(){
+            @this.set('plan', this.value);
+        });
+        Livewire.hook('message.processed', (message, component) => {
+            $('#plan').select2({
+                placeholder: 'Seleccione',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando..";
+                    }
+                }
+            });
+            $('#plan').on('change', function(){
+                @this.set('plan', this.value);
+            });
+        });
+    });
+</script>
+    
+@endpush

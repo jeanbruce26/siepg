@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\ModuloAdministrador\Configuracion\Programa;
 
+use App\Models\Plan;
 use App\Models\Programa;
 use App\Models\ProgramaPlan;
 use App\Models\ProgramaProceso;
@@ -22,8 +23,8 @@ class GestionPlanProceso extends Component
     //Variables para la gestion de Plan del programa
     public $id_programa_plan;//id del programa al que se le asignara el programa plan
     public $programa_codigo;
-    public $programa;//id del programa
-    public $plan;//id del plan
+    public $plan = null;//id del plan
+    public $plan_nombre;//nombre del plan
     public $programa_plan_creacion;//fecha de creacion del programa plan
     public $programa_plan_estado;//estado del programa plan (1: activo, 0: inactivo)
 
@@ -42,7 +43,7 @@ class GestionPlanProceso extends Component
     public function updated($propertyName)
     {
         $this->validateOnly($propertyName, [
-            'programa' => 'required|numeric',
+            'programa_codigo' => 'required|string',
             'plan' => 'required|numeric',
             'admision' => 'required|numeric',
         ]);
@@ -60,7 +61,7 @@ class GestionPlanProceso extends Component
     public function limpiar()
     {
         $this->resetErrorBag();
-        // $this->reset('tipo_seguimiento');
+        $this->reset('programa_codigo', 'plan');
         $this->modo = 1;
         $this->titulo = 'Agregar Plan al Programa';
     }
@@ -83,7 +84,7 @@ class GestionPlanProceso extends Component
     }
 
     //Alertas de exito o error
-    public function alertaPrograma($title, $text, $icon, $confirmButtonText, $color)
+    public function alertaProgramaPlan($title, $text, $icon, $confirmButtonText, $color)
     {
         $this->dispatchBrowserEvent('alerta-gestion-plan-proceso', [
             'title' => $title,
@@ -115,13 +116,120 @@ class GestionPlanProceso extends Component
 
         $programaPlan->programa->mencion ? $mencion = ' CON MECION EN '.$programaPlan->programa->mencion : $mencion = '';//Si el programa tiene mencion, mostrarla en la alerta
         //Mostrar alerta de confirmacion de cambio de estado
-        $this->alertaPrograma('¡Éxito!', 'El estado del plan en el programa de '.$programaPlan->programa->programa.' EN '.$programaPlan->programa->subprograma.''.$mencion.' ha sido actualizado satisfactoriamente.', 'success', 'Aceptar', 'success');
+        $this->alertaProgramaPlan('¡Éxito!', 'El estado del plan en el programa de '.$programaPlan->programa->programa.' EN '.$programaPlan->programa->subprograma.''.$mencion.' ha sido actualizado satisfactoriamente.', 'success', 'Aceptar', 'success');
     }
     
+    //Cargar datos en el modal para detalle y editar
+    public function cargarProgramaPlan(ProgramaPlan $programaPlan, $modo)
+    {
+        //limpiamos
+        $this->limpiar();
+        //Asignamos los valores del modo y el titulo
+        $this->modo = $modo;//1: agregar, 2: editar, 3: detalle
+        $this->modo == 2 ? $this->titulo = 'Actualizar Plan del Programa' : $this->titulo = 'Detalle del Plan del Programa';
+
+        //Cargar los datos del programa plan
+        $this->id_programa_plan = $programaPlan->id_programa_plan;
+        $this->programa_codigo = $programaPlan->programa_codigo;
+        $this->plan = $programaPlan->id_plan;
+        $this->plan_nombre = $programaPlan->plan->plan;
+        $this->programa_plan_creacion = $programaPlan->programa_plan_creacion;
+    }
+
+    //Guardar o actualizar el programa plan
+    public function guardarProgramaPlan()
+    {
+        //Validar los campos
+        $this->validate([
+            'programa_codigo' => 'required | string',
+            'plan' => 'required | numeric',
+        ]);
+
+        //Si el modo es 1 (agregar), guardar el programa plan
+        if ($this->modo == 1) {
+            //Validar que el programa plan no exista
+            $programaPlan = ProgramaPlan::where('id_programa', '=', $this->id_programa)
+                                        ->where('id_plan', '=', $this->plan)
+                                        ->first();
+            if ($programaPlan) {//Si el programa plan existe, mostrar alerta
+                $this->alertaProgramaPlan('¡Error!', 'El plan ya se encuentra registrado en el programa.', 'error', 'Aceptar', 'danger');
+                //Limpia los campos del formulario
+                $this->limpiar();
+                //Cerramos el modal
+                $this->dispatchBrowserEvent('modal', [
+                    'titleModal' => '#modalPlanProceso',
+                ]);
+            } else {//Si el programa plan no existe, guardarlo
+                $programaPlan = new ProgramaPlan();
+                $programaPlan->programa_codigo = $this->programa_codigo;
+                $programaPlan->id_programa = $this->id_programa;
+                $programaPlan->id_plan = $this->plan;
+                $programaPlan->programa_plan_creacion = date('Y-m-d H:i:s');
+                $programaPlan->programa_plan_estado = 1;
+                $programaPlan->save();
+
+                //Mostrar alerta de confirmacion
+                $this->alertaProgramaPlan('¡Éxito!', 'El plan '.$programaPlan->plan->plan.' ha sido registrado satisfactoriamente en el programa.', 'success', 'Aceptar', 'success');
+                //Limpiar los campos del formulario
+                $this->limpiar();
+                //Cerramos el modal
+                $this->dispatchBrowserEvent('modal', [
+                    'titleModal' => '#modalPlanProceso',
+                ]);
+            }
+        } else {//Si el modo es 2 (editar), actualizar el programa plan
+            //Validar que el programa plan no exista
+            $programaPlan = ProgramaPlan::where('id_programa', '=', $this->id_programa)
+                                        ->where('id_plan', '=', $this->plan)
+                                        ->where('id_programa_plan', '!=', $this->id_programa_plan)
+                                        ->first();
+            if ($programaPlan) {//Si el programa plan existe, mostrar alerta
+                $this->alertaProgramaPlan('¡Error!', 'El plan ya se encuentra registrado en el programa.', 'error', 'Aceptar', 'danger');
+                //Limpia los campos del formulario
+                $this->limpiar();
+                //Cerramos el modal
+                $this->dispatchBrowserEvent('modal', [
+                    'titleModal' => '#modalPlanProceso',
+                ]);
+            } else {//Si el programa plan no existe, actualizarlo
+                $programaPlan = ProgramaPlan::find($this->id_programa_plan);
+                //Validar que el plan del programa no haya sido actualizado
+                $programaPlanValidar = ProgramaPlan::where('id_programa', '=', $this->id_programa)
+                                                    ->where('id_plan', '=', $this->plan)
+                                                    ->where('programa_codigo', '=', $this->programa_codigo)
+                                                    ->where('id_programa_plan', '=', $this->id_programa_plan)
+                                                    ->first();
+                if ($programaPlanValidar) {//Si el plan del programa no ha sido actualizado, mostrar alerta
+                    $this->alertaProgramaPlan('¡Información!', 'El plan del programa no ha sido actualizado.', 'info', 'Aceptar', 'info');
+                    //Limpia los campos del formulario
+                    $this->limpiar();
+                    //Cerramos el modal
+                    $this->dispatchBrowserEvent('modal', [
+                        'titleModal' => '#modalPlanProceso',
+                    ]);
+                } else {//Si el plan del programa ha sido actualizado, actualizarlo
+                    $programaPlan->programa_codigo = $this->programa_codigo;
+                    $programaPlan->id_plan = $this->plan;
+                    $programaPlan->save();
+
+                    //Mostrar alerta de confirmacion
+                    $this->alertaProgramaPlan('¡Éxito!', 'El plan '.$programaPlan->plan->plan .' ha sido actualizado satisfactoriamente en el programa.', 'success', 'Aceptar', 'success');
+                    //Limpiar los campos del formulario
+                    $this->limpiar();
+                    //Cerramos el modal
+                    $this->dispatchBrowserEvent('modal', [
+                        'titleModal' => '#modalPlanProceso',
+                    ]);
+                }
+            }
+        }
+    }
+
     public function render()
     {
         $buscar = $this->search;
         $programaModel = Programa::find($this->id_programa);
+        $planModel = Plan::all();
         $programaProcesoModel = ProgramaProceso::join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
                                                 ->join('admision', 'admision.id_admision', '=', 'programa_proceso.id_admision')
                                                 ->where('programa_plan.id_programa', '=', $this->id_programa)
@@ -141,6 +249,7 @@ class GestionPlanProceso extends Component
             'programaModel' => $programaModel,
             'programaPlanModel' => $programaPlanModel,
             'programaProcesoModel' => $programaProcesoModel,
+            'planModel' => $planModel,
         ]);
     }
 }
