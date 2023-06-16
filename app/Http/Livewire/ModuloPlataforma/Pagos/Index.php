@@ -322,7 +322,7 @@ class Index extends Component
             {
                 if($this->concepto_pago == 3 || $this->concepto_pago == 4)
                 {
-                    if($this->fecha_pago >= $fecha_matricula_extemporanea_inicio || $this->fecha_pago <= $fecha_matricula_extemporanea_fin)
+                    if($this->fecha_pago >= $fecha_matricula_extemporanea_inicio && $this->fecha_pago <= $fecha_matricula_extemporanea_fin)
                     {
                         $this->dispatchBrowserEvent('alerta_pago_plataforma', [
                             'title' => '¡Error!',
