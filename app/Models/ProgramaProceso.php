@@ -18,6 +18,8 @@ class ProgramaProceso extends Model
         'programa_proceso_estado',
     ];
 
+    public $timestamps = false;
+
     // admision
     public function admision(){
         return $this->belongsTo(Admision::class,'id_admision','id_admision');

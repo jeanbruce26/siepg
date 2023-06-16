@@ -215,9 +215,9 @@ class Index extends Component
     {
         $trabajador_tipo_trabajador = TrabajadorTipoTrabajador::where('id_trabajador',$trabajador->id_trabajador)->where('trabajador_tipo_trabajador_estado',1)->count();
         if($trabajador_tipo_trabajador == 0){
-            if($trabajador->trabajador_estado == 1){
-                $trabajador->trabajador_estado = 2;
-            }else{
+            if($trabajador->trabajador_estado == 1){//Si el estado es activo (1), lo desactivamos (0)
+                $trabajador->trabajador_estado = 0;
+            }else{//Si el estado es inactivo (0), lo activamos (1)
                 $trabajador->trabajador_estado = 1;
             }
         }

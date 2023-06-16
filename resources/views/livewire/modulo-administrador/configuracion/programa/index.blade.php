@@ -159,6 +159,11 @@
                                                         Editar
                                                     </a>
                                                 </div>
+                                                <div class="menu-item px-3">
+                                                    <a href="{{ route('administrador.programa.gestion-plan-proceso', $item->id_programa) }}" class="menu-link px-3 text-start">
+                                                        Gestión de Plan y Proceso
+                                                    </a>
+                                                </div>
                                             </div>
                                         </td>
                                     </tr>

@@ -27,7 +27,7 @@ class Index extends Component
     public $complemento;
     public $requerido;
     public $tipo; // 0 = maestria y doctorado, 1 = maestria, 2 = doctorado
-    public $estado;
+    public $estado;//1=activo | 0=inactivo
     public $nombre_archivo;
 
     protected $listeners = ['render', 'cambiarEstado'];//Escuchar evento para que se actualice el componente
@@ -112,8 +112,8 @@ class Index extends Component
     //Cambiar el estado del expediente
     public function cambiarEstado(Expediente $expediente)
     {
-        if ($expediente->expediente_estado == 1) {//Si el estado es 1 (activo), cambiar a 2 (inactivo)
-            $expediente->expediente_estado = 2;
+        if ($expediente->expediente_estado == 1) {//Si el estado es 1 (activo), cambiar a 0 (inactivo)
+            $expediente->expediente_estado = 0;
         } else {//Si el estado es 2 (inactivo), cambiar a 1 (activo)
             $expediente->expediente_estado = 1;
         }
