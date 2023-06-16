@@ -14,109 +14,94 @@
                     <li class="breadcrumb-item text-muted">Inicio</li>
                 </ul>
             </div>
-            {{-- <div class="d-flex align-items-center gap-2 gap-lg-3">
-                <div class="m-0">
-                    <a href="#" class="btn btn-flex bg-body btn-color-gray-700 btn-active-color-primary shadow-sm fw-bold" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-                        <span class="svg-icon svg-icon-6 svg-icon-muted me-1">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M19.0759 3H4.72777C3.95892 3 3.47768 3.83148 3.86067 4.49814L8.56967 12.6949C9.17923 13.7559 9.5 14.9582 9.5 16.1819V19.5072C9.5 20.2189 10.2223 20.7028 10.8805 20.432L13.8805 19.1977C14.2553 19.0435 14.5 18.6783 14.5 18.273V13.8372C14.5 12.8089 14.8171 11.8056 15.408 10.964L19.8943 4.57465C20.3596 3.912 19.8856 3 19.0759 3Z" fill="currentColor" />
-                            </svg>
-                        </span>
-                        Filtrar por Proceso de Admisión
-                    </a>
-                    <div class="menu menu-sub menu-sub-dropdown w-250px w-md-300px" data-kt-menu="true" id="menu_expediente" wire:ignore.self>
-                        <div class="px-7 py-5">
-                            <div class="fs-5 text-dark fw-bold">
-                                Opciones de filtrado
-                            </div>
-                        </div>
-                        <div class="separator border-gray-200"></div>
-                        <form class="px-7 py-5" wire:submit.prevent="aplicar_filtro">
-                            <div class="mb-10">
-                                <label class="form-label fw-semibold">Proceso de Admisión:</label>
-                                <div>
-                                    <select class="form-select" wire:model="filtro_proceso" id="filtro_proceso"  data-control="select2" data-placeholder="Seleccione">
-                                        $@foreach ($admisiones as $item)
-                                        <option value="{{ $item->id_admision }}">{{ $item->admision }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="d-flex justify-content-end">
-                                <button type="button" wire:click="resetear_filtro" class="btn btn-light btn-active-light-primary me-2" data-kt-menu-dismiss="true">Resetear</button>
-                                <button type="submit" class="btn btn-primary" data-kt-menu-dismiss="true">Aplicar</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div> --}}
         </div>
     </div>
     <div id="kt_app_content" class="app-content flex-column-fluid">
         <div id="kt_app_content_container" class="app-container container-fluid">
             <div class="row mb-5 mb-xl-10">
                 <div class="col-md-12 mb-md-5 mb-xl-10">
-                    {{-- alerta --}}
-                    <div
-                        class="alert bg-light-primary border border-3 border-primary d-flex align-items-center p-5 mb-5">
-                        <i class="ki-duotone ki-information-5 fs-2qx me-4 text-primary">
-                            <i class="path1"></i>
-                            <i class="path2"></i>
-                            <i class="path3"></i>
-                        </i>
-                        <div class="d-flex flex-column">
-                            <span class="fw-bold fs-5">
-                                A continuación se muestran los cursos que fueron asignados para este semestre.
-                            </span>
-                        </div>
-                    </div>
-                    <div class="card mb-5">
-                        <div class="card-header border-0">
-                            <div class="card-title">
-                                <div class="d-flex align-items-center position-relative my-1">
-                                    <i class="ki-duotone ki-magnifier fs-3 position-absolute ms-5">
-                                        <span class="path1"></span>
-                                        <span class="path2"></span>
-                                    </i>
-                                    <input type="text" wire:model="search" class="form-control w-400px ps-13" placeholder="Buscar cursos...">
-                                </div>
+                    @if ($programas->count() > 0)
+                        {{-- alerta --}}
+                        <div class="alert bg-light-primary border border-3 border-primary d-flex align-items-center p-5 mb-5">
+                            <i class="ki-duotone ki-information-5 fs-2qx me-4 text-primary">
+                                <i class="path1"></i>
+                                <i class="path2"></i>
+                                <i class="path3"></i>
+                            </i>
+                            <div class="d-flex flex-column">
+                                <span class="fw-bold fs-5">
+                                    A continuación se muestran los cursos que fueron asignados.
+                                </span>
                             </div>
-                            {{-- <div class="card-toolbar" data-select2-id="select2-data-133-g6fa">
-                                <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base"
-                                    data-select2-id="select2-data-132-zllr">
-                                    <button type="button" class="btn btn-light-primary me-3" data-kt-menu-trigger="click"
-                                        data-kt-menu-placement="bottom-end">
-                                        <i class="ki-duotone ki-filter fs-2"><span class="path1"></span><span
-                                                class="path2"></span></i> Filter
-                                    </button>
-                                    <div class="menu menu-sub menu-sub-dropdown w-300px w-md-325px" data-kt-menu="true"
-                                        style="">
-                                        <div class="px-7 py-5">
-                                            <div class="fs-5 text-dark fw-bold">Filter Options</div>
-                                        </div>
-                                        <div class="separator border-gray-200"></div>
-                                        <div class="px-7 py-5" data-kt-user-table-filter="form">
-                                            <div class="mb-10" data-select2-id="select2-data-137-o1oi">
-                                                <label class="form-label fs-6 fw-semibold">Role:</label>
+                        </div>
+                        <div class="card mb-5">
+                            <div class="card-header border-0">
+                                <div class="card-title">
+                                    <div class="d-flex align-items-center position-relative my-1">
+                                        <i class="ki-duotone ki-magnifier fs-3 position-absolute ms-5">
+                                            <span class="path1"></span>
+                                            <span class="path2"></span>
+                                        </i>
+                                        <input type="text" wire:model="search" class="form-control w-400px ps-13" placeholder="Buscar cursos...">
+                                    </div>
+                                </div>
+                                <div class="card-toolbar" data-select2-id="select2-data-133-g6fa">
+                                    <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base"
+                                        data-select2-id="select2-data-132-zllr">
+                                        <button type="button" class="btn btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary me-3" data-kt-menu-trigger="click"
+                                            data-kt-menu-placement="bottom-end">
+                                            <i class="ki-duotone ki-filter fs-2">
+                                                <span class="path1"></span>
+                                                <span class="path2"></span>
+                                            </i> Filtro
+                                        </button>
+                                        <div class="menu menu-sub menu-sub-dropdown w-300px w-md-325px" data-kt-menu="true" wire:ignore.self>
+                                            <div class="px-7 py-5">
+                                                <div class="fs-5 text-dark fw-bold">
+                                                    Opciones de filtrado
+                                                </div>
                                             </div>
-                                            <div class="d-flex justify-content-end">
-                                                <button type="reset"
-                                                    class="btn btn-light btn-active-light-primary fw-semibold me-2 px-6"
-                                                    data-kt-menu-dismiss="true"
-                                                    data-kt-user-table-filter="reset">Reset</button>
-                                                <button type="submit" class="btn btn-primary fw-semibold px-6"
-                                                    data-kt-menu-dismiss="true"
-                                                    data-kt-user-table-filter="filter">Apply</button>
+                                            <div class="separator border-gray-200"></div>
+                                            <div class="px-7 py-5" data-kt-user-table-filter="form">
+                                                <div class="mb-10" data-select2-id="select2-data-137-o1oi">
+                                                    <label class="form-label fs-5 fw-semibold">Estado:</label>
+                                                    <div class="form-check mb-2 form-check-custom">
+                                                        <input class="form-check-input" wire:model="filtro_estado" type="radio" value="1" id="activo"/>
+                                                        <label class="form-check-label" for="activo">
+                                                            Activo
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check mb-2 form-check-custom">
+                                                        <input class="form-check-input" wire:model="filtro_estado" type="radio" value="0" id="inactivo"/>
+                                                        <label class="form-check-label" for="inactivo">
+                                                            Inactivo
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check mb-2 form-check-custom">
+                                                        <input class="form-check-input" wire:model="filtro_estado" type="radio" value="2" id="curso_terminado"/>
+                                                        <label class="form-check-label" for="curso_terminado">
+                                                            Curso Terminado
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex justify-content-end">
+                                                    <button type="button" wire:click="resetear_filtro" class="btn btn-light btn-active-light-primary fw-semibold me-2 px-6" data-kt-menu-dismiss="true">
+                                                        Resetear
+                                                    </button>
+                                                    <button type="button" wire:click="aplicar_filtro" class="btn btn-primary fw-semibold px-6" data-kt-menu-dismiss="true">
+                                                        Aplicar
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div> --}}
+                            </div>
                         </div>
-                    </div>
+                    @endif
                     {{-- card  --}}
                     <div class="row g-5 mb-5">
-                        @foreach ($programas as $item2)
+                        @forelse ($programas as $item2)
                             @php
                                 $cursos = App\Models\DocenteCurso::join('curso_programa_proceso', 'docente_curso.id_curso_programa_proceso', 'curso_programa_proceso.id_curso_programa_proceso')
                                     ->join('programa_proceso', 'curso_programa_proceso.id_programa_proceso', 'programa_proceso.id_programa_proceso')
@@ -129,6 +114,7 @@
                                         $query->where('curso.curso_nombre', 'like', '%' . $search . '%')
                                             ->orWhere('curso.curso_codigo', 'like', '%' . $search . '%');
                                     })
+                                    ->where('docente_curso_estado', $data_filtro_estado == null ? '!=' : '=', $data_filtro_estado)
                                     ->get(); // obtenemos los cursos del docente del trabajador del usuario autenticado
                                 $programa = App\Models\Programa::find($item2->id_programa);
                                 $numero_aleatorio = rand(1, 6);
@@ -169,7 +155,7 @@
                                     <div class="row g-5">
                                         @forelse ($cursos as $item)
                                             <div class="col-sm-6 col-md-6 col-lg-6 col-xl-4">
-                                                <div class="card card-bordered shadow-sm h-100">
+                                                <div class="card card-bordered shadow-sm h-100 hover-elevate-up parent-hover">
                                                     @if ($item->docente_curso_estado == 1)
                                                         <div class="ribbon ribbon-top">
                                                             <div class="ribbon-label bg-success fw-bold fs-5">Activo</div>
@@ -187,7 +173,7 @@
                                                     <div
                                                         class="card-body mb-0 d-flex flex-column justify-content-center px-10 py-10">
                                                         <div class="mb-2 text-center">
-                                                            <span class="fs-2 text-gray-800 fw-bold text-uppercase">
+                                                            <span class="fs-2 text-gray-800 fw-bold text-uppercase parent-hover-primary">
                                                                 {{ $item->curso_programa_proceso->curso->curso_nombre }}
                                                             </span>
                                                         </div>
@@ -195,17 +181,18 @@
                                                             <span>
                                                                 {{ $item->curso_programa_proceso->curso->curso_codigo }} -
                                                                 CICLO
-                                                                {{ $item->curso_programa_proceso->curso->ciclo->ciclo }}
+                                                                {{ $item->curso_programa_proceso->curso->ciclo->ciclo }} -
+                                                                GRUPO
+                                                                {{ $item->programa_proceso_grupo->grupo_detalle }}
                                                             </span>
                                                         </div>
                                                         <div class="d-flex flex-column row-gap-5">
                                                             @if ($item->docente_curso_estado == 1)
-                                                                <button class="btn btn-primary w-100 hover-scale"
-                                                                    wire:click="ingresar({{ $item->id_modalidad }})">
+                                                                <a href="{{ route('docente.matriculados', ['id_docente_curso' => $item->id_docente_curso]) }}" class="btn btn-primary w-100">
                                                                     Ingresar
-                                                                </button>
+                                                                </a>
                                                             @else
-                                                                <button class="btn btn-primary w-100 hover-scale" disabled>
+                                                                <button class="btn btn-primary w-100" disabled>
                                                                     Ingresar
                                                                 </button>
                                                             @endif
@@ -225,13 +212,20 @@
                                     </div>
                                 </div>
                             </div>
-                        @endforeach
+                        @empty
+                            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                <div class="mb-0 py-20 text-center">
+                                    <span class="fs-2 text-gray-500 fw-bold text-uppercase">
+                                        No se encontraron cursos asignados
+                                    </span>
+                                </div>
+                            </div>
+                        @endforelse
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 </div>
 @push('scripts')
     <script>

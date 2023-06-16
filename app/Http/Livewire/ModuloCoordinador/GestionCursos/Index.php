@@ -11,6 +11,7 @@ use App\Models\Docente;
 use App\Models\DocenteCurso;
 use App\Models\Plan;
 use App\Models\Programa;
+use App\Models\ProgramaProcesoGrupo;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -36,6 +37,8 @@ class Index extends Component
     public $docentes; // Variable para almacenar el docente
     public $docente; // Variable para almacenar el docente del formulario del modal
     public $id_docente_curso; // Variable para almacenar el id del docente_curso
+    public $grupo; // Variable para almacenar el grupo
+    public $grupos; // Variable para almacenar los grupos
 
     // variables para los filtros
     public $filtro_proceso; // Variable para almacenar el proceso
@@ -70,7 +73,8 @@ class Index extends Component
         if($this->modo == 'select')
         {
             $this->validateOnly($propertyName, [ // Validación de los campos
-                'docente' => 'required|integer|exists:docente,id_docente',
+                'docente' => 'required|integer',
+                'grupo' => 'required|integer'
             ]);
         }
     }
@@ -114,6 +118,7 @@ class Index extends Component
             'id_curso_programa_proceso',
             'docentes',
             'docente',
+            'grupo',
         ]);
     }
 
@@ -121,6 +126,7 @@ class Index extends Component
     {
         $this->reset([
             'docente',
+            'grupo',
         ]);
         $this->resetErrorBag();
         $this->resetValidation();
@@ -142,16 +148,17 @@ class Index extends Component
         $this->curso = $curso_programa_proceso->curso; // Se almacena el curso
         $this->id_curso = $curso_programa_proceso->curso->id_curso; // Se almacena el id del curso
         $this->docentes = DocenteCurso::where('id_curso_programa_proceso', $this->id_curso_programa_proceso)->get(); // Se almacena el docente
+        $this->grupos = ProgramaProcesoGrupo::where('id_programa_proceso', $curso_programa_proceso->id_programa_proceso)->get(); // Se almacenan los grupos
     }
 
     public function asignar_docente()
     {
         $this->validate([ // Validación de los campos
-            'docente' => 'required|integer|exists:docente,id_docente',
+            'docente' => 'required|integer',
         ]);
 
         // Se verifica si el docente ya está asignado al curso
-        $docente_curso = DocenteCurso::where('id_curso_programa_proceso', $this->id_curso_programa_proceso)->where('id_docente', $this->docente)->first();
+        $docente_curso = DocenteCurso::where('id_curso_programa_proceso', $this->id_curso_programa_proceso)->where('id_docente', $this->docente)->where('id_programa_proceso_grupo', $this->grupo)->first();
         if($docente_curso)
         {
             // emitir alerta para mostrar mensaje de error
@@ -169,6 +176,7 @@ class Index extends Component
         $docente_curso = new DocenteCurso();
         $docente_curso->id_docente = $this->docente;
         $docente_curso->id_curso_programa_proceso = $this->id_curso_programa_proceso;
+        $docente_curso->id_programa_proceso_grupo = $this->grupo;
         $docente_curso->docente_curso_fecha_creacion = date('Y-m-d H:i:s');
         $docente_curso->docente_curso_estado = 1;
         $docente_curso->save();
@@ -185,6 +193,7 @@ class Index extends Component
         // limpiamos el combo docente
         $this->reset([
             'docente',
+            'grupo',
         ]);
 
         // Se actualiza la lista de docentes

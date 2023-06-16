@@ -15,6 +15,7 @@ class DocenteCurso extends Model
         'id_docente_curso',
         'id_docente',
         'id_curso_programa_proceso',
+        'id_programa_proceso_grupo',
         'docente_curso_fecha_creacion',
         'docente_curso_estado'
     ];
@@ -31,5 +32,11 @@ class DocenteCurso extends Model
     public function curso_programa_proceso()
     {
         return $this->belongsTo(CursoProgramaProceso::class, 'id_curso_programa_proceso');
+    }
+
+    // programa proceso grupo
+    public function programa_proceso_grupo()
+    {
+        return $this->belongsTo(ProgramaProcesoGrupo::class, 'id_programa_proceso_grupo');
     }
 }
