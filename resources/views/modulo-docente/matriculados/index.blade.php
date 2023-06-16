@@ -1,14 +1,14 @@
 @extends('layouts.modulo-docente')
-@section('title', 'Docente de Posgrado - Escuela de Posgrado')
+@section('title', 'Matriculados - Docente de Posgrado - Escuela de Posgrado')
 @section('content')
-@livewire('modulo-docente.inicio.index')
+@livewire('modulo-docente.matriculados.index', ['id_docente_curso' => $id_docente_curso], key($id_docente_curso))
 @endsection
 @section('scripts')
     <script>
-        window.addEventListener('modal_encuesta', event => {
-            $('#modal_encuesta').modal(event.detail.action);
+        window.addEventListener('modal_nota', event => {
+            $('#modal_nota').modal(event.detail.action);
         })
-        window.addEventListener('alerta-encuesta', event => {
+        window.addEventListener('alerta_matriculados', event => {
             Swal.fire({
                 title: event.detail.title,
                 text: event.detail.text,
@@ -20,5 +20,26 @@
                 }
             });
         })
+        window.addEventListener('alerta_matriculados_opciones', event => {
+            // alert('Name updated to: ' + event.detail.id);
+            Swal.fire({
+                title: event.detail.title,
+                text: event.detail.text,
+                icon: event.detail.icon,
+                showCancelButton: true,
+                confirmButtonText: event.detail.confirmButtonText,
+                cancelButtonText: event.detail.cancelButtonText,
+                // confirmButtonClass: 'hover-elevate-up', // Hover para elevar boton al pasar el cursor
+                // cancelButtonClass: 'hover-elevate-up', // Hover para elevar boton al pasar el cursor
+                customClass: {
+                    confirmButton: "btn btn-"+event.detail.confirmButtonColor,
+                    cancelButton: "btn btn-"+event.detail.cancelButtonColor,
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Livewire.emitTo('modulo-docente.matriculados.index', 'asignar_nsp');
+                }
+            });
+        });
     </script>
 @endsection

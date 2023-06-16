@@ -369,7 +369,7 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="col-md-12">
+                        <div class="col-md-8">
                             <label for="docente" class="required form-label fw-semibold text-gray-600 fs-5">
                                 Buscar Docente
                             </label>
@@ -385,6 +385,27 @@
                                 @endforeach
                             </select>
                             @error('docente')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="col-md-4">
+                            <label for="docente" class="required form-label fw-semibold text-gray-600 fs-5">
+                                Seleccionar Grupo
+                            </label>
+                            <select class="form-select @error('grupo') is-invalid @enderror"
+                                wire:model="grupo" id="grupo" data-control="select2"
+                                data-placeholder="Buscar grupo" data-allow-clear="true"
+                                data-dropdown-parent="#modal_asignacion_docente">
+                                <option></option>
+                                @if ($grupos)
+                                @foreach ($grupos as $item)
+                                    <option value="{{ $item->id_programa_proceso_grupo }}">
+                                        GRUPO: {{ $item->grupo_detalle }}
+                                    </option>
+                                @endforeach
+                                @endif
+                            </select>
+                            @error('grupo')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
@@ -689,45 +710,45 @@
 </div>
 @push('scripts')
     <script>
-        // grado_academico select2
-        // $(document).ready(function() {
-        //     $('#grado_academico').select2({
-        //         placeholder: 'Seleccione su grado académico',
-        //         allowClear: true,
-        //         width: '100%',
-        //         selectOnClose: true,
-        //         language: {
-        //             noResults: function() {
-        //                 return "No se encontraron resultados";
-        //             },
-        //             searching: function() {
-        //                 return "Buscando..";
-        //             }
-        //         }
-        //     });
-        //     $('#grado_academico').on('change', function() {
-        //         @this.set('grado_academico', this.value);
-        //     });
-        //     Livewire.hook('message.processed', (message, component) => {
-        //         $('#grado_academico').select2({
-        //             placeholder: 'Seleccione su grado académico',
-        //             allowClear: true,
-        //             width: '100%',
-        //             selectOnClose: true,
-        //             language: {
-        //                 noResults: function() {
-        //                     return "No se encontraron resultados";
-        //                 },
-        //                 searching: function() {
-        //                     return "Buscando..";
-        //                 }
-        //             }
-        //         });
-        //         $('#grado_academico').on('change', function() {
-        //             @this.set('grado_academico', this.value);
-        //         });
-        //     });
-        // });
+        // grupo select2
+        $(document).ready(function() {
+            $('#grupo').select2({
+                placeholder: 'Seleccione su grupo',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function() {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function() {
+                        return "Buscando..";
+                    }
+                }
+            });
+            $('#grupo').on('change', function() {
+                @this.set('grupo', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#grupo').select2({
+                    placeholder: 'Seleccione su grupo',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function() {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function() {
+                            return "Buscando..";
+                        }
+                    }
+                });
+                $('#grupo').on('change', function() {
+                    @this.set('grupo', this.value);
+                });
+            });
+        });
         // docente select2
         $(document).ready(function() {
             $('#docente').select2({

@@ -3,17 +3,40 @@
 namespace App\Http\Livewire\ModuloDocente\Inicio;
 
 use App\Models\Admision;
+use App\Models\CursoProgramaProceso;
 use App\Models\Docente;
 use App\Models\DocenteCurso;
+use App\Models\ProgramaProcesoGrupo;
 use Livewire\Component;
 
 class Index extends Component
 {
     public $search = '';
+    public $filtro_estado; // variable para el filtro de estado\
+    public $data_filtro_estado; // variable para el filtro de estado
+
+    public $grupos; // variable para los grupos
 
     protected $queryString = [
-        'search' => ['except' => '']
+        'search' => ['except' => ''],
+        'filtro_estado' => ['except' => ''],
+        'data_filtro_estado' => ['except' => '']
     ];
+
+    public function mount()
+    {
+        $this->grupos = collect();
+    }
+
+    public function resetear_filtro()
+    {
+        $this->reset(['filtro_estado', 'data_filtro_estado']);
+    }
+
+    public function aplicar_filtro()
+    {
+        $this->data_filtro_estado = $this->filtro_estado;
+    }
 
     public function render()
     {

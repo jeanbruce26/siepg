@@ -14,9 +14,14 @@ class NotaMatriculaCurso extends Model
     protected $fillable = [
         'id_nota_matricula_curso',
         'id_matricula_curso',
-        'nota',
+        'nota_evaluacion_permanente',
+        'nota_evaluacion_medio_curso',
+        'nota_evaluacion_final',
+        'nota_promedio_final',
+        'nota_observacion',
         'nota_matricula_curso_fecha_creacion',
-        'nota_matricula_curso_estado'
+        'nota_matricula_curso_estado',
+        'id_estado_cursos'
     ];
 
     public $timestamps = false;
@@ -25,5 +30,11 @@ class NotaMatriculaCurso extends Model
     public function matricula_curso()
     {
         return $this->belongsTo(MatriculaCurso::class, 'id_matricula_curso');
+    }
+
+    // estado curso
+    public function estado_cursos()
+    {
+        return $this->belongsTo(EstadoCursos::class, 'id_estado_cursos');
     }
 }
