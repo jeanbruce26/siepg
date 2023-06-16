@@ -40,10 +40,10 @@
                             <div class="separator border-gray-200"></div>
                             <form class="px-7 py-5" wire:submit.prevent="aplicar_filtro">
                                 <div class="mb-10">
-                                    <label class="form-label fw-semibold">Proceso de Admisión:</label>
+                                    <label class="form-label fw-semibold">Proceso de Admisión: </label>
                                     <div>
                                         <select class="form-select" wire:model="filtro_proceso" id="filtro_proceso"  data-control="select2" data-placeholder="Seleccione">
-                                            $@foreach ($admisiones as $item)
+                                            @foreach ($admisiones as $item)
                                             <option value="{{ $item->id_admision }}">{{ $item->admision }}</option>
                                             @endforeach
                                         </select>

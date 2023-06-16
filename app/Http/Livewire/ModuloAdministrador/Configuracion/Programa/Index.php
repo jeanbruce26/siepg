@@ -190,19 +190,19 @@ class Index extends Component
     //Guardar o actualizar el programa
     public function guardarPrograma()
     {
-        $this->validate([
-            'programa_iniciales' => 'required | string | max:255',
-            'subprograma' => 'required | string | max:255',
-            'mencion' => 'nullable | string | max:255',
-            'id_sunedu' => 'required | numeric | unique:programa,id_sunedu,'.$this->id_programa.',id_programa',
-            'codigo_sunedu' => 'nullable | string | max:255 | unique:programa,codigo_sunedu,'.$this->id_programa.',id_programa',
-            'modalidad' => 'required | numeric',
-            'facultad' => 'required | numeric',
-            'sede' => 'required | numeric',
-            'programa_tipo' => 'required | numeric',
-        ]);
-
         if ($this->modo == 1) {//Si el modo es 1 (crear), crear el programa
+            $this->validate([
+                'programa_iniciales' => 'required | string | max:255',
+                'subprograma' => 'required | string | max:255',
+                'mencion' => 'nullable | string | max:255',
+                'id_sunedu' => 'required | numeric | unique:programa,id_sunedu,'.$this->id_programa.',id_programa',
+                'codigo_sunedu' => 'nullable | string | max:255 | unique:programa,codigo_sunedu,'.$this->id_programa.',id_programa',
+                'modalidad' => 'required | numeric',
+                'facultad' => 'required | numeric',
+                'sede' => 'required | numeric',
+                'programa_tipo' => 'required | numeric',
+            ]);
+
             //Validando que no exista el programa
             $programa = Programa::where('programa_iniciales', $this->programa_iniciales)
                                 ->where('subprograma', $this->subprograma)
@@ -255,6 +255,18 @@ class Index extends Component
             $this->alertaPrograma('¡Éxito!', "El programa de $programaModel->programa EN $programaModel->subprograma ha sido registrado satisfactoriamente.", 'success', 'Aceptar', 'success');
             
         } else {//Si el modo es 2 (actualizar), actualizar el programa
+            $this->validate([
+                'programa_iniciales' => 'required | string | max:255',
+                'subprograma' => 'required | string | max:255',
+                'mencion' => 'nullable | string | max:255',
+                'id_sunedu' => 'required | numeric',
+                'codigo_sunedu' => 'nullable | string | max:255',
+                'modalidad' => 'required | numeric',
+                'facultad' => 'required | numeric',
+                'sede' => 'required | numeric',
+                'programa_tipo' => 'required | numeric',
+            ]);
+            
             $programaModel = Programa::findOrFail($this->id_programa);
 
             //Validando que no se hayan cambiado los datos del programa
@@ -280,7 +292,10 @@ class Index extends Component
 
             //Validar que el id de sunedu o el codigo de sunedu no existan en otro programa
             $programa = Programa::where('id_sunedu', $this->id_sunedu)
+                                ->where('id_programa', '!=', $this->id_programa)
+                                ->where('id_modalidad', $this->modalidad)
                                 ->orWhere('codigo_sunedu', $this->codigo_sunedu)
+                                ->whereNotNull('codigo_sunedu')
                                 ->first();
             if($programa){
                 $this->alertaPrograma('¡Error!', "El ID de SUNEDU o el código de SUNEDU ya se encuentra registrado en otro programa.", 'error', 'Aceptar', 'danger');
