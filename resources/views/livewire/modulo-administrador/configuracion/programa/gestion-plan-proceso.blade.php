@@ -253,7 +253,7 @@
                         </button>
                         <button type="button" wire:click="guardarProgramaPlan" class="btn btn-primary" style="width: 150px" wire:loading.attr="disabled" wire:target="guardarProgramaPlan">
                             <div wire:loading.remove wire:target="guardarProgramaPlan, voucher">
-                                Registrar Pago
+                                Guardar
                             </div>
                             <div wire:loading wire:target="guardarProgramaPlan">
                                 Procesando <span class="spinner-border spinner-border-sm align-middle ms-2">
