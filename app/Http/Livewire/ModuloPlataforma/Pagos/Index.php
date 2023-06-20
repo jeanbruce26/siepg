@@ -4,11 +4,13 @@ namespace App\Http\Livewire\ModuloPlataforma\Pagos;
 
 use App\Models\Admision;
 use App\Models\Admitido;
+use App\Models\AdmitidoCiclo;
 use App\Models\CanalPago;
 use App\Models\ConceptoPago;
 use App\Models\ConstanciaIngreso;
 use App\Models\Inscripcion;
 use App\Models\Matricula;
+use App\Models\Mensualidad;
 use App\Models\Pago;
 use App\Models\PagoObservacion;
 use App\Models\Persona;
@@ -322,7 +324,7 @@ class Index extends Component
             {
                 if($this->concepto_pago == 3 || $this->concepto_pago == 4)
                 {
-                    if($this->fecha_pago >= $fecha_matricula_extemporanea_inicio || $this->fecha_pago <= $fecha_matricula_extemporanea_fin)
+                    if($this->fecha_pago >= $fecha_matricula_extemporanea_inicio && $this->fecha_pago <= $fecha_matricula_extemporanea_fin)
                     {
                         $this->dispatchBrowserEvent('alerta_pago_plataforma', [
                             'title' => '¡Error!',
@@ -580,6 +582,26 @@ class Index extends Component
         //     $pago->pago_estado = 2;
         //     $pago->save();
         // }
+
+        // si el pago es de concepto de mensualidad
+        if ( $pago->id_concepto_pago == 7 )
+        {
+            // buscar la matricula del admitido
+            $ciclo = AdmitidoCiclo::where('id_admitido', $admitido->id_admitido)->where('admitido_ciclo_estado', 1)->orderBy('id_admitido_ciclo', 'desc')->first();
+            $matricula = Matricula::where('id_admitido', $admitido->id_admitido)->where('id_ciclo', $ciclo->id_ciclo)->where('matricula_estado', 1)->first();
+            // registrar mensualidad
+            $mensualidad = new Mensualidad();
+            $mensualidad->id_matricula = $matricula->id_matricula;
+            $mensualidad->id_pago = $pago->id_pago;
+            $mensualidad->id_admitido = $admitido->id_admitido;
+            $mensualidad->mensualidad_fecha_creacion = date('Y-m-d H:i:s');
+            $mensualidad->mensualidad_estado = 1;
+            $mensualidad->save();
+
+            // cambiar de estado
+            $pago->pago_estado = 2;
+            $pago->save();
+        }
     }
 
     public function render()

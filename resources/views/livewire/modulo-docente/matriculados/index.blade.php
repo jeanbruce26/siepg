@@ -37,8 +37,7 @@
             <div class="row mb-5 mb-xl-10">
                 <div class="col-md-12 mb-md-5 mb-xl-10">
                     {{-- alerta --}}
-                    <div
-                        class="alert bg-light-primary border border-3 border-primary d-flex align-items-center p-5 mb-5">
+                    <div class="alert bg-light-primary border border-3 border-primary d-flex align-items-center p-5 mb-5">
                         <i class="ki-duotone ki-information-5 fs-2qx me-4 text-primary">
                             <i class="path1"></i>
                             <i class="path2"></i>
@@ -50,15 +49,38 @@
                             </span>
                         </div>
                     </div>
+                    <div class="alert bg-light-warning border border-3 border-warning d-flex align-items-center p-5 mb-5">
+                        <i class="ki-duotone ki-information-2 fs-2qx me-4 text-warning">
+                            <i class="path1"></i>
+                            <i class="path2"></i>
+                            <i class="path3"></i>
+                        </i>
+                        <div class="d-flex flex-column">
+                            <span class="fw-bold fs-5">
+                                Recuerde que una vez ingresadas las notas, no podrá modificarlas.
+                            </span>
+                        </div>
+                    </div>
                     {{-- card  --}}
                     <div class="card shadow-sm">
                         <div class="card-body mb-0">
-                            <div class="d-flex align-items-center mb-5">
-                                <div class="col-md-4 pe-3">
+                            <div class="row mb-5 g-5">
+                                <div class="col-md-4">
                                 </div>
-                                <div class="col-md-4 px-3">
+                                <div class="col-md-4">
+                                    <div class="d-flex flex-lg-row flex-column gap-3 justify-content-end">
+                                        @if ($modo == 'show')
+                                            <button type="button" wire:click="modo_cancelar" class="btn btn-danger w-lg-50">
+                                                Cancelar
+                                            </button>
+                                        @else
+                                            <button type="button" wire:click="modo_ingresar_notas" class="btn btn-primary w-lg-50">
+                                                Ingresar Notas
+                                            </button>
+                                        @endif
+                                    </div>
                                 </div>
-                                <div class="col-md-4 ps-3">
+                                <div class="col-md-4">
                                     <input type="search" wire:model="search" class="form-control w-100" placeholder="Buscar..."/>
                                 </div>
                             </div>
@@ -82,7 +104,7 @@
                                             @php
                                                 $nota_curso = App\Models\NotaMatriculaCurso::where('id_matricula_curso', $item->id_matricula_curso)->first();
                                             @endphp
-                                            <tr class="fs-6 text-gray-800">
+                                            <tr class="fs-6 text-gray-800" wire:key="{{ $item->id_matricula_curso }}">
                                                 <td class="fw-bold">
                                                     {{ $item->id_matricula_curso }}
                                                 </td>
@@ -99,14 +121,18 @@
                                                                 {{ number_format($nota_curso->nota_evaluacion_permanente) }} pts.
                                                             </span>
                                                         @else
-                                                            <button type="button" wire:click="cargar_curso({{$item->id_matricula_curso}}, 1)" class="btn btn-info">
-                                                                Nota
-                                                            </button>
+                                                            @if ($modo == 'hide')
+                                                                -
+                                                            @elseif ($modo == 'show')
+                                                                <input type="number" class="form-control w-100px @error('notas.' . $item->id_matricula_curso . '.nota1') is-invalid @enderror @if($this->esNotaValida($item->id_matricula_curso, 'nota3')) is-valid @endif" wire:model.lazy="notas.{{ $item->id_matricula_curso }}.nota1">
+                                                            @endif
                                                         @endif
                                                     @else
-                                                        <button type="button" wire:click="cargar_curso({{$item->id_matricula_curso}}, 1)" class="btn btn-info">
-                                                            Nota
-                                                        </button>
+                                                        @if ($modo == 'hide')
+                                                            -
+                                                        @elseif ($modo == 'show')
+                                                            <input type="number" class="form-control w-100px @error('notas.' . $item->id_matricula_curso . '.nota1') is-invalid @enderror @if($this->esNotaValida($item->id_matricula_curso, 'nota3')) is-valid @endif" wire:model.lazy="notas.{{ $item->id_matricula_curso }}.nota1">
+                                                        @endif
                                                     @endif
                                                 </td>
                                                 <td align="center">
@@ -116,14 +142,18 @@
                                                                 {{ number_format($nota_curso->nota_evaluacion_medio_curso) }} pts.
                                                             </span>
                                                         @else
-                                                            <button type="button" wire:click="cargar_curso({{$item->id_matricula_curso}}, 2)" class="btn btn-info">
-                                                                Nota
-                                                            </button>
+                                                            @if ($modo == 'hide')
+                                                                -
+                                                            @elseif ($modo == 'show')
+                                                                <input type="number" class="form-control w-100px @error('notas.' . $item->id_matricula_curso . '.nota2') is-invalid @enderror @if($this->esNotaValida($item->id_matricula_curso, 'nota3')) is-valid @endif" wire:model.lazy="notas.{{ $item->id_matricula_curso }}.nota2">
+                                                            @endif
                                                         @endif
                                                     @else
-                                                        <button type="button" wire:click="cargar_curso({{$item->id_matricula_curso}}, 2)" class="btn btn-info">
-                                                            Nota
-                                                        </button>
+                                                        @if ($modo == 'hide')
+                                                            -
+                                                        @elseif ($modo == 'show')
+                                                            <input type="number" class="form-control w-100px @error('notas.' . $item->id_matricula_curso . '.nota2') is-invalid @enderror @if($this->esNotaValida($item->id_matricula_curso, 'nota3')) is-valid @endif" wire:model.lazy="notas.{{ $item->id_matricula_curso }}.nota2">
+                                                        @endif
                                                     @endif
                                                 </td>
                                                 <td align="center">
@@ -133,14 +163,18 @@
                                                                 {{ number_format($nota_curso->nota_evaluacion_final) }} pts.
                                                             </span>
                                                         @else
-                                                            <button type="button" wire:click="cargar_curso({{$item->id_matricula_curso}}, 3)" class="btn btn-info">
-                                                                Nota
-                                                            </button>
+                                                            @if ($modo == 'hide')
+                                                                -
+                                                            @elseif ($modo == 'show')
+                                                                <input type="number" class="form-control w-100px @error('notas.' . $item->id_matricula_curso . '.nota3') is-invalid @enderror @if($this->esNotaValida($item->id_matricula_curso, 'nota3')) is-valid @endif" wire:model.lazy="notas.{{ $item->id_matricula_curso }}.nota3">
+                                                            @endif
                                                         @endif
                                                     @else
-                                                        <button type="button" wire:click="cargar_curso({{$item->id_matricula_curso}}, 3)" class="btn btn-info">
-                                                            Nota
-                                                        </button>
+                                                        @if ($modo == 'hide')
+                                                            -
+                                                        @elseif ($modo == 'show')
+                                                            <input type="number" class="form-control w-100px @error('notas.' . $item->id_matricula_curso . '.nota3') is-invalid @enderror @if($this->esNotaValida($item->id_matricula_curso, 'nota3')) is-valid @endif" wire:model.lazy="notas.{{ $item->id_matricula_curso }}.nota3">
+                                                        @endif
                                                     @endif
                                                 </td>
                                                 <td align="center">
@@ -185,7 +219,23 @@
                                                         </span>
                                                     @endif
                                                 </td>
-                                                <td>
+                                                <td class="d-flex flex-column gap-3">
+                                                    @if ($nota_curso)
+                                                        @if ($nota_curso->nota_evaluacion_final !== null)
+                                                        @else
+                                                            @if ($modo == 'show')
+                                                                <button wire:click="guardar_notas({{ $item->id_matricula_curso }})" class="btn btn-outline btn-outline-dashed btn-outline-info btn-active-light-info fw-bold hover-scale">
+                                                                    Guardar
+                                                                </button>
+                                                            @endif
+                                                        @endif
+                                                    @else
+                                                        @if ($modo == 'show')
+                                                            <button wire:click="guardar_notas({{ $item->id_matricula_curso }})" class="btn btn-outline btn-outline-dashed btn-outline-info btn-active-light-info fw-bold hover-scale">
+                                                                Guardar
+                                                            </button>
+                                                        @endif
+                                                    @endif
                                                     <button type="button"
                                                         class="btn btn-flex btn-center fw-bold btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary hover-scale"
                                                         {{-- data-kt-menu-trigger="click" --}}
@@ -238,61 +288,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                            @if ($matriculados->hasPages())
-                                <div class="d-flex justify-content-between mt-5">
-                                    <div class="d-flex align-items-center text-gray-700">
-                                        Mostrando {{ $matriculados->firstItem() }} - {{ $matriculados->lastItem() }} de {{ $matriculados->total()}} registros
-                                    </div>
-                                    <div>
-                                        {{ $matriculados->links() }}
-                                    </div>
-                                </div>
-                            @else
-                                <div class="d-flex justify-content-between mt-5">
-                                    <div class="d-flex align-items-center text-gray-700">
-                                        Mostrando {{ $matriculados->firstItem() }} - {{ $matriculados->lastItem() }} de {{ $matriculados->total()}} registros
-                                    </div>
-                                </div>
-                            @endif
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {{-- Modal Puntaje --}}
-    <div wire:ignore.self class="modal fade" id="modal_nota" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title text-uppercase">Ingresar Nota</h5>
-                    <div class="btn btn-icon btn-sm btn-active-light-danger ms-2" wire:click="limpiar_modal" data-bs-dismiss="modal" aria-label="Close">
-                        <span class="svg-icon svg-icon-2hx">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor"/>
-                                <rect x="7" y="15.3137" width="12" height="2" rx="1" transform="rotate(-45 7 15.3137)" fill="currentColor"/>
-                                <rect x="8.41422" y="7" width="12" height="2" rx="1" transform="rotate(45 8.41422 7)" fill="currentColor"/>
-                            </svg>
-                        </span>
-                    </div>
-                </div>
-                <div class="modal-body">
-                    <form class="row g-5 alig-items-center">
-                        <div class="col-12">
-                            <input type="number" class="form-control @error('nota') is-invalid @enderror w-100" wire:model="nota" placeholder="Ingrese la nota...">
-                            @error('nota')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <div class="d-flex justify-content-between w-100">
-                        <button type="button" wire:click="limpiar_modal()" class="btn btn-light" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="button" wire:click="agregar_nota()" class="btn btn-success">Guardar</button>
                     </div>
                 </div>
             </div>

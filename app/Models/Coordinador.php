@@ -9,7 +9,6 @@ class Coordinador extends Model
 {
     use HasFactory;
 
-
     protected $primaryKey = 'id_coordinador';
     protected $table = 'coordinador';
     protected $fillable = [

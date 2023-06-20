@@ -12,10 +12,6 @@ use Livewire\WithPagination;
 
 class Index extends Component
 {
-    use WithPagination; // trait para paginacion en livewire
-    // bootstrap livewire pagination views
-    protected $paginationTheme = 'bootstrap';
-
     public $id_docente_curso;
     public $id_programa_proceso_grupo;
     public $curso_programa_proceso;
@@ -26,17 +22,21 @@ class Index extends Component
     public $id_matricula_curso;
     public $matricula_curso;
     public $nota_matricula_curso;
-    public $nota;
     public $modo_nota = 0;
+
+    public $matriculados;
+    public $notas = [];
+    public $modo = 'hide';
 
     public $search = '';
 
-    protected $listeners = [
-        'asignar_nsp' => 'asignar_nsp',
+    protected $queryString = [
+        'search' => ['except' => ''],
+        'modo' => ['except' => 'hide'],
     ];
 
-    protected $queryString = [
-        'page' => ['except' => 1],
+    protected $listeners = [
+        'asignar_nsp' => 'asignar_nsp',
     ];
 
     public function mount()
@@ -65,9 +65,61 @@ class Index extends Component
 
     public function updated($propertyName)
     {
-        $this->validateOnly($propertyName, [
-            'nota' => 'required|numeric|min:0|max:20',
-        ]);
+        // Limpiar los mensajes de error cuando se modifiquen los campos
+        $this->resetErrorBag($propertyName);
+    }
+
+    public function modo_ingresar_notas()
+    {
+        $matriculados_count = MatriculaCurso::join('matricula', 'matricula_curso.id_matricula', 'matricula.id_matricula')
+                        ->join('admitido', 'matricula.id_admitido', 'admitido.id_admitido')
+                        ->join('persona', 'admitido.id_persona', 'persona.id_persona')
+                        ->where('matricula_curso.id_curso_programa_proceso', $this->id_curso_programa_proceso)
+                        ->where('matricula.id_programa_proceso_grupo', $this->id_programa_proceso_grupo)
+                        ->count();
+
+        $matriculados_finalizados_count = MatriculaCurso::join('matricula', 'matricula_curso.id_matricula', 'matricula.id_matricula')
+                        ->join('admitido', 'matricula.id_admitido', 'admitido.id_admitido')
+                        ->join('persona', 'admitido.id_persona', 'persona.id_persona')
+                        ->where('matricula_curso.id_curso_programa_proceso', $this->id_curso_programa_proceso)
+                        ->where('matricula.id_programa_proceso_grupo', $this->id_programa_proceso_grupo)
+                        ->where('matricula_curso.matricula_curso_estado', 2)
+                        ->count();
+
+        // emitir alerta de que todas las notas ya fueron ingresadas
+        if ( $matriculados_count == $matriculados_finalizados_count )
+        {
+            $this->dispatchBrowserEvent('alerta_matriculados', [
+                'title' => '¡Alerta!',
+                'text' => 'Todas las notas ya fueron ingresadas.',
+                'icon' => 'warning',
+                'confirmButtonText' => 'Aceptar',
+                'color' => 'warning'
+            ]);
+        }
+
+        $this->modo = 'show';
+    }
+
+    public function modo_cancelar()
+    {
+        $this->modo = 'hide';
+    }
+
+    public function esNotaValida($idMatricula, $campo)
+    {
+        // Verificar si la nota es válida
+        if (isset($this->notas[$idMatricula][$campo]))
+        {
+            $nota = $this->notas[$idMatricula][$campo];
+
+            // Realiza las validaciones necesarias
+            // Por ejemplo, verifica si la nota está dentro de un rango específico
+            // Si cumple las condiciones, retorna true, de lo contrario, retorna false
+            return ($nota >= 0 && $nota <= 20);
+        }
+
+        return false;
     }
 
     public function updatingSearch()
@@ -80,165 +132,6 @@ class Index extends Component
         $this->reset([
             'nota',
         ]);
-    }
-
-    public function cargar_curso(MatriculaCurso $matricula_curso, $modo)
-    {
-        $this->matricula_curso = $matricula_curso;
-        $this->id_matricula_curso = $matricula_curso->id_matricula_curso;
-        $this->modo_nota = $modo;
-        $this->nota_matricula_curso = NotaMatriculaCurso::where('id_matricula_curso', $matricula_curso->id_matricula_curso)->first();
-
-        if($this->modo_nota == 1)
-        {
-            if($this->nota_matricula_curso)
-            {
-                $this->nota = $this->nota_matricula_curso->nota_evaluacion_permanente;
-            }
-            else
-            {
-                $nota_matricula_curso = new NotaMatriculaCurso();
-                $nota_matricula_curso->id_matricula_curso = $matricula_curso->id_matricula_curso;
-                $nota_matricula_curso->nota_matricula_curso_fecha_creacion = date('Y-m-d H:i:s');
-                $nota_matricula_curso->nota_matricula_curso_estado = 1;
-                $nota_matricula_curso->id_estado_cursos = null;
-                $nota_matricula_curso->save();
-            }
-            $this->dispatchBrowserEvent('modal_nota', ['action' => 'show']);
-        }
-        else if($this->modo_nota == 2)
-        {
-            if($this->nota_matricula_curso)
-            {
-                if($this->nota_matricula_curso->nota_evaluacion_permanente == null)
-                {
-                    $this->dispatchBrowserEvent('modal_nota', ['action' => 'hide']);
-                    // emitir alerta para mostrar mensaje de error
-                    $this->dispatchBrowserEvent('alerta_matriculados', [
-                        'title' => '¡Error!',
-                        'text' => 'No se puede registrar la nota de evaluación medio curso, porque no se ha registrado la nota de evaluación permanente.',
-                        'icon' => 'error',
-                        'confirmButtonText' => 'Aceptar',
-                        'color' => 'danger'
-                    ]);
-                    return;
-                }
-                $this->nota = $this->nota_matricula_curso->nota_evaluacion_medio_curso;
-            }
-            else
-            {
-                $this->dispatchBrowserEvent('modal_nota', ['action' => 'hide']);
-                // emitir alerta para mostrar mensaje de error
-                $this->dispatchBrowserEvent('alerta_matriculados', [
-                    'title' => '¡Error!',
-                    'text' => 'No se puede registrar la nota de evaluación medio curso, porque no se ha registrado la nota de evaluación permanente.',
-                    'icon' => 'error',
-                    'confirmButtonText' => 'Aceptar',
-                    'color' => 'danger'
-                ]);
-                return;
-            }
-            $this->dispatchBrowserEvent('modal_nota', ['action' => 'show']);
-        }
-        else if($this->modo_nota == 3)
-        {
-            if($this->nota_matricula_curso)
-            {
-                if($this->nota_matricula_curso->nota_evaluacion_medio_curso == null && $this->nota_matricula_curso->nota_evaluacion_permanente == null)
-                {
-                    $this->dispatchBrowserEvent('modal_nota', ['action' => 'hide']);
-                    // emitir alerta para mostrar mensaje de error
-                    $this->dispatchBrowserEvent('alerta_matriculados', [
-                        'title' => '¡Error!',
-                        'text' => 'No se puede registrar la nota de evaluación final, porque no se ha registrado la nota de evaluación permanente y de medio curso.',
-                        'icon' => 'error',
-                        'confirmButtonText' => 'Aceptar',
-                        'color' => 'danger'
-                    ]);
-                    return;
-                }
-                if($this->nota_matricula_curso->nota_evaluacion_medio_curso == null)
-                {
-                    $this->dispatchBrowserEvent('modal_nota', ['action' => 'hide']);
-                    // emitir alerta para mostrar mensaje de error
-                    $this->dispatchBrowserEvent('alerta_matriculados', [
-                        'title' => '¡Error!',
-                        'text' => 'No se puede registrar la nota de evaluación final, porque no se ha registrado la nota de medio curso.',
-                        'icon' => 'error',
-                        'confirmButtonText' => 'Aceptar',
-                        'color' => 'danger'
-                    ]);
-                    return;
-                }
-                $this->nota = $this->nota_matricula_curso->nota_evaluacion_final;
-            }
-            else
-            {
-                $this->dispatchBrowserEvent('modal_nota', ['action' => 'hide']);
-                // emitir alerta para mostrar mensaje de error
-                $this->dispatchBrowserEvent('alerta_matriculados', [
-                    'title' => '¡Error!',
-                    'text' => 'No se puede registrar la nota de evaluación final, porque no se ha registrado la nota de evaluación permanente y la de medio curso.',
-                    'icon' => 'error',
-                    'confirmButtonText' => 'Aceptar',
-                    'color' => 'danger'
-                ]);
-                return;
-            }
-            $this->dispatchBrowserEvent('modal_nota', ['action' => 'show']);
-        }
-    }
-
-    public function agregar_nota()
-    {
-        $this->validate([
-            'nota' => 'required|numeric|min:0|max:20'
-        ]);
-
-        if($this->modo_nota == 1)
-        {
-            $this->nota_matricula_curso->nota_evaluacion_permanente = $this->nota;
-        }
-        else if($this->modo_nota == 2)
-        {
-            $this->nota_matricula_curso->nota_evaluacion_medio_curso = $this->nota;
-        }
-        else if($this->modo_nota == 3)
-        {
-            $this->nota_matricula_curso->nota_evaluacion_final = $this->nota;
-            $promedio_final = ($this->nota_matricula_curso->nota_evaluacion_permanente + $this->nota_matricula_curso->nota_evaluacion_medio_curso + $this->nota_matricula_curso->nota_evaluacion_final) / 3;
-            $promedio_final = round($promedio_final);
-            if ( $promedio_final >= 14 )
-            {
-                $this->nota_matricula_curso->id_estado_cursos = 1;
-            }
-            else if ( $promedio_final >= 10 && $promedio_final < 14 )
-            {
-                $this->nota_matricula_curso->id_estado_cursos = 2;
-            }
-            else if ( $promedio_final < 10 )
-            {
-                $this->nota_matricula_curso->id_estado_cursos = 3;
-            }
-            $this->nota_matricula_curso->nota_promedio_final = $promedio_final;
-        }
-        $this->nota_matricula_curso->save();
-
-        // cambiamos el estado de la matricula_curso a finalizado
-        $this->matricula_curso->matricula_curso_estado = 2; // 2 = curso finalizado
-        $this->matricula_curso->save();
-
-        // emitimos evento para mostrar mensaje de éxito
-        $this->dispatchBrowserEvent('alerta_matriculados', [
-            'title' => '¡Éxito!',
-            'text' => 'Se registró la nota correctamente.',
-            'icon' => 'success',
-            'confirmButtonText' => 'Aceptar',
-            'color' => 'success'
-        ]);
-
-        // emitimos evento para ocultar modal
-        $this->dispatchBrowserEvent('modal_nota', ['action' => 'hide']);
     }
 
     public function alerta_asignar_nsp(MatriculaCurso $matricula_curso)
@@ -315,9 +208,85 @@ class Index extends Component
         ]);
     }
 
+    public function guardar_notas(MatriculaCurso $matricula_curso)
+    {
+        // Validar los campos
+        $this->validate([
+            "notas.$matricula_curso->id_matricula_curso.nota1" => 'required|numeric|between:0,20',
+            "notas.$matricula_curso->id_matricula_curso.nota2" => 'required|numeric|between:0,20',
+            "notas.$matricula_curso->id_matricula_curso.nota3" => 'required|numeric|between:0,20',
+        ]);
+
+        $nota_matricula_curso = NotaMatriculaCurso::where('id_matricula_curso', $matricula_curso->id_matricula_curso)->first();
+        if($nota_matricula_curso == null)
+        {
+            $nota_matricula_curso = new NotaMatriculaCurso();
+            $nota_matricula_curso->id_matricula_curso = $matricula_curso->id_matricula_curso;
+            $nota_matricula_curso->nota_evaluacion_permanente = $this->notas[$matricula_curso->id_matricula_curso]['nota1'];
+            $nota_matricula_curso->nota_evaluacion_medio_curso = $this->notas[$matricula_curso->id_matricula_curso]['nota2'];
+            $nota_matricula_curso->nota_evaluacion_final = $this->notas[$matricula_curso->id_matricula_curso]['nota3'];
+            $promedio_final = ($this->notas[$matricula_curso->id_matricula_curso]['nota1'] + $this->notas[$matricula_curso->id_matricula_curso]['nota2'] + $this->notas[$matricula_curso->id_matricula_curso]['nota3']) / 3;
+            $nota_matricula_curso->nota_promedio_final = $promedio_final;
+            $nota_matricula_curso->nota_matricula_curso_fecha_creacion = date('Y-m-d H:i:s');
+            $nota_matricula_curso->nota_matricula_curso_estado = 1;
+            if ( $promedio_final >= 14 )
+            {
+                $nota_matricula_curso->id_estado_cursos = 1;
+            }
+            else if ( $promedio_final >= 10 && $promedio_final < 14)
+            {
+                $nota_matricula_curso->id_estado_cursos = 2;
+            }
+            else
+            {
+                $nota_matricula_curso->id_estado_cursos = 3;
+            }
+            $nota_matricula_curso->save();
+        }
+        else
+        {
+            $nota_matricula_curso->nota_evaluacion_permanente = $this->notas[$matricula_curso->id_matricula_curso]['nota1'];
+            $nota_matricula_curso->nota_evaluacion_medio_curso = $this->notas[$matricula_curso->id_matricula_curso]['nota2'];
+            $nota_matricula_curso->nota_evaluacion_final = $this->notas[$matricula_curso->id_matricula_curso]['nota3'];
+            $promedio_final = ($this->notas[$matricula_curso->id_matricula_curso]['nota1'] + $this->notas[$matricula_curso->id_matricula_curso]['nota2'] + $this->notas[$matricula_curso->id_matricula_curso]['nota3']) / 3;
+            $nota_matricula_curso->nota_promedio_final = $promedio_final;
+            $nota_matricula_curso->nota_matricula_curso_fecha_creacion = date('Y-m-d H:i:s');
+            $nota_matricula_curso->nota_matricula_curso_estado = 1;
+            if ( $promedio_final >= 14 )
+            {
+                $nota_matricula_curso->id_estado_cursos = 1;
+            }
+            else if ( $promedio_final >= 10 && $promedio_final < 14)
+            {
+                $nota_matricula_curso->id_estado_cursos = 2;
+            }
+            else
+            {
+                $nota_matricula_curso->id_estado_cursos = 3;
+            }
+            $nota_matricula_curso->save();
+        }
+
+        // cambiamos el estado de la matricula_curso a finalizado
+        $matricula_curso->matricula_curso_estado = 2; // 2 = curso finalizado
+        $matricula_curso->save();
+
+        // emitir alerta de notas agregadas correctamente
+        $this->dispatchBrowserEvent('alerta_matriculados', [
+            'title' => '¡Éxito!',
+            'text' => 'Se guardaron las notas correctamente.',
+            'icon' => 'success',
+            'confirmButtonText' => 'Aceptar',
+            'color' => 'success'
+        ]);
+
+        // emitir evento para renderizar la tabla
+        $this->emit('render');
+    }
+
     public function render()
     {
-        $matriculados = MatriculaCurso::join('matricula', 'matricula_curso.id_matricula', 'matricula.id_matricula')
+        $this->matriculados = MatriculaCurso::join('matricula', 'matricula_curso.id_matricula', 'matricula.id_matricula')
                         ->join('admitido', 'matricula.id_admitido', 'admitido.id_admitido')
                         ->join('persona', 'admitido.id_persona', 'persona.id_persona')
                         ->where('matricula_curso.id_curso_programa_proceso', $this->id_curso_programa_proceso)
@@ -327,7 +296,8 @@ class Index extends Component
                                 ->orWhere('admitido.admitido_codigo', 'like', '%'.$this->search.'%');
                         })
                         ->orderBy('persona.nombre_completo', 'asc')
-                        ->paginate(50);
+                        // ->paginate(50);
+                        ->get();
 
         $matriculados_count = MatriculaCurso::join('matricula', 'matricula_curso.id_matricula', 'matricula.id_matricula')
                         ->join('admitido', 'matricula.id_admitido', 'admitido.id_admitido')
@@ -344,8 +314,14 @@ class Index extends Component
                         ->where('matricula_curso.matricula_curso_estado', 2)
                         ->count();
 
+        // verificar si ya se agregaron todas las notas
+        if ( $matriculados_count == $matriculados_finalizados_count )
+        {
+            $this->modo = 'hide';
+        }
+
         return view('livewire.modulo-docente.matriculados.index', [
-            'matriculados' => $matriculados,
+            // 'matriculados' => $matriculados,
             'matriculados_count' => $matriculados_count,
             'matriculados_finalizados_count' => $matriculados_finalizados_count,
         ]);
