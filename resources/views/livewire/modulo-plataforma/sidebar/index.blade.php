@@ -143,7 +143,7 @@
                         @if ($admitido)
                             <div class="menu-item">
                                 <a class="menu-link {{ request()->is('plataforma/estado-cuenta') ? 'active' : '' }}"
-                                    href="">
+                                    href="{{ route('plataforma.estado-cuenta') }}">
                                     <span class="menu-bullet">
                                         <span class="bullet bullet-dot"></span>
                                     </span>

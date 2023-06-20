@@ -2,7 +2,9 @@
     <div id="kt_app_toolbar" class="app-toolbar py-3 py-lg-6">
         <div id="kt_app_toolbar_container" class="app-container container-fluid d-flex flex-stack">
             <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
-                <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">Pagos</h1>
+                <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
+                    Estado de Cuenta
+                </h1>
                 <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                     <li class="breadcrumb-item text-muted">
                         <a href="{{ route('plataforma.inicio') }}" class="text-muted text-hover-primary">Home</a>
@@ -10,11 +12,13 @@
                     <li class="breadcrumb-item">
                         <span class="bullet bg-gray-400 w-5px h-2px"></span>
                     </li>
-                    <li class="breadcrumb-item text-muted">Pagos</li>
+                    <li class="breadcrumb-item text-muted">
+                        Estado de Cuenta
+                    </li>
                 </ul>
             </div>
-            @if ($admitido)
-                {{-- verificamos si la admision existe y si es la activa a la que le pertenece al usuario admitido --}}
+            {{-- @if ($admitido)
+                verificamos si la admision existe y si es la activa a la que le pertenece al usuario admitido
                 @if ($admision)
                     @if ($admision->admision_fecha_inicio_matricula <= date('Y-m-d') && $admision->admision_fecha_fin_matricula_extemporanea >= date('Y-m-d'))
                         <div class="d-flex align-items-center gap-2 gap-lg-3">
@@ -24,7 +28,7 @@
                         </div>
                     @endif
                 @endif
-            @endif
+            @endif --}}
         </div>
     </div>
     <div id="kt_app_content" class="app-content flex-column-fluid">
@@ -40,14 +44,14 @@
                         </i>
                         <div class="d-flex flex-column">
                             <span class="fw-bold fs-5">
-                                Acontinuación se muestra la lista de sus pagos realizados en la plataforma, el cual podrá filtrar por concepto de pago.
+                                Acontinuación se muestra la lista de sus pagos realizados y pendientes.
                             </span>
                         </div>
                     </div>
                     {{-- header de la tabla --}}
-                    <div class="card p-4 mb-5">
-                        <div class="d-flex flex-column flex-md-row align-items-center w-100">
-                            <div class="col-md-4 pe-md-3 mb-2 mb-md-0">
+                    <div class="card p-5 mb-5">
+                        <div class="row mb-5 g-3">
+                            <div class="col-md-4">
                                 <button type="button" class="btn btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary btn-center fw-bold w-100px w-md-125px"
                                     data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start">
                                     <span class="svg-icon svg-icon-3 me-1">
@@ -80,11 +84,11 @@
                                                     id="filtro_concepto_pago" data-control="select2"
                                                     data-placeholder="Seleccione su concepto de pago">
                                                     <option value=""></option>
-                                                    @foreach ($conceptos_pagos as $item)
+                                                    {{-- @foreach ($conceptos_pagos as $item)
                                                         <option value="{{ $item->id_concepto_pago }}">
                                                             Concepto por {{ $item->concepto_pago }}
                                                         </option>
-                                                    @endforeach
+                                                    @endforeach --}}
                                                 </select>
                                             </div>
                                         </div>
@@ -98,10 +102,41 @@
                                     </form>
                                 </div>
                             </div>
-                            <div class="col-md-4 px-md-3 mb-2 mb-md-0"></div>
-                            <div class="col-md-4 ps-md-3">
-                                <input type="search" wire:model="search" class="form-control w-100"
-                                    placeholder="Buscar..." />
+                            <div class="col-md-4"></div>
+                            <div class="col-md-4">
+                                <input type="search" wire:model="search" class="form-control w-100" placeholder="Buscar..." />
+                            </div>
+                        </div>
+                        <div class="">
+                            <div>
+                                <table>
+                                    <tbody class="fs-2 fw-bold">
+                                        <tr>
+                                            <td style="width: 250px">
+                                                Monto Total a Pagar:
+                                            </td>
+                                            <td class="fs-2">
+                                                S/. {{ number_format($monto_total, 2, ',', ' ') }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Deuda Total:
+                                            </td>
+                                            <td class="fs-2 text-danger">
+                                                S/. {{ number_format($deuda, 2, ',', ' ') }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Monto Total Pagado:
+                                            </td>
+                                            <td class="fs-1">
+                                                S/. {{ number_format($monto_pagado, 2, ',', ' ') }}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -113,52 +148,40 @@
                                     <thead class="bg-light-warning">
                                         <tr class="fw-bold fs-5 text-gray-900 border-bottom-2 border-gray-200">
                                             <th>ID</th>
-                                            <th>Concepto Pago</th>
+                                            <th class="col-4">Descripción</th>
                                             <th>Operacion</th>
                                             <th>Monto</th>
                                             <th>Fecha</th>
                                             <th>Estado</th>
-                                            <th class="text-end">Acciones</th>
                                         </tr>
                                     </thead>
                                     <tbody class="fw-semibold text-gray-700">
-                                        @forelse ($pagos as $item)
+                                        @forelse ($mensualidades as $item)
                                         <tr class="fs-6">
                                             <td>
-                                                {{ $item->id_pago }}
+                                                {{ $item->id_mensualidad }}
                                             </td>
                                             <td>
-                                                Concepto por {{ $item->concepto_pago->concepto_pago }}
+                                                Pago por enseñanza 00{{  $loop->iteration }}
                                             </td>
                                             <td>
-                                                {{ $item->pago_operacion }}
+                                                {{ $item->pago->pago_operacion }}
                                             </td>
                                             <td>
-                                                S/. {{ number_format($item->pago_monto, 2, ',', '.') }}
+                                                S/. {{ number_format($item->pago->pago_monto, 2, ',', '.') }}
                                             </td>
                                             <td>
-                                                {{ date('d/m/Y', strtotime($item->pago_fecha)) }}
+                                                {{ date('d/m/Y', strtotime($item->mensualidad_fecha_creacion)) }}
                                             </td>
                                             <td>
-                                                @if ($item->pago_verificacion == 1)
+                                                @if ($item->pago->pago_verificacion == 1)
                                                     <span class="badge badge-warning fs-6 px-3 py-2">Pendiente</span>
-                                                @elseif ($item->pago_verificacion == 2)
-                                                    <span class="badge badge-success fs-6 px-3 py-2">Validado</span>
-                                                @elseif ($item->pago_verificacion == 0 && $item->pago_estado == 0)
-                                                        <span class="badge badge-danger fs-6 px-3 py-2">Rechazado</span>
-                                                @elseif ($item->pago_verificacion == 0)
+                                                @elseif ($item->pago->pago_verificacion == 2)
+                                                    <span class="badge badge-success fs-6 px-3 py-2">Pagado</span>
+                                                @elseif ($item->pago->pago_verificacion == 0 && $item->pago->pago_estado == 0)
+                                                    <span class="badge badge-danger fs-6 px-3 py-2">Rechazado</span>
+                                                @elseif ($item->pago->pago_verificacion == 0)
                                                     <span class="badge badge-danger fs-6 px-3 py-2">Observado</span>
-                                                @endif
-                                            </td>
-                                            <td class="text-end">
-                                                @if ($item->pago_verificacion != 2)
-                                                    <a href="#modal_pago_plataforma" wire:click="cargar_pago({{ $item->id_pago }})" class="btn btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary hover-scale" data-bs-toggle="modal" data-bs-target="#modal_pago_plataforma">
-                                                        Editar
-                                                    </a>
-                                                @else
-                                                    <a href="#modal_pago_plataforma" wire:click="cargar_pago({{ $item->id_pago }})" class="btn btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary hover-scale disabled" data-bs-toggle="modal" data-bs-target="#modal_pago_plataforma">
-                                                        Editar
-                                                    </a>
                                                 @endif
                                             </td>
                                         </tr>
@@ -166,11 +189,7 @@
                                         <tr class="fs-6">
                                             <td colspan="7" class="text-center">
                                                 <div class="text-muted py-5">
-                                                    @if ($search == '')
-                                                        No se encontraron resultados
-                                                    @elseif($search)
-                                                        No hay resultados de la busqueda "{{ $search }}"
-                                                    @endif
+                                                    No se encontraron resultados
                                                 </div>
                                             </td>
                                         </tr>
@@ -181,7 +200,7 @@
                         {{-- </div> --}}
                     </div>
                     {{-- paginacion de la tabla de pagos --}}
-                    @if ($pagos->hasPages())
+                    {{-- @if ($pagos->hasPages())
                         <div class="d-flex justify-content-between mt-5">
                             <div class="d-flex align-items-center text-gray-700">
                                 Mostrando {{ $pagos->firstItem() }} - {{ $pagos->lastItem() }} de {{ $pagos->total()}} registros
@@ -196,13 +215,13 @@
                                 Mostrando {{ $pagos->firstItem() }} - {{ $pagos->lastItem() }} de {{ $pagos->total()}} registros
                             </div>
                         </div>
-                    @endif
+                    @endif --}}
                 </div>
             </div>
         </div>
     </div>
     {{-- modal registro pago --}}
-    <div wire:ignore.self class="modal fade" tabindex="-1" id="modal_pago_plataforma">
+    {{-- <div wire:ignore.self class="modal fade" tabindex="-1" id="modal_pago_plataforma">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -283,7 +302,7 @@
                                 <option></option>
                                 @foreach ($conceptos_pagos as $item)
                                 <option value="{{ $item->id_concepto_pago }}" @if($item->id_concepto_pago == 1) disabled @endif @if($constancia_ingreso && $item->id_concepto_pago == 2) disabled @endif>
-                                    Concepto por {{ $item->concepto_pago }} @if($item->id_concepto_pago != 7) - S/. {{ number_format($item->concepto_pago_monto, 2, ',', '.') }} @endif
+                                    Concepto por {{ $item->concepto_pago }} - S/. {{ number_format($item->concepto_pago_monto, 2, ',', '.') }}
                                 </option>
                                 @endforeach
                             </select>
@@ -357,9 +376,9 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 </div>
-@push('scripts')
+{{-- @push('scripts')
     <script>
         // canal_pago select2
         $(document).ready(function () {
@@ -518,4 +537,4 @@
             });
         });
     </script>
-@endpush
+@endpush --}}
