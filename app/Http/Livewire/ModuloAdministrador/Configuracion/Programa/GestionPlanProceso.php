@@ -3,10 +3,14 @@
 namespace App\Http\Livewire\ModuloAdministrador\Configuracion\Programa;
 
 use App\Models\Admision;
+use App\Models\Admitido;
+use App\Models\CursoProgramaProceso;
+use App\Models\Inscripcion;
 use App\Models\Plan;
 use App\Models\Programa;
 use App\Models\ProgramaPlan;
 use App\Models\ProgramaProceso;
+use App\Models\ProgramaProcesoGrupo;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Str;
@@ -41,7 +45,7 @@ class GestionPlanProceso extends Component
         'search' => ['except' => ''],
     ];
 
-    protected $listeners = ['render', 'cambiarEstado', 'cambiar_estado_proceso'];//Escuchar evento para que se actualice el componente
+    protected $listeners = ['render', 'cambiarEstado', 'cambiar_estado_proceso', 'eliminar_proceso'];//Escuchar evento para que se actualice el componente
 
     //Validaciones en tiempo real para los campos del formulario de expediente
     public function updated($propertyName)
@@ -146,7 +150,7 @@ class GestionPlanProceso extends Component
     }
 
     //Cargar datos en el modal de Gestión de Proceso
-    public function cargarProcesos(ProgramaPlan $programaPlan, $modo)
+    public function cargarProcesos($id_programaPlan, $modo)
     {
         //limpiamos
         $this->limpiar();
@@ -159,6 +163,7 @@ class GestionPlanProceso extends Component
         }
 
         //Cargar los datos del programa plan
+        $programaPlan = ProgramaPlan::find($id_programaPlan);
         $this->nombrePrograma = $programaPlan->programa->programa.' EN '.$programaPlan->programa->subprograma;
         if($programaPlan->programa->mencion){
             $this->nombrePrograma = $this->nombrePrograma.' CON MECION EN '.$programaPlan->programa->mencion;
@@ -171,6 +176,7 @@ class GestionPlanProceso extends Component
 
         $this->programaProceso = ProgramaProceso::join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
                                                 ->where('programa_plan.id_programa', '=', $this->id_programa)
+                                                ->where('programa_proceso.id_programa_plan', '=', $this->id_programa_plan)
                                                 ->orderBy('programa_proceso.id_programa_proceso', 'asc')->get();
     }
 
@@ -196,6 +202,7 @@ class GestionPlanProceso extends Component
 
         $this->programaProceso = ProgramaProceso::join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
                                                 ->where('programa_plan.id_programa', '=', $this->id_programa)
+                                                ->where('programa_proceso.id_programa_plan', '=', $this->id_programa_plan)
                                                 ->orderBy('programa_proceso.id_programa_proceso', 'asc')->get();
     }
 
@@ -219,7 +226,6 @@ class GestionPlanProceso extends Component
             $programaProceso = new ProgramaProceso();
             $programaProceso->id_admision = $this->proceso_admision;
             $programaProceso->id_programa_plan = $this->id_programa_plan;
-            $programaProceso->programa_proceso_creacion = date('Y-m-d H:i:s');
             $programaProceso->programa_proceso_estado = 1;
             $programaProceso->save();
 
@@ -230,8 +236,77 @@ class GestionPlanProceso extends Component
 
             $this->programaProceso = ProgramaProceso::join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
                                                 ->where('programa_plan.id_programa', '=', $this->id_programa)
+                                                ->where('programa_proceso.id_programa_plan', '=', $this->id_programa_plan)
                                                 ->orderBy('programa_proceso.id_programa_proceso', 'asc')->get();
         }
+    }
+
+    public function alerta_eliminar_proceso(ProgramaProceso $programaProceso)
+    {
+        $this->alertaConfirmacion('¿Estás seguro?', '¿Desea eliminar el proceso '.$programaProceso->admision->admision.' del plan asignado?', 'question', 'Eliminar', 'Cancelar', 'primary', 'danger', 'eliminar_proceso', $programaProceso->id_programa_proceso);
+    }
+
+    //Eliminar el proceso del programa
+    public function eliminar_proceso(ProgramaProceso $programaProceso)
+    {
+
+        $mensaje = '';
+
+        //Validar que el programa_plan no esté como clave foránea en la tabla inscripcion
+        $programaProcesoValidar = Inscripcion::where('id_programa_proceso', '=', $programaProceso->id_programa_proceso)->first();
+        if ($programaProcesoValidar) {//Si el programa_plan esta como clave foránea, mostrar alerta
+            $mensaje = $mensaje.' la INSCRIPCION '.$programaProceso->admision->admision_año.' - '.$programaProceso->admision->admision_convocatoria.'';
+            
+        }
+
+        //Validar que el programa_plan no esté como clave foránea en la tabla  admitidos
+        $programaProcesoValidar = Admitido::where('id_programa_proceso', '=', $programaProceso->id_programa_proceso)->first();
+        if ($programaProcesoValidar) {//Si el programa_plan esta como clave foránea, mostrar alerta
+            //Validar si el mensaje ya tiene texto
+            if ($mensaje != '') {
+                $mensaje = $mensaje.',';
+            }
+            $mensaje = $mensaje.' en los ADMITIDOS';
+        }
+
+        
+
+        //Validar que el programa_plan no esté como clave foránea en la tabla  curso_programa_proceso
+        $programaProcesoValidar = CursoProgramaProceso::where('id_programa_proceso', '=', $programaProceso->id_programa_proceso)->first();
+        if ($programaProcesoValidar) {//Si el programa_plan esta como clave foránea, mostrar alerta
+            //Validar si el mensaje ya tiene texto
+            if ($mensaje != '') {
+                $mensaje = $mensaje.',';
+            }
+            $mensaje = $mensaje.' en los CURSOS';
+        }
+
+        //Validar que el programa_plan no esté como clave foránea en la tabla  programa_proceso_grupo
+        $programaProcesoValidar = ProgramaProcesoGrupo::where('id_programa_proceso', '=', $programaProceso->id_programa_proceso)->first();
+        if ($programaProcesoValidar) {//Si el programa_plan esta como clave foránea, mostrar alerta
+            //Validar si el mensaje ya tiene texto
+            if ($mensaje != '') {
+                $mensaje = $mensaje.',';
+            }
+            $mensaje = $mensaje.' en los GRUPOS DE LA MATRICULA';
+        }
+
+        if ($mensaje != '') {//Si el programa_plan esta como clave foránea, mostrar alerta
+            $this->alertaProgramaPlan('¡Error!', 'El proceso '.$programaProceso->admision->admision.' no puede ser eliminado del plan asignado porque se encuentra registrado en'.$mensaje.'.', 'error', 'Aceptar', 'danger');
+            //Limpia los campos del formulario
+            $this->limpiarProcesos();
+            return;
+        }
+
+        $programaProceso->delete();//Eliminar el proceso del programa
+
+        //Mostrar alerta de confirmacion de cambio de estado
+        $this->alertaProgramaPlan('¡Éxito!', 'El proceso '.$programaProceso->admision->admision.' ha sido eliminado satisfactoriamente del plan del programa.', 'success', 'Aceptar', 'success');
+
+        $this->programaProceso = ProgramaProceso::join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
+                                                ->where('programa_plan.id_programa', '=', $this->id_programa)
+                                                ->where('programa_proceso.id_programa_plan', '=', $this->id_programa_plan)
+                                                ->orderBy('programa_proceso.id_programa_proceso', 'asc')->get();
     }
 
     //Guardar o actualizar el programa plan
@@ -323,26 +398,21 @@ class GestionPlanProceso extends Component
         $buscar = $this->search;
         $programaModel = Programa::find($this->id_programa);
         $planModel = Plan::all();
-        $admisionModel = Admision::where('admision_estado', '=', 1)->get();
-        $programaProcesoModel = ProgramaProceso::join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
-                                                ->join('admision', 'admision.id_admision', '=', 'programa_proceso.id_admision')
-                                                ->where('programa_plan.id_programa', '=', $this->id_programa)
-                                                ->orderBy('programa_proceso.id_programa_proceso', 'asc')->get();
+        $admisionModel = Admision::all();                                                
 
         $programaPlanModel = ProgramaPlan::join('programa', 'programa.id_programa', '=', 'programa_plan.id_programa')
-                                            ->join('plan', 'plan.id_plan', '=', 'programa_plan.id_plan')
-                                            ->where('programa_plan.id_programa', '=', $this->id_programa)
-                                            ->where(function($query) use ($buscar){
-                                                $query->Where('plan.plan','like','%'.$buscar.'%')
-                                                ->orWhere('programa_plan.programa_codigo','like','%'.$buscar.'%');
-                                            })
-                                            ->orderBy('programa_plan.id_programa_plan', 'asc')
-                                            ->paginate(10);
+                                        ->join('plan', 'plan.id_plan', '=', 'programa_plan.id_plan')
+                                        ->where('programa_plan.id_programa', '=', $this->id_programa)
+                                        ->where(function($query) use ($buscar){
+                                            $query->Where('plan.plan','like','%'.$buscar.'%')
+                                            ->orWhere('programa_plan.programa_codigo','like','%'.$buscar.'%');
+                                        })
+                                        ->orderBy('programa_plan.id_programa_plan', 'asc')
+                                        ->paginate(10);
 
         return view('livewire.modulo-administrador.configuracion.programa.gestion-plan-proceso', [
             'programaModel' => $programaModel,
             'programaPlanModel' => $programaPlanModel,
-            'programaProcesoModel' => $programaProcesoModel,
             'planModel' => $planModel,
             'admisionModel' => $admisionModel,
         ]);

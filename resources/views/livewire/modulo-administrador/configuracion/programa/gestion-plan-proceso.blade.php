@@ -75,7 +75,6 @@
                                         <th scope="col" class="col-md-1">ID</th>
                                         <th scope="col">Código</th>
                                         <th scope="col">Plan</th>
-                                        <th scope="col">Procesos</th>
                                         <th scope="col" class="col-md-2">Estado</th>
                                         <th scope="col" class="col-md-2">Acciones</th>
                                     </tr>
@@ -85,17 +84,7 @@
                                     <tr>
                                         <td align="center" class="fw-bold fs-5">{{ $item->id_programa_plan }}</td>
                                         <td align="center"> {{ $item->programa_codigo }} </td>
-                                        <td align="center"> {{ $item->plan }} </td>
-                                        <td align="center">
-                                            @foreach ($programaProcesoModel as $item)
-                                                <div class="mt-2 mb-2">
-                                                    <li>
-                                                        {{ $item->admision }}
-                                                    </li>
-                                                </div>
-                                            @endforeach
-                                        </td>
-                                        
+                                        <td align="center"> {{ $item->plan }} </td>                                        
                                         <td align="center">
                                             @if ($item->programa_plan_estado == 1)
                                                 <span style="cursor: pointer;" wire:click="cargarAlertaEstado({{ $item->id_programa_plan }})" class="badge text-bg-success text-light hover-elevate-down px-3 py-2">Activo</span></span>
@@ -394,6 +383,7 @@
                                     <tr class="fw-bold fs-5 text-gray-900 border-bottom-2 border-gray-200">
                                         <th scope="col">ID</th>
                                         <th scope="col">Proceso de Admisión</th>
+                                        <th scope="col">Estado de Admisión</th>
                                         <th scope="col" class="col-md-2">Estado</th>
                                         <th scope="col" class="col-md-2">Acciones</th>
                                     </tr>
@@ -410,6 +400,17 @@
                                                 </td>
                                                 <td class="fs-6">
                                                     {{ $item->admision->admision }}
+                                                </td>
+                                                <td class="fs-6">
+                                                    @if ($item->admision->admision_estado == 1)
+                                                        <span class="badge badge-light-success fs-6 px-3 py-2">
+                                                            Activo
+                                                        </span>
+                                                    @else
+                                                        <span class="badge badge-light-danger fs-6 px-3 py-2">
+                                                            Inactivo
+                                                        </span>
+                                                    @endif
                                                 </td>
                                                 <td class="fs-6">
                                                     @if ($item->programa_proceso_estado == 1)
