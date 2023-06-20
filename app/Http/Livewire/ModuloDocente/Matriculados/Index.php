@@ -71,6 +71,33 @@ class Index extends Component
 
     public function modo_ingresar_notas()
     {
+        $matriculados_count = MatriculaCurso::join('matricula', 'matricula_curso.id_matricula', 'matricula.id_matricula')
+                        ->join('admitido', 'matricula.id_admitido', 'admitido.id_admitido')
+                        ->join('persona', 'admitido.id_persona', 'persona.id_persona')
+                        ->where('matricula_curso.id_curso_programa_proceso', $this->id_curso_programa_proceso)
+                        ->where('matricula.id_programa_proceso_grupo', $this->id_programa_proceso_grupo)
+                        ->count();
+
+        $matriculados_finalizados_count = MatriculaCurso::join('matricula', 'matricula_curso.id_matricula', 'matricula.id_matricula')
+                        ->join('admitido', 'matricula.id_admitido', 'admitido.id_admitido')
+                        ->join('persona', 'admitido.id_persona', 'persona.id_persona')
+                        ->where('matricula_curso.id_curso_programa_proceso', $this->id_curso_programa_proceso)
+                        ->where('matricula.id_programa_proceso_grupo', $this->id_programa_proceso_grupo)
+                        ->where('matricula_curso.matricula_curso_estado', 2)
+                        ->count();
+
+        // emitir alerta de que todas las notas ya fueron ingresadas
+        if ( $matriculados_count == $matriculados_finalizados_count )
+        {
+            $this->dispatchBrowserEvent('alerta_matriculados', [
+                'title' => '¡Alerta!',
+                'text' => 'Todas las notas ya fueron ingresadas.',
+                'icon' => 'warning',
+                'confirmButtonText' => 'Aceptar',
+                'color' => 'warning'
+            ]);
+        }
+
         $this->modo = 'show';
     }
 
@@ -286,6 +313,12 @@ class Index extends Component
                         ->where('matricula.id_programa_proceso_grupo', $this->id_programa_proceso_grupo)
                         ->where('matricula_curso.matricula_curso_estado', 2)
                         ->count();
+
+        // verificar si ya se agregaron todas las notas
+        if ( $matriculados_count == $matriculados_finalizados_count )
+        {
+            $this->modo = 'hide';
+        }
 
         return view('livewire.modulo-docente.matriculados.index', [
             // 'matriculados' => $matriculados,
