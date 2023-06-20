@@ -127,7 +127,7 @@
                                                     </a>
                                                 </div>
                                                 <div class="menu-item px-3">
-                                                    <a href="#modalProcesos" wire:click="cargarProcesos({{ $item->id_programa_plan }}, 2)" class="menu-link px-3" data-bs-toggle="modal" data-bs-target="#modalProcesos">
+                                                    <a href="#modalGestionProcesos" wire:click="cargarProcesos({{ $item->id_programa_plan }}, 4)" class="menu-link px-3" data-bs-toggle="modal" data-bs-target="#modalGestionProcesos">
                                                         Gestión de Procesos
                                                     </a>
                                                 </div>
@@ -266,6 +266,216 @@
     </div>
 
     {{-- modal de Procesos del Plan --}}
+    <div wire:ignore.self class="modal fade" tabindex="-1" id="modalGestionProcesos">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">
+                        {{ $titulo }}
+                    </h2>
+
+                    <div class="btn btn-icon btn-sm btn-active-light-danger ms-2" data-bs-dismiss="modal"
+                        aria-label="Close"
+                        wire:click="limpiar">
+                        <span class="svg-icon svg-icon-2hx">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <rect opacity="0.3" x="2" y="2" width="20" height="20"
+                                    rx="5" fill="currentColor" />
+                                <rect x="7" y="15.3137" width="12" height="2" rx="1"
+                                    transform="rotate(-45 7 15.3137)" fill="currentColor" />
+                                <rect x="8.41422" y="7" width="12" height="2" rx="1"
+                                    transform="rotate(45 8.41422 7)" fill="currentColor" />
+                            </svg>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="modal-body">
+                    <form autocomplete="off" class="row g-5 mb-3 px-md-5">
+                        <div class="col-md-12 mt-5">
+                            <div class="row mb-3">
+                                <span class="col-12 fw-bold text-gray-800 fs-3">
+                                    INFORMACIÓN DEL PLAN DEL PROGRAMA
+                                </span>
+                            </div>
+                            <div class="row mb-3">
+                                <span class="col-4 fw-semibold text-gray-600 fs-5">
+                                    Programa
+                                </span>
+                                <span class="col-1 fw-semibold text-gray-600 fs-5">
+                                    :
+                                </span>
+                                <span class="col-7 fw-bold text-gray-900 fs-5">
+                                    {{ $nombrePrograma }}
+                                </span>
+                            </div>
+                            <div class="row mb-3">
+                                <span class="col-4 fw-semibold text-gray-600 fs-5">
+                                    Código del Programa
+                                </span>
+                                <span class="col-1 fw-semibold text-gray-600 fs-5">
+                                    :
+                                </span>
+                                <span class="col-7 fw-bold text-gray-900 fs-5">
+                                    {{ $programa_codigo }}
+                                </span>
+                            </div>
+                            <div class="row mb-3">
+                                <span class="col-4 fw-semibold text-gray-600 fs-5">
+                                    Plan
+                                </span>
+                                <span class="col-1 fw-semibold text-gray-600 fs-5">
+                                    :
+                                </span>
+                                <span class="col-7 fw-bold text-gray-900 fs-5">
+                                    {{ $plan_nombre }}
+                                </span>
+                            </div>
+                            <div class="row mb-3">
+                                <span class="col-4 fw-semibold text-gray-600 fs-5">
+                                    Fecha de Creación del Plan
+                                </span>
+                                <span class="col-1 fw-semibold text-gray-600 fs-5">
+                                    :
+                                </span>
+                                <span class="col-7 fw-bold text-gray-900 fs-5">
+                                    {{ date('d/m/Y, h:i:s A', strtotime($programa_plan_creacion)) }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="separator separator-dotted separator-content border-primary mb-5 mt-7">
+                            <i class="ki-duotone ki-plus-square fs-1 text-primary">
+                                <i class="path1"></i>
+                                <i class="path2"></i>
+                                <i class="path3"></i>
+                            </i>
+                        </div>
+                        <div class="col-md-12">
+                            <label for="proceso_admision" class="required form-label fw-semibold text-gray-600 fs-5">
+                                Proceso de Admisión
+                            </label>
+                            <select class="form-select @error('proceso_admision') is-invalid @enderror"
+                                wire:model="proceso_admision" id="proceso_admision" data-control="select2"
+                                data-placeholder="Seleccione de Proceso de Admisión" data-allow-clear="true"
+                                data-dropdown-parent="#modalGestionProcesos">
+                                <option></option>
+                                @foreach ($admisionModel as $item)
+                                    <option value="{{ $item->id_admision }}">
+                                        {{ $item->admision }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('proceso_admision')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="col-md-12">
+                            <div class="text-end">
+                                <button type="button" wire:click="limpiarProcesos" class="btn fw-bold fs-5 btn-light">
+                                    Cancelar
+                                </button>
+                                <button type="button" wire:click="asignarProceso" class="btn fw-bold fs-5 btn-primary" wire:loading.attr="disabled" wire:target="asignarProceso">
+                                    <div wire:loading.remove wire:target="asignarProceso, voucher">
+                                        Asignar Proceso
+                                    </div>
+                                    <div wire:loading wire:target="asignarProceso">
+                                        Asignando <span class="spinner-border spinner-border-sm align-middle ms-2">
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                        <span class="col-12 fw-bold text-gray-700 fs-3">
+                            PROCESOS ASIGNADOS
+                        </span>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle table-rounded border mb-0 gy-5 gs-5">
+                                <thead class="bg-light-primary">
+                                    <tr class="fw-bold fs-5 text-gray-900 border-bottom-2 border-gray-200">
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Proceso de Admisión</th>
+                                        <th scope="col" class="col-md-2">Estado</th>
+                                        <th scope="col" class="col-md-2">Acciones</th>
+                                    </tr>
+                                </thead>
+                                @php
+                                    $id_proceso = 0;
+                                @endphp
+                                <tbody class="fw-semibold text-gray-700">
+                                    @if ($programaProceso)
+                                        @forelse ($programaProceso as $item)
+                                            <tr>
+                                                <td class="fw-bold fs-6">
+                                                    {{ $id_proceso += 1 }}
+                                                </td>
+                                                <td class="fs-6">
+                                                    {{ $item->admision->admision }}
+                                                </td>
+                                                <td class="fs-6">
+                                                    @if ($item->programa_proceso_estado == 1)
+                                                        <span class="badge badge-success fs-6 px-3 py-2"
+                                                            wire:click="alerta_cambiar_estado_proceso({{ $item->id_programa_proceso }})"
+                                                            style="cursor: pointer;">
+                                                            Activo
+                                                        </span>
+                                                    @else
+                                                        <span class="badge badge-danger fs-6 px-3 py-2"
+                                                            wire:click="alerta_cambiar_estado_proceso({{ $item->id_programa_proceso }})"
+                                                            style="cursor: pointer;">
+                                                            Inactivo
+                                                        </span>
+                                                    @endif
+                                                </td>
+                                                <td class="fs-6">
+                                                    <button type="button"
+                                                        class="btn btn-flex btn-center fw-bold btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary"
+                                                        data-bs-toggle="dropdown">
+                                                        Acciones
+                                                        <span class="svg-icon fs-5 rotate-180 ms-2 me-0 m-0">
+                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                xmlns:xlink="http://www.w3.org/1999/xlink"
+                                                                width="24px" height="24px" viewBox="0 0 24 24"
+                                                                version="1.1">
+                                                                <g stroke="none" stroke-width="1" fill="none"
+                                                                    fill-rule="evenodd">
+                                                                    <polygon points="0 0 24 0 24 24 0 24"></polygon>
+                                                                    <path
+                                                                        d="M6.70710678,15.7071068 C6.31658249,16.0976311 5.68341751,16.0976311 5.29289322,15.7071068 C4.90236893,15.3165825 4.90236893,14.6834175 5.29289322,14.2928932 L11.2928932,8.29289322 C11.6714722,7.91431428 12.2810586,7.90106866 12.6757246,8.26284586 L18.6757246,13.7628459 C19.0828436,14.1360383 19.1103465,14.7686056 18.7371541,15.1757246 C18.3639617,15.5828436 17.7313944,15.6103465 17.3242754,15.2371541 L12.0300757,10.3841378 L6.70710678,15.7071068 Z"
+                                                                        fill="currentColor" fill-rule="nonzero"
+                                                                        transform="translate(12.000003, 11.999999) rotate(-180.000000) translate(-12.000003, -11.999999)">
+                                                                    </path>
+                                                                </g>
+                                                            </svg>
+                                                        </span>
+                                                    </button>
+                                                    <div class="dropdown-menu dropdown-menu-end menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-6 w-175px py-4"
+                                                        data-kt-menu="true">
+                                                        <div class="menu-item px-3">
+                                                            <a style="cursor: pointer;"
+                                                                wire:click="alerta_eliminar_proceso({{ $item->id_programa_proceso }})"
+                                                                class="menu-link px-3 fs-6">
+                                                                Eliminar Proceso
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="5" class="text-center text-muted">
+                                                    No hay registros
+                                                </td>
+                                            </tr>
+                                        @endforelse
+                                    @endif
+                                </tbody>
+                            </table>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     
 
 </div>
@@ -308,6 +518,46 @@
             });
             $('#plan').on('change', function(){
                 @this.set('plan', this.value);
+            });
+        });
+    });
+
+    // proceso_admision select2
+    $(document).ready(function () {
+        $('#proceso_admision').select2({
+            placeholder: 'Seleccione de Proceso de Admisión',
+            allowClear: true,
+            width: '100%',
+            selectOnClose: true,
+            language: {
+                noResults: function () {
+                    return "No se encontraron resultados";
+                },
+                searching: function () {
+                    return "Buscando..";
+                }
+            }
+        });
+        $('#proceso_admision').on('change', function(){
+            @this.set('proceso_admision', this.value);
+        });
+        Livewire.hook('message.processed', (message, component) => {
+            $('#proceso_admision').select2({
+                placeholder: 'Seleccione de Proceso de Admisión',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando..";
+                    }
+                }
+            });
+            $('#proceso_admision').on('change', function(){
+                @this.set('proceso_admision', this.value);
             });
         });
     });

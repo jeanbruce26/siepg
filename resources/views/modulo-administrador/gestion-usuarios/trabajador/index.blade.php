@@ -20,10 +20,9 @@
             text: event.detail.text,
             icon: event.detail.icon,
             buttonsStyling: false,
-			confirmButtonClass: 'hover-elevate-up', // Hover para elevar boton al pasar el cursor
             confirmButtonText: event.detail.confirmButtonText,
             customClass: {
-                confirmButton: "btn btn-"+event.detail.color, // Color del boton de confirmación
+                confirmButton: "btn btn-"+event.detail.color+" hover-elevate-up",
             }
         });
     });

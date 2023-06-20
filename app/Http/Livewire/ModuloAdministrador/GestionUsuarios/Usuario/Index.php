@@ -102,7 +102,7 @@ class Index extends Component
 
     public function guardarUsuario()
     {
-        if ($this->modo == 1) {
+        if ($this->modo == 1) {//crear
             $this->validate([
                 'username' => 'required|unique:usuario,usuario_nombre',
                 'correo' => 'required|email|unique:usuario,usuario_correo',
@@ -123,7 +123,7 @@ class Index extends Component
                 'confirmButtonText' => 'Aceptar',
                 'color' => 'success'
             ]);
-        } else {
+        } else {//actualizar
             $this->validate([
                 'username' => "required|unique:usuario,usuario_nombre,{$this->id_usuario},id_usuario",
                 'correo' => "required|email|unique:usuario,usuario_correo,{$this->id_usuario},id_usuario",
@@ -131,8 +131,13 @@ class Index extends Component
             ]);
 
             $usuario = Usuario::find($this->id_usuario);
+            //Validar si se realizo algun cambio
+            $usuarioValidar = Usuario::where('id_usuario', $this->id_usuario)
+                            ->where('usuario_nombre', $this->username)
+                            ->where('usuario_correo', $this->correo)
+                            ->first();
 
-            if($usuario->usuario_nombre = $this->username || $usuario->usuario_correo = $this->correo){
+            if($usuarioValidar != null && $this->password == null){
                 $this->dispatchBrowserEvent('alerta-usuario', [
                     'title' => '¡Información!',
                     'text' => 'No se realizaron cambios en los datos del Usuario.',

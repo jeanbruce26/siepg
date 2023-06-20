@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\ModuloAdministrador\Configuracion\Programa;
 
+use App\Models\Admision;
 use App\Models\Plan;
 use App\Models\Programa;
 use App\Models\ProgramaPlan;
@@ -17,9 +18,10 @@ class GestionPlanProceso extends Component
     
     public $search;//Variable de busqueda
     public $titulo = "Agregar Plan al Programa";//titulo del modal
-    public $modo = 1;//Variable que cambia entre agregar(1), editar(2) o mostrar(3) un registro de Plan
+    public $modo = 1;//Variable que cambia entre agregar(1), editar(2), mostrar(3) o agregar procesos(4) 
 
     public $id_programa;//id del programa al que se le asignara el plan y proceso, se recibe desde la vista de programa
+    public $nombrePrograma;//nombre del programa al que se le asignara el plan y proceso, se recibe desde la vista de programa
     //Variables para la gestion de Plan del programa
     public $id_programa_plan;//id del programa al que se le asignara el programa plan
     public $programa_codigo;
@@ -30,14 +32,16 @@ class GestionPlanProceso extends Component
 
     //Variables para la gestion de Proceso del programa
     public $id_programa_proceso;//id del programa al que se le asignara el programa proceso
-    public $admision;//id de la admision
+    public $proceso_admision;//id de la admision
     public $programa_proceso_estado;//estado del programa proceso (1: activo, 0: inactivo)
+
+    public $programaProceso;//Variable para almacenar los procesos del programa
 
     protected $queryString = [//Variables de busqueda amigables
         'search' => ['except' => ''],
     ];
 
-    protected $listeners = ['render', 'cambiarEstado'];//Escuchar evento para que se actualice el componente
+    protected $listeners = ['render', 'cambiarEstado', 'cambiar_estado_proceso'];//Escuchar evento para que se actualice el componente
 
     //Validaciones en tiempo real para los campos del formulario de expediente
     public function updated($propertyName)
@@ -45,11 +49,10 @@ class GestionPlanProceso extends Component
         $this->validateOnly($propertyName, [
             'programa_codigo' => 'required|string',
             'plan' => 'required|numeric',
-            'admision' => 'required|numeric',
+            'proceso_admision' => 'required|numeric',
         ]);
     }
 
-    //Limpiar los campos del formulario y resetear el modo
     //Limpiar los campos del formulario y resetear el modo
     public function modo()
     {
@@ -61,11 +64,17 @@ class GestionPlanProceso extends Component
     public function limpiar()
     {
         $this->resetErrorBag();
-        $this->reset('programa_codigo', 'plan');
+        $this->reset('programa_codigo', 'plan', 'proceso_admision');
         $this->modo = 1;
         $this->titulo = 'Agregar Plan al Programa';
     }
 
+    //Limpiar los campos del modal de gestion de procesos
+    public function limpiarProcesos()
+    {
+        $this->resetErrorBag();
+        $this->reset('proceso_admision');
+    }
 
     //Alerta de confirmacion
     public function alertaConfirmacion($title, $text, $icon, $confirmButtonText, $cancelButtonText, $confimrColor, $cancelColor, $metodo, $id)
@@ -125,8 +134,8 @@ class GestionPlanProceso extends Component
         //limpiamos
         $this->limpiar();
         //Asignamos los valores del modo y el titulo
-        $this->modo = $modo;//1: agregar, 2: editar, 3: detalle
-        $this->modo == 2 ? $this->titulo = 'Actualizar Plan del Programa' : $this->titulo = 'Detalle del Plan del Programa';
+        $this->modo = $modo;//1: agregar, 2: editar, 3: detalle, 4: agregar procesos
+        $this->titulo = 'Actualizar Plan del Programa';
 
         //Cargar los datos del programa plan
         $this->id_programa_plan = $programaPlan->id_programa_plan;
@@ -134,6 +143,95 @@ class GestionPlanProceso extends Component
         $this->plan = $programaPlan->id_plan;
         $this->plan_nombre = $programaPlan->plan->plan;
         $this->programa_plan_creacion = $programaPlan->programa_plan_creacion;
+    }
+
+    //Cargar datos en el modal de Gestión de Proceso
+    public function cargarProcesos(ProgramaPlan $programaPlan, $modo)
+    {
+        //limpiamos
+        $this->limpiar();
+        //Asignamos los valores del modo y el titulo
+        $this->modo = $modo;//1: agregar, 2: editar, 3: detalle, 4: agregar procesos
+        if($this->modo == 4){
+            $this->titulo = 'Agregar Procesos al Plan del Programa';
+        }else if($this->modo == 3){
+            $this->titulo = 'Detalles del Plan del Programa';
+        }
+
+        //Cargar los datos del programa plan
+        $this->nombrePrograma = $programaPlan->programa->programa.' EN '.$programaPlan->programa->subprograma;
+        if($programaPlan->programa->mencion){
+            $this->nombrePrograma = $this->nombrePrograma.' CON MECION EN '.$programaPlan->programa->mencion;
+        }
+        $this->id_programa_plan = $programaPlan->id_programa_plan;
+        $this->programa_codigo = $programaPlan->programa_codigo;
+        $this->plan = $programaPlan->id_plan;
+        $this->plan_nombre = $programaPlan->plan->plan;
+        $this->programa_plan_creacion = $programaPlan->programa_plan_creacion;
+
+        $this->programaProceso = ProgramaProceso::join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
+                                                ->where('programa_plan.id_programa', '=', $this->id_programa)
+                                                ->orderBy('programa_proceso.id_programa_proceso', 'asc')->get();
+    }
+
+    //Mostar modal de confirmacion para cambiar el estado del proceso del programa
+    public function alerta_cambiar_estado_proceso(ProgramaProceso $programaProceso)
+    {
+        $this->alertaConfirmacion('¿Estás seguro?', '¿Desea cambiar el estado del proceso '.$programaProceso->admision->admision.'?', 'question', 'Modificar', 'Cancelar', 'primary', 'danger', 'cambiar_estado_proceso', $programaProceso->id_programa_proceso);
+    }
+
+    //Cambiar el estado del proceso del programa
+    public function cambiar_estado_proceso(ProgramaProceso $programaProceso)
+    {
+        if ($programaProceso->programa_proceso_estado == 1) {//Si el estado es 1 (activo), cambiar a 0 (inactivo)
+            $programaProceso->programa_proceso_estado = 0;
+        } else {//Si el estado es 2 (inactivo), cambiar a 1 (activo)
+            $programaProceso->programa_proceso_estado = 1;
+        }
+
+        $programaProceso->save();//Actualizar el estado del programa
+
+        //Mostrar alerta de confirmacion de cambio de estado
+        $this->alertaProgramaPlan('¡Éxito!', 'El estado del proceso '.$programaProceso->admision->admision.' ha sido actualizado satisfactoriamente.', 'success', 'Aceptar', 'success');
+
+        $this->programaProceso = ProgramaProceso::join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
+                                                ->where('programa_plan.id_programa', '=', $this->id_programa)
+                                                ->orderBy('programa_proceso.id_programa_proceso', 'asc')->get();
+    }
+
+    //Asignar proceso al programa y guardar 
+    public function asignarProceso()
+    {
+        $this->validate([
+            'proceso_admision' => 'required|numeric',
+        ]);
+
+        //Validar que el proceso no este asignado al programa
+        $programaProceso = ProgramaProceso::where('id_admision', '=', $this->proceso_admision)
+                                            ->where('id_programa_plan', '=', $this->id_programa_plan)
+                                            ->first();
+
+        if ($programaProceso) {//Si el proceso ya esta asignado al programa, mostrar alerta
+            $this->alertaProgramaPlan('¡Error!', 'El proceso ya se encuentra registrado en el plan del programa.', 'error', 'Aceptar', 'danger');
+            //Limpia los campos del formulario
+            $this->limpiarProcesos();
+        } else {//Si el proceso no esta asignado al programa, guardamos
+            $programaProceso = new ProgramaProceso();
+            $programaProceso->id_admision = $this->proceso_admision;
+            $programaProceso->id_programa_plan = $this->id_programa_plan;
+            $programaProceso->programa_proceso_creacion = date('Y-m-d H:i:s');
+            $programaProceso->programa_proceso_estado = 1;
+            $programaProceso->save();
+
+            //Mostrar alerta de confirmacion
+            $this->alertaProgramaPlan('¡Éxito!', 'El proceso '.$programaProceso->admision->admision.' ha sido registrado satisfactoriamente en el plan del programa.', 'success', 'Aceptar', 'success');
+            //Limpiar los campos del formulario
+            $this->limpiarProcesos();
+
+            $this->programaProceso = ProgramaProceso::join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
+                                                ->where('programa_plan.id_programa', '=', $this->id_programa)
+                                                ->orderBy('programa_proceso.id_programa_proceso', 'asc')->get();
+        }
     }
 
     //Guardar o actualizar el programa plan
@@ -185,12 +283,7 @@ class GestionPlanProceso extends Component
                                         ->first();
             if ($programaPlan) {//Si el programa plan existe, mostrar alerta
                 $this->alertaProgramaPlan('¡Error!', 'El plan ya se encuentra registrado en el programa.', 'error', 'Aceptar', 'danger');
-                //Limpia los campos del formulario
-                $this->limpiar();
-                //Cerramos el modal
-                $this->dispatchBrowserEvent('modal', [
-                    'titleModal' => '#modalPlanProceso',
-                ]);
+                
             } else {//Si el programa plan no existe, actualizarlo
                 $programaPlan = ProgramaPlan::find($this->id_programa_plan);
                 //Validar que el plan del programa no haya sido actualizado
@@ -230,6 +323,7 @@ class GestionPlanProceso extends Component
         $buscar = $this->search;
         $programaModel = Programa::find($this->id_programa);
         $planModel = Plan::all();
+        $admisionModel = Admision::where('admision_estado', '=', 1)->get();
         $programaProcesoModel = ProgramaProceso::join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
                                                 ->join('admision', 'admision.id_admision', '=', 'programa_proceso.id_admision')
                                                 ->where('programa_plan.id_programa', '=', $this->id_programa)
@@ -250,6 +344,7 @@ class GestionPlanProceso extends Component
             'programaPlanModel' => $programaPlanModel,
             'programaProcesoModel' => $programaProcesoModel,
             'planModel' => $planModel,
+            'admisionModel' => $admisionModel,
         ]);
     }
 }
