@@ -55,9 +55,9 @@
                                         <td align="center">{{ $item->plan_codigo }}</td>
                                         <td align="center">
                                             @if ($item->plan_estado == 1)
-                                                <span style="cursor: pointer;" wire:click="cargarAlerta({{ $item->id_plan }})" class="badge text-bg-success text-light hover-elevate-down px-3 py-2">Activo</span>
+                                                <span style="cursor: pointer;" wire:click="cargarAlerta({{ $item->id_plan }})" class="badge text-bg-success text-light hover-elevate-down fs-6 px-3 py-2">Activo</span>
                                             @else
-                                                <span style="cursor: pointer;" wire:click="cargarAlerta({{ $item->id_plan }})" class="badge text-bg-danger text-light hover-elevate-down px-3 py-2">Inactivo</span>
+                                                <span style="cursor: pointer;" wire:click="cargarAlerta({{ $item->id_plan }})" class="badge text-bg-danger text-light hover-elevate-down fs-6 px-3 py-2">Inactivo</span>
                                             @endif
                                         </td>
                                         <td align="center">

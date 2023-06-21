@@ -80,13 +80,13 @@
                                             <td>{{ $item->usuario_correo }}</td>
                                             <td align="center">
                                                 @if ($item->usuario_estado == 1)
-                                                    <span style="cursor: pointer;" wire:click="cargarAlerta({{ $item->id_usuario }})" class="badge text-bg-primary text-light hover-elevate-down px-3 py-2">Activo</span>
+                                                    <span style="cursor: pointer;" wire:click="cargarAlerta({{ $item->id_usuario }})" class="badge text-bg-primary text-light hover-elevate-down fs-6 px-3 py-2">Activo</span>
                                                 @endif
                                                 @if ($item->usuario_estado == 2)
-                                                    <span style="cursor: pointer;" wire:click="cargarAlerta({{ $item->id_usuario }})" class="badge text-bg-success text-light hover-elevate-down px-3 py-2">Asignado</span>
+                                                    <span style="cursor: pointer;" wire:click="cargarAlerta({{ $item->id_usuario }})" class="badge text-bg-success text-light hover-elevate-down fs-6 px-3 py-2">Asignado</span>
                                                 @endif
                                                 @if ($item->usuario_estado == 0)
-                                                    <span style="cursor: pointer;" wire:click="cargarAlerta({{ $item->id_usuario }})" class="badge text-bg-danger text-light hover-elevate-down px-3 py-2">Inactivo</span>
+                                                    <span style="cursor: pointer;" wire:click="cargarAlerta({{ $item->id_usuario }})" class="badge text-bg-danger text-light hover-elevate-down fs-6 px-3 py-2">Inactivo</span>
                                                 @endif
                                             </td>
 

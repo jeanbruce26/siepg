@@ -90,22 +90,22 @@
                                             {{-- tipo => 0 = maestria y doctorado, 1 = maestria, 2 = doctorado --}}
                                             @switch($item->expediente_tipo)
                                                 @case(0)
-                                                    <span class="badge badge-light-primary px-3 py-2">Maestría y Doctorado</span>
+                                                    <span class="badge badge-light-primary fs-6 px-3 py-2">Maestría y Doctorado</span>
                                                     @break
                                                 @case(1)
-                                                    <span class="badge badge-light-primary px-3 py-2">Maestría</span>
+                                                    <span class="badge badge-light-primary fs-6 px-3 py-2">Maestría</span>
 
                                                     @break
                                                 @case(2)
-                                                    <span class="badge badge-light-primary px-3 py-2">Doctorado</span>
+                                                    <span class="badge badge-light-primary fs-6 px-3 py-2">Doctorado</span>
                                                     @break
                                             @endswitch
                                         </td>
                                         <td align="center">
                                             @if ($item->expediente_estado == 1)
-                                                <span style="cursor: pointer;" wire:click="cargarAlertaEstado({{ $item->id_expediente }})" class="badge text-bg-success text-light hover-elevate-down px-3 py-2">Activo</span></span>
+                                                <span style="cursor: pointer;" wire:click="cargarAlertaEstado({{ $item->id_expediente }})" class="badge text-bg-success text-light hover-elevate-down fs-6 px-3 py-2">Activo</span></span>
                                             @else
-                                                <span style="cursor: pointer;" wire:click="cargarAlertaEstado({{ $item->id_expediente }})" class="badge text-bg-danger text-light hover-elevate-down px-3 py-2">Inactivo</span></span>
+                                                <span style="cursor: pointer;" wire:click="cargarAlertaEstado({{ $item->id_expediente }})" class="badge text-bg-danger text-light hover-elevate-down fs-6 px-3 py-2">Inactivo</span></span>
                                             @endif
                                         </td>
                                         <td align="center">
