@@ -291,7 +291,7 @@
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
-                        @if ($grupos)
+                        {{-- @if ($grupos)
                             @if ( $concepto_pago == 3 || $concepto_pago == 4 || $concepto_pago == 5 || $concepto_pago == 6 )
                                 <div class="col-md-12">
                                     <label for="grupo" class="required form-label">
@@ -313,7 +313,7 @@
                                     @enderror
                                 </div>
                             @endif
-                        @endif
+                        @endif --}}
                         <div class="col-md-12">
                             <label for="voucher" class="@if($modo == 'create') required @endif @if($activar_voucher == true) required @endif form-label">
                                 Voucher

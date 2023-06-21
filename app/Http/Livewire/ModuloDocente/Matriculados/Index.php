@@ -13,6 +13,7 @@ use Livewire\WithPagination;
 class Index extends Component
 {
     public $id_docente_curso;
+    public $docente_curso;
     public $id_programa_proceso_grupo;
     public $curso_programa_proceso;
     public $id_curso_programa_proceso;
@@ -46,9 +47,9 @@ class Index extends Component
         $trabajador = $trabajador_tipo_trabajador->trabajador; // obtenemos el trabajador del trabajador_tipo_trabajador del usuario autenticado
         $docente = Docente::where('id_trabajador', $trabajador->id_trabajador)->first(); // obtenemos el docente del trabajador del usuario autenticado
 
-        $docente_curso = DocenteCurso::find($this->id_docente_curso);
-        if ($docente_curso) {
-            if ($docente_curso->id_docente != $docente->id_docente) {
+        $this->docente_curso = DocenteCurso::find($this->id_docente_curso);
+        if ($this->docente_curso) {
+            if ($this->docente_curso->id_docente != $docente->id_docente) {
                 abort(403);
             }
         }
@@ -56,11 +57,11 @@ class Index extends Component
             abort(403);
         }
 
-        $this->curso_programa_proceso = CursoProgramaProceso::find($docente_curso->id_curso_programa_proceso);
+        $this->curso_programa_proceso = CursoProgramaProceso::find($this->docente_curso->id_curso_programa_proceso);
         $this->id_curso_programa_proceso = $this->curso_programa_proceso->id_curso_programa_proceso;
-        $this->id_programa_proceso_grupo = $docente_curso->id_programa_proceso_grupo;
+        $this->id_programa_proceso_grupo = $this->docente_curso->id_programa_proceso_grupo;
         $this->curso = $this->curso_programa_proceso->curso;
-        $this->grupo = $docente_curso->programa_proceso_grupo;
+        $this->grupo = $this->docente_curso->programa_proceso_grupo;
     }
 
     public function updated($propertyName)
@@ -198,6 +199,8 @@ class Index extends Component
         $this->matricula_curso->matricula_curso_estado = 2; // 2 = curso finalizado
         $this->matricula_curso->save();
 
+        $this->finalizar_curso();
+
         // emitimos alerta para mostrar mensaje de éxito
         $this->dispatchBrowserEvent('alerta_matriculados', [
             'title' => '¡Éxito!',
@@ -271,6 +274,8 @@ class Index extends Component
         $matricula_curso->matricula_curso_estado = 2; // 2 = curso finalizado
         $matricula_curso->save();
 
+        $this->finalizar_curso();
+
         // emitir alerta de notas agregadas correctamente
         $this->dispatchBrowserEvent('alerta_matriculados', [
             'title' => '¡Éxito!',
@@ -281,6 +286,35 @@ class Index extends Component
         ]);
 
         // emitir evento para renderizar la tabla
+        $this->emit('render');
+    }
+
+    public function finalizar_curso()
+    {
+        $matriculados_count = MatriculaCurso::join('matricula', 'matricula_curso.id_matricula', 'matricula.id_matricula')
+                        ->join('admitido', 'matricula.id_admitido', 'admitido.id_admitido')
+                        ->join('persona', 'admitido.id_persona', 'persona.id_persona')
+                        ->where('matricula_curso.id_curso_programa_proceso', $this->id_curso_programa_proceso)
+                        ->where('matricula.id_programa_proceso_grupo', $this->id_programa_proceso_grupo)
+                        ->count();
+
+        $matriculados_finalizados_count = MatriculaCurso::join('matricula', 'matricula_curso.id_matricula', 'matricula.id_matricula')
+                        ->join('admitido', 'matricula.id_admitido', 'admitido.id_admitido')
+                        ->join('persona', 'admitido.id_persona', 'persona.id_persona')
+                        ->where('matricula_curso.id_curso_programa_proceso', $this->id_curso_programa_proceso)
+                        ->where('matricula.id_programa_proceso_grupo', $this->id_programa_proceso_grupo)
+                        ->where('matricula_curso.matricula_curso_estado', 2)
+                        ->count();
+
+        // emitir alerta de que todas las notas ya fueron ingresadas
+        if ( $matriculados_count == $matriculados_finalizados_count )
+        {
+            // cambiamos el estado del curso del docente a finalizado
+            $this->docente_curso = DocenteCurso::find($this->id_docente_curso);
+            $this->docente_curso->docente_curso_estado = 2; // 2 = curso finalizado
+            $this->docente_curso->save();
+        }
+
         $this->emit('render');
     }
 

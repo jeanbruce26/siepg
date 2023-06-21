@@ -187,15 +187,9 @@
                                                             </span>
                                                         </div>
                                                         <div class="d-flex flex-column row-gap-5">
-                                                            @if ($item->docente_curso_estado == 1)
-                                                                <a href="{{ route('docente.matriculados', ['id_docente_curso' => $item->id_docente_curso]) }}" class="btn btn-primary w-100">
-                                                                    Ingresar
-                                                                </a>
-                                                            @else
-                                                                <button class="btn btn-primary w-100" disabled>
-                                                                    Ingresar
-                                                                </button>
-                                                            @endif
+                                                            <a href="{{ route('docente.matriculados', ['id_docente_curso' => $item->id_docente_curso]) }}" class="btn btn-primary w-100">
+                                                                Ingresar
+                                                            </a>
                                                         </div>
                                                     </div>
                                                 </div>

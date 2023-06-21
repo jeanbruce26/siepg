@@ -57,7 +57,11 @@
                         </i>
                         <div class="d-flex flex-column">
                             <span class="fw-bold fs-5">
-                                Recuerde que una vez ingresadas las notas, no podrá modificarlas.
+                                @if ($docente_curso->docente_curso_estado == 2)
+                                    El curso ya ha sido finalizado.
+                                @else
+                                    Recuerde que una vez ingresadas las notas, no podrá modificarlas.
+                                @endif
                             </span>
                         </div>
                     </div>
@@ -68,17 +72,19 @@
                                 <div class="col-md-4">
                                 </div>
                                 <div class="col-md-4">
-                                    <div class="d-flex flex-lg-row flex-column gap-3 justify-content-end">
-                                        @if ($modo == 'show')
-                                            <button type="button" wire:click="modo_cancelar" class="btn btn-danger w-lg-50">
-                                                Cancelar
-                                            </button>
-                                        @else
-                                            <button type="button" wire:click="modo_ingresar_notas" class="btn btn-primary w-lg-50">
-                                                Ingresar Notas
-                                            </button>
-                                        @endif
-                                    </div>
+                                    @if ($docente_curso->docente_curso_estado != 2)
+                                        <div class="d-flex flex-lg-row flex-column gap-3 justify-content-end">
+                                            @if ($modo == 'show')
+                                                <button type="button" wire:click="modo_cancelar" class="btn btn-danger w-lg-50">
+                                                    Cancelar
+                                                </button>
+                                            @else
+                                                <button type="button" wire:click="modo_ingresar_notas" class="btn btn-primary w-lg-50">
+                                                    Ingresar Notas
+                                                </button>
+                                            @endif
+                                        </div>
+                                    @endif
                                 </div>
                                 <div class="col-md-4">
                                     <input type="search" wire:model="search" class="form-control w-100" placeholder="Buscar..."/>
@@ -96,7 +102,9 @@
                                             <th class="text-center">Evaluación Final</th>
                                             <th class="text-center">Promedio Final</th>
                                             <th>Estado</th>
-                                            <th>Acciones</th>
+                                            @if ($docente_curso->docente_curso_estado != 2)
+                                                <th>Acciones</th>
+                                            @endif
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -219,6 +227,7 @@
                                                         </span>
                                                     @endif
                                                 </td>
+                                                @if ($docente_curso->docente_curso_estado != 2)
                                                 <td class="d-flex flex-column gap-3">
                                                     @if ($nota_curso)
                                                         @if ($nota_curso->nota_evaluacion_final !== null)
@@ -269,6 +278,7 @@
                                                         </div>
                                                     </div>
                                                 </td>
+                                                @endif
                                             </tr>
                                         @empty
                                             @if ($search != '')

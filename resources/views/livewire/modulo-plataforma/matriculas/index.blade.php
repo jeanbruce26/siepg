@@ -47,10 +47,10 @@
                         </div>
                         {{-- lista de matriculas registradas --}}
                         @foreach ($matriculas as $item)
-                            <div wire:ignore.self class="accordion shadow-sm rounded rounded-3 hover-elevate-up" id="acordion_ciclos_{{ $item->id_matricula }}">
+                            <div wire:ignore.self class="accordion shadow rounded rounded-3 hover-elevate-up" id="acordion_ciclos_{{ $item->id_matricula }}">
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="acordion_ciclos_{{ $item->id_matricula }}_header_{{ $item->id_matricula }}">
-                                        <button class="accordion-button fs-1 py-8 btn-center collapsed" style="font-weight: 700" type="button"
+                                        <button class="accordion-button fs-1 py-8 btn-center collapsed bg-light-warning" style="font-weight: 700" type="button"
                                         data-bs-toggle="collapse" data-bs-target="#acordion_ciclos_{{ $item->id_matricula }}_body_{{ $item->id_matricula }}"
                                             aria-expanded="false" aria-controls="acordion_ciclos_{{ $item->id_matricula }}_body_{{ $item->id_matricula }}">
                                             <i class="ki-duotone ki-award fs-3x me-3 text-gray-700">
@@ -66,7 +66,7 @@
                                     <div id="acordion_ciclos_{{ $item->id_matricula }}_body_{{ $item->id_matricula }}" class="accordion-collapse collapse"
                                         aria-labelledby="acordion_ciclos_{{ $item->id_matricula }}_header_{{ $item->id_matricula }}" data-bs-parent="#acordion_ciclos_{{ $item->id_matricula }}">
                                         <div class="accordion-body">
-                                            <div class="row g-5">
+                                            <div class="row g-5 fs-5">
                                                 <div class="col-12">
                                                     <div class="row">
                                                         <div class="col-4 col-md-3">
@@ -237,7 +237,7 @@
                                     <option></option>
                                     @foreach ($grupos as $item)
                                     @php
-                                        $contador_matriculados_grupos = App\Models\Matricula::where('id_programa_proceso_grupo', $item->id_programa_proceso_grupo)->where('id_ciclo', 1)->count();
+                                        $contador_matriculados_grupos = App\Models\Matricula::where('id_programa_proceso_grupo', $item->id_programa_proceso_grupo)->where('id_ciclo', $ciclo_admitido->id_ciclo)->count();
                                     @endphp
                                     <option value="{{ $item->id_programa_proceso_grupo }}" @if($item->grupo_cantidad <= $contador_matriculados_grupos) disabled @endif>
                                         GRUPO {{ $item->grupo_detalle }} - CUPOS: {{ $item->grupo_cantidad - $contador_matriculados_grupos }}
