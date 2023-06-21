@@ -77,18 +77,18 @@
                                     <form class="px-7 py-5" wire:submit.prevent="aplicar_filtro">
                                         <div class="mb-10">
                                             <label class="form-label fw-semibold">
-                                                Concepto de Pago:
+                                                Ciclo Académico:
                                             </label>
                                             <div>
-                                                <select class="form-select" wire:model="filtro_concepto_pago"
-                                                    id="filtro_concepto_pago" data-control="select2"
-                                                    data-placeholder="Seleccione su concepto de pago">
+                                                <select class="form-select" wire:model="filtro_ciclo"
+                                                    id="filtro_ciclo" data-control="select2"
+                                                    data-placeholder="Seleccione su ciclo académico">
                                                     <option value=""></option>
-                                                    {{-- @foreach ($conceptos_pagos as $item)
-                                                        <option value="{{ $item->id_concepto_pago }}">
-                                                            Concepto por {{ $item->concepto_pago }}
+                                                    @foreach ($ciclos as $item)
+                                                        <option value="{{ $item->id_ciclo }}">
+                                                            CICLO {{ $item->ciclo->ciclo }}
                                                         </option>
-                                                    @endforeach --}}
+                                                    @endforeach
                                                 </select>
                                             </div>
                                         </div>
@@ -165,22 +165,22 @@
                                                 Pago por enseñanza 00{{  $loop->iteration }}
                                             </td>
                                             <td>
-                                                {{ $item->pago->pago_operacion }}
+                                                {{ $item->pago_operacion }}
                                             </td>
                                             <td>
-                                                S/. {{ number_format($item->pago->pago_monto, 2, ',', '.') }}
+                                                S/. {{ number_format($item->pago_monto, 2, ',', '.') }}
                                             </td>
                                             <td>
                                                 {{ date('d/m/Y', strtotime($item->mensualidad_fecha_creacion)) }}
                                             </td>
                                             <td>
-                                                @if ($item->pago->pago_verificacion == 1)
+                                                @if ($item->pago_verificacion == 1)
                                                     <span class="badge badge-warning fs-6 px-3 py-2">Pendiente</span>
-                                                @elseif ($item->pago->pago_verificacion == 2)
+                                                @elseif ($item->pago_verificacion == 2)
                                                     <span class="badge badge-success fs-6 px-3 py-2">Pagado</span>
-                                                @elseif ($item->pago->pago_verificacion == 0 && $item->pago->pago_estado == 0)
+                                                @elseif ($item->pago_verificacion == 0 && $item->pago_estado == 0)
                                                     <span class="badge badge-danger fs-6 px-3 py-2">Rechazado</span>
-                                                @elseif ($item->pago->pago_verificacion == 0)
+                                                @elseif ($item->pago_verificacion == 0)
                                                     <span class="badge badge-danger fs-6 px-3 py-2">Observado</span>
                                                 @endif
                                             </td>
@@ -199,23 +199,23 @@
                             </div>
                         {{-- </div> --}}
                     </div>
-                    {{-- paginacion de la tabla de pagos --}}
-                    {{-- @if ($pagos->hasPages())
+                    {{-- paginacion de la tabla de mensualidades --}}
+                    @if ($mensualidades->hasPages())
                         <div class="d-flex justify-content-between mt-5">
                             <div class="d-flex align-items-center text-gray-700">
-                                Mostrando {{ $pagos->firstItem() }} - {{ $pagos->lastItem() }} de {{ $pagos->total()}} registros
+                                Mostrando {{ $mensualidades->firstItem() }} - {{ $mensualidades->lastItem() }} de {{ $mensualidades->total()}} registros
                             </div>
                             <div>
-                                {{ $pagos->links() }}
+                                {{ $mensualidades->links() }}
                             </div>
                         </div>
                     @else
                         <div class="d-flex justify-content-between mt-5">
                             <div class="d-flex align-items-center text-gray-700">
-                                Mostrando {{ $pagos->firstItem() }} - {{ $pagos->lastItem() }} de {{ $pagos->total()}} registros
+                                Mostrando {{ $mensualidades->firstItem() }} - {{ $mensualidades->lastItem() }} de {{ $mensualidades->total()}} registros
                             </div>
                         </div>
-                    @endif --}}
+                    @endif
                 </div>
             </div>
         </div>
@@ -378,12 +378,12 @@
         </div>
     </div> --}}
 </div>
-{{-- @push('scripts')
+@push('scripts')
     <script>
-        // canal_pago select2
+        // filtro_ciclo select2
         $(document).ready(function () {
-            $('#canal_pago').select2({
-                placeholder: 'Seleccione su canal de pago',
+            $('#filtro_ciclo').select2({
+                placeholder: 'Seleccione su ciclo académico',
                 allowClear: true,
                 width: '100%',
                 selectOnClose: true,
@@ -396,12 +396,12 @@
                     }
                 }
             });
-            $('#canal_pago').on('change', function(){
-                @this.set('canal_pago', this.value);
+            $('#filtro_ciclo').on('change', function(){
+                @this.set('filtro_ciclo', this.value);
             });
             Livewire.hook('message.processed', (message, component) => {
-                $('#canal_pago').select2({
-                    placeholder: 'Seleccione su canal de pago',
+                $('#filtro_ciclo').select2({
+                    placeholder: 'Seleccione su ciclo académico',
                     allowClear: true,
                     width: '100%',
                     selectOnClose: true,
@@ -414,127 +414,10 @@
                         }
                     }
                 });
-                $('#canal_pago').on('change', function(){
-                    @this.set('canal_pago', this.value);
-                });
-            });
-        });
-        // concepto_pago select2
-        $(document).ready(function () {
-            $('#concepto_pago').select2({
-                placeholder: 'Seleccione su concepto de pago',
-                allowClear: true,
-                width: '100%',
-                selectOnClose: true,
-                language: {
-                    noResults: function () {
-                        return "No se encontraron resultados";
-                    },
-                    searching: function () {
-                        return "Buscando..";
-                    }
-                }
-            });
-            $('#concepto_pago').on('change', function(){
-                @this.set('concepto_pago', this.value);
-            });
-            Livewire.hook('message.processed', (message, component) => {
-                $('#concepto_pago').select2({
-                    placeholder: 'Seleccione su concepto de pago',
-                    allowClear: true,
-                    width: '100%',
-                    selectOnClose: true,
-                    language: {
-                        noResults: function () {
-                            return "No se encontraron resultados";
-                        },
-                        searching: function () {
-                            return "Buscando..";
-                        }
-                    }
-                });
-                $('#concepto_pago').on('change', function(){
-                    @this.set('concepto_pago', this.value);
-                });
-            });
-        });
-        // grupo select2
-        $(document).ready(function () {
-            $('#grupo').select2({
-                placeholder: 'Seleccione su grupo',
-                allowClear: true,
-                width: '100%',
-                selectOnClose: true,
-                language: {
-                    noResults: function () {
-                        return "No se encontraron resultados";
-                    },
-                    searching: function () {
-                        return "Buscando..";
-                    }
-                }
-            });
-            $('#grupo').on('change', function(){
-                @this.set('grupo', this.value);
-            });
-            Livewire.hook('message.processed', (message, component) => {
-                $('#grupo').select2({
-                    placeholder: 'Seleccione su grupo',
-                    allowClear: true,
-                    width: '100%',
-                    selectOnClose: true,
-                    language: {
-                        noResults: function () {
-                            return "No se encontraron resultados";
-                        },
-                        searching: function () {
-                            return "Buscando..";
-                        }
-                    }
-                });
-                $('#grupo').on('change', function(){
-                    @this.set('grupo', this.value);
-                });
-            });
-        });
-        // filtro_concepto_pago select2
-        $(document).ready(function () {
-            $('#filtro_concepto_pago').select2({
-                placeholder: 'Seleccione su concepto de pago',
-                allowClear: true,
-                width: '100%',
-                selectOnClose: true,
-                language: {
-                    noResults: function () {
-                        return "No se encontraron resultados";
-                    },
-                    searching: function () {
-                        return "Buscando..";
-                    }
-                }
-            });
-            $('#filtro_concepto_pago').on('change', function(){
-                @this.set('filtro_concepto_pago', this.value);
-            });
-            Livewire.hook('message.processed', (message, component) => {
-                $('#filtro_concepto_pago').select2({
-                    placeholder: 'Seleccione su concepto de pago',
-                    allowClear: true,
-                    width: '100%',
-                    selectOnClose: true,
-                    language: {
-                        noResults: function () {
-                            return "No se encontraron resultados";
-                        },
-                        searching: function () {
-                            return "Buscando..";
-                        }
-                    }
-                });
-                $('#filtro_concepto_pago').on('change', function(){
-                    @this.set('filtro_concepto_pago', this.value);
+                $('#filtro_ciclo').on('change', function(){
+                    @this.set('filtro_ciclo', this.value);
                 });
             });
         });
     </script>
-@endpush --}}
+@endpush
