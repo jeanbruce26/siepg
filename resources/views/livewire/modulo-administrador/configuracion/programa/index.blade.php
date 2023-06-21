@@ -124,16 +124,16 @@
                                             @endif
                                         </td>
                                         <td align="center">
-                                            <span class="badge badge-light-primary px-3 py-2">{{ $item->modalidad }}</span>
+                                            <span class="badge badge-light-primary fs-6 px-3 py-2">{{ $item->modalidad }}</span>
                                         </td>
                                         <td align="center">
                                             {{ $item->sede }}
                                         </td>
                                         <td align="center">
                                             @if ($item->programa_estado == 1)
-                                                <span style="cursor: pointer;" wire:click="cargarAlertaEstado({{ $item->id_programa }})" class="badge text-bg-success text-light hover-elevate-down px-3 py-2">Activo</span></span>
+                                                <span style="cursor: pointer;" wire:click="cargarAlertaEstado({{ $item->id_programa }})" class="badge text-bg-success text-light hover-elevate-down fs-6 px-3 py-2">Activo</span></span>
                                             @else
-                                                <span style="cursor: pointer;" wire:click="cargarAlertaEstado({{ $item->id_programa }})" class="badge text-bg-danger text-light hover-elevate-down px-3 py-2">Inactivo</span></span>
+                                                <span style="cursor: pointer;" wire:click="cargarAlertaEstado({{ $item->id_programa }})" class="badge text-bg-danger text-light hover-elevate-down fs-6 px-3 py-2">Inactivo</span></span>
                                             @endif
                                         </td>
                                         <td align="center">

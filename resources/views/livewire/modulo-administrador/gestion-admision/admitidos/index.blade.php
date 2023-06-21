@@ -105,9 +105,9 @@
                                             </td>
                                             <td>
                                                 @if ($item->id_modalidad == 1)
-                                                    <span class="badge badge-light-success px-3 py-2">Presencial</span>
+                                                    <span class="badge badge-light-success fs-6 px-3 py-2">Presencial</span>
                                                 @else
-                                                    <span class="badge badge-light-primary px-3 py-2">Distancia</span>
+                                                    <span class="badge badge-light-primary fs-6 px-3 py-2">Distancia</span>
                                                 @endif
                                             </td>
                                             <td>

@@ -174,11 +174,11 @@
                                                 @if ($item->trabajador_estado == 1)
                                                     <span style="cursor: pointer;"
                                                         wire:click="cargarAlerta({{ $item->id_trabajador }})"
-                                                        class="badge text-bg-primary text-light px-3 py-2">Activo</span>
+                                                        class="badge text-bg-success text-light fs-6 px-3 py-2">Activo</span>
                                                 @else
                                                     <span style="cursor: pointer;"
                                                         wire:click="cargarAlerta({{ $item->id_trabajador }})"
-                                                        class="badge text-bg-danger text-light px-3 py-2">Inactivo</span>
+                                                        class="badge text-bg-danger text-light fs-6 px-3 py-2">Inactivo</span>
                                                 @endif
                                             </td>
                                             <td align="center">

@@ -69,9 +69,9 @@
                                         <td>{{ $item->tipo_seguimiento }}</td>
                                         <td align="center">
                                             @if ($item->expediente_tipo_seguimiento_estado == 1)
-                                                <span style="cursor: pointer;" wire:click="cargarAlertaEstado({{ $item->id_expediente_tipo_seguimiento }})" class="badge text-bg-success text-light hover-elevate-down px-3 py-2">Activo</span>
+                                                <span style="cursor: pointer;" wire:click="cargarAlertaEstado({{ $item->id_expediente_tipo_seguimiento }})" class="badge text-bg-success text-light hover-elevate-down fs-6 px-3 py-2">Activo</span>
                                             @else
-                                                <span style="cursor: pointer;" wire:click="cargarAlertaEstado({{ $item->id_expediente_tipo_seguimiento }})" class="badge text-bg-danger text-light hover-elevate-down px-3 py-2">Inactivo</span></span>
+                                                <span style="cursor: pointer;" wire:click="cargarAlertaEstado({{ $item->id_expediente_tipo_seguimiento }})" class="badge text-bg-danger text-light hover-elevate-down fs-6 px-3 py-2">Inactivo</span></span>
                                             @endif
                                         </td>
                                         <td align="center">

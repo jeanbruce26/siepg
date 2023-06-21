@@ -19,10 +19,9 @@
             text: event.detail.text,
             icon: event.detail.icon,
             buttonsStyling: false,
-			confirmButtonClass: 'hover-elevate-up', // Hover para elevar boton al pasar el cursor
             confirmButtonText: event.detail.confirmButtonText,
             customClass: {
-                confirmButton: "btn btn-"+event.detail.color,
+                confirmButton: "btn btn-"+event.detail.color+" hover-elevate-up",
             }
         });
     });
@@ -37,11 +36,9 @@
 			showCancelButton: true,
 			confirmButtonText: event.detail.confirmButtonText,
 			cancelButtonText: event.detail.cancelButtonText,
-			confirmButtonClass: 'hover-elevate-up', // Hover para elevar boton al pasar el cursor
-			cancelButtonClass: 'hover-elevate-up', // Hover para elevar boton al pasar el cursor
 			customClass: {
-                confirmButton: "btn btn-"+event.detail.confirmButtonColor,
-                cancelButton: "btn btn-"+event.detail.cancelButtonColor,
+                confirmButton: "btn btn-"+event.detail.confirmButtonColor+" hover-elevate-up",
+                cancelButton: "btn btn-"+event.detail.cancelButtonColor+" hover-elevate-up",
             }
 		}).then((result) => {
 			if (result.isConfirmed) {
