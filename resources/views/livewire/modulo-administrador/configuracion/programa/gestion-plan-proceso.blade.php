@@ -192,17 +192,16 @@
                 </div>
                 <div class="modal-body">
                     <form autocomplete="off" class="row g-5 {{ $modo == 3 ? 'mb-3' : '' }}">
-                        <div class="col-md-12">
-                            <label for="programa_codigo" class="{{ $modo != 3 ? 'required' : ''}} form-label">
-                                Código del Programa
-                            </label>
-                            <input type="text" wire:model="programa_codigo"
-                                class="form-control @error('programa_codigo') is-invalid @enderror"
-                                placeholder="Ingrese el código del programa" id="programa_codigo" @if($modo == 3) readonly @endif />
-                            @error('programa_codigo')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
+                        @if($modo == 3)
+                            <div class="col-md-12">
+                                <label for="programa_codigo" class="form-label">
+                                    Código del Programa
+                                </label>
+                                <input type="text" wire:model="programa_codigo"
+                                    class="form-control"
+                                    placeholder="Ingrese el código del programa" id="programa_codigo" readonly/>
+                            </div>
+                        @endif
                         <div class="col-md-12">
                             <label for="plan" class="{{ $modo != 3 ? 'required' : ''}} form-label">
                                 Plan
@@ -216,8 +215,7 @@
                                     data-dropdown-parent="#modalPlanProceso">
                                     <option></option>
                                     @foreach ($planModel as $item)
-                                        <option value="{{ $item->id_plan }}">Pago realizado en
-                                            {{ $item->plan }}</option>
+                                        <option value="{{ $item->id_plan }}">Plan {{ $item->plan }}</option>
                                     @endforeach
                                 </select>
                                 @error('plan')
@@ -228,7 +226,7 @@
                         @if($modo ==3)
                             <div class="col-md-12">
                                 <label  for="programa_plan_creacion" class="form-label">Fecha de creación del plan</label>
-                                <input type="text" value="{{ date('d/m/Y h:i:s A', strtotime($programa_plan_creacion)) }}"
+                                <input type="text" value="{{ date('d/m/Y, h:i:s A', strtotime($programa_plan_creacion)) }}"
                                     class="form-control" id="programa_plan_creacion" readonly />
                             </div>
                         @endif
