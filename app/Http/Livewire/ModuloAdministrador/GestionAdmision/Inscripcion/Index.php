@@ -43,7 +43,7 @@ class Index extends Component
     public $id_inscripcion;
 
     protected $listeners = [
-        'render', 'cambiarPrograma', 'cambiarSeguimiento', 'reservarPago'
+        'render', 'cambiarEstado', 'cambiarSeguimiento', 'reservarPago'
     ];
     
     public function updated($propertyName)
@@ -71,6 +71,54 @@ class Index extends Component
         $this->modalidadFiltro = $this->modalidad_filtro;
         $this->programaFiltro = $this->programa_filtro;
         $this->seguimientoFiltro = $this->seguimiento_filtro;
+    }
+
+    //Alerta de confirmacion
+    public function alertaConfirmacion($title, $text, $icon, $confirmButtonText, $cancelButtonText, $confimrColor, $cancelColor, $metodo, $id)
+    {
+        $this->dispatchBrowserEvent('alertaConfirmacion', [
+            'title' => $title,
+            'text' => $text,
+            'icon' => $icon,
+            'confirmButtonText' => $confirmButtonText,
+            'cancelButtonText' => $cancelButtonText,
+            'confimrColor' => $confimrColor,
+            'cancelColor' => $cancelColor,
+            'metodo' => $metodo,
+            'id' => $id,
+        ]);
+    }
+
+    //Alertas de exito o error
+    public function alertaPrograma($title, $text, $icon, $confirmButtonText, $color)
+    {
+        $this->dispatchBrowserEvent('alerta-inscripcion', [
+            'title' => $title,
+            'text' => $text,
+            'icon' => $icon,
+            'confirmButtonText' => $confirmButtonText,
+            'color' => $color
+        ]);
+    }
+
+    //Mostar modal de confirmacion para cambiar el estado del programa
+    public function cargarAlertaEstado(Inscripcion $inscripcion)
+    {
+        $this->alertaConfirmacion('¿Estás seguro?','¿Desea cambiar el estado de la inscripción de '.$inscripcion->persona->nombre_completo.'?','question','Modificar','Cancelar','primary','danger','cambiarEstado',$inscripcion->id_inscripcion);
+    }
+
+    //Cambiar el estado de la inscripción
+    public function cambiarEstado($id)
+    {
+        $inscripcion = Inscripcion::find($id);
+        if($inscripcion->inscripcion_estado == 1){//Si el estado es activo(1), se cambia a inactivo(0)
+            $inscripcion->inscripcion_estado = 0;
+        }else{//Si el estado es inactivo(0), se cambia a activo(1)
+            $inscripcion->inscripcion_estado = 1;
+        }
+
+        $inscripcion->save();
+        $this->alertaPrograma('¡Exito!','El estado de la inscripción de '.$inscripcion->persona->nombre_completo.' ha sido actualizado satisfactoriamente','success','Aceptar','success');
     }
 
     public function render()

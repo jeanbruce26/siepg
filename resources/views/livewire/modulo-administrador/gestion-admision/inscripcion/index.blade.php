@@ -116,7 +116,6 @@
                                         <th scope="col">Postulante</th>
                                         <th scope="col">Programa</th>
                                         <th scope="col" class="col-md-1">Modalidad</th>
-                                        <th scope="col" class="col-md-1">Estado</th>
                                         <th scope="col" class="col-md-2">Acciones</th>
                                     </tr>
                                 </thead>
@@ -127,13 +126,6 @@
                                         <td>{{ $item->numero_documento }} - {{ $item->apellido_paterno }} {{ $item->apellido_materno }} {{ $item->nombre }}</td>
                                         <td> {{ $item->programa }} EN {{ $item->subprograma }} @if($item->mencion != '') CON MENCION EN {{ $item->mencion }}@endif</td>
                                         <td align="center">{{ $item->modalidad }}</td>
-                                        <td align="center">
-                                            @if ($item->inscripcion_estado == 1)
-                                                <span style="cursor: pointer;" wire:click="cargarAlertaEstado({{ $item->id_inscripcion }})" class="badge text-bg-success text-light hover-elevate-down fs-6 px-3 py-2">Activo</span></span>
-                                            @else
-                                                <span style="cursor: pointer;" wire:click="cargarAlertaEstado({{ $item->id_inscripcion }})" class="badge text-bg-danger text-light hover-elevate-down fs-6 px-3 py-2">Inactivo</span></span>
-                                            @endif
-                                        </td>
                                         <td align="center">
                                             <a class="btn btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary btn-sm" data-bs-toggle="dropdown">
                                                 Acciones

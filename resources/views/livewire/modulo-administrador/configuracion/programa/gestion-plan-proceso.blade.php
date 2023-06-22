@@ -239,7 +239,7 @@
                             Cerrar
                         </button>
                         <button type="button" wire:click="guardarProgramaPlan" class="btn btn-primary" style="width: 150px" wire:loading.attr="disabled" wire:target="guardarProgramaPlan">
-                            <div wire:loading.remove wire:target="guardarProgramaPlan, voucher">
+                            <div wire:loading.remove wire:target="guardarProgramaPlan">
                                 Guardar
                             </div>
                             <div wire:loading wire:target="guardarProgramaPlan">
