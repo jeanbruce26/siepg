@@ -38,3 +38,9 @@ Route::get('/docentes', [CoordinadorController::class, 'docentes'])->middleware(
 
 // ruta para ir a la pagina de gestion de cursos
 Route::get('/cursos', [CoordinadorController::class, 'cursos'])->middleware(['auth.usuario', 'verificar.usuario.coordinador'])->name('coordinador.cursos');
+
+// ruta para ir a la pagina de reportes de pagos
+Route::get('/reporte-pagos', [CoordinadorController::class, 'reporte_pagos'])->middleware(['auth.usuario', 'verificar.usuario.coordinador'])->name('coordinador.reporte-pagos');
+
+// ruta para ir a la pagina de reportes de pagos d3e los programas
+Route::get('/reporte-pagos/{id_programa_proceso}/programa', [CoordinadorController::class, 'reporte_programas'])->middleware(['auth.usuario', 'verificar.usuario.coordinador'])->name('coordinador.reporte-programas');
