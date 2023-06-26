@@ -95,6 +95,26 @@
                                                 </select>
                                             </div>
                                         </div>
+                                        <div class="mb-5">
+                                            <label class="form-label fw-semibold">Mes:</label>
+                                            <div>
+                                                <select class="form-select" wire:model="mes_filtro" id="mes_filtro" data-control="select2" data-placeholder="Seleccione el Mes">
+                                                    <option></option>
+                                                    @if($proceso_filtro)
+                                                        @php
+                                                            $anioAdmision = App\Models\Admision::where('id_admision', $proceso_filtro)->first();
+                                                        @endphp
+                                                        @foreach ($mesesUnicos as $item)
+                                                            @if($item->anio == $anioAdmision->admision_año)
+                                                                <option value="{{ $item->mes }}">
+                                                                    {{ $meses[$item->mes] }}
+                                                                </option>
+                                                            @endif
+                                                        @endforeach
+                                                    @endif
+                                                </select>
+                                            </div>
+                                        </div>
                                         <div class="d-flex justify-content-end">
                                             <button type="button" wire:click="resetear_filtro" class="btn btn-sm btn-light btn-active-light-primary me-2" data-kt-menu-dismiss="true">Resetear</button>
                                             <button type="button" class="btn btn-sm btn-primary" data-kt-menu-dismiss="true" wire:click="filtrar">Aplicar</button>
@@ -116,6 +136,7 @@
                                         <th scope="col">Postulante</th>
                                         <th scope="col">Programa</th>
                                         <th scope="col" class="col-md-1">Modalidad</th>
+                                        <th scope="col" class="col-md-1">Fecha</th>
                                         <th scope="col" class="col-md-2">Acciones</th>
                                     </tr>
                                 </thead>
@@ -125,7 +146,10 @@
                                         <td align="center" class="fw-bold fs-5">{{ $item->id_inscripcion }}</td>
                                         <td>{{ $item->numero_documento }} - {{ $item->apellido_paterno }} {{ $item->apellido_materno }} {{ $item->nombre }}</td>
                                         <td> {{ $item->programa }} EN {{ $item->subprograma }} @if($item->mencion != '') CON MENCION EN {{ $item->mencion }}@endif</td>
-                                        <td align="center">{{ $item->modalidad }}</td>
+                                        <td align="center">
+                                            <span class="badge badge-light-primary fs-6 px-3 py-2">{{ $item->modalidad }}</span>
+                                        </td>
+                                        <td align="center">{{ date('d/m/Y', strtotime($item->inscripcion_fecha)) }}</td>
                                         <td align="center">
                                             <a class="btn btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary btn-sm" data-bs-toggle="dropdown">
                                                 Acciones
@@ -568,6 +592,46 @@
                 });
                 $('#seguimiento_filtro').on('change', function(){
                     @this.set('seguimiento_filtro', this.value);
+                });
+            });
+        });
+
+        //Filtro de mes_filtro de select2
+        $(document).ready(function () {
+            $('#mes_filtro').select2({
+                placeholder: 'Seleccione',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando...";
+                    }
+                }
+            });
+            $('#mes_filtro').on('change', function(){
+                @this.set('mes_filtro', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#mes_filtro').select2({
+                    placeholder: 'Seleccione',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando...";
+                        }
+                    }
+                });
+                $('#mes_filtro').on('change', function(){
+                    @this.set('mes_filtro', this.value);
                 });
             });
         });

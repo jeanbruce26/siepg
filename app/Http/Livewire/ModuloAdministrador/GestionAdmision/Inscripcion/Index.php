@@ -11,6 +11,7 @@ use App\Models\TipoSeguimiento;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Barryvdh\DomPDF\Facade\Pdf;
+use DateTime;
 use Illuminate\Support\Facades\File;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -38,9 +39,26 @@ class Index extends Component
     public $programa_filtro;//Para el filtro de inscripciones por programa
     public $seguimientoFiltro;//Para la búsqueda de inscripciones por seguimiento
     public $seguimiento_filtro;//Para el filtro de inscripciones por seguimiento
-
+    public $mesFiltro;
+    public $mes_filtro;
     //variables
     public $id_inscripcion;
+
+    //Para mapear el mes al filtrar
+    public $meses = [
+        1 => 'Enero',
+        2 => 'Febrero',
+        3 => 'Marzo',
+        4 => 'Abril',
+        5 => 'Mayo',
+        6 => 'Junio',
+        7 => 'Julio',
+        8 => 'Agosto',
+        9 => 'Setiembre',
+        10 => 'Octubre',
+        11 => 'Noviembre',
+        12 => 'Diciembre'
+    ];
 
     protected $listeners = [
         'render', 'cambiarEstado', 'cambiarSeguimiento', 'reservarPago'
@@ -61,7 +79,18 @@ class Index extends Component
     //Limpiamos los filtros
     public function resetear_filtro()
     {
-        $this->reset('procesoFiltro', 'programaFiltro', 'seguimientoFiltro', 'modalidadFiltro', 'proceso_filtro', 'programa_filtro', 'seguimiento_filtro', 'modalidad_filtro');
+        $this->reset(
+            'procesoFiltro', 
+            'programaFiltro', 
+            'seguimientoFiltro', 
+            'modalidadFiltro', 
+            'mesFiltro', 
+
+            'proceso_filtro', 
+            'programa_filtro', 
+            'seguimiento_filtro', 
+            'modalidad_filtro', 
+            'mes_filtro');
     }
 
     //Asignamos los filtros
@@ -71,6 +100,7 @@ class Index extends Component
         $this->modalidadFiltro = $this->modalidad_filtro;
         $this->programaFiltro = $this->programa_filtro;
         $this->seguimientoFiltro = $this->seguimiento_filtro;
+        $this->mesFiltro = $this->mes_filtro;
     }
 
     //Alerta de confirmacion
@@ -166,15 +196,24 @@ class Index extends Component
                                                 ->where('programa.id_modalidad', $this->modalidadFiltro == null ? '!=' : '=', $this->modalidadFiltro)
                                                 ->where('programa_plan.id_programa', $this->programaFiltro == null ? '!=' : '=', $this->programaFiltro)
                                                 ->where('programa_proceso.id_admision', $this->procesoFiltro == null ? '!=' : '=', $this->procesoFiltro)
+                                                ->when($this->mesFiltro, function ($query, $mesFiltro) {
+                                                    return $query->whereMonth('inscripcion_fecha', $mesFiltro);
+                                                })
                                                 ->orderBy('id_inscripcion', 'desc')
                                                 ->paginate(10);
         }
+
+        //Obtenemos los meses únicos de las inscripciones
+        $mesesUnicos = Inscripcion::selectRaw('MONTH(inscripcion_fecha) as mes, YEAR(inscripcion_fecha) as anio')
+                                    ->groupBy('mes', 'anio')
+                                    ->get();
 
         return view('livewire.modulo-administrador.gestion-admision.inscripcion.index', [
             'inscripcionModel' => $inscripcionModel,
             'procesos' => Admision::all(),
             'seguimientos' => TipoSeguimiento::all(),
             'modalidades' => Modalidad::all(),
+            'mesesUnicos' => $mesesUnicos,
         ]);
     }
 }

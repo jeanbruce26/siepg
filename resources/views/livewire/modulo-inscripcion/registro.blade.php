@@ -195,7 +195,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="mb-5">
-                                <label for="discapacidad" class="form-label">
+                                <label for="discapacidad" class="required form-label">
                                     Discapacidad
                                 </label>
                                 <select wire:model="discapacidad" class="form-select @error('discapacidad') is-invalid @enderror" id="discapacidad"  data-control="select2" data-placeholder="Seleccione su discapacidad" data-allow-clear="true">
