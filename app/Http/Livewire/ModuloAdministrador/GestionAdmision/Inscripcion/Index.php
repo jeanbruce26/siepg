@@ -3,413 +3,217 @@
 namespace App\Http\Livewire\ModuloAdministrador\GestionAdmision\Inscripcion;
 
 use App\Models\Admision;
-use App\Models\Expediente;
-use App\Models\ExpedienteInscripcion;
 use App\Models\ExpedienteInscripcionSeguimiento;
-use App\Models\ExpedienteTipoSeguimiento;
 use App\Models\Inscripcion;
-use App\Models\Pago;
-use App\Models\Persona;
+use App\Models\Modalidad;
 use App\Models\Programa;
+use App\Models\TipoSeguimiento;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Barryvdh\DomPDF\Facade\Pdf;
+use DateTime;
 use Illuminate\Support\Facades\File;
 use Maatwebsite\Excel\Facades\Excel;
 
 class Index extends Component
 {
-
     use WithPagination;
     protected $paginationTheme = 'bootstrap';//paginacion de bootstrap
 
     protected $queryString = [
-        'search' => ['except' => '']
+        'search' => ['except' => ''],
+        'modalidadFiltro' => ['except' => ''],
+        'procesoFiltro' => ['except' => ''],
+        'programaFiltro' => ['except' => ''],
+        'seguimientoFiltro' => ['except' => ''],
     ];
 
     public $search = '';
-    
-    //variables
-    public $inscripcion_id;
-    public $programa;
-    public $programa_nombre;
-    public $programa_model = null;
-    public $subprograma;
-    public $subprograma_model = null;
-    public $mencion;
-    public $mencion_model = null;
-    
-    public $tipo_expediente;
 
-    // variables de filtros
-    public $filtro_programa;
+    //Variables para el filtro de Inscripión
+    public $procesoFiltro;//Para la búsqueda de inscripciones por proceso
+    public $proceso_filtro;//Para el filtro de inscripciones por proceso
+    public $modalidadFiltro;//Para la búsqueda de inscripciones por modalidad
+    public $modalidad_filtro;//Para el filtro de inscripciones por modalidad
+    public $programaFiltro;//Para la búsqueda de inscripciones por programa
+    public $programa_filtro;//Para el filtro de inscripciones por programa
+    public $seguimientoFiltro;//Para la búsqueda de inscripciones por seguimiento
+    public $seguimiento_filtro;//Para el filtro de inscripciones por seguimiento
+    public $mesFiltro;
+    public $mes_filtro;
+    //variables
+    public $id_inscripcion;
+
+    //Para mapear el mes al filtrar
+    public $meses = [
+        1 => 'Enero',
+        2 => 'Febrero',
+        3 => 'Marzo',
+        4 => 'Abril',
+        5 => 'Mayo',
+        6 => 'Junio',
+        7 => 'Julio',
+        8 => 'Agosto',
+        9 => 'Setiembre',
+        10 => 'Octubre',
+        11 => 'Noviembre',
+        12 => 'Diciembre'
+    ];
 
     protected $listeners = [
-        'render', 'cambiarPrograma', 'cambiarSeguimiento', 'reservarPago'
+        'render', 'cambiarEstado', 'cambiarSeguimiento', 'reservarPago'
     ];
     
     public function updated($propertyName)
     {
         $this->validateOnly($propertyName, [
-            'programa' => 'required',
-            'subprograma' => 'required|numeric',
-            'mencion' => 'required|numeric',
+            'id_inscripcion' => 'required',
         ]);
     }
 
     public function limpiar()
     {
+        $this->reset('id_inscripcion');
+    }
+    
+    //Limpiamos los filtros
+    public function resetear_filtro()
+    {
         $this->reset(
-            'programa',
-            'subprograma',
-            'mencion',
-        );
+            'procesoFiltro', 
+            'programaFiltro', 
+            'seguimientoFiltro', 
+            'modalidadFiltro', 
+            'mesFiltro', 
+
+            'proceso_filtro', 
+            'programa_filtro', 
+            'seguimiento_filtro', 
+            'modalidad_filtro', 
+            'mes_filtro');
     }
 
-    public function cargarInscripcion(Inscripcion $inscripcion)
-    {   
-        $this->inscripcion_id = $inscripcion->id_inscripcion;
-        $this->programa_model = Programa::where('id_sede',$inscripcion->mencion->subprograma->programa->sede->cod_sede)->get();
-        $this->programa = $inscripcion->mencion->subprograma->programa->id_programa;
-        $this->programa_nombre = ucfirst(strtolower($inscripcion->mencion->subprograma->programa->descripcion_programa));
-        $this->subprograma_model = SubPrograma::where('id_programa',$inscripcion->mencion->subprograma->programa->id_programa)->get();
-        $this->subprograma = $inscripcion->mencion->subprograma->id_subprograma;
-        $this->updatedSubPrograma($this->subprograma);
-    }
-
-    public function updatedPrograma($programa)
+    //Asignamos los filtros
+    public function filtrar()
     {
-        $pro = Programa::find($programa);
-        $this->programa_nombre = ucfirst(strtolower($pro->descripcion_programa));
-        $this->subprograma_model = SubPrograma::where('id_programa',$programa)->get();
-        $this->subprograma = null;
-        $this->mencion_model = collect();
-        $this->mencion = null;
+        $this->procesoFiltro = $this->proceso_filtro;
+        $this->modalidadFiltro = $this->modalidad_filtro;
+        $this->programaFiltro = $this->programa_filtro;
+        $this->seguimientoFiltro = $this->seguimiento_filtro;
+        $this->mesFiltro = $this->mes_filtro;
     }
 
-    public function updatedSubPrograma($subprograma){
-        $this->mencion_model = Mencion::where('id_subprograma',$subprograma)->where('mencion_estado',1)->get();
-        $this->mencion = null;
-        $valor = null;
-        foreach($this->mencion_model as $item){
-            $valor = $item->mencion;
-        }
-        if($valor == null){
-            $this->mencion = Mencion::where('id_subprograma',$subprograma)->first();
-            if($this->mencion){
-                $this->mencion = $this->mencion->id_mencion;
-            }
-        }
-    }
-
-    public function guardarCambioPrograma()
+    //Alerta de confirmacion
+    public function alertaConfirmacion($title, $text, $icon, $confirmButtonText, $cancelButtonText, $confimrColor, $cancelColor, $metodo, $id)
     {
-        $this->validate([
-            'programa' => 'required',
-            'subprograma' => 'required|numeric',
-            'mencion' => 'required|numeric',
+        $this->dispatchBrowserEvent('alertaConfirmacion', [
+            'title' => $title,
+            'text' => $text,
+            'icon' => $icon,
+            'confirmButtonText' => $confirmButtonText,
+            'cancelButtonText' => $cancelButtonText,
+            'confimrColor' => $confimrColor,
+            'cancelColor' => $cancelColor,
+            'metodo' => $metodo,
+            'id' => $id,
         ]);
-
-        $this->dispatchBrowserEvent('alertaCambioPrograma');
     }
 
-    public function cambiarPrograma()
+    //Alertas de exito o error
+    public function alertaPrograma($title, $text, $icon, $confirmButtonText, $color)
     {
-        $programa = Programa::find($this->programa);
-        $inscripcion = Inscripcion::find($this->inscripcion_id);
-        if($programa->descripcion_programa === 'DOCTORADO'){
-            $inscripcion->tipo_programa = 2;
-            $this->tipo_expediente = 2;
-        }else{
-            $inscripcion->tipo_programa = 1;
-            $this->tipo_expediente = 1;
+        $this->dispatchBrowserEvent('alerta-inscripcion', [
+            'title' => $title,
+            'text' => $text,
+            'icon' => $icon,
+            'confirmButtonText' => $confirmButtonText,
+            'color' => $color
+        ]);
+    }
+
+    //Mostar modal de confirmacion para cambiar el estado del programa
+    public function cargarAlertaEstado(Inscripcion $inscripcion)
+    {
+        $this->alertaConfirmacion('¿Estás seguro?','¿Desea cambiar el estado de la inscripción de '.$inscripcion->persona->nombre_completo.'?','question','Modificar','Cancelar','primary','danger','cambiarEstado',$inscripcion->id_inscripcion);
+    }
+
+    //Cambiar el estado de la inscripción
+    public function cambiarEstado($id)
+    {
+        $inscripcion = Inscripcion::find($id);
+        if($inscripcion->inscripcion_estado == 1){//Si el estado es activo(1), se cambia a inactivo(0)
+            $inscripcion->inscripcion_estado = 0;
+        }else{//Si el estado es inactivo(0), se cambia a activo(1)
+            $inscripcion->inscripcion_estado = 1;
         }
-        $inscripcion->id_mencion = $this->mencion;
+
         $inscripcion->save();
-
-        // Eliminar expedientes de la inscripcion que no son del programa elegido
-        $expediente_inscripcion = ExpedienteInscripcion::where('id_inscripcion',$this->inscripcion_id)->get();
-        // delete storage file and database
-        foreach($expediente_inscripcion as $exp){
-            $expediente = Expediente::where('cod_exp', $exp->expediente_cod_exp)
-                                        ->where(function($query){
-                                            $query->where('expediente_tipo', 0)
-                                                ->orWhere('expediente_tipo', $this->tipo_expediente);
-                                        })
-                                        ->first();
-            if($expediente === null){
-                $exp->delete();
-                File::delete($exp->nom_exped);
-            }
-        }
-        
-        $this->limpiar();
-        $this->dispatchBrowserEvent('modalCambiarPrograma');
-        $this->dispatchBrowserEvent('alertaSuccess', [
-            'titulo' => '¡Éxito!',
-            'mensaje' => 'El programa se ha cambiado correctamente.'
-        ]);
-        $this->generarPdf($this->inscripcion_id);
-    }
-
-    public function generarPdf($id)
-    {
-        $inscripcion = Inscripcion::where('id_inscripcion',$id)->first();
-
-        $montoTotal=0;
-
-        $inscripcion_pago = InscripcionPago::where('inscripcion_id',$id)->get();
-        foreach($inscripcion_pago as $item){
-            $montoTotal = $montoTotal + $item->pago->monto;
-        }
-
-        $admision3 = Admision::where('estado',1)->first();
-        $admi = $admision3->admision;
-
-        $fecha_actual = $inscripcion->fecha_inscripcion->format('h:i:s a d/m/Y');
-        $fecha_actual2 = $inscripcion->fecha_inscripcion->format('d-m-Y');
-        $mencion = Mencion::where('id_mencion',$inscripcion->id_mencion)->get();
-        $admisionn = Admision::where('estado',1)->get();
-        $inscrip = Inscripcion::where('id_inscripcion',$id)->get();
-        $inscripcion_codigo = Inscripcion::where('id_inscripcion',$id)->first()->inscripcion_codigo;
-        $tiempo = 6;
-        $valor = '+ '.intval($tiempo).' month';
-        setlocale( LC_ALL,"es_ES@euro","es_ES","esp" );
-        $final = strftime('%d de %B del %Y', strtotime($fecha_actual2.$valor));
-        $per = Persona::where('idpersona', $inscripcion->persona_idpersona)->get();
-        $expedienteInscripcion = ExpedienteInscripcion::where('id_inscripcion',$id)->get();
-        $expedi = $expedi = Expediente::where('estado', 1)
-                    ->where(function($query) use ($inscripcion){
-                        $query->where('expediente_tipo', 0)
-                            ->orWhere('expediente_tipo', $inscripcion->tipo_programa);
-                    })
-                    ->get();
-
-        // verificamos si tiene expediente en seguimientos
-        $seguimiento_count = ExpedienteInscripcionSeguimiento::join('ex_insc', 'ex_insc.cod_ex_insc', '=', 'expediente_inscripcion_seguimiento.cod_ex_insc')
-                                                        ->where('ex_insc.id_inscripcion', $id)
-                                                        ->where('expediente_inscripcion_seguimiento.tipo_seguimiento', 1)
-                                                        ->where('expediente_inscripcion_seguimiento.expediente_inscripcion_seguimiento_estado', 1)
-                                                        ->count();
-
-        $data = [ 
-            'persona' => $per,
-            'fecha_actual' => $fecha_actual,
-            'mencion' => $mencion,
-            'admisionn' => $admisionn,
-            'inscripcion_pago' => $inscripcion_pago,
-            'inscrip' => $inscrip,
-            'inscripcion_codigo' => $inscripcion_codigo,
-            'montoTotal' => $montoTotal,
-            'final' => $final,
-            'expedienteInscripcion' => $expedienteInscripcion,
-            'expedi' => $expedi,
-            'seguimiento_count' => $seguimiento_count
-        ];
-
-        $nombre_pdf = 'FICHA_INSCRIPCION.pdf';
-        $path_pdf = $admi.'/'.$id.'/'.$nombre_pdf;
-        $pdf = Pdf::loadView('modulo_inscripcion.inscripcion.reporte-pdf', $data)->save(public_path($admi.'/'.$id.'/'). $nombre_pdf);
-
-        $ins = Inscripcion::find($id);
-        $ins->inscripcion = $path_pdf;
-        $ins->save();
-    }
-
-    public function cargarAlertaSeguimiento($id)
-    {
-        $this->inscripcion_id = $id;
-        $this->dispatchBrowserEvent('alertaSeguimiento');
-    }
-
-    public function cambiarSeguimiento()
-    {
-        $expediente_seguimiento = ExpedienteInscripcionSeguimiento::join('ex_insc', 'ex_insc.cod_ex_insc', '=', 'expediente_inscripcion_seguimiento.cod_ex_insc')
-                                                        ->where('ex_insc.id_inscripcion', $this->inscripcion_id)
-                                                        ->where('expediente_inscripcion_seguimiento.tipo_seguimiento', 1)
-                                                        ->where('expediente_inscripcion_seguimiento.expediente_inscripcion_seguimiento_estado', 1)
-                                                        ->get();
-        if($expediente_seguimiento->count() > 0){
-            foreach($expediente_seguimiento as $item){
-                $item->expediente_inscripcion_seguimiento_estado = 0;
-                $item->save();
-            }
-        }else{
-            $inscripcion = Inscripcion::find($this->inscripcion_id);
-            $exp_ins = ExpedienteInscripcion::join('expediente','ex_insc.expediente_cod_exp','=','expediente.cod_exp')
-                                                ->where('ex_insc.id_inscripcion',$this->inscripcion_id)
-                                                ->where(function($query) use ($inscripcion){
-                                                    $query->where('expediente.expediente_tipo', 0)
-                                                        ->orWhere('expediente.expediente_tipo', $inscripcion->tipo_programa);
-                                                })
-                                                ->get();
-            $exp_seg = ExpedienteTipoSeguimiento::join('expediente','expediente_tipo_seguimiento.cod_exp','=','expediente.cod_exp')
-                                                ->where('expediente_tipo_seguimiento_estado', 1)
-                                                ->where('tipo_seguimiento', 1)
-                                                ->where(function($query) use ($inscripcion){
-                                                    $query->where('expediente.expediente_tipo', 0)
-                                                        ->orWhere('expediente.expediente_tipo', $inscripcion->tipo_programa);
-                                                })
-                                                ->get();
-
-            $array_seguimiento = [];
-            foreach ($exp_ins as $exp) {
-                foreach ($exp_seg as $seg) {
-                    if($exp->expediente_cod_exp == $seg->cod_exp){
-                        array_push($array_seguimiento, $exp->cod_ex_insc);
-                    }
-                }
-            }
-            // Registrar datos del seguimiento del expediente de inscripcion
-            foreach ($array_seguimiento as $item) {
-                $seguimiento_exp_ins = new ExpedienteInscripcionSeguimiento();
-                $seguimiento_exp_ins->cod_ex_insc = $item;
-                $seguimiento_exp_ins->tipo_seguimiento = 1;
-                $seguimiento_exp_ins->expediente_inscripcion_seguimiento_estado = 1;
-                $seguimiento_exp_ins->save();
-            }
-        }
-        $this->dispatchBrowserEvent('alertaSuccess', [
-            'titulo' => '¡Éxito!',
-            'mensaje' => 'Se ha cambiado el seguimiento correctamente.'
-        ]);
-    }
-
-    public function export() 
-    {
-        $fecha_actual = date("Ymd", strtotime(today()));
-        $hora_actual = date("His", strtotime(now()));
-
-        $this->dispatchBrowserEvent('notificacionInscripcion', ['message' =>'Excel exportado satisfactoriamente.', 'color' => '#2eb867']);
-
-        return Excel::download(new DataInscripcionesExport, 'inscritos-'.$fecha_actual.'-'.$hora_actual.'.xlsx');
-    }
-
-    public function reservar_inscripcion($id_inscripcion){
-        $this->dispatchBrowserEvent('alertaReserva', [
-            'titulo' => '¡Reservar inscripción!',
-            'mensaje' => '¿Está seguro de reservar la inscripción?',
-            'id_inscripcion' => $id_inscripcion
-        ]);
-    }
-
-    public function reservarPago($id_inscripcion){
-        $mostrar_tipo_expediente = Inscripcion::find($id_inscripcion)->tipo_programa;
-        // verificamos si tiene seguimiento
-        $expediente_seguimiento = ExpedienteInscripcionSeguimiento::join('ex_insc', 'ex_insc.cod_ex_insc', '=', 'expediente_inscripcion_seguimiento.cod_ex_insc')
-                                                        ->where('ex_insc.id_inscripcion', $this->inscripcion_id)
-                                                        ->where('expediente_inscripcion_seguimiento.tipo_seguimiento', 1)
-                                                        ->where('expediente_inscripcion_seguimiento.expediente_inscripcion_seguimiento_estado', 1)
-                                                        ->get();
-        if($expediente_seguimiento->count() > 0){ // si tiene seguimiento eliminamos su seguimiento
-            foreach($expediente_seguimiento as $item){
-                $item->delete();
-            }
-        }
-        // obtenemos los expedientes de la inscripcion
-        $expediente_inscripcion = ExpedienteInscripcion::where('id_inscripcion', $id_inscripcion)->get(); 
-        // Eliminar expedientes de la inscripcion que no son del programa elegido
-        // delete storage file and database
-        foreach($expediente_inscripcion as $exp){
-            $expediente = Expediente::where('cod_exp', $exp->expediente_cod_exp)
-                                        ->where(function($query) use ($mostrar_tipo_expediente){
-                                            $query->where('expediente_tipo', 0)
-                                                ->orWhere('expediente_tipo', $mostrar_tipo_expediente);
-                                        })
-                                        ->first();
-            if($expediente === null){
-                $exp->delete();
-                File::delete($exp->nom_exped);
-            }
-        }
-        // ahora eliminamos los expedientes de la inscripcion
-        foreach($expediente_inscripcion as $item){
-            $item->delete(); // eliminamos los expedientes de la inscripcion
-        }
-        // verificamos los pagos de la inscripcion
-        $inscripcion_pago = InscripcionPago::where('inscripcion_id', $id_inscripcion)->get();
-        // eliminamos los pagos de la inscripcion y al pago le cambiamos el estado a 0
-        foreach($inscripcion_pago as $item){
-            $pago = Pago::find($item->pago_id);
-            $pago->estado = 0;
-            $pago->save();
-            $item->delete();
-        }
-        // obtenemos la inscripcion
-        $inscripcion = Inscripcion::find($id_inscripcion);
-        // eliminamos la inscripcion
-        $inscripcion->delete();
-        // emitimos la alerta de exito
-        $this->dispatchBrowserEvent('alertaSuccess', [
-            'titulo' => '¡Éxito!',
-            'mensaje' => 'Se ha eliminado la inscripción correctamente y se ha reservado el pago.'
-        ]);
-    }
-
-    public function limpiar_filtro()
-    {
-        $this->reset('filtro_programa');
+        $this->alertaPrograma('¡Exito!','El estado de la inscripción de '.$inscripcion->persona->nombre_completo.' ha sido actualizado satisfactoriamente','success','Aceptar','success');
     }
 
     public function render()
     {
-        if($this->filtro_programa)
-        {
-            $inscripcion = Inscripcion::join('persona','inscripcion.persona_idpersona','=','persona.idpersona')
-                ->join('mencion','inscripcion.id_mencion','=','mencion.id_mencion')
-                ->join('subprograma','mencion.id_subprograma','=','subprograma.id_subprograma')
-                ->join('programa','subprograma.id_programa','=','programa.id_programa')
-                ->where('mencion.id_mencion',$this->filtro_programa)
-                ->where(function($query){
-                    $query->where('persona.nombres','LIKE',"%{$this->search}%")
-                        ->orWhere('persona.apell_pater','LIKE',"%{$this->search}%")
-                        ->orWhere('persona.apell_mater','LIKE',"%{$this->search}%")
-                        ->orWhere('persona.nombre_completo','LIKE',"%{$this->search}%")
-                        ->orWhere('persona.num_doc','LIKE',"%{$this->search}%")
-                        ->orWhere('inscripcion.id_inscripcion','LIKE',"%{$this->search}%");
-                })
-                ->orderBy('inscripcion.id_inscripcion','desc')
-                ->paginate(100);
-        }else{
-            $inscripcion = Inscripcion::join('persona','inscripcion.persona_idpersona','=','persona.idpersona')
-                ->join('mencion','inscripcion.id_mencion','=','mencion.id_mencion')
-                ->join('subprograma','mencion.id_subprograma','=','subprograma.id_subprograma')
-                ->join('programa','subprograma.id_programa','=','programa.id_programa')
-                ->where(function($query){
-                    $query->where('persona.nombres','LIKE',"%{$this->search}%")
-                        ->orWhere('persona.apell_pater','LIKE',"%{$this->search}%")
-                        ->orWhere('persona.apell_mater','LIKE',"%{$this->search}%")
-                        ->orWhere('persona.nombre_completo','LIKE',"%{$this->search}%")
-                        ->orWhere('persona.num_doc','LIKE',"%{$this->search}%")
-                        ->orWhere('inscripcion.id_inscripcion','LIKE',"%{$this->search}%");
-                })
-                ->orderBy('inscripcion.id_inscripcion','desc')
-                ->paginate(100);
+        if($this->seguimientoFiltro){//Si existe el seguimientoFiltro, se cambia de consulta, con el fin de mostrar las inscripciones que tienen un seguimiento
+            $inscripcionModel = ExpedienteInscripcionSeguimiento::Join('expediente_inscripcion', 'expediente_inscripcion_seguimiento.id_expediente_inscripcion', '=', 'expediente_inscripcion.id_expediente_inscripcion')
+                                                                    ->Join('inscripcion', 'expediente_inscripcion.id_inscripcion', '=', 'inscripcion.id_inscripcion')
+                                                                    ->Join('programa_proceso', 'inscripcion.id_programa_proceso', '=', 'programa_proceso.id_programa_proceso')
+                                                                    ->Join('admision', 'programa_proceso.id_admision', '=', 'admision.id_admision')
+                                                                    ->Join('programa_plan', 'programa_proceso.id_programa_plan', '=', 'programa_plan.id_programa_plan')
+                                                                    ->Join('programa', 'programa_plan.id_programa', '=', 'programa.id_programa')
+                                                                    ->Join('persona', 'inscripcion.id_persona', '=', 'persona.id_persona')
+                                                                    ->where(function ($query){
+                                                                        $query->where('programa.programa', 'like', '%'.$this->search.'%')
+                                                                        ->orWhere('programa.subprograma', 'like', '%'.$this->search.'%')
+                                                                        ->orWhere('programa.mencion', 'like', '%'.$this->search.'%')
+                                                                        ->orWhere('persona.nombre', 'like', '%'.$this->search.'%')
+                                                                        ->orWhere('persona.apellido_paterno', 'like', '%'.$this->search.'%')
+                                                                        ->orWhere('persona.apellido_materno', 'like', '%'.$this->search.'%')
+                                                                        ->orWhere('persona.numero_documento', 'like', '%'.$this->search.'%');
+                                                                    })
+                                                                    ->where('expediente_inscripcion_seguimiento.tipo_seguimiento', $this->seguimientoFiltro)
+                                                                    ->where('programa.id_modalidad', $this->modalidadFiltro == null ? '!=' : '=', $this->modalidadFiltro)
+                                                                    ->where('programa_plan.id_programa', $this->programaFiltro == null ? '!=' : '=', $this->programaFiltro)
+                                                                    ->where('programa_proceso.id_admision', $this->procesoFiltro == null ? '!=' : '=', $this->procesoFiltro)
+                                                                    ->orderBy('id_inscripcion', 'desc')
+                                                                    ->paginate(10);
+        }else{//Si no existe el seguimientoFiltro, se muestra la consulta normal
+            $inscripcionModel = Inscripcion::Join('programa_proceso', 'inscripcion.id_programa_proceso', '=', 'programa_proceso.id_programa_proceso')
+                                                ->Join('admision', 'programa_proceso.id_admision', '=', 'admision.id_admision')
+                                                ->Join('programa_plan', 'programa_proceso.id_programa_plan', '=', 'programa_plan.id_programa_plan')
+                                                ->Join('programa', 'programa_plan.id_programa', '=', 'programa.id_programa')
+                                                ->Join('modalidad', 'programa.id_modalidad', '=', 'modalidad.id_modalidad')
+                                                ->Join('persona', 'inscripcion.id_persona', '=', 'persona.id_persona')
+                                                ->where(function ($query){
+                                                    $query->where('programa.programa', 'like', '%'.$this->search.'%')
+                                                    ->orWhere('programa.subprograma', 'like', '%'.$this->search.'%')
+                                                    ->orWhere('programa.mencion', 'like', '%'.$this->search.'%')
+                                                    ->orWhere('persona.nombre', 'like', '%'.$this->search.'%')
+                                                    ->orWhere('persona.apellido_paterno', 'like', '%'.$this->search.'%')
+                                                    ->orWhere('persona.apellido_materno', 'like', '%'.$this->search.'%')
+                                                    ->orWhere('persona.numero_documento', 'like', '%'.$this->search.'%')
+                                                    ->orWhere('modalidad.modalidad', 'like', '%'.$this->search.'%');
+                                                })
+                                                ->where('programa.id_modalidad', $this->modalidadFiltro == null ? '!=' : '=', $this->modalidadFiltro)
+                                                ->where('programa_plan.id_programa', $this->programaFiltro == null ? '!=' : '=', $this->programaFiltro)
+                                                ->where('programa_proceso.id_admision', $this->procesoFiltro == null ? '!=' : '=', $this->procesoFiltro)
+                                                ->when($this->mesFiltro, function ($query, $mesFiltro) {
+                                                    return $query->whereMonth('inscripcion_fecha', $mesFiltro);
+                                                })
+                                                ->orderBy('id_inscripcion', 'desc')
+                                                ->paginate(10);
         }
-        // $inscripcion = Inscripcion::join('persona','inscripcion.persona_idpersona','=','persona.idpersona')
-        //         ->join('mencion','inscripcion.id_mencion','=','mencion.id_mencion')
-        //         ->join('subprograma','mencion.id_subprograma','=','subprograma.id_subprograma')
-        //         ->join('programa','subprograma.id_programa','=','programa.id_programa')
-        //         ->where('persona.nombres','LIKE',"%{$this->search}%")
-        //         ->orWhere('persona.apell_pater','LIKE',"%{$this->search}%")
-        //         ->orWhere('persona.apell_mater','LIKE',"%{$this->search}%")
-        //         ->orWhere('persona.nombre_completo','LIKE',"%{$this->search}%")
-        //         ->orWhere('inscripcion.id_inscripcion','LIKE',"%{$this->search}%")
-        //         ->orWhere('persona.num_doc','LIKE',"%{$this->search}%")
-        //         ->orderBy('inscripcion.id_inscripcion','DESC')->paginate(100);
 
-        $programas = Mencion::join('subprograma','mencion.id_subprograma','=','subprograma.id_subprograma')
-                ->join('programa','subprograma.id_programa','=','programa.id_programa')
-                ->where('mencion.mencion_estado', 1)
-                ->orderBy('programa.descripcion_programa','ASC')
-                ->orderBy('subprograma.subprograma','ASC')
-                ->get();
-
-        // dd($programas);
+        //Obtenemos los meses únicos de las inscripciones
+        $mesesUnicos = Inscripcion::selectRaw('MONTH(inscripcion_fecha) as mes, YEAR(inscripcion_fecha) as anio')
+                                    ->groupBy('mes', 'anio')
+                                    ->get();
 
         return view('livewire.modulo-administrador.gestion-admision.inscripcion.index', [
-            'inscripcion' => $inscripcion,
-            'programas' => $programas
+            'inscripcionModel' => $inscripcionModel,
+            'procesos' => Admision::all(),
+            'seguimientos' => TipoSeguimiento::all(),
+            'modalidades' => Modalidad::all(),
+            'mesesUnicos' => $mesesUnicos,
         ]);
     }
 }

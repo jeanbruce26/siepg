@@ -18,7 +18,8 @@ class Index extends Component
     
     // Para poder agregar los parámetros de búsqueda en la URL 
     protected $queryString = [
-        'search' => ['except' => '']
+        'search' => ['except' => ''],
+        'filtroProceso' => ['except' => ''],
     ];
 
     // Definimos las variables para la vista del componente Livewire
@@ -28,7 +29,7 @@ class Index extends Component
     public $titulo = 'Crear Pago';
     public $iteracion = 0;
 
-
+    // Variables de la tabla pagos
     public $documento;
     public $numero_operacion;
     public $monto;
@@ -36,7 +37,11 @@ class Index extends Component
     public $voucher_url;
     public $canal_pago;
     public $concepto_pago;
-    
+
+    // Variables para filtrar los pagos
+    public $filtroProceso;
+    public $filtro_proceso;
+
     protected $listeners = ['render', 'deletePago'];// Para escuchar estos dos eventos
 
     public function updated($propertyName)
@@ -105,6 +110,18 @@ class Index extends Component
         $this->fecha_pago = $pago->pago_fecha;
         $this->canal_pago = $pago->id_canal_pago;
         $this->concepto_pago = $pago->id_concepto_pago;
+    }
+
+    //Filtra los pagos por proceso
+    public function filtrar()
+    {
+        $this->filtroProceso = $this->filtro_proceso;
+    }
+
+    //Limpiar el filtro de proceso
+    public function resetear_filtro()
+    {
+        $this->reset('filtroProceso','filtro_proceso');
     }
 
     public function validacionDatos()
@@ -260,19 +277,27 @@ class Index extends Component
 
     public function render()
     {
-        $buscar = $this->search;
-        $pago_model = Pago::where('pago_fecha','LIKE',"%{$buscar}%")
-                ->orWhere('pago_documento','LIKE',"%{$buscar}%")
-                ->orWhere('pago_operacion','LIKE',"%{$buscar}%")
-                ->orWhere('id_pago','LIKE',"%{$buscar}%")
-                ->orderBy('id_pago','DESC')
-                ->paginate(200);
+        $pago_model = Pago::where(function ($query){
+                            $query->where('pago_fecha','LIKE',"%{$this->search}%")
+                            ->orWhere('pago_documento','LIKE',"%{$this->search}%")
+                            ->orWhere('pago_operacion','LIKE',"%{$this->search}%")
+                            ->orWhere('id_pago','LIKE',"%{$this->search}%");
+                        })
+                        ->whereYear('pago_fecha', $this->filtroProceso == null ? '!=' : '=', strval($this->filtroProceso))
+                        ->orderBy('id_pago','DESC')
+                        ->paginate(200);
+
         $canalPago = CanalPago::all();
         $conceptoPago = ConceptoPago::all();
+        $aniosUnicos = Pago::selectRaw('YEAR(pago_fecha) as anio')
+                            ->groupBy('anio')
+                            ->pluck('anio');
+
         return view('livewire.modulo-administrador.gestion-pagos.pago.index', [
             'pago_model' => $pago_model,
             'canalPago' => $canalPago,
-            'conceptoPago' => $conceptoPago
+            'conceptoPago' => $conceptoPago,
+            'aniosUnicos' => $aniosUnicos
         ]);
     }
 

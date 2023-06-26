@@ -21,7 +21,7 @@
             buttonsStyling: false,
             confirmButtonText: event.detail.confirmButtonText,
             customClass: {
-                confirmButton: "btn btn-"+event.detail.color+" hover-elevate-up",
+                confirmButton: "btn btn-"+event.detail.color+" hover-elevate-up",// Color del boton de confirmación y Hover
             }
         });
     });

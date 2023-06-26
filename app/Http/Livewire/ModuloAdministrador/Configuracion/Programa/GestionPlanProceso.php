@@ -51,7 +51,6 @@ class GestionPlanProceso extends Component
     public function updated($propertyName)
     {
         $this->validateOnly($propertyName, [
-            'programa_codigo' => 'required|string',
             'plan' => 'required|numeric',
             'proceso_admision' => 'required|numeric',
         ]);
@@ -314,7 +313,6 @@ class GestionPlanProceso extends Component
     {
         //Validar los campos
         $this->validate([
-            'programa_codigo' => 'required | string',
             'plan' => 'required | numeric',
         ]);
 
@@ -333,8 +331,18 @@ class GestionPlanProceso extends Component
                     'titleModal' => '#modalPlanProceso',
                 ]);
             } else {//Si el programa plan no existe, guardarlo
+                
+                //Generar el codigo del programa
+                $codigo = '';
+                $numPlan = Plan::find($this->plan)->plan;
+                $programa = Programa::find($this->id_programa);
+                strval($numPlan);
+                $codigo = $codigo.$programa->programa_iniciales;
+                $codigo = $codigo.strtoupper(substr($programa->modalidad->modalidad, 0, 1));
+                $codigo = $codigo.substr($numPlan, -2);
+                //Crear el programa plan
                 $programaPlan = new ProgramaPlan();
-                $programaPlan->programa_codigo = $this->programa_codigo;
+                $programaPlan->programa_codigo = $codigo;
                 $programaPlan->id_programa = $this->id_programa;
                 $programaPlan->id_plan = $this->plan;
                 $programaPlan->programa_plan_creacion = date('Y-m-d H:i:s');
@@ -376,7 +384,15 @@ class GestionPlanProceso extends Component
                         'titleModal' => '#modalPlanProceso',
                     ]);
                 } else {//Si el plan del programa ha sido actualizado, actualizarlo
-                    $programaPlan->programa_codigo = $this->programa_codigo;
+                    //Generar el codigo del programa para actualizarlo
+                    $codigo = '';
+                    $numPlan = Plan::find($this->plan)->plan;
+                    $programa = Programa::find($this->id_programa);
+                    strval($numPlan);
+                    $codigo = $codigo.$programa->programa_iniciales;
+                    $codigo = $codigo.strtoupper(substr($programa->modalidad->modalidad, 0, 1));
+                    $codigo = $codigo.substr($numPlan, -2);
+                    $programaPlan->programa_codigo = $codigo;
                     $programaPlan->id_plan = $this->plan;
                     $programaPlan->save();
 
