@@ -137,7 +137,14 @@ class Index extends Component
 
         // editamos el estado del pago
         $pago = Pago::where('id_pago', $constancia->id_pago)->first();
-        $pago->pago_estado = 2;
+        if($pago->id_concepto_pago == 4 || $pago->id_concepto_pago == 6)
+        {
+            $pago->pago_estado = 1;
+        }
+        else
+        {
+            $pago->pago_estado = 2;
+        }
         $pago->save();
 
         // emitir evento para recargar el modulo livewire

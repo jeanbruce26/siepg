@@ -205,4 +205,16 @@ class CoordinadorController extends Controller
     {
         return view('modulo-coordinador.gestion-cursos.index');
     }
+
+    public function reporte_pagos()
+    {
+        return view('modulo-coordinador.reporte-pagos.index');
+    }
+
+    public function reporte_programas($id_programa_proceso)
+    {
+        return view('modulo-coordinador.reporte-pagos.reporte-programa', [
+            'id_programa_proceso' => $id_programa_proceso
+        ]);
+    }
 }
