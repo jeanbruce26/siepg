@@ -38,15 +38,15 @@
                                     </span>
                                     Filtro
                                 </a>
-                                <div class="menu menu-sub menu-sub-dropdown w-250px w-md-300px" data-kt-menu="true" id="menu_inscripcion" wire:ignore.self>
+                                <div class="menu menu-sub menu-sub-dropdown w-250px w-md-500px" data-kt-menu="true" id="menu_inscripcion" wire:ignore.self>
                                     <div class="px-7 py-5">
                                         <div class="fs-5 text-dark fw-bold">
                                             Opciones de filtrado
                                         </div> 
                                     </div>
                                     <div class="separator border-gray-200"></div>
-                                    <div class="px-7 py-5">
-                                        <div class="mb-5">
+                                    <div class="px-7 py-5 row">
+                                        <div class="mb-5 col-md-6">
                                             <label class="form-label fw-semibold">Proceso de Admisión:</label>
                                             <div>
                                                 <select class="form-select" wire:model="proceso_filtro" id="proceso_filtro"  data-control="select2" data-placeholder="Seleccione el Proceso">
@@ -57,7 +57,7 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="mb-5">
+                                        <div class="mb-5 col-md-6">
                                             <label class="form-label fw-semibold">Modalidad del Programa:</label>
                                             <div>
                                                 <select class="form-select" wire:model="modalidad_filtro" id="modalidad_filtro" data-control="select2" data-placeholder="Seleccione la Modalidad">
@@ -68,7 +68,7 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="mb-5">
+                                        <div class="mb-5 col-md-12">
                                             <label class="form-label fw-semibold">Programa:</label>
                                             <div>
                                                 <select class="form-select" wire:model="programa_filtro" id="programa_filtro" data-control="select2" data-placeholder="Seleccione el Programa">
@@ -84,7 +84,7 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="mb-5">
+                                        <div class="mb-5 col-md-6">
                                             <label class="form-label fw-semibold">Tipo de Seguimiento:</label>
                                             <div>
                                                 <select class="form-select" wire:model="seguimiento_filtro" id="seguimiento_filtro" data-control="select2" data-placeholder="Seleccione el Seguimiento">
@@ -95,7 +95,7 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="mb-5">
+                                        <div class="mb-5 col-md-6">
                                             <label class="form-label fw-semibold">Mes:</label>
                                             <div>
                                                 <select class="form-select" wire:model="mes_filtro" id="mes_filtro" data-control="select2" data-placeholder="Seleccione el Mes">
