@@ -43,6 +43,8 @@ class Index extends Component
     public $mes_filtro;
     //variables
     public $id_inscripcion;
+    public $modalidad;
+    public $programa;
 
     //Para mapear el mes al filtrar
     public $meses = [
@@ -120,7 +122,7 @@ class Index extends Component
     }
 
     //Alertas de exito o error
-    public function alertaPrograma($title, $text, $icon, $confirmButtonText, $color)
+    public function alertaInscripcion($title, $text, $icon, $confirmButtonText, $color)
     {
         $this->dispatchBrowserEvent('alerta-inscripcion', [
             'title' => $title,
@@ -148,7 +150,43 @@ class Index extends Component
         }
 
         $inscripcion->save();
-        $this->alertaPrograma('¡Exito!','El estado de la inscripción de '.$inscripcion->persona->nombre_completo.' ha sido actualizado satisfactoriamente','success','Aceptar','success');
+        $this->alertaInscripcion('¡Exito!','El estado de la inscripción de '.$inscripcion->persona->nombre_completo.' ha sido actualizado satisfactoriamente','success','Aceptar','success');
+    }
+
+    //Cargamos los datos de la inscripción para mostrarlos en el modal
+    public function cargarInscripcion(Inscripcion $inscripcion)
+    {
+        $this->id_inscripcion = $inscripcion->id_inscripcion;
+        $this->modalidad = $inscripcion->programa_proceso->programa_plan->programa->modalidad->id_modalidad;
+        $this->programa = $inscripcion->programa_proceso->programa_plan->programa->id_programa;
+    }
+
+    //Actualizar el programa de la inscripción
+    public function actualizarInscripcion()
+    {
+        $inscripcion = Inscripcion::find($this->id_inscripcion);
+        
+        $id_programa_proceso_actualizado = Programa::join('programa_plan', 'programa.id_programa', '=', 'programa_plan.id_programa')
+                                                    ->join('programa_proceso', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
+                                                    ->where('programa.id_modalidad', $this->modalidad)->where('programa.id_programa', $this->programa)->first()->id_programa_proceso;
+        // dd($id_programa_proceso_actualizado);
+        //Validar que no hayan cambios
+        if($inscripcion->id_programa_proceso == $id_programa_proceso_actualizado){
+            $this->alertaInscripcion('¡Información!','No se han realizado cambios en el programa de la inscripción','info','Aceptar','info');
+            //Cerramos el modal
+            $this->dispatchBrowserEvent('modal', [
+                'titleModal' => '#ModalInscripcionEditar',
+            ]);
+            return;
+        }
+
+        $inscripcion->id_programa_proceso = $id_programa_proceso_actualizado;
+        $inscripcion->save();
+        $this->alertaInscripcion('¡Exito!','El programa de la inscripción de '.$inscripcion->persona->nombre_completo.' ha sido actualizado satisfactoriamente','success','Aceptar','success');
+        //Cerramos el modal
+        $this->dispatchBrowserEvent('modal', [
+            'titleModal' => '#ModalInscripcionEditar',
+        ]);
     }
 
     public function render()
