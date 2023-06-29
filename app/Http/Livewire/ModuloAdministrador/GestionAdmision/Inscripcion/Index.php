@@ -7,6 +7,7 @@ use App\Models\ExpedienteInscripcionSeguimiento;
 use App\Models\Inscripcion;
 use App\Models\Modalidad;
 use App\Models\Programa;
+use App\Models\ProgramaProceso;
 use App\Models\TipoSeguimiento;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -45,6 +46,7 @@ class Index extends Component
     public $id_inscripcion;
     public $modalidad;
     public $programa;
+    public $programasModal;//Para mostrar los programas en el modal
 
     //Para mapear el mes al filtrar
     public $meses = [
@@ -159,6 +161,11 @@ class Index extends Component
         $this->id_inscripcion = $inscripcion->id_inscripcion;
         $this->modalidad = $inscripcion->programa_proceso->programa_plan->programa->modalidad->id_modalidad;
         $this->programa = $inscripcion->programa_proceso->programa_plan->programa->id_programa;
+        $this->programasModal = ProgramaProceso::join('programa_plan', 'programa_plan.id_programa_plan', 'programa_proceso.id_programa_plan')
+                                            ->join('programa', 'programa.id_programa', 'programa_plan.id_programa')
+                                            ->where('programa.id_modalidad', $this->modalidad)
+                                            ->where('programa_plan.programa_plan_estado', 1)
+                                            ->get();
     }
 
     //Actualizar el programa de la inscripción
@@ -167,8 +174,8 @@ class Index extends Component
         $inscripcion = Inscripcion::find($this->id_inscripcion);
         
         $id_programa_proceso_actualizado = Programa::join('programa_plan', 'programa.id_programa', '=', 'programa_plan.id_programa')
-                                                    ->join('programa_proceso', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
-                                                    ->where('programa.id_modalidad', $this->modalidad)->where('programa.id_programa', $this->programa)->first()->id_programa_proceso;
+                                                ->join('programa_proceso', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
+                                                ->where('programa.id_modalidad', $this->modalidad)->where('programa.id_programa', $this->programa)->first()->id_programa_proceso;
         // dd($id_programa_proceso_actualizado);
         //Validar que no hayan cambios
         if($inscripcion->id_programa_proceso == $id_programa_proceso_actualizado){
@@ -246,12 +253,27 @@ class Index extends Component
                                     ->groupBy('mes', 'anio')
                                     ->get();
 
+        //validar que existan las modalidades en programa Proceso
+        $modalidadesModal = ProgramaProceso::join('programa_plan', 'programa_proceso.id_programa_plan', '=', 'programa_plan.id_programa_plan')
+                                        ->join('programa', 'programa_plan.id_programa', '=', 'programa.id_programa')
+                                        ->join('modalidad', 'programa.id_modalidad', '=', 'modalidad.id_modalidad')
+                                        ->selectRaw('programa.id_modalidad as id_modalidad')
+                                        ->groupBy('id_modalidad')
+                                        ->pluck('id_modalidad');
+
+        $this->programasModal = ProgramaProceso::join('programa_plan', 'programa_plan.id_programa_plan', 'programa_proceso.id_programa_plan')
+                                        ->join('programa', 'programa.id_programa', 'programa_plan.id_programa')
+                                        ->where('programa.id_modalidad', $this->modalidad)
+                                        ->where('programa_plan.programa_plan_estado', 1)
+                                        ->get();
+
         return view('livewire.modulo-administrador.gestion-admision.inscripcion.index', [
             'inscripcionModel' => $inscripcionModel,
             'procesos' => Admision::all(),
             'seguimientos' => TipoSeguimiento::all(),
             'modalidades' => Modalidad::all(),
             'mesesUnicos' => $mesesUnicos,
+            'modalidadesModal' => $modalidadesModal,
         ]);
     }
 }

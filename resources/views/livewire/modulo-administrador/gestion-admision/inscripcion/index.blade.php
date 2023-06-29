@@ -478,8 +478,11 @@
                             </label>
                             <select class="form-select" wire:model="modalidad" id="modalidad" data-control="select2" data-placeholder="Seleccione la Modalidad">
                                 <option></option>
-                                @foreach ($modalidades as $item)
-                                    <option value="{{ $item->id_modalidad }}">{{ $item->modalidad }}</option>
+                                @foreach ($modalidadesModal as $item)
+                                    @php
+                                        $modalidadAsignadas = App\Models\Modalidad::where('id_modalidad', $item)->first();
+                                    @endphp
+                                    <option value="{{ $item }}">{{ $modalidadAsignadas->modalidad }}</option>
                                 @endforeach
                             </select>
                             @error('modalidad')
@@ -493,11 +496,10 @@
                             <select class="form-select" wire:model="programa" id="programa" data-control="select2" data-placeholder="Seleccione el Programa">
                                 <option></option>
                                 @if($modalidad)
-                                    @php
-                                        $programas = App\Models\Programa::where('id_modalidad', $modalidad)->get();
-                                    @endphp
-                                    @foreach ($programas as $item)
-                                        <option value="{{ $item->id_programa }}">{{ $item->programa }} EN {{ $item->subprograma }} @if($item->mencion != '') CON MENCION EN {{ $item->mencion }}@endif</option>
+                                    @foreach ($programasModal as $item)
+                                        @if($item->programa_proceso_estado == 1)
+                                            <option value="{{ $item->id_programa }}">{{ $item->programa }} EN {{ $item->subprograma }} @if($item->mencion != '') CON MENCION EN {{ $item->mencion }}@endif</option>
+                                        @endif
                                     @endforeach
                                 @endif
                             </select>
