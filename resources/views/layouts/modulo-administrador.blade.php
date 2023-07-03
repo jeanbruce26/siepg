@@ -163,7 +163,7 @@
 
                                 {{-- Estudiantes --}}
                                 <div class="menu-item">
-                                    <a class="menu-link {{ request()->is('administrador/estudiante') ? 'active border-3 border-start border-primary' : '' }}" href="{{ route('administrador.admitidos') }}">
+                                    <a class="menu-link {{ request()->is('administrador/estudiante') ? 'active border-3 border-start border-primary' : '' }}" href="{{ route('administrador.estudiante') }}">
                                         <span class="menu-icon">
                                             <span class="svg-icon svg-icon-2  {{ request()->is('administrador/estudiante') ? 'text-primary' : ''}}">
                                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
