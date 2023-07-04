@@ -89,9 +89,9 @@
                                             {{ date('d/m/Y', strtotime($item->fecha_nacimiento)) }}
                                         </td> --}}
                                         <td>
-                                            {{ $item->correo }}
+                                            <div>{{ $item->correo }}</div>
                                             @if($item->correo_opcional)
-                                                {{ $item->correo_opcional }}
+                                                <div class="mt-2">{{ $item->correo_opcional }}</div>
                                             @endif
                                         </td>
                                         <td align="center">
@@ -108,12 +108,16 @@
                                             @if($validarInscripcion)
                                                 @if($validarAdmitido)
                                                     @if($validarAdmitido->evaluacion_estado_admitido == 0 && $validarAdmitido->evaluacion_estado == 3)
-                                                        <span class="badge badge-light-danger fs-6 px-3 py-2">NO ADMITIDO</span>
-                                                    @else
-                                                        @if($validarAdmitido->evaluacion_estado_admitido == 1 && $validarAdmitido->evaluacion_estado_admitido == 2)
-                                                            <span class="badge badge-light-primary fs-6 px-3 py-2">ADMITIDO</span>
-                                                        @endif
+                                                        <span class="badge badge-light-danger fs-6 px-3 py-2">NO ADMITIDO</span>                                                        
                                                     @endif
+                                                    @if($validarAdmitido->evaluacion_estado_admitido == 1 && $validarAdmitido->evaluacion_estado == 2)
+                                                        <span class="badge badge-light-primary fs-6 px-3 py-2">ADMITIDO</span>
+                                                    @endif
+                                                    @if($validarAdmitido->evaluacion_estado_admitido == 0 && $validarAdmitido->evaluacion_estado == 1)
+                                                        <span class="badge badge-light-success fs-6 px-3 py-2">INSCRITO</span>
+                                                    @endif
+                                                @else
+                                                    <span class="badge badge-light-success fs-6 px-3 py-2">INSCRITO</span>
                                                 @endif
                                             @endif
                                         </td>
