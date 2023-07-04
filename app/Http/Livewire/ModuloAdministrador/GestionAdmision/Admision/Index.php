@@ -119,9 +119,15 @@ class Index extends Component
     public function cargarAlerta($id)
     {
         $admision = Admision::where('id_admision',$id)->first();
+        //Validar si el proceso de admision esta activo o inactivo
+        if($admision->admision_estado == 1){//Si el proceso de admision esta activo
+            $this->alertaAdmision('¡Error!', 'El proceso de admisión ' . $admision->admision . ' ya se encuentra activo. No es posible modificar su estado.', 'error', 'Aceptar', 'danger');
+            return;
+        }
+
         $this->alertaConfirmacion(
             '¿Estás seguro?', 
-            '¿Desea modificar el estado del proceso de admisión ' . $admision->admision . ' ?', 
+            '¿Desea modificar el estado del proceso de admisión ' . $admision->admision . '? <br><br> <strong>Nota: </strong>Si activa este proceso de admisión, se desactivará el proceso de admisión activo actualmente.',
             'question', 
             'Modificar', 
             'Cancelar', 
@@ -134,17 +140,16 @@ class Index extends Component
 
     public function cambiarEstado(Admision $admision)
     {
-        if ($admision->admision_estado == 1) {//Si el estado del admision es 1 (activo) cambiar a 0 (inactivo)
-            $admision->admision_estado = 0;
-        } else {//Si el estado del admision es 0 (inactivo) cambiar a 1 (activo)
-            //Validar si hay otro admision activo
-            if (Admision::where('admision_estado', 1)->count() > 0) {//Si hay otro admision activo
-                $this->alertaAdmision('¡Error!', 'Ya existe un proceso de admision activo.', 'error', 'Aceptar', 'danger');
-                return;
-            }else{//Si no hay otro admision activo
-                $admision->admision_estado = 1;//Cambiar el estado del admision a 1 (activo)
+        
+        //Cambiar todos los estados de los admisiones a 0 (inactivo)
+        $admisiones = Admision::all();
+        foreach ($admisiones as $item) {
+            if ($item->admision_estado == 1) {
+                $item->admision_estado = 0;
+                $item->save();
             }
         }
+        $admision->admision_estado = 1;
         $admision->save();
 
         $this->alertaAdmision('¡Éxito!', 'El estado del admisión ' . $admision->admision . ' ha sido actualizado satisfactoriamente.', 'success', 'Aceptar', 'success');

@@ -30,7 +30,7 @@
     window.addEventListener('alertaConfirmacion', event => {
         Swal.fire({
             title: event.detail.title,
-            text: event.detail.text,
+            html: event.detail.text,
             icon: event.detail.icon,
             showCancelButton: true,
             confirmButtonText: event.detail.confirmButtonText,
