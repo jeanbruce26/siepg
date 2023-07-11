@@ -75,6 +75,7 @@
                                         <th scope="col">Estudiante</th>
                                         <th scope="col" class="col-md-2">Correo</th>
                                         <th scope="col" class="col-md-1">Celular</th>
+                                        <th scope="col" class="col-md-2">Dirección</th>
                                         <th scope="col" class="col-md-1">Estado</th>
                                         <th scope="col" class="col-md-2">Acciones</th>
                                     </tr>
@@ -96,6 +97,12 @@
                                         </td>
                                         <td align="center">
                                             {{ $item->celular }}
+                                        </td>
+                                        @php
+                                            $ubigeoDireccion = App\Models\Ubigeo::where('id_ubigeo', $item->ubigeo_direccion)->first();
+                                        @endphp
+                                        <td align="center">
+                                            {{ $ubigeoDireccion->departamento }} - {{ $ubigeoDireccion->provincia }} - {{ $ubigeoDireccion->distrito }}
                                         </td>
                                         @php
                                             //Consultas para revisar los estados de los estudiantes (inscrito, admitido, matriculado)
@@ -121,6 +128,7 @@
                                                 @endif
                                             @endif
                                         </td>
+                                        
                                         <td align="center">
                                             <a class="btn btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary btn-sm" data-bs-toggle="dropdown">
                                                 Acciones
@@ -192,13 +200,13 @@
     </div>
 
     {{-- Modal Programa --}}
-    {{-- <div wire:ignore.self class="modal fade" tabindex="-1" id="modalPersona">
+    <div wire:ignore.self class="modal fade" tabindex="-1" id="modalPersona">
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title">
+                    <h2 class="modal-title">
                         {{ $titulo }}
-                    </h3>
+                    </h2>
                     <div class="btn btn-icon btn-sm btn-active-light-danger ms-2" data-bs-dismiss="modal"
                         aria-label="Close">
                         <span class="svg-icon svg-icon-2hx">
@@ -216,166 +224,241 @@
                 </div>
                 <div class="modal-body">
                     <form autocomplete="off" class="row g-5 {{ $modo == 3 ? 'mb-3' : '' }}">
-                        <div class="col-md-6">
-                            <label for="programa_codigo" class="{{ $modo != 3 ? 'required' : ''}} form-label">
-                                Programa
-                            </label>
-                            @if($modo == 3)
-                                <input type="text" wire:model="programa"
-                                    class="form-control" id="programa" readonly />
-                            @else
-                                <select class="form-select @error('programa_tipo') is-invalid @enderror"
-                                    wire:model="programa_tipo" id="programa_tipo" data-control="select2"
-                                    data-placeholder="Seleccione el Plan" data-allow-clear="true"
-                                    data-dropdown-parent="#modalPersona">
-                                    <option></option>
-                                    <option value="1">MAESTRIA</option>
-                                    <option value="2">DOCTORADO</option>
-                                </select>
-                                @error('programa_tipo')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            @endif
-                        </div>
-                        <div class="col-md-6">
-                            <label for="programa_iniciales" class="{{ $modo != 3 ? 'required' : ''}} form-label">
-                                Iniciales 
-                                @switch($programa_tipo)
-                                    @case(1)
-                                        Maestría
-                                        @break
-                                    @case(2)
-                                        Doctorado
-                                        @break
-                                    @default
-                                        ***
-                                        @break
-                                @endswitch
-                            </label>
-                            <input type="text" wire:model="programa_iniciales"
-                                class="form-control @error('programa_iniciales') is-invalid @enderror"
-                                placeholder="Ingrese las iniciales del programa" id="programa_iniciales" @if($modo == 3) readonly @endif />
-                        </div>
-                        <div class="col-md-12">
-                            <label for="subprograma" class="{{ $modo != 3 ? 'required' : ''}} form-label">
-                                @switch($programa_tipo)
-                                    @case(1)
-                                        Maestría
-                                        @break
-                                    @case(2)
-                                        Doctorado
-                                        @break
-                                    @default
-                                        ***
-                                        @break
-                                @endswitch
-                            </label>
-                            <input type="text" wire:model="subprograma"
-                                class="form-control @error('subprograma') is-invalid @enderror"
-                                placeholder="Ingrese {{ $programa_tipo == 1 ? 'la maestría' : '' }}{{ $programa_tipo == 2 ? 'el doctorado' : '' }}" id="subprograma" @if($modo == 3) readonly @endif />
-                        </div>
-                        <div class="col-md-6">
-                            <label for="mencion" class="form-label">
-                                Mención
-                            </label>
-                            <input type="text" wire:model="mencion"
-                                class="form-control @error('mencion') is-invalid @enderror"
-                                placeholder="{{ $modo == 3 ? 'Sin mención' : 'Ingrese la mención' }}" id="mencion" @if($modo == 3) readonly @endif />
-                        </div>
-                        <div class="col-md-6">
-                            <label for="facultad" class="{{ $modo != 3 ? 'required' : ''}} form-label">
-                                Facultad
-                            </label>
-                            @if($modo == 3)
-                                <input type="text" wire:model="facultadDetalle"
-                                    class="form-control" id="facultadDetalle" readonly />
-                            @else
-                                <select class="form-select @error('facultad') is-invalid @enderror"
-                                    wire:model="facultad" id="facultad" data-control="select2"
-                                    data-placeholder="Seleccione la Facultad" data-allow-clear="true"
-                                    data-dropdown-parent="#modalPersona">
-                                    <option></option>
-                                    @foreach ($facultad_model as $item)
-                                        @if($item->facultad_estado == 1)
-                                            <option value="{{ $item->id_facultad }}">{{ $item->facultad }}</option>
+                        <div class="col-md-12 mt-5">
+                            <div class="row g-5">
+                                <div class="col-md-12">
+                                    <span class="col-12 fw-bold text-gray-800 fs-3">
+                                        INFORMACIÓN PERSONAL
+                                    </span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="numero_documento" class="{{ $modo != 3 ? 'required' : ''}} form-label">
+                                        Número de Documento
+                                    </label>
+                                    <input type="text" wire:model="numero_documento"
+                                        class="form-control @error('numero_documento') is-invalid @enderror"
+                                        placeholder="Ingrese su número de documento" id="numero_documento" @if($modo == 3) readonly @endif />
+                                        @error('numero_documento')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                </div>                        
+                                <div class="col-md-4">
+                                    <label for="nombre" class="{{ $modo != 3 ? 'required' : ''}} form-label">
+                                        Nombres
+                                    </label>
+                                    <input type="text" wire:model="nombre"
+                                        class="form-control @error('nombre') is-invalid @enderror"
+                                        placeholder="Ingrese su nombre" id="nombre" @if($modo == 3) readonly @endif />
+                                        @error('nombre')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                </div>                        
+                                <div class="col-md-4">
+                                    <label for="apellido_paterno" class="{{ $modo != 3 ? 'required' : ''}} form-label">
+                                        Apellido Paterno
+                                    </label>
+                                    <input type="text" wire:model="apellido_paterno"
+                                        class="form-control @error('apellido_paterno') is-invalid @enderror"
+                                        placeholder="Ingrese su número de documento" id="apellido_paterno" @if($modo == 3) readonly @endif />
+                                        @error('apellido_paterno')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                </div>                        
+                                <div class="col-md-4">
+                                    <label for="apellido_materno" class="{{ $modo != 3 ? 'required' : ''}} form-label">
+                                        Apellido Materno
+                                    </label>
+                                    <input type="text" wire:model="apellido_materno"
+                                        class="form-control @error('apellido_materno') is-invalid @enderror"
+                                        placeholder="Ingrese su apellido paterno" id="apellido_materno" @if($modo == 3) readonly @endif />
+                                        @error('apellido_materno')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                </div>                       
+                                <div class="col-md-4">
+                                    <label for="fecha_nacimiento" class="{{ $modo != 3 ? 'required' : ''}} form-label">
+                                        Fecha de Nacimiento
+                                    </label>
+                                        <input type="date" wire:model="fecha_nacimiento" class="form-control @error('fecha_nacimiento') is-invalid @enderror" id="fecha_nacimiento" {{ $modo == 3 ? 'readonly' : '' }}>
+                                        @error('fecha_nacimiento')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="genero" class="{{ $modo != 3 ? 'required' : ''}} form-label">
+                                        Sexo
+                                    </label>
+                                    @if($modo == 3)
+                                        <input type="text" wire:model="genero_detalle"
+                                            class="form-control" id="genero_detalle" readonly />
+                                    @else
+                                        <select class="form-select @error('genero') is-invalid @enderror"
+                                            wire:model="genero" id="genero" data-control="select2"
+                                            data-placeholder="Seleccione su género" data-allow-clear="true"
+                                            data-dropdown-parent="#modalPersona">
+                                            <option></option>
+                                            @foreach ($genero_model as $item)
+                                                @if($item->genero_estado == 1)
+                                                    <option value="{{ $item->id_genero }}">{{ $item->genero }}</option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                        @error('genero')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    @endif
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="estado_civil" class="{{ $modo != 3 ? 'required' : ''}} form-label">
+                                        Estado Civil
+                                    </label>
+                                    @if($modo == 3)
+                                        <input type="text" wire:model="estado_civil_detalle"
+                                            class="form-control" id="estado_civil_detalle" readonly />
+                                    @else
+                                        <select class="form-select @error('estado_civil') is-invalid @enderror"
+                                            wire:model="estado_civil" id="estado_civil" data-control="select2"
+                                            data-placeholder="Seleccione su estado civil" data-allow-clear="true"
+                                            data-dropdown-parent="#modalPersona">
+                                            <option></option>
+                                            @foreach ($estado_civil_model as $item)
+                                                @if($item->estado_civil_estado == 1)
+                                                    <option value="{{ $item->id_estado_civil }}">{{ $item->estado_civil }}</option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                        @error('estado_civil')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    @endif
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="discapacidad" class="{{ $modo != 3 ? 'required' : ''}} form-label">
+                                        Discapacidad
+                                    </label>
+                                    @if($modo == 3)
+                                        <input type="text" wire:model="discapacidad_detalle"
+                                            class="form-control" id="discapacidad_detalle" readonly />
+                                    @else
+                                        <select class="form-select @error('discapacidad') is-invalid @enderror"
+                                            wire:model="discapacidad" id="discapacidad" data-control="select2"
+                                            data-placeholder="Seleccione su estado civil" data-allow-clear="true"
+                                            data-dropdown-parent="#modalPersona">
+                                            <option></option>
+                                            @foreach ($discapacidad_model as $item)
+                                                @if($item->discapacidad_estado == 1)
+                                                    <option value="{{ $item->id_discapacidad }}">{{ $item->discapacidad }}</option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                        @error('discapacidad')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    @endif
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="celular" class="{{ $modo != 3 ? 'required' : ''}} form-label">
+                                        Celular
+                                    </label>
+                                    @if($agregar_celular == false && $modo == 2)
+                                        <div class="row">
+                                            <div class="col-md-10">
+                                                <input type="number" wire:model="celular" class="form-control @error('celular') is-invalid @enderror" id="celular" placeholder="Ingrese su número de celular">
+                                            </div>
+                                            <div class="col-md-1 d-flex justify-content-center align-items-center">
+                                                <i class="ki-duotone ki-message-add text-success fs-2x hover-scale" data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar celular opcional" wire:click="agregarCelular" style="cursor: pointer">
+                                                    <i class="path1"></i>
+                                                    <i class="path2"></i>
+                                                    <i class="path3"></i>
+                                                </i>
+                                            </div>
+                                        </div>
+                                    @else
+                                        <input type="number" wire:model="celular" class="form-control @error('celular') is-invalid @enderror" id="celular" placeholder="Ingrese su número de celular" {{ $modo == 3 ? 'readonly' : '' }}>
+                                    @endif
+                                    @error('celular')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                @if($celular_opcional || $agregar_celular == true)
+                                    <div class="col-md-4">
+                                        <label for="celular_opcional" class="form-label">
+                                            Celular Opcional
+                                        </label>
+                                        @if($celular_opcional == null)
+                                            <div class="row">
+                                                <div class="col-md-10">
+                                                    <input type="number" wire:model="celular_opcional" class="form-control @error('celular_opcional') is-invalid @enderror" id="celular_opcional" placeholder="Ingrese número opcional" {{ $modo == 3 ? 'readonly' : '' }}>
+                                                </div>
+                                                <div class="col-md-1 d-flex justify-content-center align-items-center">
+                                                    <i class="ki-duotone ki-message-minus text-danger fs-2x hover-scale" data-bs-toggle="tooltip" data-bs-placement="top" title="Quitar celular opcional" wire:click="quitarCelular" style="cursor: pointer">
+                                                        <i class="path1"></i>
+                                                        <i class="path2"></i>
+                                                        <i class="path3"></i>
+                                                    </i>
+                                                </div>
+                                            </div>
+                                            @error('celular_opcional')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        @else
+                                            <input type="number" wire:model="celular_opcional" class="form-control @error('celular_opcional') is-invalid @enderror" id="celular_opcional" placeholder="Ingrese número opcional" {{ $modo == 3 ? 'readonly' : '' }}>
                                         @endif
-                                    @endforeach
-                                </select>
-                                @error('facultad')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            @endif
-                        </div>
-                        <div class="col-md-6">
-                            <label for="id_sunedu" class="{{ $modo != 3 ? 'required' : ''}} form-label">
-                                ID SUNEDU
-                            </label>
-                            <input type="text" wire:model="id_sunedu"
-                                class="form-control @error('id_sunedu') is-invalid @enderror"
-                                placeholder="Ingrese el ID de SUNEDU" id="mencion" @if($modo == 3) readonly @endif />
-                                @error('id_sunedu')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                        </div>
-                        <div class="col-md-6">
-                            <label for="codigo_sunedu" class="form-label">
-                                Código SUNEDU
-                            </label>
-                            <input type="text" wire:model="codigo_sunedu"
-                                class="form-control @error('codigo_sunedu') is-invalid @enderror"
-                                placeholder="Ingrese el código de SUNEDU" id="mencion" @if($modo == 3) readonly @endif />
-                                @error('codigo_sunedu')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                        </div>
-                        <div class="col-md-6">
-                            <label for="modalidad" class="{{ $modo != 3 ? 'required' : ''}} form-label">
-                                Modalidad
-                            </label>
-                            @if($modo == 3)
-                                <input type="text" wire:model="modalidadDetalle"
-                                    class="form-control" id="modalidadDetalle" readonly />
-                            @else
-                                <select class="form-select @error('modalidad') is-invalid @enderror"
-                                    wire:model="modalidad" id="modalidad" data-control="select2"
-                                    data-placeholder="Seleccione la Modalidad" data-allow-clear="true"
-                                    data-dropdown-parent="#modalPersona">
-                                    <option></option>
-                                    @foreach ($modalidad_model as $item)
-                                        @if($item->modalidad_estado == 1)
-                                            <option value="{{ $item->id_modalidad }}">{{ $item->modalidad }}</option>
+                                    </div>
+                                @endif
+                                <div class="col-md-4">
+                                    <label for="correo" class="{{ $modo != 3 ? 'required' : ''}} form-label">
+                                        Correo
+                                    </label>
+                                    @if($agregar_correo == false && $modo == 2)
+                                        <div class="row">
+                                            <div class="col-md-10">
+                                                <input type="email" wire:model="correo" class="form-control @error('correo') is-invalid @enderror" id="correo" placeholder="Ingrese su correo">
+                                            </div>
+                                            <div class="col-md-1 d-flex justify-content-center align-items-center">
+                                                <i class="ki-duotone ki-message-add text-success fs-2x hover-scale" data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar celular opcional" wire:click="agregarCorreo" style="cursor: pointer">
+                                                    <i class="path1"></i>
+                                                    <i class="path2"></i>
+                                                    <i class="path3"></i>
+                                                </i>
+                                            </div>
+                                        </div>
+                                    @else
+                                        <input type="email" wire:model="correo" class="form-control @error('correo') is-invalid @enderror" id="correo" placeholder="Ingrese su correo" {{ $modo == 3 ? 'readonly' : '' }}>
+                                    @endif
+                                    @error('correo')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                @if($correo_opcional || $agregar_correo == true)
+                                    <div class="col-md-4">
+                                        <label for="correo_opcional" class="form-label">
+                                            Correo Opcional
+                                        </label>
+                                        @if($correo_opcional == null)
+                                            <div class="row">
+                                                <div class="col-md-10">
+                                                    <input type="email" wire:model="correo_opcional" class="form-control @error('correo_opcional') is-invalid @enderror" id="correo_opcional" placeholder="Ingrese correo opcional" {{ $modo == 3 ? 'readonly' : '' }}>
+                                                </div>
+                                                <div class="col-md-1 d-flex justify-content-center align-items-center">
+                                                    <i class="ki-duotone ki-message-minus text-danger fs-2x hover-scale" data-bs-toggle="tooltip" data-bs-placement="top" title="Quitar correo opcional" wire:click="quitarCorreo" style="cursor: pointer">
+                                                        <i class="path1"></i>
+                                                        <i class="path2"></i>
+                                                        <i class="path3"></i>
+                                                    </i>
+                                                </div>
+                                            </div>
+                                            @error('correo_opcional')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        @else
+                                            <input type="email" wire:model="correo_opcional" class="form-control @error('correo_opcional') is-invalid @enderror" id="correo_opcional" placeholder="Ingrese correo opcional" {{ $modo == 3 ? 'readonly' : '' }}>
                                         @endif
-                                    @endforeach
-                                </select>
-                                @error('modalidad')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            @endif
+                                    </div>
+                                @endif
+                            </div>
                         </div>
-                        <div class="col-md-6">
-                            <label for="sede" class="{{ $modo != 3 ? 'required' : ''}} form-label">
-                                Sede
-                            </label>
-                            @if($modo == 3)
-                                <input type="text" wire:model="sedeDetalle"
-                                    class="form-control" id="sedeDetalle" readonly />
-                            @else
-                                <select class="form-select @error('sede') is-invalid @enderror"
-                                    wire:model="sede" id="sede" data-control="select2"
-                                    data-placeholder="Seleccione la Sede" data-allow-clear="true"
-                                    data-dropdown-parent="#modalPersona">
-                                    <option></option>
-                                    @foreach ($sede_model as $item)
-                                        @if($item->sede_estado == 1)
-                                            <option value="{{ $item->id_sede }}">{{ $item->sede }}</option>
-                                        @endif
-                                    @endforeach
-                                </select>
-                                @error('sede')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            @endif
-                        </div>
+                        
                         
                     </form>
                 </div>
@@ -396,7 +479,7 @@
                 @endif
             </div>
         </div>
-    </div> --}}
+    </div>
 
 </div>
 @push('scripts')
@@ -438,6 +521,125 @@
                 });
                 $('#filtro_proceso').on('change', function(){
                     @this.set('filtro_proceso', this.value);
+                });
+            });
+        });
+
+        //Select2 de Modal
+        // genero select2
+        $(document).ready(function () {
+            $('#genero').select2({
+                placeholder: 'Seleccione',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando...";
+                    }
+                }
+            });
+            $('#genero').on('change', function(){
+                @this.set('genero', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#genero').select2({
+                    placeholder: 'Seleccione',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando...";
+                        }
+                    }
+                });
+                $('#genero').on('change', function(){
+                    @this.set('genero', this.value);
+                });
+            });
+        });
+        // estado_civil select2
+        $(document).ready(function () {
+            $('#estado_civil').select2({
+                placeholder: 'Seleccione',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando...";
+                    }
+                }
+            });
+            $('#estado_civil').on('change', function(){
+                @this.set('estado_civil', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#estado_civil').select2({
+                    placeholder: 'Seleccione',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando...";
+                        }
+                    }
+                });
+                $('#estado_civil').on('change', function(){
+                    @this.set('estado_civil', this.value);
+                });
+            });
+        });
+        // discapacidad select2
+        $(document).ready(function () {
+            $('#discapacidad').select2({
+                placeholder: 'Seleccione',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando...";
+                    }
+                }
+            });
+            $('#discapacidad').on('change', function(){
+                @this.set('discapacidad', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#discapacidad').select2({
+                    placeholder: 'Seleccione',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando...";
+                        }
+                    }
+                });
+                $('#discapacidad').on('change', function(){
+                    @this.set('discapacidad', this.value);
                 });
             });
         });
