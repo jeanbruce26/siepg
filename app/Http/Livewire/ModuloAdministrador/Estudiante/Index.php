@@ -6,8 +6,11 @@ use App\Models\Admision;
 use App\Models\Discapacidad;
 use App\Models\EstadoCivil;
 use App\Models\Genero;
+use App\Models\GradoAcademico;
 use App\Models\Inscripcion;
 use App\Models\Persona;
+use App\Models\Ubigeo;
+use App\Models\Universidad;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -54,10 +57,14 @@ class Index extends Component
     public $estado_civil;
     public $estado_civil_detalle;
     public $grado_academico;
+    public $grado_academico_detalle;
     public $universidad;
+    public $universidad_detalle;
     public $ubigeo_direccion;
+    public $ubigeo_direccion_detalle;
     public $pais;
     public $ubigeo_nacimiento;
+    public $ubigeo_nacimiento_detalle;
     public $pais_nacimiento;
     
     public $agregar_celular = false;
@@ -161,18 +168,24 @@ class Index extends Component
             $this->agregar_correo = true;
         }
         $this->año_egreso = $persona->año_egreso;
-        $this->especialidad = $persona->especialidad;
+        $this->especialidad = $persona->especialidad_carrera;
         $this->centro_trabajo = $persona->centro_trabajo;
         // $this->tipo_documento = $persona->tipo_documento;
         $this->discapacidad = $persona->id_discapacidad;
         $this->discapacidad_detalle = Discapacidad::findOrFail($persona->id_discapacidad)->discapacidad;
         $this->estado_civil = $persona->id_estado_civil;
         $this->estado_civil_detalle = EstadoCivil::findOrFail($persona->id_estado_civil)->estado_civil;
-        $this->grado_academico = $persona->grado_academico;
-        $this->universidad = $persona->universidad;
+        $this->grado_academico = $persona->id_grado_academico;
+        $this->grado_academico_detalle = GradoAcademico::findOrFail($persona->id_grado_academico)->grado_academico;
+        $this->universidad = $persona->id_universidad;
+        $this->universidad_detalle = Universidad::findOrFail($persona->id_universidad)->universidad;
         $this->ubigeo_direccion = $persona->ubigeo_direccion;
+        $this->ubigeo_direccion_detalle = Ubigeo::findOrFail($persona->ubigeo_direccion);
+        $this->ubigeo_direccion_detalle = $this->ubigeo_direccion_detalle->ubigeo.' / '.$this->ubigeo_direccion_detalle->departamento.' / '.$this->ubigeo_direccion_detalle->provincia.' / '.$this->ubigeo_direccion_detalle->distrito;
         $this->pais = $persona->pais;
         $this->ubigeo_nacimiento = $persona->ubigeo_nacimiento;
+        $this->ubigeo_nacimiento_detalle = Ubigeo::findOrFail($persona->ubigeo_nacimiento);
+        $this->ubigeo_nacimiento_detalle = $this->ubigeo_nacimiento_detalle->ubigeo.' / '.$this->ubigeo_nacimiento_detalle->departamento.' / '.$this->ubigeo_nacimiento_detalle->provincia.' / '.$this->ubigeo_nacimiento_detalle->distrito;
         $this->pais_nacimiento = $persona->pais_nacimiento;
     }
 
@@ -251,6 +264,9 @@ class Index extends Component
             "genero_model" => Genero::all(),
             "estado_civil_model" => EstadoCivil::all(),
             "discapacidad_model" => Discapacidad::all(),
+            "ubigeo_model" => Ubigeo::all(),
+            "grado_academico_model" => GradoAcademico::all(),
+            "universidad_model" => Universidad::all(),
         ]);
     }
 }

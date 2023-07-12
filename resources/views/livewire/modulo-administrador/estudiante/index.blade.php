@@ -201,7 +201,7 @@
 
     {{-- Modal Programa --}}
     <div wire:ignore.self class="modal fade" tabindex="-1" id="modalPersona">
-        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
                     <h2 class="modal-title">
@@ -238,10 +238,10 @@
                                     <input type="text" wire:model="numero_documento"
                                         class="form-control @error('numero_documento') is-invalid @enderror"
                                         placeholder="Ingrese su número de documento" id="numero_documento" @if($modo == 3) readonly @endif />
-                                        @error('numero_documento')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
-                                </div>                        
+                                    @error('numero_documento')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
                                 <div class="col-md-4">
                                     <label for="nombre" class="{{ $modo != 3 ? 'required' : ''}} form-label">
                                         Nombres
@@ -249,10 +249,10 @@
                                     <input type="text" wire:model="nombre"
                                         class="form-control @error('nombre') is-invalid @enderror"
                                         placeholder="Ingrese su nombre" id="nombre" @if($modo == 3) readonly @endif />
-                                        @error('nombre')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
-                                </div>                        
+                                    @error('nombre')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
                                 <div class="col-md-4">
                                     <label for="apellido_paterno" class="{{ $modo != 3 ? 'required' : ''}} form-label">
                                         Apellido Paterno
@@ -260,10 +260,10 @@
                                     <input type="text" wire:model="apellido_paterno"
                                         class="form-control @error('apellido_paterno') is-invalid @enderror"
                                         placeholder="Ingrese su número de documento" id="apellido_paterno" @if($modo == 3) readonly @endif />
-                                        @error('apellido_paterno')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
-                                </div>                        
+                                    @error('apellido_paterno')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
                                 <div class="col-md-4">
                                     <label for="apellido_materno" class="{{ $modo != 3 ? 'required' : ''}} form-label">
                                         Apellido Materno
@@ -271,10 +271,10 @@
                                     <input type="text" wire:model="apellido_materno"
                                         class="form-control @error('apellido_materno') is-invalid @enderror"
                                         placeholder="Ingrese su apellido paterno" id="apellido_materno" @if($modo == 3) readonly @endif />
-                                        @error('apellido_materno')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
-                                </div>                       
+                                    @error('apellido_materno')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
                                 <div class="col-md-4">
                                     <label for="fecha_nacimiento" class="{{ $modo != 3 ? 'required' : ''}} form-label">
                                         Fecha de Nacimiento
@@ -416,7 +416,7 @@
                                                 <input type="email" wire:model="correo" class="form-control @error('correo') is-invalid @enderror" id="correo" placeholder="Ingrese su correo">
                                             </div>
                                             <div class="col-md-1 d-flex justify-content-center align-items-center">
-                                                <i class="ki-duotone ki-message-add text-success fs-2x hover-scale" data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar celular opcional" wire:click="agregarCorreo" style="cursor: pointer">
+                                                <i class="ki-duotone ki-message-add text-success fs-2x hover-scale" data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar correo opcional" wire:click="agregarCorreo" style="cursor: pointer">
                                                     <i class="path1"></i>
                                                     <i class="path2"></i>
                                                     <i class="path3"></i>
@@ -456,6 +456,158 @@
                                         @endif
                                     </div>
                                 @endif
+
+                                <div class="col-md-12 mt-8">
+                                    <span class="col-12 fw-bold text-gray-800 fs-3">
+                                        INFORMACIÓN DE DIRECCIÓN Y LUGAR DE NACIMIENTO
+                                    </span>
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="ubigeo_direccion" class="{{ $modo != 3 ? 'required' : ''}} form-label">
+                                        Ubigeo de Dirección
+                                    </label>
+                                    @if($modo == 3)
+                                        <input type="text" wire:model="ubigeo_direccion_detalle"
+                                            class="form-control" id="ubigeo_direccion_detalle" readonly />
+                                    @else
+                                        <select class="form-select @error('ubigeo_direccion') is-invalid @enderror"
+                                            wire:model="ubigeo_direccion" id="ubigeo_direccion" data-control="select2"
+                                            data-placeholder="Seleccione su ubigeo de dirección" data-allow-clear="true"
+                                            data-dropdown-parent="#modalPersona">
+                                            <option></option>
+                                            @foreach ($ubigeo_model as $item)
+                                                @if($item->ubigeo_estado == 1)
+                                                    <option value="{{ $item->id_ubigeo }}">{{ $item->ubigeo }} / {{ $item->departamento }} / {{ $item->provincia }} / {{ $item->distrito }}</option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                        @error('ubigeo_direccion')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    @endif
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="direccion" class="{{ $modo != 3 ? 'required' : ''}} form-label">
+                                        Dirección
+                                    </label>
+                                    <input type="text" wire:model="direccion"
+                                        class="form-control @error('direccion') is-invalid @enderror"
+                                        placeholder="Ingrese su dirección" id="direccion" @if($modo == 3) readonly @endif />
+                                    @error('direccion')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="ubigeo_nacimiento" class="{{ $modo != 3 ? 'required' : ''}} form-label">
+                                        Ubigeo de Nacimiento
+                                    </label>
+                                    @if($modo == 3)
+                                        <input type="text" wire:model="ubigeo_nacimiento_detalle"
+                                            class="form-control" id="ubigeo_nacimiento_detalle" readonly />
+                                    @else
+                                        <select class="form-select @error('ubigeo_nacimiento') is-invalid @enderror"
+                                            wire:model="ubigeo_nacimiento" id="ubigeo_nacimiento" data-control="select2"
+                                            data-placeholder="Seleccione su ubigeo de nacimiento" data-allow-clear="true"
+                                            data-dropdown-parent="#modalPersona">
+                                            <option></option>
+                                            @foreach ($ubigeo_model as $item)
+                                                @if($item->ubigeo_estado == 1)
+                                                    <option value="{{ $item->id_ubigeo }}">{{ $item->ubigeo }} / {{ $item->departamento }} / {{ $item->provincia }} / {{ $item->distrito }}</option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                        @error('ubigeo_nacimiento')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    @endif
+                                </div>
+
+                                <div class="col-md-12 mt-8">
+                                    <span class="col-12 fw-bold text-gray-800 fs-3">
+                                        INFORMACIÓN DE GRADO ACADÉMICO, UNIVERSIDAD Y EXPERIENCIA LABORAL
+                                    </span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="grado_academico" class="{{ $modo != 3 ? 'required' : ''}} form-label">
+                                        Grado Académico
+                                    </label>
+                                    @if($modo == 3)
+                                        <input type="text" wire:model="grado_academico_detalle"
+                                            class="form-control" id="grado_academico_detalle" readonly />
+                                    @else
+                                        <select class="form-select @error('grado_academico') is-invalid @enderror"
+                                            wire:model="grado_academico" id="grado_academico" data-control="select2"
+                                            data-placeholder="Seleccione su grado académico" data-allow-clear="true"
+                                            data-dropdown-parent="#modalPersona">
+                                            <option></option>
+                                            @foreach ($grado_academico_model as $item)
+                                                @if($item->grado_academico_estado == 1)
+                                                    <option value="{{ $item->id_grado_academico }}">{{ $item->grado_academico }}</option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                        @error('grado_academico')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    @endif
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="especialidad" class="form-label">
+                                        Especialidad de Carrera
+                                    </label>
+                                    <input type="text" wire:model="especialidad"
+                                        class="form-control @error('especialidad') is-invalid @enderror"
+                                        placeholder="Ingrese especialidad de su carrera" id="especialidad" @if($modo == 3) readonly @endif />
+                                    @error('especialidad')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="año_egreso" class="{{ $modo != 3 ? 'required' : ''}} form-label">
+                                        Año de Egreso de Universidad o Maestría
+                                    </label>
+                                    <input type="text" wire:model="año_egreso"
+                                        class="form-control @error('año_egreso') is-invalid @enderror"
+                                        placeholder="Ingrese el año de egreso de universidad o maestría" id="año_egreso" @if($modo == 3) readonly @endif />
+                                    @error('año_egreso')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                <div class="col-md-8">
+                                    <label for="universidad" class="{{ $modo != 3 ? 'required' : ''}} form-label">
+                                        Universidad de Egreso
+                                    </label>
+                                    @if($modo == 3)
+                                        <input type="text" wire:model="universidad_detalle"
+                                            class="form-control" id="universidad_detalle" readonly />
+                                    @else
+                                        <select class="form-select @error('universidad') is-invalid @enderror"
+                                            wire:model="universidad" id="universidad" data-control="select2"
+                                            data-placeholder="Seleccione su universidad de egreso" data-allow-clear="true"
+                                            data-dropdown-parent="#modalPersona">
+                                            <option></option>
+                                            @foreach ($universidad_model as $item)
+                                                @if($item->universidad_estado == 1)
+                                                    <option value="{{ $item->id_universidad }}">{{ $item->universidad }}</option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                        @error('universidad')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    @endif
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="centro_trabajo" class="{{ $modo != 3 ? 'required' : ''}} form-label">
+                                        Centro de Trabajo
+                                    </label>
+                                    <input type="text" wire:model="centro_trabajo"
+                                        class="form-control @error('centro_trabajo') is-invalid @enderror"
+                                        placeholder="Ingrese su centro de trabajo" id="centro_trabajo" @if($modo == 3) readonly @endif />
+                                    @error('centro_trabajo')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
                             </div>
                         </div>
                         
@@ -640,6 +792,123 @@
                 });
                 $('#discapacidad').on('change', function(){
                     @this.set('discapacidad', this.value);
+                });
+            });
+        });
+        // ubigeo_direccion select2
+        $(document).ready(function () {
+            $('#ubigeo_direccion').select2({
+                placeholder: 'Seleccione',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando...";
+                    }
+                }
+            });
+            $('#ubigeo_direccion').on('change', function(){
+                @this.set('ubigeo_direccion', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#ubigeo_direccion').select2({
+                    placeholder: 'Seleccione',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando...";
+                        }
+                    }
+                });
+                $('#ubigeo_direccion').on('change', function(){
+                    @this.set('ubigeo_direccion', this.value);
+                });
+            });
+        });
+        // ubigeo_nacimiento select2
+        $(document).ready(function () {
+            $('#ubigeo_nacimiento').select2({
+                placeholder: 'Seleccione',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando...";
+                    }
+                }
+            });
+            $('#ubigeo_nacimiento').on('change', function(){
+                @this.set('ubigeo_nacimiento', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#ubigeo_nacimiento').select2({
+                    placeholder: 'Seleccione',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando...";
+                        }
+                    }
+                });
+                $('#ubigeo_nacimiento').on('change', function(){
+                    @this.set('ubigeo_nacimiento', this.value);
+                });
+            });
+        });
+        // grado_academico select2
+        $(document).ready(function () {
+            $('#grado_academico').select2({
+                placeholder: 'Seleccione',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando...";
+                    }
+                }
+            });
+            $('#grado_academico').on('change', function(){
+                @this.set('grado_academico', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#grado_academico').select2({
+                    placeholder: 'Seleccione',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando...";
+                        }
+                    }
+                });
+                $('#grado_academico').on('change', function(){
+                    @this.set('grado_academico', this.value);
                 });
             });
         });
