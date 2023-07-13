@@ -19,7 +19,8 @@ class Curso extends Model
         'curso_horas',
         'curso_fecha_creacion',
         'curso_estado',
-        'id_ciclo'
+        'id_ciclo',
+        'curso_prerequisito',
     ];
 
     public $timestamps = false;

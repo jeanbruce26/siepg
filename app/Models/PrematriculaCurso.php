@@ -9,12 +9,12 @@ class PrematriculaCurso extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'id_prematrícula_curso';
+    protected $primaryKey = 'id_prematricula_curso';
     protected $table = 'prematricula_curso';
     protected $fillable = [
-        'id_prematriícula_curso',
+        'id_prematricula_curso',
         'id_prematricula',
-        'id_curso_programa_plan',
+        'id_curso_programa_programa',
         'prematricula_curso_fecha_creacion',
         'prematricula_curso_estado'
     ];
@@ -28,8 +28,8 @@ class PrematriculaCurso extends Model
     }
 
     // curso programa plan
-    public function curso_programa_plan()
+    public function curso_programa_proceso()
     {
-        return $this->belongsTo(CursoProgramaPlan::class, 'id_curso_programa_plan');
+        return $this->belongsTo(CursoProgramaProceso::class, 'id_curso_programa_proceso');
     }
 }

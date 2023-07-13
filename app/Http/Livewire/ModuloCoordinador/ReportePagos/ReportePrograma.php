@@ -11,11 +11,6 @@ class ReportePrograma extends Component
 {
     public $id_programa_proceso;
 
-    public function moun()
-    {
-
-    }
-
     public function render()
     {
         $programa_proceso = ProgramaProceso::join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')

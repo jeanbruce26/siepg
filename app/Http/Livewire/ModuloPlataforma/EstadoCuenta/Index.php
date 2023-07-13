@@ -25,6 +25,8 @@ class Index extends Component
     // opciones de filtro
     public $filtro_ciclo;
     public $ciclo_data;
+    public $admitido_ciclo;
+    public $costo_enseñanza;
 
     protected $queryString = [
         'filtro_ciclo' => ['except' => ''],
@@ -41,11 +43,16 @@ class Index extends Component
         {
             abort(403);
         }
+        $this->admitido_ciclo = AdmitidoCiclo::where('id_admitido', $this->admitido->id_admitido)->orderBy('id_admitido_ciclo', 'desc')->first();
+        $this->filtro_ciclo = $this->admitido_ciclo->id_ciclo;
+        $this->ciclo_data = $this->admitido_ciclo->id_ciclo;
+        $this->costo_enseñanza = CostoEnseñanza::where('id_programa_plan', $this->admitido->programa_proceso->id_programa_plan)->where('id_ciclo', $this->admitido_ciclo->id_ciclo)->first();
     }
 
     public function aplicar_filtro()
     {
         $this->ciclo_data = $this->filtro_ciclo;
+        $this->costo_enseñanza = CostoEnseñanza::where('id_programa_plan', $this->admitido->programa_proceso->id_programa_plan)->where('id_ciclo', $this->ciclo_data)->first();
     }
 
     public function resetear_filtro()
@@ -54,14 +61,14 @@ class Index extends Component
             'filtro_ciclo',
             'ciclo_data'
         ]);
-        $this->emit('render');
+        $this->admitido_ciclo = AdmitidoCiclo::where('id_admitido', $this->admitido->id_admitido)->orderBy('id_admitido_ciclo', 'desc')->first();
+        $this->filtro_ciclo = $this->admitido_ciclo->id_ciclo;
+        $this->ciclo_data = $this->admitido_ciclo->id_ciclo;
     }
 
     public function render()
     {
-        $admitido_ciclo = AdmitidoCiclo::where('id_admitido', $this->admitido->id_admitido)->orderBy('id_admitido_ciclo', 'desc')->first();
-        $this->filtro_ciclo = $admitido_ciclo->id_ciclo;
-        $this->ciclo_data = $admitido_ciclo->id_ciclo;
+        $this->admitido_ciclo = AdmitidoCiclo::where('id_admitido', $this->admitido->id_admitido)->orderBy('id_admitido_ciclo', 'desc')->first();
 
         $mensualidades  = Mensualidad::join('matricula', 'mensualidad.id_matricula', '=', 'matricula.id_matricula')
                                         ->join('pago', 'mensualidad.id_pago', '=', 'pago.id_pago')
@@ -74,9 +81,7 @@ class Index extends Component
                                         ->orderBy('mensualidad.id_mensualidad', 'asc')
                                         ->paginate(5);
 
-        $costo_enseñanza = CostoEnseñanza::where('id_programa_plan', $this->admitido->programa_proceso->id_programa_plan)->where('id_ciclo', $admitido_ciclo->id_ciclo)->first();
-
-        $monto_total = $costo_enseñanza->costo_ciclo;
+        $monto_total = $this->costo_enseñanza->costo_ciclo;
         $monto_pagado = 0;
 
         foreach($mensualidades as $mensualidad)
@@ -93,7 +98,6 @@ class Index extends Component
 
         return view('livewire.modulo-plataforma.estado-cuenta.index', [
             'mensualidades' => $mensualidades,
-            'costo_enseñanza' => $costo_enseñanza,
             'monto_total' => $monto_total,
             'monto_pagado' => $monto_pagado,
             'deuda' => $deuda,

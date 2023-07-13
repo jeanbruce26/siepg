@@ -10,6 +10,7 @@ use App\Models\ConceptoPago;
 use App\Models\ConstanciaIngreso;
 use App\Models\Inscripcion;
 use App\Models\Matricula;
+use App\Models\MatriculaGestion;
 use App\Models\Mensualidad;
 use App\Models\Pago;
 use App\Models\PagoObservacion;
@@ -621,11 +622,15 @@ class Index extends Component
         $admision = null;
         $grupos = null;
         $constancia_ingreso = null;
+        $matricula_gestion = null;
+        $ciclo_actual = null;
         if($evaluacion)
         {
             $this->admitido = $persona->admitido->where('id_evaluacion', $evaluacion->id_evaluacion)->first(); // admitido de la inscripcion del usuario logueado
             if($this->admitido)
             {
+                $ciclo_actual = AdmitidoCiclo::where('id_admitido', $this->admitido->id_admitido)->where('admitido_ciclo_estado', 1)->orderBy('id_admitido_ciclo', 'desc')->first(); // ciclo actual del admitido del usuario logueado
+                // dd($ciclo_actual);
                 $admision = $this->admitido->programa_proceso->admision; // admision del admitido del usuario logueado
                 if ( $admision )
                 {
@@ -641,6 +646,11 @@ class Index extends Component
                     $grupos = ProgramaProcesoGrupo::where('id_programa_proceso', $this->admitido->id_programa_proceso)->get(); // grupos de la admision del usuario logueado
 
                     $constancia_ingreso = ConstanciaIngreso::where('id_admitido', $this->admitido->id_admitido)->first(); // constancia de ingreso del usuario logueado
+
+                    $matricula_gestion = MatriculaGestion::where('id_programa_proceso', $this->admitido ? $this->admitido->id_programa_proceso : '')
+                            ->where('matricula_gestion_estado', 1)
+                            ->orderBy('id_matricula_gestion', 'desc')
+                            ->first(); // gestion de matricula actual
                 }
             }
         }
@@ -658,6 +668,8 @@ class Index extends Component
             'admision' => $admision,
             'constancia_ingreso' => $constancia_ingreso,
             'grupos' => $grupos,
+            'matricula_gestion' => $matricula_gestion,
+            'ciclo_actual' => $ciclo_actual,
         ]);
     }
 }
