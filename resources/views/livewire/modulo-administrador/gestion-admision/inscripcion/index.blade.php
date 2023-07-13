@@ -18,8 +18,23 @@
                         <li class="breadcrumb-item text-muted">Inscripción</li>
                     </ul>
                 </div>
-                <div class="d-flex align-items-center gap-2 gap-lg-3">
-                    <a href="#ModalInscripcion" wire:click="modo()" class="btn btn-primary btn-sm hover-elevate-up" data-bs-toggle="modal" data-bs-target="#ModalInscripcion">Nuevo</a>
+                <div class="d-flex align-items-center text-center gap-2 gap-lg-3 ms-5">
+                    <button type="button" class="btn btn-primary btn-sm hover-elevate-up" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+                        <span class="svg-icon svg-icon-muted svg-icon-3"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path opacity="0.3" d="M10 4H21C21.6 4 22 4.4 22 5V7H10V4Z" fill="currentColor"/>
+                            <path opacity="0.3" d="M13 14.4V9C13 8.4 12.6 8 12 8C11.4 8 11 8.4 11 9V14.4H13Z" fill="currentColor"/>
+                            <path d="M10.4 3.60001L12 6H21C21.6 6 22 6.4 22 7V19C22 19.6 21.6 20 21 20H3C2.4 20 2 19.6 2 19V4C2 3.4 2.4 3 3 3H9.20001C9.70001 3 10.2 3.20001 10.4 3.60001ZM13 14.4V9C13 8.4 12.6 8 12 8C11.4 8 11 8.4 11 9V14.4H8L11.3 17.7C11.7 18.1 12.3 18.1 12.7 17.7L16 14.4H13Z" fill="currentColor"/>
+                            </svg>
+                        </span>
+                        Exportar
+                    </button>
+                    <div id="kt_datatable_example_export_menu" class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-200px py-4" data-kt-menu="true">
+                        <div class="menu-item px-3">
+                            <a href="#exportarExcel" wire:click="excel()" class="menu-link px-3">
+                            Exportar a Excel
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -38,15 +53,15 @@
                                     </span>
                                     Filtro
                                 </a>
-                                <div class="menu menu-sub menu-sub-dropdown w-250px w-md-300px" data-kt-menu="true" id="menu_inscripcion" wire:ignore.self>
+                                <div class="menu menu-sub menu-sub-dropdown w-250px w-md-500px" data-kt-menu="true" id="menu_inscripcion" wire:ignore.self>
                                     <div class="px-7 py-5">
                                         <div class="fs-5 text-dark fw-bold">
                                             Opciones de filtrado
                                         </div> 
                                     </div>
                                     <div class="separator border-gray-200"></div>
-                                    <div class="px-7 py-5">
-                                        <div class="mb-5">
+                                    <div class="px-7 py-5 row">
+                                        <div class="mb-5 col-md-6">
                                             <label class="form-label fw-semibold">Proceso de Admisión:</label>
                                             <div>
                                                 <select class="form-select" wire:model="proceso_filtro" id="proceso_filtro"  data-control="select2" data-placeholder="Seleccione el Proceso">
@@ -57,7 +72,7 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="mb-5">
+                                        <div class="mb-5 col-md-6">
                                             <label class="form-label fw-semibold">Modalidad del Programa:</label>
                                             <div>
                                                 <select class="form-select" wire:model="modalidad_filtro" id="modalidad_filtro" data-control="select2" data-placeholder="Seleccione la Modalidad">
@@ -68,7 +83,7 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="mb-5">
+                                        <div class="mb-5 col-md-12">
                                             <label class="form-label fw-semibold">Programa:</label>
                                             <div>
                                                 <select class="form-select" wire:model="programa_filtro" id="programa_filtro" data-control="select2" data-placeholder="Seleccione el Programa">
@@ -84,7 +99,7 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="mb-5">
+                                        <div class="mb-5 col-md-6">
                                             <label class="form-label fw-semibold">Tipo de Seguimiento:</label>
                                             <div>
                                                 <select class="form-select" wire:model="seguimiento_filtro" id="seguimiento_filtro" data-control="select2" data-placeholder="Seleccione el Seguimiento">
@@ -95,7 +110,7 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="mb-5">
+                                        <div class="mb-5 col-md-6">
                                             <label class="form-label fw-semibold">Mes:</label>
                                             <div>
                                                 <select class="form-select" wire:model="mes_filtro" id="mes_filtro" data-control="select2" data-placeholder="Seleccione el Mes">
@@ -169,7 +184,7 @@
                                                     </a>
                                                 </div>
                                                 <div class="menu-item px-3">
-                                                    <a href="#ModalInscripcion" wire:click="cargarInscripcion({{ $item->id_inscripcion }}, 2)" class="menu-link px-3" data-bs-toggle="modal" data-bs-target="#ModalInscripcion">
+                                                    <a href="#ModalInscripcionEditar" wire:click="cargarInscripcion({{ $item->id_inscripcion }}, 2)" class="menu-link px-3" data-bs-toggle="modal" data-bs-target="#ModalInscripcionEditar">
                                                         Editar
                                                     </a>
                                                 </div>
@@ -432,6 +447,85 @@
         </div>
     </div> --}}
 
+    {{-- Modal Editar Inscripcion --}}
+    <div wire:ignore.self class="modal fade" tabindex="-1" id="ModalInscripcionEditar">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">
+                        Actualizar Programa
+                    </h3>
+                    <div class="btn btn-icon btn-sm btn-active-light-danger ms-2" data-bs-dismiss="modal"
+                        aria-label="Close">
+                        <span class="svg-icon svg-icon-2hx">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <rect opacity="0.3" x="2" y="2" width="20" height="20"
+                                    rx="5" fill="currentColor" />
+                                <rect x="7" y="15.3137" width="12" height="2" rx="1"
+                                    transform="rotate(-45 7 15.3137)" fill="currentColor" />
+                                <rect x="8.41422" y="7" width="12" height="2" rx="1"
+                                    transform="rotate(45 8.41422 7)" fill="currentColor" />
+                            </svg>
+                        </span>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <form autocomplete="off" class="row g-5">
+                        <div class="col-md-12">
+                            <label for="modalidad" class="form-label">
+                                Modalidad
+                            </label>
+                            <select class="form-select" wire:model="modalidad" id="modalidad" data-control="select2" data-placeholder="Seleccione la Modalidad">
+                                <option></option>
+                                @foreach ($modalidadesModal as $item)
+                                    @php
+                                        $modalidadAsignadas = App\Models\Modalidad::where('id_modalidad', $item)->first();
+                                    @endphp
+                                    <option value="{{ $item }}">{{ $modalidadAsignadas->modalidad }}</option>
+                                @endforeach
+                            </select>
+                            @error('modalidad')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="col-md-12">
+                            <label for="programa" class="form-label">
+                                Programa
+                            </label>
+                            <select class="form-select" wire:model="programa" id="programa" data-control="select2" data-placeholder="Seleccione el Programa">
+                                <option></option>
+                                @if($modalidad)
+                                    @foreach ($programasModal as $item)
+                                        @if($item->programa_proceso_estado == 1)
+                                            <option value="{{ $item->id_programa }}">{{ $item->programa }} EN {{ $item->subprograma }} @if($item->mencion != '') CON MENCION EN {{ $item->mencion }}@endif</option>
+                                        @endif
+                                    @endforeach
+                                @endif
+                            </select>
+                            @error('programa')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal" wire:click="limpiar()">
+                        Cerrar
+                    </button>
+                    <button type="button" wire:click="actualizarInscripcion" class="btn btn-primary" style="width: 150px" wire:loading.attr="disabled" wire:target="actualizarInscripcion">
+                        <div wire:loading.remove wire:target="actualizarInscripcion">
+                            Guardar
+                        </div>
+                        <div wire:loading wire:target="actualizarInscripcion">
+                            Procesando <span class="spinner-border spinner-border-sm align-middle ms-2">
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 @push('scripts')
     <script>
@@ -635,5 +729,88 @@
                 });
             });
         });
+
+
+        //Select2 de Modal Inscripcion
+        //Filtro de modalidad de select2
+        $(document).ready(function () {
+            $('#modalidad').select2({
+                placeholder: 'Seleccione',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando...";
+                    }
+                }
+            });
+            $('#modalidad').on('change', function(){
+                @this.set('modalidad', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#modalidad').select2({
+                    placeholder: 'Seleccione',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando...";
+                        }
+                    }
+                });
+                $('#modalidad').on('change', function(){
+                    @this.set('modalidad', this.value);
+                });
+            });
+        });
+
+        //Filtro de programa de select2
+        $(document).ready(function () {
+            $('#programa').select2({
+                placeholder: 'Seleccione',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando...";
+                    }
+                }
+            });
+            $('#programa').on('change', function(){
+                @this.set('programa', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#programa').select2({
+                    placeholder: 'Seleccione',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando...";
+                        }
+                    }
+                });
+                $('#programa').on('change', function(){
+                    @this.set('programa', this.value);
+                });
+            });
+        });
+
     </script>
 @endpush

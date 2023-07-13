@@ -2,18 +2,19 @@
 
 @section('content')
 
-@livewire('modulo-administrador.gestion-admision.admision.index')
+@livewire('modulo-administrador.estudiante.index')
 
 @endsection
 
 @section('javascript')
 <script>
+
     window.addEventListener('modal', event => {   
         $(event.detail.titleModal).modal('hide');
     })
 
     // Alerta para confirmacion
-	window.addEventListener('alerta-admision', event => {
+	window.addEventListener('alerta-canal-pago', event => {
         Swal.fire({
             title: event.detail.title,
             text: event.detail.text,
@@ -21,16 +22,16 @@
             buttonsStyling: false,
             confirmButtonText: event.detail.confirmButtonText,
             customClass: {
-                confirmButton: "btn btn-"+event.detail.color+" hover-elevate-up", // Color del boton de confirmación y Hover
+                confirmButton: "btn btn-"+event.detail.color+" hover-elevate-up", // Hover y color del boton de confirmación
             }
         });
     });
 
-    //alerta 
+    //alerta
     window.addEventListener('alertaConfirmacion', event => {
         Swal.fire({
             title: event.detail.title,
-            html: event.detail.text,
+            text: event.detail.text,
             icon: event.detail.icon,
             showCancelButton: true,
             confirmButtonText: event.detail.confirmButtonText,
@@ -41,9 +42,10 @@
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                Livewire.emitTo('modulo-administrador.gestion-admision.admision.index', event.detail.metodo, event.detail.id);
+                Livewire.emitTo('modulo-administrador.estudiante.index', event.detail.metodo, event.detail.id);
             }
         })
     })
+
 </script>
 @endsection

@@ -5,6 +5,7 @@ use App\Http\Controllers\ModuloAdministrador\AdmitidoController;
 use App\Http\Controllers\ModuloAdministrador\CanalPagoController;
 use App\Http\Controllers\ModuloAdministrador\ConceptoPagoController;
 use App\Http\Controllers\ModuloAdministrador\DashboardController;
+use App\Http\Controllers\ModuloAdministrador\EstudianteController;
 use App\Http\Controllers\ModuloAdministrador\ExpedienteController;
 use App\Http\Controllers\ModuloAdministrador\InscripcionController;
 use App\Http\Controllers\ModuloAdministrador\InscripcionPagoController;
@@ -30,7 +31,7 @@ Route::get('/trabajador', [TrabajadorController::class, 'index'])->middleware(['
 
 //Estudiantes
 //Ruta para ir a la vista de Estudiantes
-Route::get('/estudiante', [PersonaController::class, 'index'])->middleware(['auth.usuario'])->name('administrador.estudiante'); // No hay controlador
+Route::get('/estudiante', [EstudianteController::class, 'index'])->middleware(['auth.usuario'])->name('administrador.estudiante'); // No hay controlador
 
 //Gestion Admision
 //Ruta para ir a la vista de Admision en la Gestion Admision

@@ -119,9 +119,37 @@ class GestionPlanProceso extends Component
     public function cambiarEstado(ProgramaPlan $programaPlan)
     {
         if ($programaPlan->programa_plan_estado == 1) {//Si el estado es 1 (activo), cambiar a 0 (inactivo)
+            //Validar si algun programa proceso esta activo
+            $programaProcesoValidar = ProgramaProceso::where('id_programa_plan', '=', $programaPlan->id_programa_plan)
+                                                        ->where('programa_proceso_estado', '=', 1)
+                                                        ->first();
+            if ($programaProcesoValidar) {//Si algun programa proceso esta activo, mostrar alerta
+                $this->alertaProgramaPlan('¡Error!', 'El plan '.$programaPlan->plan->plan.' no puede ser desactivado porque ya existe un proceso activo en el plan del programa.', 'error', 'Aceptar', 'danger');
+                //Limpia los campos del formulario
+                $this->limpiar();
+                //Cerramos el modal
+                $this->dispatchBrowserEvent('modal', [
+                    'titleModal' => '#modalPlanProceso',
+                ]);
+                return;
+            }
             $programaPlan->programa_plan_estado = 0;
-        } else {//Si el estado es 2 (inactivo), cambiar a 1 (activo)
-            $programaPlan->programa_plan_estado = 1;
+        } else {//Si el estado es 0 (inactivo), cambiar a 1 (activo)
+            //Validar si algun programa plan esta activo
+            $programaPlanValidar = ProgramaPlan::where('id_programa', '=', $programaPlan->id_programa)
+                                                ->where('programa_plan_estado', '=', 1)
+                                                ->first();
+            if ($programaPlanValidar) {//Si algun programa plan esta activo, mostrar alerta
+                $this->alertaProgramaPlan('¡Error!', 'El plan '.$programaPlan->plan->plan.' no puede ser activado porque ya existe un plan activo en el programa.', 'error', 'Aceptar', 'danger');
+                //Limpia los campos del formulario
+                $this->limpiar();
+                //Cerramos el modal
+                $this->dispatchBrowserEvent('modal', [
+                    'titleModal' => '#modalPlanProceso',
+                ]);
+                return;
+            }
+            $programaPlan->programa_plan_estado = 1;//Si no hay ningun programa plan activo, cambiar el estado a 1 (activo)
         }
 
         $programaPlan->save();//Actualizar el estado del programa
@@ -191,7 +219,25 @@ class GestionPlanProceso extends Component
         if ($programaProceso->programa_proceso_estado == 1) {//Si el estado es 1 (activo), cambiar a 0 (inactivo)
             $programaProceso->programa_proceso_estado = 0;
         } else {//Si el estado es 2 (inactivo), cambiar a 1 (activo)
-            $programaProceso->programa_proceso_estado = 1;
+            //Validar si algun programa proceso esta activo o si el programa plan esta inactivo
+            $programaProcesoValidar = ProgramaProceso::where('id_programa_plan', '=', $programaProceso->id_programa_plan)
+                                                        ->where('programa_proceso_estado', '=', 1)
+                                                        ->first();
+            $programaPlanValidar = ProgramaPlan::where('id_programa_plan', '=', $programaProceso->id_programa_plan)
+                                                ->where('programa_plan_estado', '=', 0)
+                                                ->first();
+            if ($programaProcesoValidar) {//Si algun programa proceso esta activo
+                $this->alertaProgramaPlan('¡Error!', 'El proceso '.$programaProceso->admision->admision.' no puede ser activado porque ya existe un proceso activo en el plan del programa.', 'error', 'Aceptar', 'danger');
+                //Limpia los campos del formulario
+                $this->limpiarProcesos();
+                return;
+            }else if($programaPlanValidar){//Si el programa plan esta inactivo
+                $this->alertaProgramaPlan('¡Error!', 'El proceso '.$programaProceso->admision->admision.' no puede ser activado porque el plan del programa se encuentra inactivo.', 'error', 'Aceptar', 'danger');
+                //Limpia los campos del formulario
+                $this->limpiarProcesos();
+                return;
+            }
+            $programaProceso->programa_proceso_estado = 1;//Si no hay ningun programa proceso activo, cambiar el estado a 1 (activo)
         }
 
         $programaProceso->save();//Actualizar el estado del programa
@@ -225,7 +271,21 @@ class GestionPlanProceso extends Component
             $programaProceso = new ProgramaProceso();
             $programaProceso->id_admision = $this->proceso_admision;
             $programaProceso->id_programa_plan = $this->id_programa_plan;
-            $programaProceso->programa_proceso_estado = 1;
+            //Validar si el estao del plan del programa es 0 (inactivo), para asignar el estado del proceso en 0 (inactivo)
+            $programaPlan = ProgramaPlan::find($this->id_programa_plan);
+            if ($programaPlan->programa_plan_estado == 0) {
+                $programaProceso->programa_proceso_estado = 0;
+            } else {
+                $programaProceso->programa_proceso_estado = 1;
+            }
+            //Desactivar el proceso anterior
+            $programaProcesoAnterior = ProgramaProceso::where('id_programa_plan', '=', $this->id_programa_plan)
+                                                        ->where('programa_proceso_estado', '=', 1)
+                                                        ->first();
+            if ($programaProcesoAnterior) {//Si el programa proceso existe, cambiar el estado a 0 (inactivo)
+                $programaProcesoAnterior->programa_proceso_estado = 0;
+                $programaProcesoAnterior->save();
+            }
             $programaProceso->save();
 
             //Mostrar alerta de confirmacion
@@ -332,6 +392,23 @@ class GestionPlanProceso extends Component
                 ]);
             } else {//Si el programa plan no existe, guardarlo
                 
+                //Cambiar el estado del programa plan anterior a 0 (inactivo)
+                $programaPlan = ProgramaPlan::where('id_programa', '=', $this->id_programa)
+                                            ->where('programa_plan_estado', '=', 1)
+                                            ->first();
+                if ($programaPlan) {//Si el programa plan existe, cambiar el estado a 0 (inactivo)
+                    $programaPlan->programa_plan_estado = 0;
+                    $programaPlan->save();
+                    //Cambiar el estado del programa proceso anterior a 0 (inactivo)
+                    $programaProceso = ProgramaProceso::where('id_programa_plan', '=', $programaPlan->id_programa_plan)
+                                                        ->where('programa_proceso_estado', '=', 1)
+                                                        ->first();
+                    if ($programaProceso) {//Si el programa proceso existe, cambiar el estado a 0 (inactivo)
+                        $programaProceso->programa_proceso_estado = 0;
+                        $programaProceso->save();
+                    }
+                }
+
                 //Generar el codigo del programa
                 $codigo = '';
                 $numPlan = Plan::find($this->plan)->plan;

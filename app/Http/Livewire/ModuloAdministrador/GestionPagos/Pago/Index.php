@@ -115,6 +115,7 @@ class Index extends Component
     //Filtra los pagos por proceso
     public function filtrar()
     {
+        $this->resetear_filtro();
         $this->filtroProceso = $this->filtro_proceso;
     }
 

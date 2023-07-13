@@ -216,9 +216,9 @@
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title">
+                    <h2 class="modal-title">
                         {{ $titulo }}
-                    </h3>
+                    </h2>
                     <div class="btn btn-icon btn-sm btn-active-light-danger ms-2" data-bs-dismiss="modal"
                         aria-label="Close">
                         <span class="svg-icon svg-icon-2hx">
