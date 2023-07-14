@@ -51,4 +51,9 @@ class PlataformaController extends Controller
     {
         return view('modulo-plataforma.matriculas.index');
     }
+
+    public function record_academico()
+    {
+        return view('modulo-plataforma.record-academico.index');
+    }
 }
