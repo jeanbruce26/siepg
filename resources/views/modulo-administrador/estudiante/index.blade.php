@@ -14,7 +14,7 @@
     })
 
     // Alerta para confirmacion
-	window.addEventListener('alerta-canal-pago', event => {
+	window.addEventListener('alerta-estudiante', event => {
         Swal.fire({
             title: event.detail.title,
             text: event.detail.text,
