@@ -48,14 +48,14 @@
                                     <td class="w-95px w-sm-125px">
                                         <div class="d-flex align-items-center">
                                             <i class="ki-outline ki-teacher me-2 fs-3"></i>
-                                            MAESTRIA
+                                            {{ $admitido->programa_proceso->programa_plan->programa->programa }}
                                         </div>
                                     </td>
                                     <td class="w-10px">
                                         :
                                     </td>
                                     <td>
-                                        GESTION PUBLICA
+                                        {{ $admitido->programa_proceso->programa_plan->programa->subprograma }} {{ $admitido->programa_proceso->programa_plan->programa->mencion ? 'CON MENCION EN '.$admitido->programa_proceso->programa_plan->programa->mencion : '' }}
                                     </td>
                                 </tr>
                             </table>
@@ -71,7 +71,7 @@
                                         :
                                     </td>
                                     <td>
-                                        A
+                                        {{ $ultima_matricula->programa_proceso_grupo->grupo_detalle }}
                                     </td>
                                 </tr>
                             </table>
@@ -92,7 +92,7 @@
                                             :
                                         </td>
                                         <td>
-                                            MENDOZA FLORES JAMT AMERICO
+                                            {{ $admitido->persona->nombre_completo }}
                                         </td>
                                     </tr>
                                 </table>
@@ -108,7 +108,7 @@
                                             :
                                         </td>
                                         <td>
-                                            0M0123123123
+                                            {{ $admitido->admitido_codigo }}
                                         </td>
                                     </tr>
                                 </table>
@@ -125,7 +125,7 @@
                                         :
                                     </td>
                                     <td>
-                                        12/12/2021
+                                        {{ date('d/m/Y') }}
                                     </td>
                                 </tr>
                             </table>
@@ -142,7 +142,7 @@
                         <div class="card shadow-sm mb-5">
                             <div class="px-10 pt-5 pb-2 border-bottom mb-0">
                                 <h3 class="card-title fs-2" style="font-weight: 700">
-                                    CICLO {{ $item->ciclo }}
+                                    CICLO - {{ $item->ciclo }}
                                 </h3>
                             </div>
                             <div class="card-body">
