@@ -16,6 +16,8 @@ class Plan extends Model
         'plan_codigo',
         'plan',
         'plan_estado',
+        'plan_resolucion',
+        'plan_fecha_resolucion'
     ];
 
     public $timestamps = false;
