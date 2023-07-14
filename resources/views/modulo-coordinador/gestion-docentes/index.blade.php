@@ -1,5 +1,5 @@
 @extends('layouts.modulo-coordinador')
-@section('title', 'Gestión de Docentes - Direccitor de Unidad - Escuela de Posgrado')
+@section('title', 'Gestión de Docentes - Director de Unidad - Escuela de Posgrado')
 @section('content')
 @livewire('modulo-coordinador.gestion-docentes.index')
 @endsection

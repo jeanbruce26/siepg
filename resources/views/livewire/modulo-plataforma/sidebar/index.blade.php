@@ -152,6 +152,20 @@
                             </div>
                         @endif
                     </div>
+                    <div class="menu-item">
+                        <a class="menu-link {{ request()->routeIs('plataforma.record-academico') ? 'active' : '' }}"
+                            href="{{ route('plataforma.record-academico') }}">
+                            <span class="menu-icon">
+                                <i class="ki-duotone ki-book-open fs-1">
+                                    <i class="path1"></i>
+                                    <i class="path2"></i>
+                                    <i class="path3"></i>
+                                    <i class="path4"></i>
+                                </i>
+                            </span>
+                            <span class="menu-title fw-semibold fs-4">Record Académico</span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

@@ -15,8 +15,8 @@
             </div>
             @if ($admitido)
                 {{-- verificamos si la admision existe y si es la activa a la que le pertenece al usuario admitido --}}
-                @if ($admision)
-                    @if ($admision->admision_fecha_inicio_matricula <= date('Y-m-d') && $admision->admision_fecha_fin_matricula_extemporanea >= date('Y-m-d'))
+                @if ($admision || $matricula_gestion)
+                    @if ($admision->admision_fecha_inicio_matricula <= date('Y-m-d') && $admision->admision_fecha_fin_matricula_extemporanea >= date('Y-m-d') || $matricula_gestion->matricula_gestion_fecha_inicio <= date('Y-m-d') && $matricula_gestion->matricula_gestion_fecha_extemporanea_fin >= date('Y-m-d'))
                         <div class="d-flex align-items-center gap-2 gap-lg-3">
                             <a href="#modal_pago_plataforma" wire:click="modo" class="btn fw-bold btn-primary" data-bs-toggle="modal" data-bs-target="#modal_pago_plataforma">
                                 Nuevo Pago
@@ -24,6 +24,15 @@
                         </div>
                     @endif
                 @endif
+                {{-- @if ($matricula_gestion)
+                    @if ($matricula_gestion->matricula_gestion_fecha_inicio <= date('Y-m-d') && $matricula_gestion->matricula_gestion_fecha_extemporanea_fin >= date('Y-m-d'))
+                        <div class="d-flex align-items-center gap-2 gap-lg-3">
+                            <a href="#modal_pago_plataforma" wire:click="modo" class="btn fw-bold btn-primary" data-bs-toggle="modal" data-bs-target="#modal_pago_plataforma">
+                                Nuevo Pago
+                            </a>
+                        </div>
+                    @endif
+                @endif --}}
             @endif
         </div>
     </div>

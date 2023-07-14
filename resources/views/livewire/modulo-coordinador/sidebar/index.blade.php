@@ -65,6 +65,19 @@
                     </a>
                 </div>
                 <div class="menu-item">
+                    <a class="menu-link {{ request()->routeIs('coordinador.matriculas') ? 'active' : '' }}" href="{{ route('coordinador.matriculas') }}">
+                        <span class="menu-icon">
+                            <i class="ki-duotone ki-teacher fs-1">
+                                <i class="path1"></i>
+                                <i class="path2"></i>
+                            </i>
+                        </span>
+                        <span class="menu-title fw-semibold fs-4">
+                            Gestión de Matriculas
+                        </span>
+                    </a>
+                </div>
+                <div class="menu-item">
                     <a class="menu-link {{ request()->routeIs('coordinador.reporte-pagos') || request()->routeIs('coordinador.reporte-programas') ? 'active' : '' }}" href="{{ route('coordinador.reporte-pagos') }}">
                         <span class="menu-icon">
                             <i class="ki-duotone ki-financial-schedule fs-1">

@@ -217,4 +217,9 @@ class CoordinadorController extends Controller
             'id_programa_proceso' => $id_programa_proceso
         ]);
     }
+
+    public function matriculas()
+    {
+        return view('modulo-coordinador.gestion-matriculas.index');
+    }
 }

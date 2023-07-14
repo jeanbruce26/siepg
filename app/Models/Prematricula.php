@@ -15,7 +15,8 @@ class Prematricula extends Model
         'id_prematricula',
         'prematricula_fecha_creacion',
         'prematricula_estado',
-        'id_admitido'
+        'id_admitido',
+        'id_ciclo'
     ];
 
     public $timestamps = false;

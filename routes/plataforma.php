@@ -29,3 +29,6 @@ Route::get('/constancia-ingreso', [PlataformaController::class, 'constancia'])->
 
 // ruta para ir ver las matriculas
 Route::get('/matriculas', [PlataformaController::class, 'matriculas'])->middleware(['auth.plataforma'])->name('plataforma.matriculas');
+
+// ruta para ir ver el record academico
+Route::get('/record-academico', [PlataformaController::class, 'record_academico'])->middleware(['auth.plataforma'])->name('plataforma.record-academico');
