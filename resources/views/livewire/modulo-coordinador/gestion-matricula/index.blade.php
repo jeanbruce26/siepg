@@ -62,7 +62,7 @@
                                         </span>
                                         Filtrar
                                     </button>
-                                    {{-- <div class="menu menu-sub menu-sub-dropdown w-300px w-md-325px"
+                                    <div class="menu menu-sub menu-sub-dropdown w-300px w-md-325px"
                                         data-kt-menu="true" id="filtros_docentes" wire:ignore.self>
                                         <div class="px-7 py-5">
                                             <div class="fs-4 text-dark fw-bold">
@@ -75,32 +75,53 @@
                                         <form class="px-7 py-5" wire:submit.prevent="aplicar_filtro">
                                             <div class="mb-5">
                                                 <label class="form-label fw-semibold">
-                                                    Grado Académico:
+                                                    Proceso Académico:
                                                 </label>
                                                 <div>
-                                                    <select class="form-select" wire:model="filtro_grado_academico"
-                                                        id="filtro_grado_academico" data-control="select2"
-                                                        data-placeholder="Seleccione su grado académico">
-                                                        @foreach ($grados_academicos as $item)
+                                                    <select class="form-select" wire:model="filtro_proceso"
+                                                        id="filtro_proceso" data-control="select2"
+                                                        data-placeholder="Seleccione su proceso académico">
+                                                        @foreach ($admisiones as $item)
                                                             <option value=""></option>
-                                                            <option value="{{ $item->id_grado_academico }}">
-                                                                {{ $item->grado_academico }}</option>
+                                                            <option value="{{ $item->id_admision }}">
+                                                                PROCESO {{ $item->admision_año }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="mb-5">
+                                                <label class="form-label fw-semibold">
+                                                    Programa Académico:
+                                                </label>
+                                                <div>
+                                                    <select class="form-select" wire:model="filtro_programa"
+                                                        id="filtro_programa" data-control="select2"
+                                                        data-placeholder="Seleccione el programa">
+                                                        @foreach ($programas_model_filtro as $item)
+                                                            <option value="{{ $item->id_programa_proceso }}">
+                                                                @if ($item->mencion)
+                                                                    MENCION EN {{ $item->mencion }}
+                                                                @else
+                                                                    {{ $item->programa }} EN {{ $item->subprograma }}
+                                                                @endif
+                                                            </option>
                                                         @endforeach
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="mb-10">
                                                 <label class="form-label fw-semibold">
-                                                    Tipo de Docente:
+                                                    Ciclo Académico:
                                                 </label>
                                                 <div>
-                                                    <select class="form-select" wire:model="filtro_tipo_docente"
-                                                        id="filtro_tipo_docente" data-control="select2"
-                                                        data-placeholder="Seleccione el tipo de docente">
-                                                        @foreach ($tipos_docentes as $item)
-                                                            <option value=""></option>
-                                                            <option value="{{ $item->id_tipo_docente }}">
-                                                                {{ $item->tipo_docente }}</option>
+                                                    <select class="form-select" wire:model="filtro_ciclo"
+                                                        id="filtro_ciclo" data-control="select2"
+                                                        data-placeholder="Seleccione el ciclo">
+                                                        @foreach ($ciclos_model_filtro as $item)
+                                                            <option value="{{ $item->id_ciclo }}">
+                                                                CICLO {{ $item->ciclo }}
+                                                            </option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -113,7 +134,7 @@
                                                     data-kt-menu-dismiss="true">Aplicar</button>
                                             </div>
                                         </form>
-                                    </div> --}}
+                                    </div>
                                 </div>
                                 <div class="col-md-4 px-md-3 mb-2 mb-md-0"></div>
                                 <div class="col-md-4 ps-md-3">
@@ -492,7 +513,7 @@
                 });
             });
         });
-        // programa_academico select2
+        // ciclo select2
         $(document).ready(function() {
             $('#ciclo').select2({
                 placeholder: 'Seleccione su ciclo',
@@ -528,6 +549,123 @@
                 });
                 $('#ciclo').on('change', function() {
                     @this.set('ciclo', this.value);
+                });
+            });
+        });
+        // filtro_proceso select2
+        $(document).ready(function() {
+            $('#filtro_proceso').select2({
+                placeholder: 'Seleccione su proceso académico',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function() {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function() {
+                        return "Buscando..";
+                    }
+                }
+            });
+            $('#filtro_proceso').on('change', function() {
+                @this.set('filtro_proceso', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#filtro_proceso').select2({
+                    placeholder: 'Seleccione su proceso académico',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function() {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function() {
+                            return "Buscando..";
+                        }
+                    }
+                });
+                $('#filtro_proceso').on('change', function() {
+                    @this.set('filtro_proceso', this.value);
+                });
+            });
+        });
+        // filtro_programa select2
+        $(document).ready(function() {
+            $('#filtro_programa').select2({
+                placeholder: 'Seleccione su programa académico',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function() {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function() {
+                        return "Buscando..";
+                    }
+                }
+            });
+            $('#filtro_programa').on('change', function() {
+                @this.set('filtro_programa', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#filtro_programa').select2({
+                    placeholder: 'Seleccione su programa académico',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function() {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function() {
+                            return "Buscando..";
+                        }
+                    }
+                });
+                $('#filtro_programa').on('change', function() {
+                    @this.set('filtro_programa', this.value);
+                });
+            });
+        });
+        // filtro_ciclo select2
+        $(document).ready(function() {
+            $('#filtro_ciclo').select2({
+                placeholder: 'Seleccione su ciclo académico',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function() {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function() {
+                        return "Buscando..";
+                    }
+                }
+            });
+            $('#filtro_ciclo').on('change', function() {
+                @this.set('filtro_ciclo', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#filtro_ciclo').select2({
+                    placeholder: 'Seleccione su ciclo académico',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function() {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function() {
+                            return "Buscando..";
+                        }
+                    }
+                });
+                $('#filtro_ciclo').on('change', function() {
+                    @this.set('filtro_ciclo', this.value);
                 });
             });
         });

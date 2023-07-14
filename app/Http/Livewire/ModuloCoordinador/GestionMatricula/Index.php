@@ -27,6 +27,23 @@ class Index extends Component
     public $fecha_inicio, $fecha_fin, $fecha_extemporanea_inicio, $fecha_extemporanea_fin;
     public $alumnos_minimos;
 
+    // variables de filtro
+    public $filtro_proceso;
+    public $proceso_data;
+    public $filtro_programa;
+    public $programa_data;
+    public $filtro_ciclo;
+    public $ciclo_data;
+
+    protected $queryString = [
+        'filtro_proceso' => ['except' => ''],
+        'proceso_data' => ['except' => ''],
+        'filtro_programa' => ['except' => ''],
+        'programa_data' => ['except' => ''],
+        'filtro_ciclo' => ['except' => ''],
+        'ciclo_data' => ['except' => ''],
+    ];
+
     public function mount()
     {
         $this->coordinador = Coordinador::where('id_trabajador',auth('usuario')->user()->trabajador_tipo_trabajador->id_trabajador)->first();
@@ -66,6 +83,25 @@ class Index extends Component
         );
         $this->resetErrorBag();
         $this->resetValidation();
+    }
+
+    public function aplicar_filtro()
+    {
+        $this->proceso_data = $this->filtro_proceso;
+        $this->programa_data = $this->filtro_programa;
+        $this->ciclo_data = $this->filtro_ciclo;
+    }
+
+    public function resetear_filtro()
+    {
+        $this->reset([
+            'filtro_proceso',
+            'proceso_data',
+            'filtro_programa',
+            'programa_data',
+            'filtro_ciclo',
+            'ciclo_data'
+        ]);
     }
 
     public function cargar_matricula(MatriculaGestion $matricula_gestion)
@@ -155,7 +191,11 @@ class Index extends Component
 
     public function render()
     {
-        $matriculas = MatriculaGestion::orderBy('id_matricula_gestion', 'desc')->paginate(10);
+        $matriculas = MatriculaGestion::where('id_admision', $this->proceso_data ? '=' : '!=', $this->proceso_data)
+            ->where('id_programa_proceso', $this->programa_data ? '=' : '!=', $this->programa_data)
+            ->where('id_ciclo', $this->ciclo_data ? '=' : '!=', $this->ciclo_data)
+            ->orderBy('id_matricula_gestion', 'desc')
+            ->paginate(10);
 
         $admisiones = Admision::orderBy('id_admision', 'desc')->get();
 
@@ -182,6 +222,7 @@ class Index extends Component
                 ->join('programa', 'programa.id_programa', 'programa_plan.id_programa')
                 ->where('programa_proceso.id_programa_proceso', $this->programa_academico)
                 ->first();
+
             if($programa)
             {
                 $ciclos_model = Ciclo::where(function ($query) use ($programa){
@@ -202,11 +243,61 @@ class Index extends Component
             $this->ciclo = null;
         }
 
+        if ($this->filtro_proceso)
+        {
+            $programas_model_filtro = ProgramaProceso::join('programa_plan', 'programa_plan.id_programa_plan', 'programa_proceso.id_programa_plan')
+                ->join('programa', 'programa.id_programa', 'programa_plan.id_programa')
+                ->where('programa_proceso.id_admision', $this->filtro_proceso)
+                ->where('programa.id_facultad', $this->coordinador->id_facultad)
+                ->get();
+            $ciclos_model_filtro = collect();
+        }
+        else
+        {
+            $programas_model_filtro = collect();
+            $this->filtro_programa = null;
+            $this->programa_data = null;
+            $ciclos_model_filtro = collect();
+            $this->filtro_ciclo = null;
+            $this->ciclo_data = null;
+        }
+
+        if ($this->filtro_programa)
+        {
+            $programa = ProgramaProceso::join('programa_plan', 'programa_plan.id_programa_plan', 'programa_proceso.id_programa_plan')
+                ->join('programa', 'programa.id_programa', 'programa_plan.id_programa')
+                ->where('programa_proceso.id_programa_proceso', $this->filtro_programa)
+                ->first();
+
+            if($programa)
+            {
+                $ciclos_model_filtro = Ciclo::where(function ($query) use ($programa){
+                                            $query->where('ciclo_programa', $programa->programa_tipo)
+                                                ->orWhere('ciclo_programa', 0);
+                                        })
+                                        ->get();
+            }
+            else
+            {
+                $ciclos_model_filtro = collect();
+                $this->filtro_ciclo = null;
+                $this->ciclo_data = null;
+            }
+        }
+        else
+        {
+            $ciclos_model_filtro = collect();
+            $this->filtro_ciclo = null;
+            $this->ciclo_data = null;
+        }
+
         return view('livewire.modulo-coordinador.gestion-matricula.index', [
             'matriculas' => $matriculas,
             'admisiones' => $admisiones,
             'programas_model' => $programas_model,
-            'ciclos_model' => $ciclos_model
+            'programas_model_filtro' => $programas_model_filtro,
+            'ciclos_model' => $ciclos_model,
+            'ciclos_model_filtro' => $ciclos_model_filtro
         ]);
     }
 }
