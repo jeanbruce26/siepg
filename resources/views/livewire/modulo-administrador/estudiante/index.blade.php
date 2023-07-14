@@ -403,6 +403,9 @@
                                             @enderror
                                         @else
                                             <input type="number" wire:model="celular_opcional" class="form-control @error('celular_opcional') is-invalid @enderror" id="celular_opcional" placeholder="Ingrese número opcional" {{ $modo == 3 ? 'readonly' : '' }}>
+                                            @error('celular_opcional')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
                                         @endif
                                     </div>
                                 @endif
@@ -451,8 +454,12 @@
                                             @error('correo_opcional')
                                                 <span class="text-danger">{{ $message }}</span>
                                             @enderror
+                                            
                                         @else
                                             <input type="email" wire:model="correo_opcional" class="form-control @error('correo_opcional') is-invalid @enderror" id="correo_opcional" placeholder="Ingrese correo opcional" {{ $modo == 3 ? 'readonly' : '' }}>
+                                            @error('correo_opcional')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
                                         @endif
                                     </div>
                                 @endif
@@ -460,7 +467,7 @@
                                 <div class="col-md-12 mt-8">
                                     <span class="col-12 fw-bold text-gray-800 fs-3">
                                         INFORMACIÓN DE DIRECCIÓN Y LUGAR DE NACIMIENTO
-                                    </span>
+                                    </span>                                    
                                 </div>
                                 <div class="col-md-12">
                                     <label for="ubigeo_direccion" class="{{ $modo != 3 ? 'required' : ''}} form-label">
@@ -484,8 +491,24 @@
                                         @error('ubigeo_direccion')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
+                                        <div class="mt-1 text-muted">
+                                            <strong>Nota:</strong> Si es de otro país, ingrese "OTRO" en el campo de ubigeo con el código de ubigeo 000000
+                                        </div>
                                     @endif
                                 </div>
+                                @if($pais_direccion_estado == true)
+                                    <div class="col-md-12">
+                                        <label for="pais_direccion" class="{{ $modo != 3 ? 'required' : ''}} form-label">
+                                            País de Dirección
+                                        </label>
+                                        <input type="text" wire:model="pais_direccion"
+                                            class="form-control @error('pais_direccion') is-invalid @enderror"
+                                            placeholder="Ingrese su país de dirección" id="pais_direccion" @if($modo == 3) readonly @endif />
+                                        @error('pais_direccion')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                @endif
                                 <div class="col-md-12">
                                     <label for="direccion" class="{{ $modo != 3 ? 'required' : ''}} form-label">
                                         Dirección
@@ -519,8 +542,24 @@
                                         @error('ubigeo_nacimiento')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
+                                        <div class="mt-1 text-muted">
+                                            <strong>Nota:</strong> Si es de otro país, ingrese "OTRO" en el campo de ubigeo con el código de ubigeo 000000
+                                        </div>
                                     @endif
                                 </div>
+                                @if($pais_nacimiento_estado == true)
+                                    <div class="col-md-12">
+                                        <label for="pais_nacimiento" class="{{ $modo != 3 ? 'required' : ''}} form-label">
+                                            País de Nacimiento
+                                        </label>
+                                        <input type="text" wire:model="pais_nacimiento"
+                                            class="form-control @error('pais_nacimiento') is-invalid @enderror"
+                                            placeholder="Ingrese su país de nacimiento" id="pais_nacimiento" @if($modo == 3) readonly @endif />
+                                        @error('pais_nacimiento')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                @endif
 
                                 <div class="col-md-12 mt-8">
                                     <span class="col-12 fw-bold text-gray-800 fs-3">
@@ -619,11 +658,11 @@
                         <button type="button" class="btn btn-light" data-bs-dismiss="modal" wire:click="limpiar()">
                             Cerrar
                         </button>
-                        <button type="button" wire:click="guardarPrograma" class="btn btn-primary" style="width: 150px" wire:loading.attr="disabled" wire:target="guardarPrograma">
-                            <div wire:loading.remove wire:target="guardarPrograma">
+                        <button type="button" wire:click="guardarEstudiante" class="btn btn-primary" style="width: 150px" wire:loading.attr="disabled" wire:target="guardarEstudiante">
+                            <div wire:loading.remove wire:target="guardarEstudiante">
                                 Guardar
                             </div>
-                            <div wire:loading wire:target="guardarPrograma">
+                            <div wire:loading wire:target="guardarEstudiante">
                                 Procesando <span class="spinner-border spinner-border-sm align-middle ms-2">
                             </div>
                         </button>
