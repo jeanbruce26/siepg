@@ -4,6 +4,7 @@ namespace App\Http\Livewire\ModuloPlataforma\RecordAcademico;
 
 use App\Models\Admitido;
 use App\Models\Ciclo;
+use App\Models\Matricula;
 use App\Models\Persona;
 use App\Models\ProgramaProceso;
 use Livewire\Component;
@@ -14,6 +15,7 @@ class Index extends Component
     public $admitido; // admitido del usuario logueado
     public $programa; // programa del usuario logueado
     public $ciclos; // ciclos del usuario logueado
+    public $ultima_matricula; // ultima matricula del usuario logueado
 
     public function mount()
     {
@@ -30,6 +32,7 @@ class Index extends Component
                 $query->where('ciclo_programa', 0)
                     ->orWhere('ciclo_programa', $this->programa->programa_tipo);
             })->orderBy('id_ciclo', 'asc')->get(); // ciclos del usuario logueado
+        $this->ultima_matricula = Matricula::where('id_admitido', $this->admitido->id_admitido)->orderBy('id_matricula', 'desc')->first(); // ultima matricula del usuario logueado
     }
 
     public function render()
