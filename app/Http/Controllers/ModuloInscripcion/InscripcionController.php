@@ -44,6 +44,11 @@ class InscripcionController extends Controller
         ]);
     }
 
+    public function registro_alumnos()
+    {
+        return view('modulo-inscripcion.registro-alumnos.index');
+    }
+
     public function gracias($id_inscripcion)
     {
         $inscripcion = Inscripcion::find($id_inscripcion);
