@@ -51,26 +51,26 @@
                                             {{ $admitido->programa_proceso->programa_plan->programa->programa }}
                                         </div>
                                     </td>
-                                    <td class="w-10px">
+                                    <td class="w-15px">
                                         :
                                     </td>
-                                    <td>
+                                    <td class="fw-semibold">
                                         {{ $admitido->programa_proceso->programa_plan->programa->subprograma }} {{ $admitido->programa_proceso->programa_plan->programa->mencion ? 'CON MENCION EN '.$admitido->programa_proceso->programa_plan->programa->mencion : '' }}
                                     </td>
                                 </tr>
                             </table>
                             <table>
                                 <tr class="fs-6 fs-sm-5">
-                                    <td class="w-95px w-sm-80px">
+                                    <td class="w-95px w-sm-95px">
                                         <div class="d-flex align-items-center">
                                             <i class="ki-outline ki-award me-2 fs-3"></i>
                                             GRUPO
                                         </div>
                                     </td>
-                                    <td class="w-10px">
+                                    <td class="w-15px">
                                         :
                                     </td>
-                                    <td>
+                                    <td class="fw-semibold">
                                         {{ $ultima_matricula->programa_proceso_grupo->grupo_detalle }}
                                     </td>
                                 </tr>
@@ -88,10 +88,10 @@
                                                 ALUMNO
                                             </div>
                                         </td>
-                                        <td class="w-10px">
+                                        <td class="w-15px">
                                             :
                                         </td>
-                                        <td>
+                                        <td class="fw-semibold">
                                             {{ $admitido->persona->nombre_completo }}
                                         </td>
                                     </tr>
@@ -104,10 +104,10 @@
                                                 CODIGO
                                             </div>
                                         </td>
-                                        <td class="w-10px">
+                                        <td class="w-15px">
                                             :
                                         </td>
-                                        <td>
+                                        <td class="fw-semibold">
                                             {{ $admitido->admitido_codigo }}
                                         </td>
                                     </tr>
@@ -115,16 +115,16 @@
                             </div>
                             <table>
                                 <tr class="fs-6 fs-sm-5">
-                                    <td class="w-95px w-sm-80px">
+                                    <td class="w-95px w-sm-95px">
                                         <div class="d-flex align-items-center">
                                             <i class="ki-outline ki-calendar me-2 fs-3"></i>
                                             FECHA
                                         </div>
                                     </td>
-                                    <td class="w-10px">
+                                    <td class="w-15px">
                                         :
                                     </td>
-                                    <td>
+                                    <td class="fw-semibold">
                                         {{ date('d/m/Y') }}
                                     </td>
                                 </tr>
