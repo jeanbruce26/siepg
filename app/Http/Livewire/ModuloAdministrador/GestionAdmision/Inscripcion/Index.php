@@ -91,7 +91,6 @@ class Index extends Component
             'seguimientoFiltro',
             'modalidadFiltro',
             'mesFiltro',
-
             'proceso_filtro',
             'programa_filtro',
             'seguimiento_filtro',

@@ -152,6 +152,7 @@
                             </div>
                         @endif
                     </div>
+                    @if ($ultima_matricula)
                     <div class="menu-item">
                         <a class="menu-link {{ request()->routeIs('plataforma.record-academico') ? 'active' : '' }}"
                             href="{{ route('plataforma.record-academico') }}">
@@ -166,6 +167,7 @@
                             <span class="menu-title fw-semibold fs-4">Record Académico</span>
                         </a>
                     </div>
+                    @endif
                 </div>
             </div>
         </div>
