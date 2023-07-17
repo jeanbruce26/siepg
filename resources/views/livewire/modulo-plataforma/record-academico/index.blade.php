@@ -18,7 +18,7 @@
                 </ul>
             </div>
             <div class="d-flex align-items-center gap-2 gap-lg-3">
-                <a href="#modal_pago_plataforma" wire:click="modo" class="btn fw-bold btn-primary" data-bs-toggle="modal" data-bs-target="#modal_pago_plataforma">
+                <a href="{{ route('plataforma.record-academico-ficha', ['id_admitido' => $admitido->id_admitido]) }}" class="btn fw-bold btn-primary">
                     Descargar Record Académico
                 </a>
             </div>

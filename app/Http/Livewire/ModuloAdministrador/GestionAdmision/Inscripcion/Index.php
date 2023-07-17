@@ -67,7 +67,7 @@ class Index extends Component
     protected $listeners = [
         'render', 'cambiarEstado', 'cambiarSeguimiento', 'reservarPago'
     ];
-    
+
     public function updated($propertyName)
     {
         $this->validateOnly($propertyName, [
@@ -79,21 +79,21 @@ class Index extends Component
     {
         $this->reset('id_inscripcion');
     }
-    
+
     //Limpiamos los filtros
     public function resetear_filtro()
     {
         $this->reset(
-            'procesoFiltro', 
-            'programaFiltro', 
-            'seguimientoFiltro', 
-            'modalidadFiltro', 
-            'mesFiltro', 
+            'procesoFiltro',
+            'programaFiltro',
+            'seguimientoFiltro',
+            'modalidadFiltro',
+            'mesFiltro',
 
-            'proceso_filtro', 
-            'programa_filtro', 
-            'seguimiento_filtro', 
-            'modalidad_filtro', 
+            'proceso_filtro',
+            'programa_filtro',
+            'seguimiento_filtro',
+            'modalidad_filtro',
             'mes_filtro');
     }
 
@@ -172,7 +172,7 @@ class Index extends Component
     public function actualizarInscripcion()
     {
         $inscripcion = Inscripcion::find($this->id_inscripcion);
-        
+
         $id_programa_proceso_actualizado = Programa::join('programa_plan', 'programa.id_programa', '=', 'programa_plan.id_programa')
                                                 ->join('programa_proceso', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
                                                 ->where('programa.id_modalidad', $this->modalidad)->where('programa.id_programa', $this->programa)->first()->id_programa_proceso;
