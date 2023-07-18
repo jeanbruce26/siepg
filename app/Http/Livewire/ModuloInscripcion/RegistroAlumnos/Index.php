@@ -250,7 +250,8 @@ class Index extends Component
                                         ->get();
     }
 
-    public function updatedAdmision($admision){
+    public function updatedAdmision($admision)
+    {
         $this->programas_model = ProgramaProceso::join('programa_plan', 'programa_plan.id_programa_plan', 'programa_proceso.id_programa_plan')
                                         ->join('programa', 'programa.id_programa', 'programa_plan.id_programa')
                                         ->where('programa.id_modalidad', $this->modalidad)
@@ -286,7 +287,6 @@ class Index extends Component
 
     public function render()
     {
-
 
         return view('livewire.modulo-inscripcion.registro-alumnos.index', [
             'admision_model' => \App\Models\Admision::all(),

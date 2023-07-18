@@ -43,10 +43,14 @@
                                     <option value="{{ $item->id_admision }}">{{ $item->admision }}</option>
                                     @endforeach
                                 </select>
+                                <div class="mt-1 text-muted">
+                                    <strong>Nota: </strong>El año del proceso que ingresó.
+                                </div>
                                 @error('admision')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
+
                         </div>
                         <div class="col-md-12">
                             <div class="mb-5">
