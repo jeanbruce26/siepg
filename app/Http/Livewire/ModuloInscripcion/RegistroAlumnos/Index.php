@@ -50,6 +50,7 @@ class Index extends Component
     {
         if($this->paso == 1){
             $this->validateOnly($propertyName, [
+                'admision' => 'required',
                 'programa' => 'required',
                 'modalidad' => 'required',
             ]);
@@ -99,6 +100,11 @@ class Index extends Component
         $this->paso = 2;
     }
 
+    public function guardarRegistro(){
+        $this->validar_registro();
+        $this->paso = 2;
+    }
+
     public function validar_registro()
     {
         if($this->paso === 1)
@@ -115,64 +121,7 @@ class Index extends Component
         {
             $this->resetErrorBag();
             $this->resetValidation();
-            if($this->ubigeo_direccion){
-                $ubi_direccion = \App\Models\Ubigeo::find($this->ubigeo_direccion)->ubigeo;
-                if($ubi_direccion == 000000){
-                    $this->validate([
-                        'numero_documento' => 'required|max:8|unique:personas,numero_documento',
-                        'apellido_paterno' => 'required|max:50',
-                        'apellido_materno' => 'required|max:50',
-                        'nombre' => 'required|max:50',
-                        'genero' => 'required|numeric',
-                        'fecha_nacimiento' => 'required|date',
-                        'direccion' => 'required|max:100',
-                        'celular' => 'required|max:9',
-                        'celular_opcional' => 'nullable|max:9',
-                        'correo' => 'required|email|max:50',
-                        'correo_opcional' => 'nullable|email|max:50',
-                        'año_egreso' => 'required|numeric',
-                        'especialidad' => 'required|max:50',
-                        'centro_trabajo' => 'required|max:50',
-                        'discapacidad' => 'required|numeric',
-                        'estado_civil' => 'required|numeric',
-                        'grado_academico' => 'required|numeric',
-                        'universidad' => 'required|max:50',
-                        'ubigeo_direccion' => 'required|numeric',
-                        'ubigeo_nacimiento' => 'required|numeric',
-                        'pais_direccion' => 'required|max:50',
-                        'pais_nacimiento' => 'nullable|max:50',
-                    ]);
-                }
-            }
-            if($this->ubigeo_nacimiento){
-                $ubi_nacimiento = \App\Models\Ubigeo::find($this->ubigeo_nacimiento)->ubigeo;
-                if($ubi_nacimiento == 000000){
-                    $this->validate([
-                        'numero_documento' => 'required|max:8|unique:personas,numero_documento',
-                        'apellido_paterno' => 'required|max:50',
-                        'apellido_materno' => 'required|max:50',
-                        'nombre' => 'required|max:50',
-                        'genero' => 'required|numeric',
-                        'fecha_nacimiento' => 'required|date',
-                        'direccion' => 'required|max:100',
-                        'celular' => 'required|max:9',
-                        'celular_opcional' => 'nullable|max:9',
-                        'correo' => 'required|email|max:50',
-                        'correo_opcional' => 'nullable|email|max:50',
-                        'año_egreso' => 'required|numeric',
-                        'especialidad' => 'required|max:50',
-                        'centro_trabajo' => 'required|max:50',
-                        'discapacidad' => 'required|numeric',
-                        'estado_civil' => 'required|numeric',
-                        'grado_academico' => 'required|numeric',
-                        'universidad' => 'required|max:50',
-                        'ubigeo_direccion' => 'required|numeric',
-                        'ubigeo_nacimiento' => 'required|numeric',
-                        'pais_direccion' => 'nullable|max:50',
-                        'pais_nacimiento' => 'required|max:50',
-                    ]);
-                }
-            }
+
             if($this->ubigeo_direccion && $this->ubigeo_nacimiento){
                 $ubi_direccion = \App\Models\Ubigeo::find($this->ubigeo_direccion)->ubigeo;
                 $ubi_nacimiento = \App\Models\Ubigeo::find($this->ubigeo_nacimiento)->ubigeo;
@@ -203,62 +152,93 @@ class Index extends Component
                         'pais_nacimiento' => 'required|max:50',
                     ]);
                 }
+            }else{
+
+                if($this->ubigeo_direccion){
+                    $ubi_direccion = \App\Models\Ubigeo::find($this->ubigeo_direccion)->ubigeo;
+                    if($ubi_direccion == 000000){
+                        $this->validate([
+                            'numero_documento' => 'required|max:8|unique:personas,numero_documento',
+                            'apellido_paterno' => 'required|max:50',
+                            'apellido_materno' => 'required|max:50',
+                            'nombre' => 'required|max:50',
+                            'genero' => 'required|numeric',
+                            'fecha_nacimiento' => 'required|date',
+                            'direccion' => 'required|max:100',
+                            'celular' => 'required|max:9',
+                            'celular_opcional' => 'nullable|max:9',
+                            'correo' => 'required|email|max:50',
+                            'correo_opcional' => 'nullable|email|max:50',
+                            'año_egreso' => 'required|numeric',
+                            'especialidad' => 'required|max:50',
+                            'centro_trabajo' => 'required|max:50',
+                            'discapacidad' => 'required|numeric',
+                            'estado_civil' => 'required|numeric',
+                            'grado_academico' => 'required|numeric',
+                            'universidad' => 'required|max:50',
+                            'ubigeo_direccion' => 'required|numeric',
+                            'ubigeo_nacimiento' => 'required|numeric',
+                            'pais_direccion' => 'required|max:50',
+                            'pais_nacimiento' => 'nullable|max:50',
+                        ]);
+                    }
+                }else if($this->ubigeo_nacimiento){
+                    $ubi_nacimiento = \App\Models\Ubigeo::find($this->ubigeo_nacimiento)->ubigeo;
+                    if($ubi_nacimiento == 000000){
+                        $this->validate([
+                            'numero_documento' => 'required|max:8|unique:personas,numero_documento',
+                            'apellido_paterno' => 'required|max:50',
+                            'apellido_materno' => 'required|max:50',
+                            'nombre' => 'required|max:50',
+                            'genero' => 'required|numeric',
+                            'fecha_nacimiento' => 'required|date',
+                            'direccion' => 'required|max:100',
+                            'celular' => 'required|max:9',
+                            'celular_opcional' => 'nullable|max:9',
+                            'correo' => 'required|email|max:50',
+                            'correo_opcional' => 'nullable|email|max:50',
+                            'año_egreso' => 'required|numeric',
+                            'especialidad' => 'required|max:50',
+                            'centro_trabajo' => 'required|max:50',
+                            'discapacidad' => 'required|numeric',
+                            'estado_civil' => 'required|numeric',
+                            'grado_academico' => 'required|numeric',
+                            'universidad' => 'required|max:50',
+                            'ubigeo_direccion' => 'required|numeric',
+                            'ubigeo_nacimiento' => 'required|numeric',
+                            'pais_direccion' => 'nullable|max:50',
+                            'pais_nacimiento' => 'required|max:50',
+                        ]);
+                    }
+                }else{
+                    $this->validate([
+                        'numero_documento' => 'required|max:8|unique:personas,numero_documento',
+                        'apellido_paterno' => 'required|max:50',
+                        'apellido_materno' => 'required|max:50',
+                        'nombre' => 'required|max:50',
+                        'genero' => 'required|numeric',
+                        'fecha_nacimiento' => 'required|date',
+                        'direccion' => 'required|max:100',
+                        'celular' => 'required|max:9',
+                        'celular_opcional' => 'nullable|max:9',
+                        'correo' => 'required|email|max:50',
+                        'correo_opcional' => 'nullable|email|max:50',
+                        'año_egreso' => 'required|numeric',
+                        'especialidad' => 'required|max:50',
+                        'centro_trabajo' => 'required|max:50',
+                        'discapacidad' => 'required|numeric',
+                        'estado_civil' => 'required|numeric',
+                        'grado_academico' => 'required|numeric',
+                        'universidad' => 'required|max:50',
+                        'ubigeo_direccion' => 'required|numeric',
+                        'ubigeo_nacimiento' => 'required|numeric',
+                        'pais_direccion' => 'nullable|max:50',
+                        'pais_nacimiento' => 'nullable|max:50',
+                    ]);
+                }
             }
         }
     }
-
-            // else if($this->ubigeo_nacimiento == 1893 && $this->ubigeo_direccion == 1893)
-            // {
-            //     $this->validate([
-            //         'paterno' => 'required|max:50',
-            //         'materno' => 'required|max:50',
-            //         'nombres' => 'required|max:50',
-            //         'fecha_nacimiento' => 'required|date',
-            //         'genero' => 'required|numeric',
-            //         'estado_civil' => 'required|numeric',
-            //         'grado_academico' => 'required|numeric',
-            //         'especialidad_carrera' => 'required|max:50',
-            //         'discapacidad' => 'required|numeric',
-            //         'direccion' => 'required|max:100',
-            //         'celular' => 'required|max:9',
-            //         'celular_opcional' => 'nullable|max:9',
-            //         'año_egreso' => 'required|numeric',
-            //         'email' => 'required|email|max:50',
-            //         'email_opcional' => 'nullable|email|max:50',
-            //         'universidad' => 'required|numeric',
-            //         'centro_trabajo' => 'required|max:50',
-            //         'pais_direccion' => 'required|max:50',
-            //         'ubigeo_direccion' => 'required|numeric',
-            //         'pais_nacimiento' => 'required|max:50',
-            //         'ubigeo_nacimiento' => 'required|numeric',
-            //     ]);
-            // }
-            // else
-            // {
-            //     $this->validate([
-            //         'paterno' => 'required|max:50',
-            //         'materno' => 'required|max:50',
-            //         'nombres' => 'required|max:50',
-            //         'fecha_nacimiento' => 'required|date',
-            //         'genero' => 'required|numeric',
-            //         'estado_civil' => 'required|numeric',
-            //         'grado_academico' => 'required|numeric',
-            //         'especialidad_carrera' => 'required|max:50',
-            //         'discapacidad' => 'required|numeric',
-            //         'direccion' => 'required|max:100',
-            //         'celular' => 'required|max:9',
-            //         'celular_opcional' => 'nullable|max:9',
-            //         'año_egreso' => 'required|numeric',
-            //         'email' => 'required|email|max:50',
-            //         'email_opcional' => 'nullable|email|max:50',
-            //         'universidad' => 'required|numeric',
-            //         'centro_trabajo' => 'required|max:50',
-            //         'pais_direccion' => 'nullable|max:50',
-            //         'ubigeo_direccion' => 'required|numeric',
-            //         'pais_nacimiento' => 'nullable|max:50',
-            //         'ubigeo_nacimiento' => 'required|numeric',
-            //     ]);
-            // }
 
     public function updatedModalidad($modalidad)
     {
@@ -279,12 +259,43 @@ class Index extends Component
                                         ->get();
     }
 
+    public function updatedUbigeoDireccion($ubigeo_direccion)
+    {
+        $ubi = \App\Models\Ubigeo::find($ubigeo_direccion);
+        if($ubigeo_direccion){
+            if($ubi->ubigeo == 000000){
+                $this->pais_direccion_estado = true;
+            }else{
+                $this->pais_direccion_estado = false;
+            }
+        }else{
+            $this->pais_direccion_estado = false;
+        }
+        
+    }
+
+    public function updatedUbigeoNacimiento($ubigeo_nacimiento)
+    {
+        $ubi = \App\Models\Ubigeo::find($ubigeo_nacimiento);
+        if($ubi->ubigeo == 000000){
+            $this->pais_nacimiento_estado = true;
+        }else{
+            $this->pais_nacimiento_estado = false;
+        }
+    }
+
     public function render()
     {
 
 
         return view('livewire.modulo-inscripcion.registro-alumnos.index', [
             'admision_model' => \App\Models\Admision::all(),
+            'ubigeo_model' => \App\Models\Ubigeo::all(),
+            'genero_model' => \App\Models\Genero::all(),
+            'grado_academico_model' => \App\Models\GradoAcademico::all(),
+            'estado_civil_model' => \App\Models\EstadoCivil::all(),
+            'discapacidad_model' => \App\Models\Discapacidad::all(),
+            'universidad_model' => \App\Models\Universidad::all(),
         ]);
     }
 }

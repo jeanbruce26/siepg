@@ -109,33 +109,44 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="mb-5">
-                                <label for="paterno" class="required form-label">
-                                    Apellidos Paterno
+                                <label for="numero_documento" class="required form-label">
+                                    Número de Documento
                                 </label>
-                                <input type="text" wire:model="paterno" class="form-control @error('paterno') is-invalid @enderror" id="paterno" placeholder="Ingrese su apellido paterno">
-                                @error('paterno')
+                                <input type="text" wire:model="numero_documento" class="form-control @error('numero_documento') is-invalid @enderror" id="numero_documento" placeholder="Ingrese su número de documento">
+                                @error('numero_documento')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="mb-5">
-                                <label for="materno" class="required form-label">
+                                <label for="apellido_paterno" class="required form-label">
+                                    Apellido Paterno
+                                </label>
+                                <input type="text" wire:model="apellido_paterno" class="form-control @error('apellido_paterno') is-invalid @enderror" id="apellido_paterno" placeholder="Ingrese su apellido paterno">
+                                @error('apellido_paterno')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-5">
+                                <label for="apellido_materno" class="required form-label">
                                     Apellidos Materno
                                 </label>
-                                <input type="text" wire:model="materno" class="form-control @error('materno') is-invalid @enderror" id="materno" placeholder="Ingrese su apellido materno">
-                                @error('materno')
+                                <input type="text" wire:model="apellido_materno" class="form-control @error('apellido_materno') is-invalid @enderror" id="apellido_materno" placeholder="Ingrese su apellido apellido_materno">
+                                @error('apellido_materno')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="mb-5">
-                                <label for="nombres" class="required form-label">
+                                <label for="nombre" class="required form-label">
                                     Nombres
                                 </label>
-                                <input type="text" wire:model="nombres" class="form-control @error('nombres') is-invalid @enderror" id="nombres" placeholder="Ingrese sus nombres">
-                                @error('nombres')
+                                <input type="text" wire:model="nombre" class="form-control @error('nombre') is-invalid @enderror" id="nombre" placeholder="Ingrese sus nombre">
+                                @error('nombre')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
@@ -158,7 +169,7 @@
                                 </label>
                                 <select wire:model="genero" class="form-select @error('genero') is-invalid @enderror" id="genero" data-control="select2" data-placeholder="Seleccione su genero" data-allow-clear="true">
                                     <option></option>
-                                    @foreach ($genero_array as $item)
+                                    @foreach ($genero_model as $item)
                                     <option value="{{ $item->id_genero }}">{{ $item->genero }}</option>
                                     @endforeach
                                 </select>
@@ -172,9 +183,9 @@
                                 <label for="estado_civil" class="required form-label">
                                     Estado Civil
                                 </label>
-                                <select wire:model="estado_civil" class="form-select @error('genero') is-invalid @enderror" id="estado_civil" data-control="select2" data-placeholder="Seleccione su estado civil" data-allow-clear="true">
+                                <select wire:model="estado_civil" class="form-select @error('estado_civil') is-invalid @enderror" id="estado_civil" data-control="select2" data-placeholder="Seleccione su estado civil" data-allow-clear="true">
                                     <option></option>
-                                    @foreach ($estado_civil_array as $item)
+                                    @foreach ($estado_civil_model as $item)
                                     <option value="{{ $item->id_estado_civil }}">{{ $item->estado_civil }}</option>
                                     @endforeach
                                 </select>
@@ -190,7 +201,7 @@
                                 </label>
                                 <select wire:model="discapacidad" class="form-select @error('discapacidad') is-invalid @enderror" id="discapacidad"  data-control="select2" data-placeholder="Seleccione su discapacidad" data-allow-clear="true">
                                     <option></option>
-                                    @foreach ($tipo_discapacidad_array as $item)
+                                    @foreach ($discapacidad_model as $item)
                                     <option value="{{ $item->id_discapacidad }}">{{ $item->discapacidad }}</option>
                                     @endforeach
                                 </select>
@@ -223,22 +234,22 @@
                         </div>
                         <div class="col-md-4">
                             <div class="mb-5">
-                                <label for="email" class="required form-label">
+                                <label for="correo" class="required form-label">
                                     Correo Electrónico
                                 </label>
-                                <input type="email" wire:model="email" class="form-control @error('email') is-invalid @enderror" id="email" placeholder="Ingrese su correo electrónico">
-                                @error('email')
+                                <input type="email" wire:model="correo" class="form-control @error('correo') is-invalid @enderror" id="correo" placeholder="Ingrese su correo electrónico">
+                                @error('correo')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="mb-5">
-                                <label for="email_opcional" class="form-label">
+                                <label for="correo_opcional" class="form-label">
                                     Correo Electrónico Opcional
                                 </label>
-                                <input type="email" wire:model="email_opcional" class="form-control @error('email_opcional') is-invalid @enderror" id="email_opcional" placeholder="Ingrese su correo electrónico opcional">
-                                @error('email_opcional')
+                                <input type="email" wire:model="correo_opcional" class="form-control @error('correo_opcional') is-invalid @enderror" id="correo_opcional" placeholder="Ingrese su correo electrónico opcional">
+                                @error('correo_opcional')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
@@ -266,7 +277,7 @@
                                 </label>
                                 <select wire:model="ubigeo_direccion" class="form-select @error('ubigeo_direccion') is-invalid @enderror" id="ubigeo_direccion" data-control="select2" data-placeholder="Seleccione su ubigeo de direccion" data-allow-clear="true">
                                     <option></option>
-                                    @foreach ($ubigeo_direccion_array as $item)
+                                    @foreach ($ubigeo_model as $item)
                                     <option value="{{ $item->id_ubigeo }}">{{ $item->ubigeo }} / {{ $item->departamento }} / {{ $item->provincia }} / {{ $item->distrito }}</option>
                                     @endforeach
                                 </select>
@@ -275,18 +286,18 @@
                                 @enderror
                             </div>
                         </div>
-                        @if ($ubigeo_direccion == 1893)
-                        <div class="col-md-12">
-                            <div class="mb-5">
-                                <label for="pais_direccion" class="required form-label">
-                                    País de Dirección
-                                </label>
-                                <input type="text" wire:model="pais_direccion" class="form-control @error('pais_direccion') is-invalid @enderror" id="pais_direccion" placeholder="Ingrese el pais del ubigeo seleccionado">
-                                @error('pais_direccion')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
+                        @if ($pais_direccion_estado === true && $ubigeo_direccion)
+                            <div class="col-md-12">
+                                <div class="mb-5">
+                                    <label for="pais_direccion" class="required form-label">
+                                        País de Dirección
+                                    </label>
+                                    <input type="text" wire:model="pais_direccion" class="form-control @error('pais_direccion') is-invalid @enderror" id="pais_direccion" placeholder="Ingrese el pais del ubigeo seleccionado">
+                                    @error('pais_direccion')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
                             </div>
-                        </div>
                         @endif
                         <div class="col-md-12">
                             <div class="mb-5">
@@ -313,7 +324,7 @@
                                 </label>
                                 <select wire:model="ubigeo_nacimiento" class="form-select @error('ubigeo_nacimiento') is-invalid @enderror" id="ubigeo_nacimiento" data-control="select2" data-placeholder="Seleccione su ubigeo de nacimiento" data-allow-clear="true">
                                     <option></option>
-                                    @foreach ($ubigeo_nacimiento_array as $item)
+                                    @foreach ($ubigeo_model as $item)
                                     <option value="{{ $item->id_ubigeo }}">{{ $item->ubigeo }} / {{ $item->departamento }} / {{ $item->provincia }} / {{ $item->distrito }}</option>
                                     @endforeach
                                 </select>
@@ -322,7 +333,7 @@
                                 @enderror
                             </div>
                         </div>
-                        @if ($ubigeo_nacimiento == 1893)
+                        @if ($pais_nacimiento_estado === true && $ubigeo_nacimiento)
                         <div class="col-md-12">
                             <div class="mb-5">
                                 <label for="pais_nacimiento" class="required form-label">
@@ -353,7 +364,7 @@
                                 </label>
                                 <select wire:model="grado_academico" class="form-select @error('grado_academico') is-invalid @enderror" id="grado_academico"  data-control="select2" data-placeholder="Seleccione su grado academico" data-allow-clear="true">
                                     <option></option>
-                                    @foreach ($grado_academico_array as $item)
+                                    @foreach ($grado_academico_model as $item)
                                         <option value="{{ $item->id_grado_academico }}">{{ $item->grado_academico }}</option>
                                     @endforeach
                                 </select>
@@ -364,11 +375,11 @@
                         </div>
                         <div class="col-md-4">
                             <div class="mb-5">
-                                <label for="especialidad_carrera" class="required form-label">
+                                <label for="especialidad" class="required form-label">
                                     Especialidad de Carrera
                                 </label>
-                                <input type="text" wire:model="especialidad_carrera" class="form-control @error('especialidad_carrera') is-invalid @enderror" id="especialidad_carrera" placeholder="Ingrese la especialidad de su carrera">
-                                @error('especialidad_carrera')
+                                <input type="text" wire:model="especialidad" class="form-control @error('especialidad') is-invalid @enderror" id="especialidad" placeholder="Ingrese la especialidad de su carrera">
+                                @error('especialidad')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
@@ -391,7 +402,7 @@
                                 </label>
                                 <select wire:model="universidad" class="form-select @error('universidad') is-invalid @enderror" id="universidad" data-control="select2" data-placeholder="Seleccione su universidad" data-allow-clear="true">
                                     <option></option>
-                                    @foreach ($universidad_array as $item)
+                                    @foreach ($universidad_model as $item)
                                         <option value="{{ $item->id_universidad }}">{{ $item->universidad }}</option>
                                     @endforeach
                                 </select>
@@ -418,8 +429,8 @@
                 <button type="button" class="btn btn-secondary hover-elevate-down" style="width: 150px" wire:click.prevent="paso_1()">
                     Regresar
                 </button>
-                <button type="button" class="btn btn-primary hover-elevate-down" style="width: 150px" wire:click.prevent="paso_3()">
-                    Siguiente
+                <button type="button" class="btn btn-primary hover-elevate-down" style="width: 150px" wire:click.prevent="guardarRegistro()">
+                    Guardar
                 </button>
             </div>
         @endif
@@ -427,10 +438,11 @@
 
 @push('scripts')
     <script>
+        //Paso 1
         // admision select2
         $(document).ready(function () {
             $('#admision').select2({
-                placeholder: 'Seleccione su admision',
+                placeholder: 'Seleccione',
                 allowClear: true,
                 width: '100%',
                 selectOnClose: true,
@@ -439,7 +451,7 @@
                         return "No se encontraron resultados";
                     },
                     searching: function () {
-                        return "Buscando..";
+                        return "Buscando...";
                     }
                 }
             });
@@ -448,7 +460,7 @@
             });
             Livewire.hook('message.processed', (message, component) => {
                 $('#admision').select2({
-                    placeholder: 'Seleccione su admision',
+                    placeholder: 'Seleccione',
                     allowClear: true,
                     width: '100%',
                     selectOnClose: true,
@@ -457,16 +469,19 @@
                             return "No se encontraron resultados";
                         },
                         searching: function () {
-                            return "Buscando..";
+                            return "Buscando...";
                         }
                     }
+                });
+                $('#admision').on('change', function(){
+                    @this.set('admision', this.value);
                 });
             });
         });
         // modalidad select2
         $(document).ready(function () {
             $('#modalidad').select2({
-                placeholder: 'Seleccione su modalidad',
+                placeholder: 'Seleccione',
                 allowClear: true,
                 width: '100%',
                 selectOnClose: true,
@@ -475,7 +490,7 @@
                         return "No se encontraron resultados";
                     },
                     searching: function () {
-                        return "Buscando..";
+                        return "Buscando...";
                     }
                 }
             });
@@ -484,7 +499,7 @@
             });
             Livewire.hook('message.processed', (message, component) => {
                 $('#modalidad').select2({
-                    placeholder: 'Seleccione su modalidad',
+                    placeholder: 'Seleccione',
                     allowClear: true,
                     width: '100%',
                     selectOnClose: true,
@@ -493,16 +508,19 @@
                             return "No se encontraron resultados";
                         },
                         searching: function () {
-                            return "Buscando..";
+                            return "Buscando...";
                         }
                     }
+                });
+                $('#modalidad').on('change', function(){
+                    @this.set('modalidad', this.value);
                 });
             });
         });
         // programa select2
         $(document).ready(function () {
             $('#programa').select2({
-                placeholder: 'Seleccione su programa',
+                placeholder: 'Seleccione',
                 allowClear: true,
                 width: '100%',
                 selectOnClose: true,
@@ -511,17 +529,16 @@
                         return "No se encontraron resultados";
                     },
                     searching: function () {
-                        return "Buscando..";
+                        return "Buscando...";
                     }
                 }
             });
             $('#programa').on('change', function(){
                 @this.set('programa', this.value);
-                console.log(this.value);
             });
             Livewire.hook('message.processed', (message, component) => {
                 $('#programa').select2({
-                    placeholder: 'Seleccione su programa',
+                    placeholder: 'Seleccione',
                     allowClear: true,
                     width: '100%',
                     selectOnClose: true,
@@ -530,9 +547,287 @@
                             return "No se encontraron resultados";
                         },
                         searching: function () {
-                            return "Buscando..";
+                            return "Buscando...";
                         }
                     }
+                });
+                $('#programa').on('change', function(){
+                    @this.set('programa', this.value);
+                });
+            });
+        });
+
+        //Paso 2
+        // genero select2
+        $(document).ready(function () {
+            $('#genero').select2({
+                placeholder: 'Seleccione',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando...";
+                    }
+                }
+            });
+            $('#genero').on('change', function(){
+                @this.set('genero', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#genero').select2({
+                    placeholder: 'Seleccione',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando...";
+                        }
+                    }
+                });
+                $('#genero').on('change', function(){
+                    @this.set('genero', this.value);
+                });
+            });
+        });
+        // estado_civil select2
+        $(document).ready(function () {
+            $('#estado_civil').select2({
+                placeholder: 'Seleccione',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando...";
+                    }
+                }
+            });
+            $('#estado_civil').on('change', function(){
+                @this.set('estado_civil', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#estado_civil').select2({
+                    placeholder: 'Seleccione',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando...";
+                        }
+                    }
+                });
+                $('#estado_civil').on('change', function(){
+                    @this.set('estado_civil', this.value);
+                });
+            });
+        });
+        // discapacidad select2
+        $(document).ready(function () {
+            $('#discapacidad').select2({
+                placeholder: 'Seleccione',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando...";
+                    }
+                }
+            });
+            $('#discapacidad').on('change', function(){
+                @this.set('discapacidad', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#discapacidad').select2({
+                    placeholder: 'Seleccione',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando...";
+                        }
+                    }
+                });
+                $('#discapacidad').on('change', function(){
+                    @this.set('discapacidad', this.value);
+                });
+            });
+        });
+        // ubigeo_direccion select2
+        $(document).ready(function () {
+            $('#ubigeo_direccion').select2({
+                placeholder: 'Seleccione',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando...";
+                    }
+                }
+            });
+            $('#ubigeo_direccion').on('change', function(){
+                @this.set('ubigeo_direccion', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#ubigeo_direccion').select2({
+                    placeholder: 'Seleccione',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando...";
+                        }
+                    }
+                });
+                $('#ubigeo_direccion').on('change', function(){
+                    @this.set('ubigeo_direccion', this.value);
+                });
+            });
+        });
+        // ubigeo_nacimiento select2
+        $(document).ready(function () {
+            $('#ubigeo_nacimiento').select2({
+                placeholder: 'Seleccione',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando...";
+                    }
+                }
+            });
+            $('#ubigeo_nacimiento').on('change', function(){
+                @this.set('ubigeo_nacimiento', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#ubigeo_nacimiento').select2({
+                    placeholder: 'Seleccione',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando...";
+                        }
+                    }
+                });
+                $('#ubigeo_nacimiento').on('change', function(){
+                    @this.set('ubigeo_nacimiento', this.value);
+                });
+            });
+        });
+        // grado_academico select2
+        $(document).ready(function () {
+            $('#grado_academico').select2({
+                placeholder: 'Seleccione',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando...";
+                    }
+                }
+            });
+            $('#grado_academico').on('change', function(){
+                @this.set('grado_academico', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#grado_academico').select2({
+                    placeholder: 'Seleccione',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando...";
+                        }
+                    }
+                });
+                $('#grado_academico').on('change', function(){
+                    @this.set('grado_academico', this.value);
+                });
+            });
+        });
+        // universidad select2
+        $(document).ready(function () {
+            $('#universidad').select2({
+                placeholder: 'Seleccione',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando...";
+                    }
+                }
+            });
+            $('#universidad').on('change', function(){
+                @this.set('universidad', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#universidad').select2({
+                    placeholder: 'Seleccione',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando...";
+                        }
+                    }
+                });
+                $('#universidad').on('change', function(){
+                    @this.set('universidad', this.value);
                 });
             });
         });
