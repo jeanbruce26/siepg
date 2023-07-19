@@ -20,14 +20,13 @@
         </div>
     </div>
 
-    {{-- formulario --}}
     <form autocomplete="off" class="mt-0">
         {{-- formulario paso 1 --}}
         @if ($paso === 1)
             <div class="card shadow-sm mt-5">
                 <div class="card-header">
                     <h3 class="card-title fw-bold fs-2">
-                        Selección de Modalidad y Programa
+                        Selección de Modalidad, Programa y Código de Alumno
                     </h3>
                 </div>
                 <div class="card-body">
@@ -86,6 +85,29 @@
                                         @endforeach
                                     @endif
                                 </select>
+                                @error('programa')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-5">
+                                <label for="admitido_codigo" class="form-label">
+                                    Código de alumno
+                                </label>
+                                <div class="d-flex flex-column flex-md-row gap-5">
+                                    <div class="d-flex flex-column w-100">
+                                        <input type="text" wire:model="admitido_codigo" class="form-control @error('admitido_codigo') is-invalid @enderror" id="admitido_codigo" placeholder="Ingrese su código de alumno">
+                                        <div class="mt-1 text-muted">
+                                            <strong>Nota: </strong>Si has olvidado tu código, puedes buscarlo mediante su nombre.
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <button type="button" href="#modalBuscarCodigo" class="btn btn-primary hover-elevate-down w-100 w-md-150px"  wire:click.prevent="" data-bs-toggle="modal" data-bs-target="#modalBuscarCodigo">
+                                            Buscar código
+                                        </button>
+                                    </div>
+                                </div>
                                 @error('programa')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
@@ -438,7 +460,105 @@
                 </button>
             </div>
         @endif
+    </form>
+
+    {{-- modal de busqueda de codigo --}}
+    <div wire:ignore.self class="modal fade" tabindex="-1" id="modalBuscarCodigo">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">
+                        Buscar Código de Alumno por Nombre
+                    </h2>
+    
+                    <div class="btn btn-icon btn-sm btn-active-light-danger ms-2" data-bs-dismiss="modal"
+                        aria-label="Close"
+                        wire:click="limpiar()">
+                        <span class="svg-icon svg-icon-2hx">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <rect opacity="0.3" x="2" y="2" width="20" height="20"
+                                    rx="5" fill="currentColor" />
+                                <rect x="7" y="15.3137" width="12" height="2" rx="1"
+                                    transform="rotate(-45 7 15.3137)" fill="currentColor" />
+                                <rect x="8.41422" y="7" width="12" height="2" rx="1"
+                                    transform="rotate(45 8.41422 7)" fill="currentColor" />
+                            </svg>
+                        </span>
+                    </div>
+                </div>
+    
+                <div class="modal-body">
+                    <div class="row g-5 mb-3 px-md-5 mb-3">
+                        <div class="d-flex justify-content-start align-items-center mb-5">
+                            <div class="col-12">
+                                <input class="form-control form-control-sm text-muted" type="search" wire:model="search"
+                                    placeholder="Buscar...">
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle table-rounded border mb-0 gy-5 gs-5">
+                                <thead class="bg-light-warning">
+                                    <tr align="center" class="fw-bold fs-5 text-gray-900 border-bottom-2 border-gray-200">
+                                        <th scope="col">#</th>
+                                        <th scope="col">Código</th>
+                                        <th scope="col">Alumno</th>
+                                    </tr>
+                                </thead>
+                                @php
+                                    $id_proceso = 0;
+                                @endphp
+                                <tbody class="fw-semibold text-gray-700">
+                                    @forelse ($estudiantes_codigo_model as $item)
+                                        @if($estudiantes_codigo_model->count() > 10)
+                                            <tr>
+                                                <td colspan="7" class="text-center text-muted">
+                                                    Busqueda limitada a 10 resultados
+                                                </td>
+                                            </tr>
+                                            @break
+                                        @else
+                                            <tr>
+                                                <td align="center" class="fw-bold fs-6">
+                                                    {{ $numero_alumnos += 1 }}
+                                                </td>
+                                                <td align="center" class="fs-6">
+                                                    {{ $item->id_persona }}
+                                                </td>
+                                                <td class="fs-6">
+                                                    {{ $item->nombre_completo }}
+                                                </td>
+                                                
+                                            </tr>
+                                        @endif
+                                    @empty
+                                        @if ($search != '')
+                                            <tr>
+                                                <td colspan="7" class="text-center text-muted">
+                                                    No se encontraron resultados para la busqueda
+                                                    "{{ $search }}"
+                                                </td>
+                                            </tr>
+                                        @else
+                                            <tr>
+                                                <td colspan="7" class="text-center text-muted">
+                                                    No hay registros
+                                                </td>
+                                            </tr>
+                                        @endif
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+
+
 
 @push('scripts')
     <script>

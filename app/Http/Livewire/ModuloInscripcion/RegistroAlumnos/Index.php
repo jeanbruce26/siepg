@@ -2,8 +2,10 @@
 
 namespace App\Http\Livewire\ModuloInscripcion\RegistroAlumnos;
 
+use App\Models\Persona;
 use App\Models\ProgramaProceso;
 use Livewire\Component;
+use Psy\Command\WhereamiCommand;
 
 class Index extends Component
 {
@@ -46,6 +48,13 @@ class Index extends Component
     public $pais_direccion_estado = false;
     public $pais_nacimiento_estado = false;
 
+    public $admitido_codigo;
+
+    //Valiables para modal de selecionar codigo de admitido
+    public $numero_alumnos = 0;
+    public $search = '';
+    public $estudiantes_codigo_model;
+
     public function updated($propertyName)
     {
         if($this->paso == 1){
@@ -84,9 +93,9 @@ class Index extends Component
 
     public function mount()
     {
-
         $this->modalidad_model = \App\Models\Modalidad::where('modalidad_estado', 1)->get();
         $this->programas_model = collect();
+        $this->estudiantes_codigo_model = collect();
     }
 
     public function paso_1()
@@ -100,7 +109,8 @@ class Index extends Component
         $this->paso = 2;
     }
 
-    public function guardarRegistro(){
+    public function guardarRegistro()
+    {
         $this->validar_registro();
         $this->paso = 2;
     }
@@ -263,16 +273,13 @@ class Index extends Component
     public function updatedUbigeoDireccion($ubigeo_direccion)
     {
         $ubi = \App\Models\Ubigeo::find($ubigeo_direccion);
-        if($ubigeo_direccion){
-            if($ubi->ubigeo == 000000){
-                $this->pais_direccion_estado = true;
-            }else{
-                $this->pais_direccion_estado = false;
-            }
+        if($ubi->ubigeo == 000000){
+            $this->pais_direccion_estado = true;
         }else{
             $this->pais_direccion_estado = false;
+            $this->reset('pais_direccion');
+            $this->resetErrorBag('pais_direccion');
         }
-        
     }
 
     public function updatedUbigeoNacimiento($ubigeo_nacimiento)
@@ -282,7 +289,28 @@ class Index extends Component
             $this->pais_nacimiento_estado = true;
         }else{
             $this->pais_nacimiento_estado = false;
+            $this->reset('pais_nacimiento');
+            $this->resetErrorBag('pais_nacimiento');
         }
+    }
+
+    public function updatedSearch($search)
+    {
+        if($search || $search != ''){
+            $this->estudiantes_codigo_model = Persona::where('numero_documento', 'like', '%'.$search.'%')
+                                                    ->orWhere('apellido_paterno', 'like', '%'.$search.'%')
+                                                    ->orWhere('apellido_materno', 'like', '%'.$search.'%')
+                                                    ->orWhere('nombre', 'like', '%'.$search.'%')
+                                                    ->get();
+        }else{
+            $this->estudiantes_codigo_model = collect();
+        }
+    }
+
+    //Limpiamos las variables del modal
+    public function limpiar(){
+        $this->reset('search');
+        $this->estudiantes_codigo_model = collect();
     }
 
     public function render()
