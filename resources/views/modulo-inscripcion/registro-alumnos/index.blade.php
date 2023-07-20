@@ -10,6 +10,10 @@
 @endsection
 @section('scripts')
 <script>
+    window.addEventListener('modal', event => {   
+        $(event.detail.titleModal).modal('hide');
+    })
+    
     window.addEventListener('registro-alumnos', event => {
         Swal.fire({
             title: event.detail.title,

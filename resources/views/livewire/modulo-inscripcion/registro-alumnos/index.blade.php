@@ -108,7 +108,7 @@
                                         </button>
                                     </div>
                                 </div>
-                                @error('programa')
+                                @error('admitido_codigo')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
@@ -490,18 +490,32 @@
     
                 <div class="modal-body">
                     <div class="row g-5 mb-3 px-md-5 mb-3">
-                        <div class="d-flex justify-content-start align-items-center mb-5">
+                        <div class="col-12">
+                            <div class="alert bg-light-primary border border-3 border-primary d-flex align-items-center p-5 mb-5">
+                                <i class="ki-duotone ki-information-5 fs-2qx me-4 text-primary">
+                                    <i class="path1"></i>
+                                    <i class="path2"></i>
+                                    <i class="path3"></i>
+                                </i>
+                                <div class="d-flex flex-column">
+                                    <span class="fw-bold fs-5">
+                                        Haga clic o seleccione su nombre para obtener el código de alumno.
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-start align-items-center mb-2">
                             <div class="col-12">
                                 <input class="form-control form-control-sm text-muted" type="search" wire:model="search"
-                                    placeholder="Buscar...">
+                                    placeholder="Buscar por nombre">
                             </div>
                         </div>
                         <div class="table-responsive">
                             <table class="table table-hover align-middle table-rounded border mb-0 gy-5 gs-5">
                                 <thead class="bg-light-warning">
                                     <tr align="center" class="fw-bold fs-5 text-gray-900 border-bottom-2 border-gray-200">
-                                        <th scope="col">#</th>
-                                        <th scope="col">Código</th>
+                                        <th scope="col" class="col-md-3">Código</th>
                                         <th scope="col">Alumno</th>
                                     </tr>
                                 </thead>
@@ -509,27 +523,26 @@
                                     $id_proceso = 0;
                                 @endphp
                                 <tbody class="fw-semibold text-gray-700">
-                                    @forelse ($estudiantes_codigo_model as $item)
-                                        @if($estudiantes_codigo_model->count() > 10)
-                                            <tr>
-                                                <td colspan="7" class="text-center text-muted">
-                                                    Busqueda limitada a 10 resultados
-                                                </td>
-                                            </tr>
-                                            @break
-                                        @else
-                                            <tr>
-                                                <td align="center" class="fw-bold fs-6">
-                                                    {{ $numero_alumnos += 1 }}
-                                                </td>
-                                                <td align="center" class="fs-6">
-                                                    {{ $item->id_persona }}
-                                                </td>
-                                                <td class="fs-6">
-                                                    {{ $item->nombre_completo }}
-                                                </td>
-                                                
-                                            </tr>
+                                    @forelse ($codigo_estudiante_model as $item)
+                                        @if($item->codigo_estudiante_estado == 1)
+                                            @if($codigo_estudiante_model->count() > 20)
+                                                <tr>
+                                                    <td colspan="7" class="text-center text-muted">
+                                                        Busqueda limitada a 20 resultados
+                                                    </td>
+                                                </tr>
+                                                @break
+                                            @else
+                                                <tr>
+                                                    <td class="fs-6" align="center">
+                                                        {{ $item->codigo_estudiante }}
+                                                    </td>
+                                                    <td class="cursor-pointer fs-6"
+                                                    wire:click="seleccionarCodigo({{ $item->id_codigo_estudiante }})">
+                                                        {{ $item->codigo_estudiante_nombre }}
+                                                    </td>
+                                                </tr>
+                                            @endif
                                         @endif
                                     @empty
                                         @if ($search != '')
@@ -542,7 +555,7 @@
                                         @else
                                             <tr>
                                                 <td colspan="7" class="text-center text-muted">
-                                                    No hay registros
+                                                    Buscar código de alumno
                                                 </td>
                                             </tr>
                                         @endif
@@ -555,8 +568,8 @@
             </div>
         </div>
     </div>
-</div>
 
+</div>
 
 
 

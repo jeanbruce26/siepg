@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\ModuloInscripcion\RegistroAlumnos;
 
+use App\Models\CodigoEstudiante;
 use App\Models\Persona;
 use App\Models\ProgramaProceso;
 use Livewire\Component;
@@ -48,12 +49,13 @@ class Index extends Component
     public $pais_direccion_estado = false;
     public $pais_nacimiento_estado = false;
 
+    //Variables para la tabla de admitidos
     public $admitido_codigo;
 
     //Valiables para modal de selecionar codigo de admitido
     public $numero_alumnos = 0;
     public $search = '';
-    public $estudiantes_codigo_model;
+    public $codigo_estudiante_model;
 
     public function updated($propertyName)
     {
@@ -62,6 +64,7 @@ class Index extends Component
                 'admision' => 'required',
                 'programa' => 'required',
                 'modalidad' => 'required',
+                'admitido_codigo' => 'required',
             ]);
         }else{
             $this->validateOnly($propertyName, [
@@ -95,7 +98,7 @@ class Index extends Component
     {
         $this->modalidad_model = \App\Models\Modalidad::where('modalidad_estado', 1)->get();
         $this->programas_model = collect();
-        $this->estudiantes_codigo_model = collect();
+        $this->codigo_estudiante_model = collect();
     }
 
     public function paso_1()
@@ -125,6 +128,7 @@ class Index extends Component
                 'admision' => 'required|numeric',
                 'modalidad' => 'required|numeric',
                 'programa' => 'required|numeric',
+                'admitido_codigo' => 'required',
             ]);
         }
         else if($this->paso === 2)
@@ -297,20 +301,34 @@ class Index extends Component
     public function updatedSearch($search)
     {
         if($search || $search != ''){
-            $this->estudiantes_codigo_model = Persona::where('numero_documento', 'like', '%'.$search.'%')
-                                                    ->orWhere('apellido_paterno', 'like', '%'.$search.'%')
-                                                    ->orWhere('apellido_materno', 'like', '%'.$search.'%')
-                                                    ->orWhere('nombre', 'like', '%'.$search.'%')
+            $this->codigo_estudiante_model = CodigoEstudiante::where('codigo_estudiante', 'like', '%'.$search.'%')
+                                                    ->orWhere('codigo_estudiante_nombre', 'like', '%'.$search.'%')
                                                     ->get();
         }else{
-            $this->estudiantes_codigo_model = collect();
+            $this->codigo_estudiante_model = collect();
         }
+    }
+
+    public function seleccionarCodigo($id_codigo_estudiante)
+    {
+        $this->admitido_codigo = CodigoEstudiante::find($id_codigo_estudiante)->codigo_estudiante;
+        $this->numero_alumnos = 0;
+        $this->codigo_estudiante_model = collect();
+        $this->search = '';
+        $this->reset('search');
+        $this->resetErrorBag('admitido_codigo');
+        $this->emit('codigo_seleccionado');
+        //Cerrar modal
+        $this->dispatchBrowserEvent('modal', [
+            'titleModal' => '#modalBuscarCodigo',
+        ]);
+
     }
 
     //Limpiamos las variables del modal
     public function limpiar(){
         $this->reset('search');
-        $this->estudiantes_codigo_model = collect();
+        $this->codigo_estudiante_model = collect();
     }
 
     public function render()
