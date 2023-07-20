@@ -26,7 +26,7 @@
             <div class="card shadow-sm mt-5">
                 <div class="card-header">
                     <h3 class="card-title fw-bold fs-2">
-                        Selección de Modalidad, Programa y Código de Alumno
+                        Selección de Proceso, Modalidad, Programa y Código de Alumno
                     </h3>
                 </div>
                 <div class="card-body">
@@ -92,7 +92,7 @@
                         </div>
                         <div class="col-md-12">
                             <div class="mb-5">
-                                <label for="admitido_codigo" class="form-label">
+                                <label for="admitido_codigo" class="required form-label">
                                     Código de alumno
                                 </label>
                                 <div class="d-flex flex-column flex-md-row gap-5">
@@ -103,7 +103,7 @@
                                         </div>
                                     </div>
                                     <div>
-                                        <button type="button" href="#modalBuscarCodigo" class="btn btn-primary hover-elevate-down w-100 w-md-150px"  wire:click.prevent="" data-bs-toggle="modal" data-bs-target="#modalBuscarCodigo">
+                                        <button type="button" href="#modalBuscarCodigo" class="btn btn-primary hover-elevate-down w-100 w-md-150px"  wire:click="abrirModal()">
                                             Buscar código
                                         </button>
                                     </div>
@@ -519,9 +519,6 @@
                                         <th scope="col">Alumno</th>
                                     </tr>
                                 </thead>
-                                @php
-                                    $id_proceso = 0;
-                                @endphp
                                 <tbody class="fw-semibold text-gray-700">
                                     @forelse ($codigo_estudiante_model as $item)
                                         @if($item->codigo_estudiante_estado == 1)
@@ -533,12 +530,11 @@
                                                 </tr>
                                                 @break
                                             @else
-                                                <tr>
+                                                <tr class="@if($fila_seleccionada == $item->id_codigo_estudiante) table-primary @endif">
                                                     <td class="fs-6" align="center">
                                                         {{ $item->codigo_estudiante }}
                                                     </td>
-                                                    <td class="cursor-pointer fs-6"
-                                                    wire:click="seleccionarCodigo({{ $item->id_codigo_estudiante }})">
+                                                    <td class="cursor-pointer fs-6"  wire:click="seleccionarCodigo({{ $item->id_codigo_estudiante }})">
                                                         {{ $item->codigo_estudiante_nombre }}
                                                     </td>
                                                 </tr>
@@ -969,4 +965,6 @@
             });
         });
     </script>
+
+    
 @endpush

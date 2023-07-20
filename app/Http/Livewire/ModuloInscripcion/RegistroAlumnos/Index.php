@@ -56,6 +56,7 @@ class Index extends Component
     public $numero_alumnos = 0;
     public $search = '';
     public $codigo_estudiante_model;
+    public $fila_seleccionada = null;//Variable para seleccionar la fila de la tabla
 
     public function updated($propertyName)
     {
@@ -115,7 +116,8 @@ class Index extends Component
     public function guardarRegistro()
     {
         $this->validar_registro();
-        $this->paso = 2;
+        
+
     }
 
     public function validar_registro()
@@ -305,7 +307,11 @@ class Index extends Component
                                                     ->orWhere('codigo_estudiante_nombre', 'like', '%'.$search.'%')
                                                     ->get();
         }else{
-            $this->codigo_estudiante_model = collect();
+            if($this->fila_seleccionada){
+                $this->codigo_estudiante_model = CodigoEstudiante::where('id_codigo_estudiante', $this->fila_seleccionada)->get();
+            }else{
+                $this->codigo_estudiante_model = collect();
+            }
         }
     }
 
@@ -322,13 +328,27 @@ class Index extends Component
         $this->dispatchBrowserEvent('modal', [
             'titleModal' => '#modalBuscarCodigo',
         ]);
+        $this->fila_seleccionada = $id_codigo_estudiante;
+    }
 
+    //Abrir modal de buscar codigo
+    public function abrirModal()
+    {
+        $this->limpiar();
+        $this->dispatchBrowserEvent('abrir-modal', [
+            'titleModal' => '#modalBuscarCodigo',
+        ]);
     }
 
     //Limpiamos las variables del modal
-    public function limpiar(){
+    public function limpiar()
+    {
         $this->reset('search');
-        $this->codigo_estudiante_model = collect();
+        if($this->fila_seleccionada){
+            $this->codigo_estudiante_model = CodigoEstudiante::where('id_codigo_estudiante', $this->fila_seleccionada)->get();
+        }else{
+            $this->codigo_estudiante_model = collect();
+        }
     }
 
     public function render()

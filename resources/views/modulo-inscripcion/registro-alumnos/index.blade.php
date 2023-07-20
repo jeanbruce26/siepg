@@ -13,6 +13,11 @@
     window.addEventListener('modal', event => {   
         $(event.detail.titleModal).modal('hide');
     })
+
+    //Evento para abrir el modal
+    window.addEventListener('abrir-modal', event => {   
+        $(event.detail.titleModal).modal('show');
+    })
     
     window.addEventListener('registro-alumnos', event => {
         Swal.fire({
