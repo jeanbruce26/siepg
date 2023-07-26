@@ -17,6 +17,7 @@ class Admitido extends Model
         'id_persona',
         'id_evaluacion',
         'id_programa_proceso',
+        'id_programa_proceso_antiguo',
         'id_tipo_estudiante',
         'admitido_estado'
     ];
