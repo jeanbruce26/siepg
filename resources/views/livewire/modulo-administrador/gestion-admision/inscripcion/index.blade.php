@@ -476,7 +476,7 @@
                             <label for="modalidad" class="form-label">
                                 Modalidad
                             </label>
-                            <select class="form-select" wire:model="modalidad" id="modalidad" data-control="select2" data-placeholder="Seleccione la Modalidad">
+                            <select class="form-select @error('modalidad') is-invalid @enderror" wire:model="modalidad" id="modalidad" data-control="select2" data-placeholder="Seleccione la Modalidad">
                                 <option></option>
                                 @foreach ($modalidadesModal as $item)
                                     @php
@@ -493,7 +493,7 @@
                             <label for="programa" class="form-label">
                                 Programa
                             </label>
-                            <select class="form-select" wire:model="programa" id="programa" data-control="select2" data-placeholder="Seleccione el Programa">
+                            <select class="form-select @error('programa') is-invalid @enderror" wire:model="programa" id="programa" data-control="select2" data-placeholder="Seleccione el Programa">
                                 <option></option>
                                 @if($modalidad)
                                     @foreach ($programasModal as $item)
