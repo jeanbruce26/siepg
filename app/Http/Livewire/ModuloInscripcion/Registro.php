@@ -688,16 +688,17 @@ class Registro extends Component
         if($usuario_estudiante === null)
         {
             $usuario_estudiante = new UsuarioEstudiante();
-            $usuario_estudiante->usuario_estudiante = $this->documento;
-            $usuario_estudiante->usuario_estudiante_password = $inscripcion->inscripcion_codigo;
+            $usuario_estudiante->usuario_estudiante = $this->email;
+            $usuario_estudiante->usuario_estudiante_password = $persona->numero_documento;
             $usuario_estudiante->usuario_estudiante_creacion = now();
             $usuario_estudiante->usuario_estudiante_estado = 1;
+            $usuario_estudiante->id_persona = $this->id_persona;
             $usuario_estudiante->save();
         }
         else
         {
             // falta mostrar mensaje de que el usuario ya existe y de que se le actualizo la contraseña
-            $usuario_estudiante->usuario_estudiante_password = $inscripcion->inscripcion_codigo;
+            $usuario_estudiante->usuario_estudiante_password = $persona->numero_documento;
             $usuario_estudiante->save();
         }
 

@@ -67,7 +67,10 @@
                     </div>
                 </div>
                 <div class="col-md-12">
-                    <div class="text-center mt-3">
+                    <div class="d-flex mt-3 gap-5">
+                        <button type="button" class="btn btn-info hover-scale w-50" data-bs-toggle="modal" data-bs-target="#modal_formas_pago">
+                            FORMAS DE PAGO
+                        </button>
                         @if ($fecha_inicio_inscripcion <= date('Y-m-d') && $fecha_final_inscripcion >= date('Y-m-d'))
                             <a
                                 href="#modal_registro_pago"
@@ -187,6 +190,25 @@
         </div>
     </div>
     {{-- modal registro pago --}}
+    <div wire:ignore.self class="modal fade" tabindex="-1" id="modal_formas_pago">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">
+                        Formas de Pago
+                    </h3>
+                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
+                        aria-label="Close" wire:click="limpiar_registro_pago">
+                        <i class="bi bi-x fs-1"></i>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <embed src="{{ asset('assets_pdf/manual-tipo-voucher.pdf') }}" class="rounded" type="application/pdf" width="100%" height="700"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- modal registro pago --}}
     <div wire:ignore.self class="modal fade" tabindex="-1" id="modal_registro_pago">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -258,6 +280,7 @@
                             <select class="form-select @error('canal_pago') is-invalid @enderror"
                                 wire:model="canal_pago" id="canal_pago" data-control="select2"
                                 data-placeholder="Seleccione su canal de pago" data-allow-clear="true"
+                                data-hide-search="true"
                                 data-dropdown-parent="#modal_registro_pago">
                                 <option></option>
                                 @foreach ($canales_pagos as $item)

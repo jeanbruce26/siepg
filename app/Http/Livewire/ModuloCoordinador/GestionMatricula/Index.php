@@ -9,9 +9,12 @@ use App\Models\MatriculaGestion;
 use App\Models\ProgramaProceso;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Illuminate\Support\Str;
+use Livewire\WithFileUploads;
 
 class Index extends Component
 {
+    use WithFileUploads; // trait de carga de archivos
     use WithPagination; // trait de paginacion
     protected $paginationTheme = 'bootstrap'; // tema de paginacion
 
@@ -26,6 +29,9 @@ class Index extends Component
     public $ciclo;
     public $fecha_inicio, $fecha_fin, $fecha_extemporanea_inicio, $fecha_extemporanea_fin;
     public $alumnos_minimos;
+    public $nombre_resolucion, $resolucion;
+    public $nombre_resolucion_form = "", $resolucion_form = "";
+    public $iteration = 0;
 
     // variables de filtro
     public $filtro_proceso;
@@ -67,6 +73,9 @@ class Index extends Component
     {
         $this->limpiar_modal();
         $this->modo = 'create';
+        $this->title_modal = 'Nueva Matricula';
+        $this->nombre_resolucion_form = "Nombre de la Resolucion";
+        $this->resolucion_form = "Documento de la Resolucion";
     }
 
     public function limpiar_modal()
@@ -79,10 +88,13 @@ class Index extends Component
             'fecha_fin',
             'fecha_extemporanea_inicio',
             'fecha_extemporanea_fin',
-            'alumnos_minimos'
+            'alumnos_minimos',
+            'nombre_resolucion',
+            'resolucion'
         );
         $this->resetErrorBag();
         $this->resetValidation();
+        $this->iteration++;
     }
 
     public function aplicar_filtro()
@@ -108,6 +120,8 @@ class Index extends Component
     {
         $this->modo = 'edit';
         $this->title_modal = 'Editar Matricula';
+        $this->nombre_resolucion_form = "Nombre de la Resolucion";
+        $this->resolucion_form = "Documento de la Resolucion";
         $this->matricula_gestion = $matricula_gestion;
         $this->proceso = $matricula_gestion->id_admision;
         $this->programa_academico = $matricula_gestion->id_programa_proceso;
@@ -117,6 +131,25 @@ class Index extends Component
         $this->fecha_extemporanea_inicio = $matricula_gestion->matricula_gestion_fecha_extemporanea_inicio;
         $this->fecha_extemporanea_fin = $matricula_gestion->matricula_gestion_fecha_extemporanea_fin;
         $this->alumnos_minimos = $matricula_gestion->matricula_gestion_minimo_alumnos;
+        $this->nombre_resolucion = $matricula_gestion->matricula_gestion_resolucion;
+    }
+
+    public function cargar_matricula_ampliacion(MatriculaGestion $matricula_gestion)
+    {
+        $this->modo = 'ampliacion';
+        $this->title_modal = 'Editar Matricula para Ampliacion';
+        $this->nombre_resolucion_form = "Nombre de la Resolucion de Ampliacion";
+        $this->resolucion_form = "Documento de la Resolucion de Ampliacion";
+        $this->matricula_gestion = $matricula_gestion;
+        $this->proceso = $matricula_gestion->id_admision;
+        $this->programa_academico = $matricula_gestion->id_programa_proceso;
+        $this->ciclo = $matricula_gestion->id_ciclo;
+        $this->fecha_inicio = $matricula_gestion->matricula_gestion_fecha_inicio;
+        $this->fecha_fin = $matricula_gestion->matricula_gestion_fecha_fin;
+        $this->fecha_extemporanea_inicio = $matricula_gestion->matricula_gestion_fecha_extemporanea_inicio;
+        $this->fecha_extemporanea_fin = $matricula_gestion->matricula_gestion_fecha_extemporanea_fin;
+        $this->alumnos_minimos = $matricula_gestion->matricula_gestion_minimo_alumnos;
+        $this->nombre_resolucion = $matricula_gestion->matricula_gestion_resolucion_ampliacion;
     }
 
     public function guardar_matricula()
@@ -129,7 +162,9 @@ class Index extends Component
             'fecha_fin' => 'required|date|after_or_equal:fecha_inicio',
             'fecha_extemporanea_inicio' => 'required|date|after_or_equal:fecha_fin',
             'fecha_extemporanea_fin' => 'required|date|after_or_equal:fecha_extemporanea_inicio',
-            'alumnos_minimos' => 'required|numeric|min:1'
+            'alumnos_minimos' => 'required|numeric|min:1',
+            'nombre_resolucion' => $this->modo == 'create' || $this->modo == 'ampliacion' ? 'required' : 'nullable',
+            'resolucion' => $this->modo == 'create' || $this->modo == 'ampliacion' ? 'required|mimes:pdf|max:10240' : 'nullable|mimes:pdf|max:10240',
         ]);
 
         if ($this->modo == 'create')
@@ -145,12 +180,20 @@ class Index extends Component
             $matricula_gestion->matricula_gestion_fecha_creacion = date('Y-m-d H:i:s');
             $matricula_gestion->matricula_gestion_estado = 1;
             $matricula_gestion->matricula_gestion_minimo_alumnos = $this->alumnos_minimos;
+            $matricula_gestion->matricula_gestion_resolucion = $this->nombre_resolucion;
+            if($this->resolucion)
+            {
+                $slug_resolucion = Str::slug($this->nombre_resolucion);
+                $path = 'Posgrado/Matricula/Resolucion/';
+                $filename = $slug_resolucion.'-'.date('YmdHis').'.pdf';
+                $nombre_db = $path.$filename;
+                $data = $this->resolucion;
+                $data->storeAs($path, $filename, 'files_publico');
+                $matricula_gestion->matricula_gestion_resolucion_url = $nombre_db;
+            }
             $matricula_gestion->save();
-
-            // asignamos el siguiente ciclo a los alumnos que estan en el ciclo actual
-
         }
-        else
+        else if ($this->modo == 'edit')
         {
             $this->matricula_gestion->id_programa_proceso = $this->programa_academico;
             $this->matricula_gestion->id_admision = $this->proceso;
@@ -160,6 +203,35 @@ class Index extends Component
             $this->matricula_gestion->matricula_gestion_fecha_extemporanea_inicio = $this->fecha_extemporanea_inicio;
             $this->matricula_gestion->matricula_gestion_fecha_extemporanea_fin = $this->fecha_extemporanea_fin;
             $this->matricula_gestion->matricula_gestion_minimo_alumnos = $this->alumnos_minimos;
+            $this->matricula_gestion->matricula_gestion_resolucion = $this->nombre_resolucion;
+            if($this->resolucion)
+            {
+                $slug_resolucion = Str::slug($this->nombre_resolucion);
+                $path = 'Posgrado/Matricula/Resolucion/';
+                $filename = $slug_resolucion.'-'.date('YmdHis').'.pdf';
+                $nombre_db = $path.$filename;
+                $data = $this->resolucion;
+                $data->storeAs($path, $filename, 'files_publico');
+                $this->matricula_gestion->matricula_gestion_resolucion_url = $nombre_db;
+            }
+            $this->matricula_gestion->save();
+        }
+        else if ($this->modo == 'ampliacion')
+        {
+            $this->matricula_gestion->matricula_gestion_fecha_fin = $this->fecha_fin;
+            $this->matricula_gestion->matricula_gestion_fecha_extemporanea_inicio = $this->fecha_extemporanea_inicio;
+            $this->matricula_gestion->matricula_gestion_fecha_extemporanea_fin = $this->fecha_extemporanea_fin;
+            $this->matricula_gestion->matricula_gestion_resolucion_ampliacion = $this->nombre_resolucion;
+            if($this->resolucion)
+            {
+                $slug_resolucion = Str::slug($this->nombre_resolucion);
+                $path = 'Posgrado/Matricula/Resolucion/';
+                $filename = $slug_resolucion.'-'.date('YmdHis').'.pdf';
+                $nombre_db = $path.$filename;
+                $data = $this->resolucion;
+                $data->storeAs($path, $filename, 'files_publico');
+                $this->matricula_gestion->matricula_gestion_resolucion_ampliacion_url = $nombre_db;
+            }
             $this->matricula_gestion->save();
         }
 
@@ -177,11 +249,21 @@ class Index extends Component
                 'color' => 'success'
             ]);
         }
-        else
+        else if ($this->modo == 'edit')
         {
             $this->dispatchBrowserEvent('alerta_matricula', [
                 'title' => '¡Éxito!',
                 'text' => 'Matricula actualizada correctamente.',
+                'icon' => 'success',
+                'confirmButtonText' => 'Aceptar',
+                'color' => 'success'
+            ]);
+        }
+        else if ($this->modo == 'ampliacion')
+        {
+            $this->dispatchBrowserEvent('alerta_matricula', [
+                'title' => '¡Éxito!',
+                'text' => 'Ampliación de matricula registrada correctamente.',
                 'icon' => 'success',
                 'confirmButtonText' => 'Aceptar',
                 'color' => 'success'
