@@ -28,7 +28,7 @@ class Index extends Component
 
     public function mount()
     {
-        $this->persona = Persona::where('numero_documento', auth('plataforma')->user()->usuario_estudiante)->first(); // persona del usuario logueado
+        $this->persona = Persona::where('id_persona', auth('plataforma')->user()->id_persona)->first(); // persona del usuario logueado
         $this->admitido = Admitido::where('id_persona', $this->persona->id_persona)->orderBy('id_admitido', 'desc')->first(); // admitido del usuario logueado
         $this->constancia = ConstanciaIngreso::where('id_admitido', $this->admitido->id_admitido)->orderBy('id_constancia_ingreso', 'desc')->first(); // constancia de ingreso del usuario logueado
         if ($this->constancia == null) {

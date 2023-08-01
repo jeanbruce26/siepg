@@ -2,9 +2,12 @@
 
 namespace App\Http\Livewire\ModuloPlataforma\Matriculas;
 
+use App\Models\Admitido;
 use App\Models\AdmitidoCiclo;
+use App\Models\ConstanciaIngreso;
 use App\Models\CostoEnseñanza;
 use App\Models\CursoProgramaProceso;
+use App\Models\Evaluacion;
 use App\Models\Inscripcion;
 use App\Models\Matricula;
 use App\Models\MatriculaCurso;
@@ -524,25 +527,16 @@ class Index extends Component
     public function render()
     {
         $usuario = auth('plataforma')->user(); // obtenemos el usuario autenticado en la plataforma
-        $persona = Persona::where('numero_documento', $usuario->usuario_estudiante)->first(); // obtenemos la persona del usuario autenticado en la plataforma
+        $persona = Persona::where('id_persona', $usuario->id_persona)->first(); // obtenemos la persona del usuario autenticado en la plataforma
         $inscripcion_ultima = Inscripcion::where('id_persona', $persona->id_persona)->orderBy('id_inscripcion', 'desc')->first(); // inscripcion del usuario logueado
-        $evaluacion = $inscripcion_ultima->evaluacion; // evaluacion de la inscripcion del usuario logueado
-        $ciclo_admitido = null;
-        $matriculas = collect();
-        if ( $evaluacion )
-        {
-            $this->admitido = $persona->admitido->where('id_evaluacion', $evaluacion->id_evaluacion)->first(); // admitido de la inscripcion del usuario logueado
-            if ( $this->admitido )
-            {
-                $grupos = ProgramaProcesoGrupo::where('id_programa_proceso', $this->admitido->id_programa_proceso)->get(); // grupos de la admision del usuario logueado
-                $ciclo_admitido = AdmitidoCiclo::where('id_admitido', $this->admitido->id_admitido)->where('admitido_ciclo_estado', 1)->first(); // ciclo de la admision del usuario logueado
-                $matriculas = Matricula::where('id_admitido', $this->admitido->id_admitido)->get(); // matriculas del usuario logueado
-            }
-        }
-        else
-        {
-            $this->admitido = null;
-        }
+
+        $this->admitido = Admitido::where('id_persona', $persona->id_persona)->orderBy('id_admitido', 'desc')->first(); // obtenemos el admitido de la inscripcion de la persona del usuario autenticado en la plataforma
+        $inscripcion_ultima = Inscripcion::where('id_persona', $persona->id_persona)->orderBy('id_inscripcion', 'desc')->first(); // inscripcion del usuario logueado
+        $evaluacion = $this->admitido ? Evaluacion::where('id_evaluacion', $this->admitido->id_evaluacion)->first() : $inscripcion_ultima->evaluacion()->orderBy('id_evaluacion', 'desc')->first(); // evaluacion de la inscripcion del usuario logueado
+
+        $grupos = $this->admitido ? ProgramaProcesoGrupo::where('id_programa_proceso', $this->admitido->id_programa_proceso)->get() : null; // grupos de la admision del usuario logueado
+        $ciclo_admitido = $this->admitido ? AdmitidoCiclo::where('id_admitido', $this->admitido->id_admitido)->where('admitido_ciclo_estado', 1)->first() : null; // ciclo de la admision del usuario logueado
+        $matriculas = $this->admitido ? Matricula::where('id_admitido', $this->admitido->id_admitido)->get() : collect(); // matriculas del usuario logueado
 
         $pagos = Pago::where(function ($query) {
                         $query->where('pago_operacion', 'like', '%' . $this->search . '%')
