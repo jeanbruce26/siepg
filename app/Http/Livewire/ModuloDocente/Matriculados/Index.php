@@ -105,6 +105,8 @@ class Index extends Component
     public function modo_cancelar()
     {
         $this->modo = 'hide';
+        $this->resetErrorBag();
+        $this->resetValidation();
     }
 
     public function esNotaValida($idMatricula, $campo)
@@ -211,24 +213,37 @@ class Index extends Component
         ]);
     }
 
-    public function guardar_notas(MatriculaCurso $matricula_curso)
+    public function updatedNota($value)
     {
         // Validar los campos
         $this->validate([
-            "notas.$matricula_curso->id_matricula_curso.nota1" => 'required|numeric|between:0,20',
-            "notas.$matricula_curso->id_matricula_curso.nota2" => 'required|numeric|between:0,20',
-            "notas.$matricula_curso->id_matricula_curso.nota3" => 'required|numeric|between:0,20',
+            'nota' => 'required|numeric|between:0,20',
+        ]);
+    }
+
+    public function guardar_notas()
+    {
+        // validar si todos los campos de notas están vacíos y mostrar alerta
+        $this->validate([
+            'notas' => 'required|array|min:' . count($this->matriculados),
         ]);
 
-        $nota_matricula_curso = NotaMatriculaCurso::where('id_matricula_curso', $matricula_curso->id_matricula_curso)->first();
-        if($nota_matricula_curso == null)
+        // validar todas las filas de notas
+        $this->validate([
+            'notas.*.nota1' => 'required|numeric|between:0,20',
+            'notas.*.nota2' => 'required|numeric|between:0,20',
+            'notas.*.nota3' => 'required|numeric|between:0,20',
+        ]);
+
+        // registrar las notas en la tabla nota_matricula_curso
+        foreach ($this->notas as $key => $item)
         {
             $nota_matricula_curso = new NotaMatriculaCurso();
-            $nota_matricula_curso->id_matricula_curso = $matricula_curso->id_matricula_curso;
-            $nota_matricula_curso->nota_evaluacion_permanente = $this->notas[$matricula_curso->id_matricula_curso]['nota1'];
-            $nota_matricula_curso->nota_evaluacion_medio_curso = $this->notas[$matricula_curso->id_matricula_curso]['nota2'];
-            $nota_matricula_curso->nota_evaluacion_final = $this->notas[$matricula_curso->id_matricula_curso]['nota3'];
-            $promedio_final = ($this->notas[$matricula_curso->id_matricula_curso]['nota1'] + $this->notas[$matricula_curso->id_matricula_curso]['nota2'] + $this->notas[$matricula_curso->id_matricula_curso]['nota3']) / 3;
+            $nota_matricula_curso->id_matricula_curso = $key;
+            $nota_matricula_curso->nota_evaluacion_permanente = $item['nota1'];
+            $nota_matricula_curso->nota_evaluacion_medio_curso = $item['nota2'];
+            $nota_matricula_curso->nota_evaluacion_final = $item['nota3'];
+            $promedio_final = ($item['nota1'] + $item['nota2'] + $item['nota3']) / 3;
             $nota_matricula_curso->nota_promedio_final = $promedio_final;
             $nota_matricula_curso->nota_matricula_curso_fecha_creacion = date('Y-m-d H:i:s');
             $nota_matricula_curso->nota_matricula_curso_estado = 1;
@@ -245,34 +260,12 @@ class Index extends Component
                 $nota_matricula_curso->id_estado_cursos = 3;
             }
             $nota_matricula_curso->save();
-        }
-        else
-        {
-            $nota_matricula_curso->nota_evaluacion_permanente = $this->notas[$matricula_curso->id_matricula_curso]['nota1'];
-            $nota_matricula_curso->nota_evaluacion_medio_curso = $this->notas[$matricula_curso->id_matricula_curso]['nota2'];
-            $nota_matricula_curso->nota_evaluacion_final = $this->notas[$matricula_curso->id_matricula_curso]['nota3'];
-            $promedio_final = ($this->notas[$matricula_curso->id_matricula_curso]['nota1'] + $this->notas[$matricula_curso->id_matricula_curso]['nota2'] + $this->notas[$matricula_curso->id_matricula_curso]['nota3']) / 3;
-            $nota_matricula_curso->nota_promedio_final = $promedio_final;
-            $nota_matricula_curso->nota_matricula_curso_fecha_creacion = date('Y-m-d H:i:s');
-            $nota_matricula_curso->nota_matricula_curso_estado = 1;
-            if ( $promedio_final >= 14 )
-            {
-                $nota_matricula_curso->id_estado_cursos = 1;
-            }
-            else if ( $promedio_final >= 10 && $promedio_final < 14)
-            {
-                $nota_matricula_curso->id_estado_cursos = 2;
-            }
-            else
-            {
-                $nota_matricula_curso->id_estado_cursos = 3;
-            }
-            $nota_matricula_curso->save();
-        }
 
-        // cambiamos el estado de la matricula_curso a finalizado
-        $matricula_curso->matricula_curso_estado = 2; // 2 = curso finalizado
-        $matricula_curso->save();
+            // cambiamos el estado de la matricula_curso a finalizado
+            $matricula_curso = MatriculaCurso::find($key);
+            $matricula_curso->matricula_curso_estado = 2; // 2 = curso finalizado
+            $matricula_curso->save();
+        }
 
         $this->finalizar_curso();
 

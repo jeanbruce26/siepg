@@ -166,7 +166,7 @@
                                                         </div>
                                                     @elseif ($item->docente_curso_estado == 2)
                                                         <div class="ribbon ribbon-top">
-                                                            <div class="ribbon-label bg-warning fw-bold fs-5">Curso
+                                                            <div class="ribbon-label bg-secondary text-gray-700 fw-bold fs-5">Curso
                                                                 Terminado</div>
                                                         </div>
                                                     @endif
