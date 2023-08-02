@@ -798,11 +798,11 @@
             <thead>
                 <tr>
                     <th class="tabla4" style="background-color: rgb(200, 229, 255)"><div class="titulo3" style="font-size: small;">Usuario</div></th>
-                    <th class="tabla4" style="text-align: initial; font-size: small;">{{ $persona->numero_documento }}</th>
+                    <th class="tabla4" style="text-align: initial; font-size: small;">{{ $persona->correo }}</th>
                 </tr>
                 <tr>
                     <th class="tabla4" style="background-color: rgb(200, 229, 255)"><div class="titulo3" style="font-size: small;">Contraseña</div></th>
-                    <th class="tabla4" style="text-align: initial; font-size: small;">{{$inscripcion_codigo}}</th>
+                    <th class="tabla4" style="text-align: initial; font-size: small;">{{ $persona->numero_documento }}</th>
                 </tr>
                 <tr>
                     <th class="tabla4" style="background-color: rgb(200, 229, 255)"><div class="titulo3" style="font-size: small;">Link</div></th>

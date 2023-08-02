@@ -47,7 +47,7 @@ class Index extends Component
         $this->admision = Admision::where('admision_estado', 1)->first(); // obtenemos la admision activa
         $this->filtro_proceso = $this->admision->id_admision; // asignamos el valor de la admision activa a la variable filtro_proceso
         // $this->admisiones = Admision::orderBy('cod_admi', 'desc')->get(); // obtenemos todas las admisiones
-        $persona = Persona::where('numero_documento', auth('plataforma')->user()->usuario_estudiante)->first(); // obtenemos la persona
+        $persona = Persona::where('id_persona', auth('plataforma')->user()->id_persona)->first(); // obtenemos la persona
         $this->inscripcion = $persona->inscripcion()->orderBy('id_inscripcion', 'desc')->first(); // obtenemos la
         $this->filtro_proceso = $this->inscripcion->id_programa_proceso; // asignamos el valor de la inscripcion a la variable filtro_proceso
         $this->admisiones = Inscripcion::where('id_persona', $persona->id_persona)->groupBy('id_programa_proceso')->orderBy('id_inscripcion', 'desc')->get(); // obtenemos todas las inscripciones de la persona
@@ -104,7 +104,7 @@ class Index extends Component
             ]);
             return back();
         }
-        $persona = Persona::where('numero_documento', auth('plataforma')->user()->usuario_estudiante)->first(); // obtenemos la persona
+        $persona = Persona::where('id_persona', auth('plataforma')->user()->id_persona)->first(); // obtenemos la persona
         $this->inscripcion = Inscripcion::where('id_persona', $persona->id_persona)
                                     ->where('id_programa_proceso', $this->filtro_proceso)->first(); // obtenemos la inscripcion
         $this->expedientes_model = ExpedienteAdmision::join('expediente', 'expediente.id_expediente', '=', 'expediente_admision.id_expediente')

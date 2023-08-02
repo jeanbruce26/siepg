@@ -15,6 +15,7 @@ class Docente extends Model
         'id_docente',
         'docente_cv_url',
         'id_tipo_docente',
+        'id_categoria_docente',
         'docente_estado',
         'id_trabajador',
     ];
@@ -31,5 +32,8 @@ class Docente extends Model
         return $this->belongsTo(Trabajador::class, 'id_trabajador', 'id_trabajador');
     }
 
-    
+    public function categoria_docente()
+    {
+        return $this->belongsTo(CategoriaDocente::class, 'id_categoria_docente', 'id_categoria_docente');
+    }
 }

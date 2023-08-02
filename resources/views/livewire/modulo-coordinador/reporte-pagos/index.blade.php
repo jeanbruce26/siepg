@@ -24,8 +24,7 @@
             <div class="row mb-5 mb-xl-10">
                 <div class="col-md-12 mb-md-5 mb-xl-10">
                     {{-- alerta --}}
-                    <div
-                        class="alert bg-light-primary border border-3 border-primary d-flex align-items-center p-5 mb-5">
+                    <div class="alert bg-light-primary border border-3 border-primary d-flex align-items-center p-5 mb-5">
                         <span class="svg-icon svg-icon-2hx svg-icon-primary me-4 d-flex align-items-center">
                             <i class="las la-exclamation-circle fs-1 text-primary"></i>
                         </span>
@@ -40,112 +39,7 @@
                         <div class="card-body mb-0">
                             {{-- header de la tabla --}}
                             <div class="d-flex flex-column flex-md-row align-items-center w-100">
-                                <div class="col-md-4 pe-md-3 mb-2 mb-md-0">
-                                    <button type="button" class="btn btn btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary btn-center fw-bold w-100px w-md-125px"
-                                        data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start">
-                                        <span class="svg-icon svg-icon-3 me-1">
-                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M19.0759 3H4.72777C3.95892 3 3.47768 3.83148 3.86067 4.49814L8.56967 12.6949C9.17923 13.7559 9.5 14.9582 9.5 16.1819V19.5072C9.5 20.2189 10.2223 20.7028 10.8805 20.432L13.8805 19.1977C14.2553 19.0435 14.5 18.6783 14.5 18.273V13.8372C14.5 12.8089 14.8171 11.8056 15.408 10.964L19.8943 4.57465C20.3596 3.912 19.8856 3 19.0759 3Z"
-                                                    fill="currentColor" />
-                                            </svg>
-                                        </span>
-                                        Filtrar
-                                    </button>
-                                    <div class="menu menu-sub menu-sub-dropdown w-300px w-md-350px"
-                                        data-kt-menu="true" id="filtros_docentes" wire:ignore.self>
-                                        <div class="px-7 py-5">
-                                            <div class="fs-4 text-dark fw-bold">
-                                                Opciones de Filtro
-                                            </div>
-                                        </div>
-
-                                        <div class="separator border-gray-200"></div>
-
-                                        <form class="px-7 py-5" wire:submit.prevent="aplicar_filtro">
-                                            <div class="mb-5">
-                                                <label class="form-label fw-semibold">
-                                                    Proceso Académico:
-                                                </label>
-                                                <div>
-                                                    <select class="form-select" wire:model="filtro_proceso"
-                                                        id="filtro_proceso" data-control="select2"
-                                                        data-placeholder="Seleccione su admisión">
-                                                        <option value=""></option>
-                                                        {{-- @foreach ($procesos as $item)
-                                                            <option value="{{ $item->id_admision }}">
-                                                                {{ $item->admision }}
-                                                            </option>
-                                                        @endforeach --}}
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="mb-5">
-                                                <label class="form-label fw-semibold">
-                                                    Plan de Estudios:
-                                                </label>
-                                                <div>
-                                                    <select class="form-select" wire:model="filtro_plan"
-                                                        id="filtro_plan" data-control="select2"
-                                                        data-placeholder="Seleccione su plan">
-                                                        <option value=""></option>
-                                                        {{-- @foreach ($planes as $item)
-                                                            <option value="{{ $item->id_plan }}">
-                                                                PLAN {{ $item->plan }}
-                                                            </option>
-                                                        @endforeach --}}
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="mb-5">
-                                                <label class="form-label fw-semibold">
-                                                    Programa Académico:
-                                                </label>
-                                                <div>
-                                                    <select class="form-select" wire:model="filtro_programa"
-                                                        id="filtro_programa" data-control="select2"
-                                                        data-placeholder="Seleccione su programa">
-                                                        <option value=""></option>
-                                                        {{-- @foreach ($programas as $item)
-                                                            <option value="{{ $item->id_programa }}">
-                                                                @if ($item->mencion)
-                                                                    MENCIÓN EN {{ $item->mencion }} MODALIDAD {{ $item->modalidad->modalidad }}
-                                                                @else
-                                                                    {{ $item->programa }} EN {{ $item->subprograma }} MODALIDAD {{ $item->modalidad->modalidad }}
-                                                                @endif
-                                                            </option>
-                                                        @endforeach --}}
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="mb-10">
-                                                <label class="form-label fw-semibold">
-                                                    Ciclo Académico:
-                                                </label>
-                                                <div>
-                                                    <select class="form-select" wire:model="filtro_ciclo"
-                                                        id="filtro_ciclo" data-control="select2"
-                                                        data-placeholder="Seleccione su ciclo">
-                                                        <option value=""></option>
-                                                        {{-- @foreach ($ciclos as $item)
-                                                            <option value="{{ $item->id_ciclo }}">
-                                                                CICLO {{ $item->ciclo }}
-                                                            </option>
-                                                        @endforeach --}}
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex justify-content-end">
-                                                <button type="button" wire:click="resetear_filtro"
-                                                    class="btn btn-light btn-active-light-primary me-2"
-                                                    data-kt-menu-dismiss="true">Resetear</button>
-                                                <button type="submit" class="btn btn-primary"
-                                                    data-kt-menu-dismiss="true">Aplicar</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
+                                <div class="col-md-4 pe-md-3 mb-2 mb-md-0"></div>
                                 <div class="col-md-4 px-md-3 mb-2 mb-md-0"></div>
                                 <div class="col-md-4 ps-md-3">
                                     <input type="search" wire:model="search" class="form-control w-100"
@@ -212,6 +106,7 @@
             </div>
         </div>
     </div>
+    {{-- Modal para buscar programa| --}}
     <div wire:ignore.self class="modal fade" tabindex="-1" id="modal_buscar_programa">
         <div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
             <div class="modal-content">
@@ -236,7 +131,6 @@
                         </span>
                     </div>
                 </div>
-
                 <div class="modal-body">
                     <div class="row g-2 mb-3">
                         <div class="col-12 mb-5">

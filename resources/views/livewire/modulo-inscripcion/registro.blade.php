@@ -166,7 +166,7 @@
                                 <label for="genero" class="required form-label">
                                     Genero
                                 </label>
-                                <select wire:model="genero" class="form-select @error('genero') is-invalid @enderror" id="genero" data-control="select2" data-placeholder="Seleccione su genero" data-allow-clear="true">
+                                <select wire:model="genero" class="form-select @error('genero') is-invalid @enderror" id="genero" data-control="select2" data-placeholder="Seleccione su genero" data-allow-clear="true" data-hide-search="true">
                                     <option></option>
                                     @foreach ($genero_array as $item)
                                     <option value="{{ $item->id_genero }}">{{ $item->genero }}</option>
@@ -182,7 +182,7 @@
                                 <label for="estado_civil" class="required form-label">
                                     Estado Civil
                                 </label>
-                                <select wire:model="estado_civil" class="form-select @error('genero') is-invalid @enderror" id="estado_civil" data-control="select2" data-placeholder="Seleccione su estado civil" data-allow-clear="true">
+                                <select wire:model="estado_civil" class="form-select @error('genero') is-invalid @enderror" id="estado_civil" data-control="select2" data-placeholder="Seleccione su estado civil" data-allow-clear="true" data-hide-search="true">
                                     <option></option>
                                     @foreach ($estado_civil_array as $item)
                                     <option value="{{ $item->id_estado_civil }}">{{ $item->estado_civil }}</option>
@@ -359,9 +359,9 @@
                         <div class="col-md-4">
                             <div class="mb-5">
                                 <label for="grado_academico" class="required form-label">
-                                    Grado Académico o Titulo
+                                    Grado Maximo Académico o Titulo
                                 </label>
-                                <select wire:model="grado_academico" class="form-select @error('grado_academico') is-invalid @enderror" id="grado_academico"  data-control="select2" data-placeholder="Seleccione su grado academico" data-allow-clear="true">
+                                <select wire:model="grado_academico" class="form-select @error('grado_academico') is-invalid @enderror" id="grado_academico"  data-control="select2" data-placeholder="Seleccione su grado academico" data-allow-clear="true" data-hide-search="true">
                                     <option></option>
                                     @foreach ($grado_academico_array as $item)
                                         <option value="{{ $item->id_grado_academico }}">{{ $item->grado_academico }}</option>

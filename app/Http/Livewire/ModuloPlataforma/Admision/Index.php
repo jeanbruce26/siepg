@@ -6,6 +6,7 @@ use App\Models\Admitido;
 use App\Models\Admitidos;
 use App\Models\Encuesta;
 use App\Models\EncuestaDetalle;
+use App\Models\Evaluacion;
 use App\Models\Inscripcion;
 use App\Models\Persona;
 use App\Models\ProgramaProceso;
@@ -120,19 +121,12 @@ class Index extends Component
         $admision_fecha_admitidos->locale('es'); // seteamos el idioma
         $admision_fecha_admitidos = $admision_fecha_admitidos->isoFormat('LL'); // formateamos la fecha
 
-        $documento = auth('plataforma')->user()->usuario_estudiante; // documento del usuario logueado
-        $persona = Persona::where('numero_documento', $documento)->first(); // persona logueada
+        $usuario = auth('plataforma')->user(); // obtenemos el usuario autenticado en la plataforma
+        $persona = Persona::where('id_persona', $usuario->id_persona)->first(); // obtenemos la persona del usuario autenticado en la plataforma
+        $admitido = Admitido::where('id_persona', $persona->id_persona)->orderBy('id_admitido', 'desc')->first(); // obtenemos el admitido de la inscripcion de la persona del usuario autenticado en la plataforma
         $inscripcion_ultima = Inscripcion::where('id_persona', $persona->id_persona)->orderBy('id_inscripcion', 'desc')->first(); // inscripcion del usuario logueado
         $inscripcion_admision = ProgramaProceso::where('id_programa_proceso', $inscripcion_ultima->id_programa_proceso)->first(); // admision de la inscripcion del usuario logueado
-        $evaluacion = $inscripcion_ultima->evaluacion; // evaluacion de la inscripcion del usuario logueado
-        if($evaluacion)
-        {
-            $admitido = $persona->admitido->where('id_evaluacion', $evaluacion->id_evaluacion)->first(); // admitido de la inscripcion del usuario logueado
-        }
-        else
-        {
-            $admitido = null;
-        }
+        $evaluacion = $admitido ? Evaluacion::where('id_evaluacion', $admitido->id_evaluacion)->first() : $inscripcion_ultima->evaluacion()->orderBy('id_evaluacion', 'desc')->first(); // evaluacion de la inscripcion del usuario logueado
         $encuestas = Encuesta::where('encuesta_estado', 1)->get(); // obtenemos las encuestas activas
 
         return view('livewire.modulo-plataforma.admision.index', [

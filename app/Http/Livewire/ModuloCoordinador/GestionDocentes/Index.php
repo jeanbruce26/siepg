@@ -25,6 +25,7 @@ class Index extends Component
     // variables para el modal
     public $title_modal = 'Agregar Docente'; // Título del modal
     public $iteration = 0; // Variable para limpiar el modal
+    public $iteration2 = 0; // Variable para limpiar el modal
     public $documento_identidad; // Variable para almacenar el número de documento
     public $nombre; // Variable para almacenar el nombre
     public $apellido_paterno; // Variable para almacenar el apellido paterno
@@ -90,15 +91,6 @@ class Index extends Component
                 'foto_perfil' => 'nullable|image|max:2048'
             ]);
         }
-
-        if($this->tipo_docente == 2)
-        {
-            $this->mostrar_curriculum = true;
-        }
-        else
-        {
-            $this->mostrar_curriculum = false;
-        }
     }
 
     public function aplicar_filtro()
@@ -143,6 +135,7 @@ class Index extends Component
         ]);
         $this->resetErrorBag();
         $this->iteration++;
+        $this->iteration2++;
         $this->resetValidation();
     }
 

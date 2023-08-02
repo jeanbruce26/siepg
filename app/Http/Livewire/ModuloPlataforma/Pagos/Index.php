@@ -8,6 +8,7 @@ use App\Models\AdmitidoCiclo;
 use App\Models\CanalPago;
 use App\Models\ConceptoPago;
 use App\Models\ConstanciaIngreso;
+use App\Models\Evaluacion;
 use App\Models\Inscripcion;
 use App\Models\Matricula;
 use App\Models\MatriculaGestion;
@@ -607,59 +608,52 @@ class Index extends Component
 
     public function render()
     {
+        $persona = Persona::where('id_persona', auth('plataforma')->user()->id_persona)->first(); // persona del usuario logueado
+
         $canal_pagos = CanalPago::where('canal_pago_estado', 1)->get();
         $pagos = Pago::where(function ($query) {
                             $query->where('pago_operacion', 'like', '%' . $this->search . '%')
                                 ->orWhere('id_pago', 'like', '%' . $this->search . '%');
                         })
-                        ->where('pago_documento', auth('plataforma')->user()->usuario_estudiante)
+                        ->where('pago_documento', $persona->numero_documento)
                         ->where('id_concepto_pago', $this->concepto_pago_data ? '=' : '!=', $this->concepto_pago_data)
                         ->orderBy('id_pago', 'desc')
                         ->paginate(5); // pagos del usuario logueado
-        $persona = Persona::where('numero_documento', auth('plataforma')->user()->usuario_estudiante)->first(); // persona del usuario logueado
+
+        $this->admitido = Admitido::where('id_persona', $persona->id_persona)->orderBy('id_admitido', 'desc')->first(); // obtenemos el admitido de la inscripcion de la persona del usuario autenticado en la plataforma
         $inscripcion_ultima = Inscripcion::where('id_persona', $persona->id_persona)->orderBy('id_inscripcion', 'desc')->first(); // inscripcion del usuario logueado
-        $evaluacion = $inscripcion_ultima->evaluacion; // evaluacion de la inscripcion del usuario logueado
-        $admision = null;
-        $grupos = null;
-        $constancia_ingreso = null;
-        $matricula_gestion = null;
-        $ciclo_actual = null;
-        if($evaluacion)
+        $evaluacion = $this->admitido ? Evaluacion::where('id_evaluacion', $this->admitido->id_evaluacion)->first() : $inscripcion_ultima->evaluacion()->orderBy('id_evaluacion', 'desc')->first(); // evaluacion de la inscripcion del usuario logueado
+        $ciclo_actual =  $this->admitido ? AdmitidoCiclo::where('id_admitido', $this->admitido->id_admitido)->where('admitido_ciclo_estado', 1)->orderBy('id_admitido_ciclo', 'desc')->first() : null; // ciclo actual del admitido del usuario logueado
+        $admision = $this->admitido ? $this->admitido->programa_proceso->admision : null; // admision del admitido del usuario logueado
+        if ( $admision )
         {
-            $this->admitido = $persona->admitido->where('id_evaluacion', $evaluacion->id_evaluacion)->first(); // admitido de la inscripcion del usuario logueado
-            if($this->admitido)
+            $admision_actual = Admision::where('admision_estado', 1)->first(); // admision actual
+            if ( $admision_actual )
             {
-                $ciclo_actual = AdmitidoCiclo::where('id_admitido', $this->admitido->id_admitido)->where('admitido_ciclo_estado', 1)->orderBy('id_admitido_ciclo', 'desc')->first(); // ciclo actual del admitido del usuario logueado
-                // dd($ciclo_actual);
-                $admision = $this->admitido->programa_proceso->admision; // admision del admitido del usuario logueado
-                if ( $admision )
+                if ( $admision->id_admision != $admision_actual->id_admision )
                 {
-                    $admision_actual = Admision::where('admision_estado', 1)->first(); // admision actual
-                    if ( $admision_actual )
-                    {
-                        if ( $admision->id_admision != $admision_actual->id_admision )
-                        {
-                            $admision = null;
-                        }
-                    }
-
-                    $grupos = ProgramaProcesoGrupo::where('id_programa_proceso', $this->admitido->id_programa_proceso)->get(); // grupos de la admision del usuario logueado
-
-                    $constancia_ingreso = ConstanciaIngreso::where('id_admitido', $this->admitido->id_admitido)->first(); // constancia de ingreso del usuario logueado
-
-                    $matricula_gestion = MatriculaGestion::where('id_programa_proceso', $this->admitido ? $this->admitido->id_programa_proceso : '')
-                            ->where('matricula_gestion_estado', 1)
-                            ->orderBy('id_matricula_gestion', 'desc')
-                            ->first(); // gestion de matricula actual
+                    $admision = null;
                 }
             }
+
+            $grupos = ProgramaProcesoGrupo::where('id_programa_proceso', $this->admitido->id_programa_proceso)->get(); // grupos de la admision del usuario logueado
+
+            $constancia_ingreso = ConstanciaIngreso::where('id_admitido', $this->admitido->id_admitido)->first(); // constancia de ingreso del usuario logueado
+
+            $matricula_gestion = MatriculaGestion::where('id_programa_proceso', $this->admitido ? $this->admitido->id_programa_proceso : '')
+                    ->where('matricula_gestion_estado', 1)
+                    ->orderBy('id_matricula_gestion', 'desc')
+                    ->first(); // gestion de matricula actual
         }
         else
         {
-            $this->admitido = null;
+            $grupos = null;
+            $constancia_ingreso = null;
+            $matricula_gestion = null;
         }
         $canales_pagos = CanalPago::where('canal_pago_estado', 1)->get(); // canales de pago
         $conceptos_pagos = ConceptoPago::where('concepto_pago_estado', 1)->get(); // canales de pago
+
         return view('livewire.modulo-plataforma.pagos.index', [
             'canal_pagos' => $canal_pagos,
             'pagos' => $pagos,

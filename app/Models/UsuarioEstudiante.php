@@ -18,8 +18,15 @@ class UsuarioEstudiante extends Authenticatable
         'usuario_estudiante_password',
         'usuario_estudiante_creacion',
         'usuario_estudiante_estado',
+        'id_persona',
         'usuario_estudiante_perfil_url',
     ];
 
     public $timestamps = false;
+
+    // model persona
+    public function persona()
+    {
+        return $this->belongsTo(Persona::class, 'id_persona');
+    }
 }

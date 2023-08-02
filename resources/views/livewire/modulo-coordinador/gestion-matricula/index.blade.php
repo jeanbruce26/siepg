@@ -153,6 +153,7 @@
                                             <th>Fecha Inicio</th>
                                             <th>Fecha Fin</th>
                                             <th>Alumnos minimos</th>
+                                            <th>Resoluciones</th>
                                             <th>Estado</th>
                                             <th></th>
                                         </tr>
@@ -188,6 +189,53 @@
                                                 </td>
                                                 <td class="fs-6">
                                                     {{ $item->matricula_gestion_minimo_alumnos }}
+                                                </td>
+                                                <td>
+                                                    <button type="button"
+                                                        class="btn btn-flex btn-center fw-bold btn-outline btn-outline-dashed btn-outline-info btn-active-light-info hover-scale"
+                                                        {{-- data-kt-menu-trigger="click" --}}
+                                                        {{-- data-kt-menu-placement="bottom-end" --}}
+                                                        data-bs-toggle="dropdown">
+                                                        Resoluciones
+                                                        <span class="svg-icon fs-5 rotate-180 ms-2 me-0 m-0">
+                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                xmlns:xlink="http://www.w3.org/1999/xlink"
+                                                                width="24px" height="24px" viewBox="0 0 24 24"
+                                                                version="1.1">
+                                                                <g stroke="none" stroke-width="1" fill="none"
+                                                                    fill-rule="evenodd">
+                                                                    <polygon points="0 0 24 0 24 24 0 24"></polygon>
+                                                                    <path
+                                                                        d="M6.70710678,15.7071068 C6.31658249,16.0976311 5.68341751,16.0976311 5.29289322,15.7071068 C4.90236893,15.3165825 4.90236893,14.6834175 5.29289322,14.2928932 L11.2928932,8.29289322 C11.6714722,7.91431428 12.2810586,7.90106866 12.6757246,8.26284586 L18.6757246,13.7628459 C19.0828436,14.1360383 19.1103465,14.7686056 18.7371541,15.1757246 C18.3639617,15.5828436 17.7313944,15.6103465 17.3242754,15.2371541 L12.0300757,10.3841378 L6.70710678,15.7071068 Z"
+                                                                        fill="currentColor" fill-rule="nonzero"
+                                                                        transform="translate(12.000003, 11.999999) rotate(-180.000000) translate(-12.000003, -11.999999)">
+                                                                    </path>
+                                                                </g>
+                                                            </svg>
+                                                        </span>
+                                                    </button>
+                                                    <div class="dropdown-menu dropdown-menu-end menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-6 w-250px py-4"
+                                                        data-kt-menu="true">
+                                                        <div class="menu-item px-3">
+                                                            @if ($item->matricula_gestion_resolucion_url)
+                                                                <a href="{{ asset($item->matricula_gestion_resolucion_url) }}"
+                                                                    target="_blank" class="menu-link px-3 fs-6">
+                                                                    Ver Resolución
+                                                                </a>
+                                                            @endif
+                                                            @if ($item->matricula_gestion_resolucion_ampliacion_url)
+                                                                <a href="{{ asset($item->matricula_gestion_resolucion_ampliacion_url) }}"
+                                                                    target="_blank" class="menu-link px-3 fs-6">
+                                                                    Ver Resolución Ampliación
+                                                                </a>
+                                                            @endif
+                                                            @if ($item->matricula_gestion_resolucion_url == null && $item->matricula_gestion_resolucion_ampliacion_url == null)
+                                                                <span class="menu-link px-3 fs-6">
+                                                                    Sin Resoluciones
+                                                                </span>
+                                                            @endif
+                                                        </div>
+                                                    </div>
                                                 </td>
                                                 <td class="fs-6">
                                                     @if ($item->matricula_gestion_estado == 1)
@@ -236,6 +284,12 @@
                                                                 class="menu-link px-3 fs-6" data-bs-toggle="modal"
                                                                 data-bs-target="#modal_gestion_matricula">
                                                                 Editar Datos
+                                                            </a>
+                                                            <a href="#modal_gestion_matricula"
+                                                                wire:click="cargar_matricula_ampliacion({{ $item->id_matricula_gestion }})"
+                                                                class="menu-link px-3 fs-6" data-bs-toggle="modal"
+                                                                data-bs-target="#modal_gestion_matricula">
+                                                                Ampliación
                                                             </a>
                                                         </div>
                                                     </div>
@@ -302,6 +356,7 @@
 
                 <div class="modal-body">
                     <form autocomplete="off" class="row g-5">
+                        @if ($modo != 'ampliacion')
                         <div class="col-md-12">
                             <label for="proceso" class="required form-label">
                                 Procesos Académicos
@@ -373,6 +428,7 @@
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
+                        @endif
                         <div class="col-md-6">
                             <label for="fecha_inicio" class="required form-label">
                                 Fecha Matricula Inicio
@@ -410,6 +466,26 @@
                             <input type="date" wire:model="fecha_extemporanea_fin"
                                 class="form-control @error('fecha_extemporanea_fin') is-invalid @enderror" id="fecha_extemporanea_fin" />
                             @error('fecha_extemporanea_fin')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="col-md-12">
+                            <label for="nombre_resolucion" class="required form-label">
+                                {{ $nombre_resolucion_form }}
+                            </label>
+                            <input class="form-control @error('nombre_resolucion') is-invalid @enderror"
+                                wire:model="nombre_resolucion" id="nombre_resolucion" type="text" placeholder="Ingrese el nombre de la resolucion" />
+                            @error('nombre_resolucion')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="col-md-12">
+                            <label for="nombre_resolucion" class="required form-label">
+                                {{ $resolucion_form }}
+                            </label>
+                            <input class="form-control @error('resolucion') is-invalid @enderror"
+                                wire:model="resolucion" id="upload({{ $iteration }})" type="file" accept="application/pdf" />
+                            @error('resolucion')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>

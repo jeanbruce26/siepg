@@ -222,4 +222,14 @@ class CoordinadorController extends Controller
     {
         return view('modulo-coordinador.gestion-matriculas.index');
     }
+
+    public function reingreso_individual()
+    {
+        return view('modulo-coordinador.gestion-reingreso.individual.index');
+    }
+
+    public function reingreso_masivo()
+    {
+        return view('modulo-coordinador.gestion-reingreso.masivo.index');
+    }
 }

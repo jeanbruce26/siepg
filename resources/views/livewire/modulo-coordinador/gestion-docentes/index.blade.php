@@ -446,14 +446,14 @@
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
-                        @if ($mostrar_curriculum == true)
+                        @if ($this->tipo_docente == 2)
                             <div class="col-md-12">
                                 <label for="curriculum_vitae" class="required form-label">
                                     Curriculum Vitae
                                 </label>
                                 <input type="file" wire:model="curriculum_vitae"
                                     class="form-control @error('curriculum_vitae') is-invalid @enderror"
-                                    id="upload{{ $iteration }}" accept="application/pdf" />
+                                    id="curriculum_vitae" accept="application/pdf" />
                                 <span class="form-text text-muted mt-2 fst-italic">
                                     Nota: El currivulum vitae debe ser en formato PDF y no debe superar los 10MB. <br>
                                 </span>
@@ -469,7 +469,7 @@
                             </label>
                             <input type="file" wire:model="foto_perfil"
                                 class="form-control @error('foto_perfil') is-invalid @enderror"
-                                id="upload{{ $iteration }}" accept="image/jpeg, image/png, image/jpg" />
+                                id="foto_perfil" accept="image/jpeg, image/png, image/jpg" />
                             <span class="form-text text-muted mt-2 fst-italic">
                                 Nota: La foto de perfil debe ser imagen en formato JPG, JPEG, PNG y no debe superar los
                                 2MB. <br>

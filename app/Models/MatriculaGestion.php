@@ -22,7 +22,11 @@ class MatriculaGestion extends Model
         'matricula_gestion_fecha_extemporaneo_fin',
         'matricula_gestion_fecha_creacion',
         'matricula_gestion_estado',
-        'matricula_gestion_minimo_alumnos'
+        'matricula_gestion_minimo_alumnos',
+        'matricula_gestion_resolucion',
+        'matricula_gestion_resolucion_url',
+        'matricula_gestion_resolucion_ampliacion',
+        'matricula_gestion_resolucion_ampliacion_url',
     ];
 
     public $timestamps = false;

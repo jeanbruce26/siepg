@@ -78,9 +78,12 @@
                                                 <button type="button" wire:click="modo_cancelar" class="btn btn-danger w-lg-50">
                                                     Cancelar
                                                 </button>
+                                                <button type="button" wire:click="guardar_notas" class="btn btn-primary w-lg-50">
+                                                    Registrar Notas
+                                                </button>
                                             @else
-                                                <button type="button" wire:click="modo_ingresar_notas" class="btn btn-primary w-lg-50">
-                                                    Ingresar Notas
+                                                <button type="button" wire:click="modo_ingresar_notas" class="btn btn-success w-lg-60">
+                                                    Habilitar Ingreso de Notas
                                                 </button>
                                             @endif
                                         </div>
@@ -132,14 +135,14 @@
                                                             @if ($modo == 'hide')
                                                                 -
                                                             @elseif ($modo == 'show')
-                                                                <input type="number" class="form-control w-100px @error('notas.' . $item->id_matricula_curso . '.nota1') is-invalid @enderror @if($this->esNotaValida($item->id_matricula_curso, 'nota3')) is-valid @endif" wire:model.lazy="notas.{{ $item->id_matricula_curso }}.nota1">
+                                                                <input type="number" class="form-control w-100px @error('notas') is-invalid @enderror @error('notas.' . $item->id_matricula_curso . '.nota1') is-invalid @enderror @if($this->esNotaValida($item->id_matricula_curso, 'nota3')) is-valid @endif" wire:model.lazy="notas.{{ $item->id_matricula_curso }}.nota1">
                                                             @endif
                                                         @endif
                                                     @else
                                                         @if ($modo == 'hide')
                                                             -
                                                         @elseif ($modo == 'show')
-                                                            <input type="number" class="form-control w-100px @error('notas.' . $item->id_matricula_curso . '.nota1') is-invalid @enderror @if($this->esNotaValida($item->id_matricula_curso, 'nota3')) is-valid @endif" wire:model.lazy="notas.{{ $item->id_matricula_curso }}.nota1">
+                                                            <input type="number" class="form-control w-100px @error('notas') is-invalid @enderror @error('notas.' . $item->id_matricula_curso . '.nota1') is-invalid @enderror @if($this->esNotaValida($item->id_matricula_curso, 'nota3')) is-valid @endif" wire:model.lazy="notas.{{ $item->id_matricula_curso }}.nota1">
                                                         @endif
                                                     @endif
                                                 </td>
@@ -153,14 +156,14 @@
                                                             @if ($modo == 'hide')
                                                                 -
                                                             @elseif ($modo == 'show')
-                                                                <input type="number" class="form-control w-100px @error('notas.' . $item->id_matricula_curso . '.nota2') is-invalid @enderror @if($this->esNotaValida($item->id_matricula_curso, 'nota3')) is-valid @endif" wire:model.lazy="notas.{{ $item->id_matricula_curso }}.nota2">
+                                                                <input type="number" class="form-control w-100px @error('notas') is-invalid @enderror @error('notas.' . $item->id_matricula_curso . '.nota2') is-invalid @enderror @if($this->esNotaValida($item->id_matricula_curso, 'nota3')) is-valid @endif" wire:model.lazy="notas.{{ $item->id_matricula_curso }}.nota2">
                                                             @endif
                                                         @endif
                                                     @else
                                                         @if ($modo == 'hide')
                                                             -
                                                         @elseif ($modo == 'show')
-                                                            <input type="number" class="form-control w-100px @error('notas.' . $item->id_matricula_curso . '.nota2') is-invalid @enderror @if($this->esNotaValida($item->id_matricula_curso, 'nota3')) is-valid @endif" wire:model.lazy="notas.{{ $item->id_matricula_curso }}.nota2">
+                                                            <input type="number" class="form-control w-100px @error('notas') is-invalid @enderror @error('notas.' . $item->id_matricula_curso . '.nota2') is-invalid @enderror @if($this->esNotaValida($item->id_matricula_curso, 'nota3')) is-valid @endif" wire:model.lazy="notas.{{ $item->id_matricula_curso }}.nota2">
                                                         @endif
                                                     @endif
                                                 </td>
@@ -174,14 +177,14 @@
                                                             @if ($modo == 'hide')
                                                                 -
                                                             @elseif ($modo == 'show')
-                                                                <input type="number" class="form-control w-100px @error('notas.' . $item->id_matricula_curso . '.nota3') is-invalid @enderror @if($this->esNotaValida($item->id_matricula_curso, 'nota3')) is-valid @endif" wire:model.lazy="notas.{{ $item->id_matricula_curso }}.nota3">
+                                                                <input type="number" class="form-control w-100px @error('notas') is-invalid @enderror @error('notas.' . $item->id_matricula_curso . '.nota3') is-invalid @enderror @if($this->esNotaValida($item->id_matricula_curso, 'nota3')) is-valid @endif" wire:model.lazy="notas.{{ $item->id_matricula_curso }}.nota3">
                                                             @endif
                                                         @endif
                                                     @else
                                                         @if ($modo == 'hide')
                                                             -
                                                         @elseif ($modo == 'show')
-                                                            <input type="number" class="form-control w-100px @error('notas.' . $item->id_matricula_curso . '.nota3') is-invalid @enderror @if($this->esNotaValida($item->id_matricula_curso, 'nota3')) is-valid @endif" wire:model.lazy="notas.{{ $item->id_matricula_curso }}.nota3">
+                                                            <input type="number" class="form-control w-100px @error('notas') is-invalid @enderror @error('notas.' . $item->id_matricula_curso . '.nota3') is-invalid @enderror @if($this->esNotaValida($item->id_matricula_curso, 'nota3')) is-valid @endif" wire:model.lazy="notas.{{ $item->id_matricula_curso }}.nota3">
                                                         @endif
                                                     @endif
                                                 </td>
@@ -228,23 +231,7 @@
                                                     @endif
                                                 </td>
                                                 @if ($docente_curso->docente_curso_estado != 2)
-                                                <td class="d-flex flex-column gap-3">
-                                                    @if ($nota_curso)
-                                                        @if ($nota_curso->nota_evaluacion_final !== null)
-                                                        @else
-                                                            @if ($modo == 'show')
-                                                                <button wire:click="guardar_notas({{ $item->id_matricula_curso }})" class="btn btn-outline btn-outline-dashed btn-outline-info btn-active-light-info fw-bold hover-scale">
-                                                                    Guardar
-                                                                </button>
-                                                            @endif
-                                                        @endif
-                                                    @else
-                                                        @if ($modo == 'show')
-                                                            <button wire:click="guardar_notas({{ $item->id_matricula_curso }})" class="btn btn-outline btn-outline-dashed btn-outline-info btn-active-light-info fw-bold hover-scale">
-                                                                Guardar
-                                                            </button>
-                                                        @endif
-                                                    @endif
+                                                <td class="text-center">
                                                     <button type="button"
                                                         class="btn btn-flex btn-center fw-bold btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary hover-scale"
                                                         {{-- data-kt-menu-trigger="click" --}}

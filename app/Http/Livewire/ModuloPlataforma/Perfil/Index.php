@@ -123,8 +123,8 @@ class Index extends Component
 
     public function render()
     {
-        $documento = auth('plataforma')->user()->usuario_estudiante; // documento del usuario logueado
-        $persona = Persona::where('numero_documento', $documento)->first(); // persona logueada
+        $id_persona = auth('plataforma')->user()->id_persona; // documento del usuario logueado
+        $persona = Persona::where('id_persona', $id_persona)->first(); // persona logueada
         $admitido = Admitido::where('id_persona', $persona->id_persona)->first(); // admitido del usuario logueado')
         if(!$persona)
         {
