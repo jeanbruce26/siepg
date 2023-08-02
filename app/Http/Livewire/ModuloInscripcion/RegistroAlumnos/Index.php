@@ -294,6 +294,7 @@ class Index extends Component
         $admitido->id_persona = $persona->id_persona;
         $admitido->id_evaluacion = null;
         $admitido->id_programa_proceso = $this->programa;
+        $admitido->id_programa_proceso_antiguo = null;
         $admitido->id_tipo_estudiante = null;
         $admitido->admitido_estado = 1;
         $admitido->save();
@@ -304,6 +305,9 @@ class Index extends Component
         $usuario_estudiante->usuario_estudiante_password = $persona->numero_documento;
         $usuario_estudiante->usuario_estudiante_creacion = date('Y-m-d H:i:s');
         $usuario_estudiante->usuario_estudiante_estado = 1;
+        $usuario_estudiante->id_persona = $persona->id_persona;
+        $usuario_estudiante->usuario_estudiante_perfil_url = '/public/assets/media/avatars/blank.png';
+        $usuario_estudiante->save();
 
         $this->dispatchBrowserEvent('alerta_final_registro', [
             'id_persona' => $persona->id_persona,
@@ -624,7 +628,6 @@ class Index extends Component
                                         ->join('programa', 'programa.id_programa', 'programa_plan.id_programa')
                                         ->where('programa.id_modalidad', $modalidad)
                                         ->where('programa_proceso.id_admision',$this->admision)
-                                        ->where('programa_plan.programa_plan_estado', 1)
                                         ->get();
     }
 
@@ -634,7 +637,6 @@ class Index extends Component
                                         ->join('programa', 'programa.id_programa', 'programa_plan.id_programa')
                                         ->where('programa.id_modalidad', $this->modalidad)
                                         ->where('programa_proceso.id_admision',$admision)
-                                        ->where('programa_plan.programa_plan_estado', 1)
                                         ->get();
     }
 
@@ -719,6 +721,25 @@ class Index extends Component
                         }
                         if($this->correo_opcional == $this->correo){
                             $fail('El correo opcional no puede ser igual al correo.');
+                        }
+                    }
+                },
+            ],
+        ]);
+    }
+
+    public function updatedCelular($celular)
+    {
+        $this->validate([
+            'celular' => 'required|numeric|digits:9',
+            'celular_opcional' => [
+                'nullable',
+                'numeric',
+                'digits:9',
+                function ($attribute, $value, $fail) {
+                    if ($this->celular_opcional) {
+                        if ($this->celular == $this->celular_opcional) {
+                            $fail('El celular opcional no puede ser igual al celular.');
                         }
                     }
                 },

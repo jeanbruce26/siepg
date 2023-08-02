@@ -24,8 +24,8 @@ class Gracias extends Component
 
         $personaModel = Persona::find($this->id_persona);
         $admitidoModel = Admitido::where('id_persona', $this->id_persona)->first();
-        $usuarioModel = UsuarioEstudiante::where('usuario_estudiante', $personaModel->correo)->first();
-        dd($usuarioModel);
+        $usuarioModel = UsuarioEstudiante::where('id_persona', $this->id_persona)->first();
+        
 
         return view('livewire.modulo-inscripcion.registro-alumnos.gracias', [
             'personaModel' => $personaModel,
