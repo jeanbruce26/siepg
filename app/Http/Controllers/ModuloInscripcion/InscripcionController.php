@@ -60,6 +60,21 @@ class InscripcionController extends Controller
         ]);
     }
 
+    public function gracias_registro($id)
+    {
+        $id_persona = $id;
+
+        
+        $persona = Persona::find($id_persona);
+        // dd($persona);
+        if (!$persona) {
+            abort(404);
+        }
+        return view('modulo-inscripcion.registro-alumnos.gracias', [
+            'id_persona' => $id_persona
+        ]);
+    }
+
     public function ficha_inscripcion_email($id)
     {
         $inscripcion = Inscripcion::where('id_inscripcion',$id)->first(); // Datos de la inscripcion

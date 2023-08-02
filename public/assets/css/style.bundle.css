@@ -49596,3 +49596,23 @@ body,
   width: 2.5rem;
   margin-right: 0.5rem;
 }
+
+
+
+/* Input de codigo de admitidos */
+.input-group-with-clear {
+  position: relative;
+}
+
+.input-group-clear-button {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  z-index: 1;
+}
+
+.input-group-clear-button:hover {
+  color: red;
+}

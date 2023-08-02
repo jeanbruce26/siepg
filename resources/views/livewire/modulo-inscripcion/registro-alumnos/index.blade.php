@@ -97,11 +97,17 @@
                                 </label>
                                 <div class="d-flex flex-column flex-md-row gap-5">
                                     <div class="d-flex flex-column w-100">
-                                        <input type="text" wire:model="admitido_codigo" class="form-control @error('admitido_codigo') is-invalid @enderror" id="admitido_codigo" placeholder="Ingrese su código de alumno">
-                                        <div class="mt-1 text-muted">
-                                            <strong>Nota: </strong>Si has olvidado tu código, puedes buscarlo mediante su nombre.
-                                        </div>
+                                        <input type="text" wire:model="admitido_codigo" class="form-control cursor-default @error('admitido_codigo') is-invalid @enderror" id="admitido_codigo" placeholder="Busque su código de alumno" readonly>
                                     </div>
+                                    @if($admitido_codigo)
+                                        <div class="d-flex justify-content-center align-items-center me-4">
+                                            <i class="ki-duotone ki-cross-square text-danger fs-3x hover-scale" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar código" wire:click="eliminarCodigo()" style="cursor: pointer">
+                                                <i class="path1"></i>
+                                                <i class="path2"></i>
+                                                <i class="path3"></i>
+                                            </i>
+                                        </div>
+                                    @endif
                                     <div>
                                         <button type="button" href="#modalBuscarCodigo" class="btn btn-primary hover-elevate-down w-100 w-md-150px"  wire:click="abrirModal()">
                                             Buscar código
@@ -231,6 +237,9 @@
                                     <option value="{{ $item->id_discapacidad }}">{{ $item->discapacidad }}</option>
                                     @endforeach
                                 </select>
+                                <div class="mt-1 text-muted">
+                                    <strong>Nota: </strong>En caso que no tenga discapacidad, seleccione "Ninguna de las anteriores"
+                                </div>
                                 @error('discapacidad')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
@@ -451,6 +460,14 @@
                     </div>
                 </div>
             </div>
+            <div class="alert bg-light-secondary border border-secondary d-flex align-items-center gap-2 p-5 mb-8 mt-8">
+                <div class="form-check form-check-custom form-check-solid">
+                    <input class="form-check-input @error('declaracion_jurada') is-invalid @enderror" type="checkbox" wire:model="declaracion_jurada" id="declaracion_jurada" style="cursor: pointer"/>
+                    <label class="fw-bold fs-5 @error('declaracion_jurada') text-danger @enderror ms-5" for="declaracion_jurada" style="cursor: pointer">
+                        DECLARO BAJO JURAMENTO QUE LOS DATOS CONSIGNADOS EN EL PRESENTE REGISTRO SON FIDEDIGNOS
+                    </label>
+                </div>
+            </div>
             <div class="d-flex justify-content-between mt-8">
                 <button type="button" class="btn btn-secondary hover-elevate-down" style="width: 150px" wire:click.prevent="paso_1()">
                     Regresar
@@ -530,7 +547,7 @@
                                                 </tr>
                                                 @break
                                             @else
-                                                <tr class="@if($fila_seleccionada == $item->id_codigo_estudiante) table-primary @endif">
+                                                <tr class="@if($fila_seleccionada == $item->id_codigo_estudiante) bg-light-primary text-primary @endif">
                                                     <td class="fs-6" align="center">
                                                         {{ $item->codigo_estudiante }}
                                                     </td>

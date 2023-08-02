@@ -78,12 +78,12 @@ class Index extends Component
     {
         $this->validateOnly($propertyName, [
             'numero_documento' => 'required|numeric|digits_between:8,9|unique:persona,numero_documento,' . $this->id_persona . ',id_persona',
-            'apellido_paterno' => 'required',
-            'apellido_materno' => 'required',
-            'nombre' => 'required',
+            'apellido_paterno' => 'required|max:50|alpha',
+            'apellido_materno' => 'required|max:50|alpha',
+            'nombre' => 'required|max:50|alpha',
             'genero' => 'required|numeric',
             'fecha_nacimiento' => 'required|date',
-            'direccion' => 'required',
+            'direccion' => 'required|max:100',
             'celular' => 'required|numeric|digits:9',
             'celular_opcional' => [
                 'nullable',
@@ -137,22 +137,24 @@ class Index extends Component
             ],
             'año_egreso' => 'required|numeric|digits:4',
             'especialidad' => 'nullable',
-            'centro_trabajo' => 'required',
+            'centro_trabajo' => 'required|max:50',
             'discapacidad' => 'required|numeric',
             'estado_civil' => 'required|numeric',
             'grado_academico' => 'required|numeric',
             'universidad' => 'required|numeric',
             'ubigeo_direccion' => 'required|numeric',
             'ubigeo_nacimiento' => 'required|numeric',
-            'pais_direccion' => 'required',
-            'pais_nacimiento' => 'required',
+            'pais_direccion' => 'required|max:50',
+            'pais_nacimiento' => 'required|max:50',
         ]);
+    }
 
-        //Validar si existe el ubigeo de dirección y nacimiento. Si selecciona otro pais, se debe activar el pais de nacimiento y direccion
-        if ($this->ubigeo_direccion) 
+    public function updatedUbigeoDireccion($ubigeo_direccion)
+    {
+        if ($ubigeo_direccion) 
         {
             //Validar si escoge otro pais con ubigeo 000000
-            $ubigeo = Ubigeo::findOrFail($this->ubigeo_direccion);
+            $ubigeo = Ubigeo::findOrFail($ubigeo_direccion);
             if ($ubigeo->ubigeo == '000000') {
                 $this->pais_direccion_estado = true;
             }else{
@@ -163,10 +165,14 @@ class Index extends Component
                 $this->pais_direccion = $paisDireccion;
             }
         }
-        if ($this->ubigeo_nacimiento) 
+    }
+
+    public function updatedUbigeoNacimiento($ubigeo_nacimiento)
+    {
+        if ($ubigeo_nacimiento) 
         {
             //Validar si escoge otro pais con ubigeo 000000
-            $ubigeo = Ubigeo::findOrFail($this->ubigeo_nacimiento);
+            $ubigeo = Ubigeo::findOrFail($ubigeo_nacimiento);
             if ($ubigeo->ubigeo == '000000') {
                 $this->pais_nacimiento_estado = true;
             }else{

@@ -496,7 +496,7 @@
                                         </div>
                                     @endif
                                 </div>
-                                @if($pais_direccion_estado == true)
+                                @if($pais_direccion_estado == true && $ubigeo_direccion)
                                     <div class="col-md-12">
                                         <label for="pais_direccion" class="{{ $modo != 3 ? 'required' : ''}} form-label">
                                             País de Dirección
@@ -547,7 +547,7 @@
                                         </div>
                                     @endif
                                 </div>
-                                @if($pais_nacimiento_estado == true)
+                                @if($pais_nacimiento_estado == true && $ubigeo_nacimiento)
                                     <div class="col-md-12">
                                         <label for="pais_nacimiento" class="{{ $modo != 3 ? 'required' : ''}} form-label">
                                             País de Nacimiento
