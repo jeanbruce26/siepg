@@ -487,7 +487,7 @@
                     <h2 class="modal-title">
                         Buscar Código de Alumno por Nombre
                     </h2>
-    
+
                     <div class="btn btn-icon btn-sm btn-active-light-danger ms-2" data-bs-dismiss="modal"
                         aria-label="Close"
                         wire:click="limpiar()">
@@ -504,7 +504,7 @@
                         </span>
                     </div>
                 </div>
-    
+
                 <div class="modal-body">
                     <div class="row g-5 mb-3 px-md-5 mb-3">
                         <div class="col-12">
@@ -524,7 +524,7 @@
 
                         <div class="d-flex justify-content-start align-items-center mb-2">
                             <div class="col-12">
-                                <input class="form-control form-control-sm text-muted" type="search" wire:model="search"
+                                <input class="form-control text-muted" type="search" wire:model="search"
                                     placeholder="Buscar por nombre">
                             </div>
                         </div>
@@ -983,5 +983,5 @@
         });
     </script>
 
-    
+
 @endpush
