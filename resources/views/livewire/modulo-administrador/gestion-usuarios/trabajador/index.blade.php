@@ -31,32 +31,54 @@
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-5">
-                            <div class="d-flex justify-content-between align-items-center gap-4">
-                                <div class="text-muted d-flex align-items-center">
-                                    <label class="col-form-label me-2">Mostrar</label>
-                                    <select class="form-select form-select-sm text-muted"
-                                        wire:model="mostrar" id="mostrar" data-control="select2"
-                                        data-placeholder="Seleccione">
-                                        <option value="10" selected>10</option>
-                                        <option value="25">25</option>
-                                        <option value="50">50</option>
-                                        <option value="100">100</option>
-                                    </select>
-                                </div>
-                                <div class="text-muted d-flex align-items-center">
-                                    <label class="col-form-label me-2">Tipo</label>
-                                    <select class="form-select form-select-sm text-muted"
-                                        wire:model="tipo" id="tipo" data-control="select2"
-                                        data-placeholder="Seleccione">
-                                        <option value="all" selected>Mostrar todos</option>
-                                        @foreach ($tipo_trabajadores as $item)
-                                            <option value="{{ $item->id_tipo_trabajador }}">{{ $item->tipo_trabajador }}
-                                            </option>
-                                        @endforeach
-                                    </select>
+                            <div class="me-1">
+                                <a class="btn btn-sm btn-light-primary me-3 fw-bold" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start">
+                                    <span class="svg-icon svg-icon-6 svg-icon-muted me-1">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M19.0759 3H4.72777C3.95892 3 3.47768 3.83148 3.86067 4.49814L8.56967 12.6949C9.17923 13.7559 9.5 14.9582 9.5 16.1819V19.5072C9.5 20.2189 10.2223 20.7028 10.8805 20.432L13.8805 19.1977C14.2553 19.0435 14.5 18.6783 14.5 18.273V13.8372C14.5 12.8089 14.8171 11.8056 15.408 10.964L19.8943 4.57465C20.3596 3.912 19.8856 3 19.0759 3Z" fill="currentColor" />
+                                        </svg>
+                                    </span>
+                                    Filtro
+                                </a>
+                                <div class="menu menu-sub menu-sub-dropdown w-250px w-md-300px" data-kt-menu="true" id="menu_expediente" wire:ignore.self>
+                                    <div class="px-7 py-5">
+                                        <div class="fs-5 text-dark fw-bold">
+                                            Opciones de filtrado
+                                        </div> 
+                                    </div>
+                                    <div class="separator border-gray-200"></div>
+                                    <div class="px-7 py-5">
+                                        <div class="mb-5 col-md-12">
+                                            <label class="form-label fw-semibold">Mostrar:</label>
+                                            <div>
+                                                <select class="form-select" wire:model="mostrar" id="mostrar"  data-control="select2" data-placeholder="Seleccione">
+                                                    <option value="10" selected>10</option>
+                                                    <option value="25">25</option>
+                                                    <option value="50">50</option>
+                                                    <option value="100">100</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="mb-5 col-md-12">
+                                            <label class="form-label fw-semibold">Tipo:</label>
+                                            <div>
+                                                <select class="form-select" wire:model="tipo" id="tipo"  data-control="select2" data-placeholder="Seleccione">
+                                                    <option value="all" selected>Mostrar todos</option>
+                                                    @foreach ($tipo_trabajadores as $item)
+                                                        <option value="{{ $item->id_tipo_trabajador }}">{{ $item->tipo_trabajador }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-end">
+                                            <button type="button" wire:click="resetear_filtro" class="btn btn-sm btn-light btn-active-light-primary me-2" data-kt-menu-dismiss="true">Resetear</button>
+                                            <button type="button" class="btn btn-sm btn-primary" data-kt-menu-dismiss="true" wire:click="filtrar">Aplicar</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="w-25">
+                            <div class="ms-2">
                                 <input class="form-control form-control-sm text-muted" type="search" wire:model="search"
                                     placeholder="Buscar...">
                             </div>
@@ -92,7 +114,7 @@
                                             <td>
                                                 <div class="d-flex justify-conten-star align-items-center">
                                                     <div class="flex-shirnk-0">
-                                                        @if ($item->trabajador_perfil_url)
+                                                        @if ($item->trabajador_perfil_url && file_exists(public_path($item->trabajador_perfil_url)))
                                                             <img class="rounded-circle avatar-xs"
                                                                 src="{{ asset($item->trabajador_perfil_url) }}"
                                                                 alt="perfil Avatar">

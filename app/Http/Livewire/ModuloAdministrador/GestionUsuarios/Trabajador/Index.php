@@ -255,7 +255,7 @@ class Index extends Component
     {
         $id_trabajador = 0;
 
-        if ($this->modo == 1) {
+        if ($this->modo == 1) {//Si el modo es crear
             if($this->tipo_documento == 1){
                 $this->validate([
                     'tipo_documento' => 'required|numeric',
@@ -279,17 +279,18 @@ class Index extends Component
                     'perfil' => 'nullable|file|mimes:jpg,png,jpeg',
                 ]);
             }
-    
-            $trabajador = TrabajadorModel::create([
-                "trabajador_nombre" => $this->nombres,
-                "trabajador_apellido" => $this->apellidos,
-                "trabajador_nombre_completo" => $this->apellidos.' '.$this->nombres,
-                "trabajador_numero_documento" => $this->documento,
-                "trabajador_correo" => $this->correo,
-                "trabajador_direccion" => $this->direccion,
-                "id_grado_academico " => $this->grado,
-                "trabajador_estado" => 1,
-            ]);
+
+            //Creamos el trabajador
+            $trabajador = new TrabajadorModel();
+            $trabajador->trabajador_nombre = $this->nombres;
+            $trabajador->trabajador_apellido = $this->apellidos;
+            $trabajador->trabajador_nombre_completo = $this->apellidos.' '.$this->nombres;
+            $trabajador->trabajador_numero_documento = $this->documento;
+            $trabajador->trabajador_correo = $this->correo;
+            $trabajador->trabajador_direccion = $this->direccion;
+            $trabajador->id_grado_academico = $this->grado;
+            $trabajador->trabajador_estado = 1;
+            $trabajador->save();
 
             $id_trabajador = $trabajador->id_trabajador;
     
@@ -301,7 +302,7 @@ class Index extends Component
                 'color' => 'success'
             ]);
 
-        }else{
+        }else{//Si el modo es editar
             if($this->tipo_documento == 1){
                 $this->validate([
                     'tipo_documento' => 'required|numeric',
@@ -1084,6 +1085,42 @@ class Index extends Component
             'titleModal' => '#modaldDesAsignar'
         ]);
         $this->limpiarAsignacion();
+    }
+
+    //Limpiamos los filtros
+    public function resetear_filtro()
+    {
+        $this->reset(['tipo','mostrar']);
+        $this->tipo = 'all';
+        $this->mostrar = '10';
+    }
+
+    public function filtrar()
+    {
+        $tip = $this->tipo;
+        $buscar = $this->search;
+
+        if($this->tipo == 'all'){
+            $trabajadores = TrabajadorTipoTrabajador::join('trabajador','trabajador_tipo_trabajador.id_trabajador','=','trabajador.id_trabajador')
+                    ->where('trabajador.trabajador_nombre','LIKE',"%{$this->search}%")
+                    ->orWhere('trabajador.trabajador_apellido','LIKE',"%{$this->search}%")
+                    // ->orWhere('id_grado_academico','LIKE',"%{$this->search}%")
+                    ->orderBy('trabajador.id_trabajador','DESC')
+                    ->paginate($this->mostrar);
+        }else{
+            $trabajadores = TrabajadorTipoTrabajador::join('trabajador','trabajador_tipo_trabajador.id_trabajador','=','trabajador.id_trabajador')
+                ->where(function($query) use ($tip){
+                    $query->where('trabajador_tipo_trabajador.id_tipo_trabajador',$tip)
+                        ->where('trabajador_tipo_trabajador.trabajador_tipo_trabajador_estado',1);
+                })
+                ->where(function($query) use ($buscar){
+                    $query->where('trabajador.trabajador_nombre','LIKE',"%{$buscar}%")
+                        ->orWhere('trabajador.trabajador_apellido','LIKE',"%{$buscar}%");
+                        // ->orWhere('trabajador.id_grado_academico','LIKE',"%{$buscar}%");
+                    })
+                ->orderBy('id_trabajador_tipo_trabajador','DESC')
+                ->paginate($this->mostrar);
+        }
     }
     
     public function render()

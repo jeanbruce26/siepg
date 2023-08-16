@@ -155,7 +155,7 @@
         <div class="cursor-pointer symbol symbol-35px symbol-md-45px"
             data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-attach="parent"
             data-kt-menu-placement="bottom-end">
-            @if ($trabajador->trabajador_perfil_url)
+            @if ($trabajador->trabajador_perfil_url && file_exists(public_path($trabajador->trabajador_perfil_url)))
                 <img src="{{ asset($trabajador->trabajador_perfil_url) }}" alt="avatar" />
             @else
                 <img src="{{ asset('assets/media/avatars/blank.png') }}" alt="avatar" />
@@ -166,7 +166,7 @@
             <div class="menu-item px-3">
                 <div class="menu-content d-flex align-items-center px-3">
                     <div class="symbol symbol-50px me-5">
-                        @if ($trabajador->trabajador_perfil_url)
+                        @if ($trabajador->trabajador_perfil_url && file_exists(public_path($trabajador->trabajador_perfil_url)))
                             <img src="{{ asset($trabajador->trabajador_perfil_url) }}" alt="avatar" />
                         @else
                             <img src="{{ asset('assets/media/avatars/blank.png') }}" alt="avatar" />
