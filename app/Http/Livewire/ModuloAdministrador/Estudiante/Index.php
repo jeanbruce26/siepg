@@ -400,6 +400,37 @@ class Index extends Component
             'pais_nacimiento' => 'required',
         ]);
 
+        // verificamos el pais de direccion
+        $ubigeo_validar = Ubigeo::find($this->ubigeo_direccion)->ubigeo;
+        if ($ubigeo_validar == 000000)
+        {
+            $this->pais_direccion = str_replace(["á", "é", "í", "ó", "ú", "Á", "É", "Í", "Ó", "Ú"], ["a", "e", "i", "o", "u", "A", "E", "I", "O", "U"], $this->pais_direccion);
+        }
+        else
+        {
+            $this->pais_direccion = 'PERU';
+        }
+
+        // verificamos el pais de nacimiento
+        $ubigeo_validar = Ubigeo::find($this->ubigeo_nacimiento)->ubigeo;
+        if ($ubigeo_validar == 000000)
+        {
+            $this->pais_nacimiento = str_replace(["á", "é", "í", "ó", "ú", "Á", "É", "Í", "Ó", "Ú"], ["a", "e", "i", "o", "u", "A", "E", "I", "O", "U"], $this->pais_nacimiento);
+        }
+        else
+        {
+            $this->pais_nacimiento = 'PERU';
+        }
+
+        //reemplazar tildes por letras sin tildes en los campos de apellido paterno, apellido materno y nombres
+        $this->nombre = strtoupper(str_replace(["á", "é", "í", "ó", "ú", "Á", "É", "Í", "Ó", "Ú", "à", "è", "ì", "ò", "ù", "À", "È", "Ì", "Ò", "Ù"], ["a", "e", "i", "o", "u", "A", "E", "I", "O", "U", "a", "e", "i", "o", "u", "A", "E", "I", "O", "U"], $this->nombre));
+        $this->apellido_paterno = strtoupper(str_replace(["á", "é", "í", "ó", "ú", "Á", "É", "Í", "Ó", "Ú", "à", "è", "ì", "ò", "ù", "À", "È", "Ì", "Ò", "Ù"], ["a", "e", "i", "o", "u", "A", "E", "I", "O", "U", "a", "e", "i", "o", "u", "A", "E", "I", "O", "U"], $this->apellido_paterno));
+        $this->apellido_materno = strtoupper(str_replace(["á", "é", "í", "ó", "ú", "Á", "É", "Í", "Ó", "Ú", "à", "è", "ì", "ò", "ù", "À", "È", "Ì", "Ò", "Ù"], ["a", "e", "i", "o", "u", "A", "E", "I", "O", "U", "a", "e", "i", "o", "u", "A", "E", "I", "O", "U"], $this->apellido_materno));
+        $this->direccion = strtoupper(str_replace(["á", "é", "í", "ó", "ú", "Á", "É", "Í", "Ó", "Ú", "à", "è", "ì", "ò", "ù", "À", "È", "Ì", "Ò", "Ù"], ["a", "e", "i", "o", "u", "A", "E", "I", "O", "U", "a", "e", "i", "o", "u", "A", "E", "I", "O", "U"], $this->direccion));
+        $this->especialidad = strtoupper(str_replace(["á", "é", "í", "ó", "ú", "Á", "É", "Í", "Ó", "Ú", "à", "è", "ì", "ò", "ù", "À", "È", "Ì", "Ò", "Ù"], ["a", "e", "i", "o", "u", "A", "E", "I", "O", "U", "a", "e", "i", "o", "u", "A", "E", "I", "O", "U"], $this->especialidad));
+        $this->centro_trabajo = strtoupper(str_replace(["á", "é", "í", "ó", "ú", "Á", "É", "Í", "Ó", "Ú", "à", "è", "ì", "ò", "ù", "À", "È", "Ì", "Ò", "Ù"], ["a", "e", "i", "o", "u", "A", "E", "I", "O", "U", "a", "e", "i", "o", "u", "A", "E", "I", "O", "U"], $this->centro_trabajo));
+        $this->correo = strtolower(str_replace(' ', '', $this->correo));
+
         //Validar que no se hayan realizado cambios en el modal
         $persona = Persona::findOrFail($this->id_persona);
         if ($persona->numero_documento == $this->numero_documento && $persona->apellido_paterno == $this->apellido_paterno && $persona->apellido_materno == $this->apellido_materno && $persona->nombre == $this->nombre && $persona->id_genero == $this->genero && $persona->fecha_nacimiento == $this->fecha_nacimiento && $persona->direccion == $this->direccion && $persona->celular == $this->celular && $persona->celular_opcional == $this->celular_opcional && $persona->correo == $this->correo && $persona->correo_opcional == $this->correo_opcional && $persona->año_egreso == $this->año_egreso && $persona->especialidad_carrera == $this->especialidad && $persona->centro_trabajo == $this->centro_trabajo && $persona->id_discapacidad == $this->discapacidad && $persona->id_estado_civil == $this->estado_civil && $persona->id_grado_academico == $this->grado_academico && $persona->id_universidad == $this->universidad && $persona->ubigeo_direccion == $this->ubigeo_direccion && $persona->ubigeo_nacimiento == $this->ubigeo_nacimiento && $persona->pais_direccion == $this->pais_direccion && $persona->pais_nacimiento == $this->pais_nacimiento) {

@@ -1092,10 +1092,11 @@ class Index extends Component
         $buscar = $this->search;
 
         if($this->tipo == 'all'){
-            $trabajadores = TrabajadorModel::where('trabajador_nombre','LIKE',"%{$this->search}%")
-                    ->orWhere('trabajador_apellido','LIKE',"%{$this->search}%")
+            $trabajadores = TrabajadorTipoTrabajador::join('trabajador','trabajador_tipo_trabajador.id_trabajador','=','trabajador.id_trabajador')
+                    ->where('trabajador.trabajador_nombre','LIKE',"%{$this->search}%")
+                    ->orWhere('trabajador.trabajador_apellido','LIKE',"%{$this->search}%")
                     // ->orWhere('id_grado_academico','LIKE',"%{$this->search}%")
-                    ->orderBy('id_trabajador','DESC')
+                    ->orderBy('trabajador.id_trabajador','DESC')
                     ->paginate($this->mostrar);
         }else{
             $trabajadores = TrabajadorTipoTrabajador::join('trabajador','trabajador_tipo_trabajador.id_trabajador','=','trabajador.id_trabajador')

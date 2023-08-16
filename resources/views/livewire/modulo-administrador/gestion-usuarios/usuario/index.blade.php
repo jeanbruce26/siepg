@@ -191,10 +191,26 @@
                                 @enderror
                             </div>
 
-                            <div class="col-md-12">
+                            <div class="mb-3 col-md-12">
                                 <label class="form-label">Contraseña @if($modo==1) <span class="text-danger">*</span> @endif</label>
-                                <input type="password" class="form-control @error('password') is-invalid  @enderror" wire:model="password" placeholder="Ingrese su contraseña" autocomplete="off">
-                                @error('password') <span class="error text-danger" >{{ $message }}</span> @enderror
+                                <div class="input-group">
+                                    <input type="{{ $showPassword ? 'text' : 'password' }}" class="form-control @error('password') is-invalid  @enderror" wire:model="password" placeholder="Ingrese su contraseña" autocomplete="off" aria-describedby="password">
+                                    <button class="input-group-text" id="password" type="button" wire:click="toggleShowPassword">
+                                        <i class="{{ $showPassword ? 'fas fa-eye-slash' : 'fas fa-eye' }}"></i>
+                                    </button>
+                                </div>
+                                @error('password') <span class="error text-danger">{{ $message }}</span> @enderror
+                            </div>
+
+                            <div class="mb-3 col-md-12">
+                                <label class="form-label">Confirmar Contraseña @if($modo==1) <span class="text-danger">*</span> @endif</label>
+                                <div class="input-group">
+                                    <input type="{{ $showPassword_confirmation ? 'text' : 'password' }}" class="form-control @error('password_confirmation') is-invalid  @enderror" wire:model="password_confirmation" placeholder="Confirme su contraseña" autocomplete="off" aria-describedby="password_confirmation">
+                                    <button class="input-group-text" id="password_confirmation" type="button" wire:click="toggleShowPasswordConfirmation">
+                                        <i class="{{ $showPassword_confirmation ? 'fas fa-eye-slash' : 'fas fa-eye' }}"></i>
+                                    </button>
+                                </div>
+                                @error('password_confirmation') <span class="error text-danger">{{ $message }}</span> @enderror
                             </div>
                         </div>
                     </form>

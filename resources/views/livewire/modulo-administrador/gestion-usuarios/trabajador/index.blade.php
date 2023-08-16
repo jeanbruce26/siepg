@@ -34,8 +34,9 @@
                             <div class="d-flex justify-content-between align-items-center gap-4">
                                 <div class="text-muted d-flex align-items-center">
                                     <label class="col-form-label me-2">Mostrar</label>
-                                    <select class="form-select form-select-sm text-muted" wire:model="mostrar"
-                                        aria-label="Default select example">
+                                    <select class="form-select form-select-sm text-muted"
+                                        wire:model="mostrar" id="mostrar" data-control="select2"
+                                        data-placeholder="Seleccione">
                                         <option value="10" selected>10</option>
                                         <option value="25">25</option>
                                         <option value="50">50</option>
@@ -44,8 +45,9 @@
                                 </div>
                                 <div class="text-muted d-flex align-items-center">
                                     <label class="col-form-label me-2">Tipo</label>
-                                    <select class="form-select form-select-sm text-muted" wire:model="tipo"
-                                        aria-label="Default select example">
+                                    <select class="form-select form-select-sm text-muted"
+                                        wire:model="tipo" id="tipo" data-control="select2"
+                                        data-placeholder="Seleccione">
                                         <option value="all" selected>Mostrar todos</option>
                                         @foreach ($tipo_trabajadores as $item)
                                             <option value="{{ $item->id_tipo_trabajador }}">{{ $item->tipo_trabajador }}
@@ -105,7 +107,7 @@
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td align="center">{{ $item->grado_academico->grado_academico }}</td>
+                                            <td align="center">{{ $item->grado_academico }}</td>
                                             <td>{{ $item->trabajador_correo }}</td>
                                             @php
                                                 $tra_tipo_tra = App\Models\TrabajadorTipoTrabajador::where('id_trabajador', $item->id_trabajador)->where('trabajador_tipo_trabajador_estado',1)->get();
@@ -862,3 +864,88 @@
     </div>
 
 </div>
+
+@push('scripts')
+    <script>
+        //Select2 de Filtro
+        // mostrar select2
+        $(document).ready(function () {
+            $('#mostrar').select2({
+                placeholder: 'Seleccione',
+                allowClear: false,
+                width: '100%',
+                selectOnClose: false,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando...";
+                    }
+                }
+            });
+            $('#mostrar').on('change', function(){
+                @this.set('mostrar', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#mostrar').select2({
+                    placeholder: 'Seleccione',
+                    allowClear: false,
+                    width: '100%',
+                    selectOnClose: false,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando...";
+                        }
+                    }
+                });
+                $('#mostrar').on('change', function(){
+                    @this.set('mostrar', this.value);
+                });
+            });
+        });
+
+        // tipo select2
+        $(document).ready(function () {
+            $('#tipo').select2({
+                placeholder: 'Seleccione',
+                allowClear: false,
+                width: '100%',
+                selectOnClose: false,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando...";
+                    }
+                }
+            });
+            $('#tipo').on('change', function(){
+                @this.set('tipo', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#tipo').select2({
+                    placeholder: 'Seleccione',
+                    allowClear: false,
+                    width: '100%',
+                    selectOnClose: false,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando...";
+                        }
+                    }
+                });
+                $('#tipo').on('change', function(){
+                    @this.set('tipo', this.value);
+                });
+            });
+        });
+    </script>
+@endpush

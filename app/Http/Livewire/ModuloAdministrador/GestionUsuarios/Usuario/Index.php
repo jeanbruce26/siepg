@@ -26,6 +26,9 @@ class Index extends Component
     public $username;
     public $correo;
     public $password;
+    public $password_confirmation;
+    public $showPassword = false;
+    public $showPassword_confirmation = false;
 
     protected $listeners = ['render', 'cambiarEstado'];
 
@@ -34,8 +37,20 @@ class Index extends Component
         $this->validateOnly($propertyName, [
             'username' => 'required',
             'correo' => 'required|email',
-            'password' => 'nullable'
+            'password' => 'nullable',
+            'password_confirmation' => 'nullable|same:password'
         ]);
+    }
+
+    public function updatedPassword($password)
+    {
+        if($password != null && $this->password_confirmation != null)
+        {
+            $this->validate([
+                'password' => 'required',
+                'password_confirmation' => 'required|same:password'
+            ]);
+        }
     }
 
     public function modo()
@@ -50,6 +65,16 @@ class Index extends Component
         $this->resetErrorBag();
         $this->reset('username', 'correo', 'password');
         $this->modo = 1;
+    }
+
+    public function toggleShowPassword()
+    {
+        $this->showPassword = !$this->showPassword;
+    }
+
+    public function toggleShowPasswordConfirmation()
+    {
+        $this->showPassword_confirmation = !$this->showPassword_confirmation;
     }
 
     public function cargarAlerta($id)
@@ -106,7 +131,8 @@ class Index extends Component
             $this->validate([
                 'username' => 'required|unique:usuario,usuario_nombre',
                 'correo' => 'required|email|unique:usuario,usuario_correo',
-                'password' => 'required'
+                'password' => 'required',
+                'password_confirmation' => 'required|same:password'
             ]);
 
             $usuario = Usuario::create([
@@ -124,11 +150,24 @@ class Index extends Component
                 'color' => 'success'
             ]);
         } else {//actualizar
-            $this->validate([
-                'username' => "required|unique:usuario,usuario_nombre,{$this->id_usuario},id_usuario",
-                'correo' => "required|email|unique:usuario,usuario_correo,{$this->id_usuario},id_usuario",
-                'password' => 'nullable'
-            ]);
+            if($this->password)
+            {
+                $this->validate([
+                    'username' => "required|unique:usuario,usuario_nombre,{$this->id_usuario},id_usuario",
+                    'correo' => "required|email|unique:usuario,usuario_correo,{$this->id_usuario},id_usuario",
+                    'password' => 'required',
+                    'password_confirmation' => 'required|same:password'
+                ]);
+            }
+            else
+            {
+                $this->validate([
+                    'username' => "required|unique:usuario,usuario_nombre,{$this->id_usuario},id_usuario",
+                    'correo' => "required|email|unique:usuario,usuario_correo,{$this->id_usuario},id_usuario",
+                    'password' => 'nullable',
+                    'password_confirmation' => 'nullable|same:password'
+                ]);
+            }
 
             $usuario = Usuario::find($this->id_usuario);
             //Validar si se realizo algun cambio
