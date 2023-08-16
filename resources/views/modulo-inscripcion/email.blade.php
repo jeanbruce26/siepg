@@ -21,6 +21,12 @@
             Nos complace informarte que hemos recibido tu registro de inscripción para el proceso de {{ $admision }}. Agradecemos tu interés en nuestro programa y estamos entusiasmados por brindarte una experiencia educativa valiosa.
         </p>
         <p style="text-align: justify; text-justify: inter-word; margin-bottom: 1rem;">
+            A continuación, te indicamos el link de acceso al grupo de WhatsApp {{ $programa }}:
+        </p>
+        <p style="text-align: justify; text-justify: inter-word; margin-bottom: 1rem;">
+            <strong>Link:</strong> {{ $link }}
+        </p>
+        <p style="text-align: justify; text-justify: inter-word; margin-bottom: 1rem;">
             Adjunto a este correo, encontrarás el detalle de tu ficha de inscripción. Si tienes alguna pregunta o necesitas más información, por favor no dudes en contactarnos. Estamos aquí para ayudarte.
         </p>
         <p style="margin-bottom: 1rem;">
