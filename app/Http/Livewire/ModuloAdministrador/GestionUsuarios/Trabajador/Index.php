@@ -284,7 +284,7 @@ class Index extends Component
             $trabajador = new TrabajadorModel();
             $trabajador->trabajador_nombre = $this->nombres;
             $trabajador->trabajador_apellido = $this->apellidos;
-            $trabajador->trabajador_nombre_completo = $this->apellidos.' '.$this->nombres;
+            $trabajador->trabajador_nombre_completo = $this->nombres.' '.$this->apellidos;
             $trabajador->trabajador_numero_documento = $this->documento;
             $trabajador->trabajador_correo = $this->correo;
             $trabajador->trabajador_direccion = $this->direccion;
@@ -365,7 +365,7 @@ class Index extends Component
                 $trabajador->trabajador_numero_documento = $this->documento;
                 $trabajador->trabajador_apellido = $this->apellidos;
                 $trabajador->trabajador_nombre = $this->nombres;
-                $trabajador->trabajador_nombre_completo = $this->apellidos.' '.$this->nombres;
+                $trabajador->trabajador_nombre_completo = $this->nombres.' '.$this->apellidos;
                 $trabajador->trabajador_direccion = $this->direccion;
                 $trabajador->trabajador_correo = $this->correo;
                 $trabajador->id_grado_academico = $this->grado;

@@ -145,6 +145,16 @@
                                                         @foreach ($tra_tipo_tra as $item2)
                                                             @if ($item2->id_tipo_trabajador == 1)
                                                                 Docente
+                                                                {{-- TIPO DE DOCENTE --}}
+                                                                @if ($item->trabajador->docente->id_tipo_docente == 1)
+                                                                    <li class="text-gray-500">
+                                                                        (INTERNO)
+                                                                    </li> 
+                                                                @else 
+                                                                    <li class="text-gray-500">
+                                                                        (EXTERNO)
+                                                                    </li>
+                                                                @endif
                                                             @endif
                                                             @if ($item2->id_tipo_trabajador == 2)
                                                                 Coordinador de Unidad
@@ -749,7 +759,15 @@
                                                     <tr>
                                                         <td>Curriculum Vitae</td>
                                                         <td>:</td>
-                                                        <td>{{ $docente_model->docente_cv_url }}</td>
+                                                        <td>
+                                                            @if ($docente_model->docente_cv_url)
+                                                                <a href="{{ asset('Docente/' . $docente_model->docente_cv_url) }}" target="_blank" class="text-primary">
+                                                                    Ver
+                                                                </a>
+                                                            @else
+                                                                <span class="text-dark">No tiene CV</span>
+                                                            @endif
+                                                        </td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -775,7 +793,7 @@
                                                     <tr>
                                                         <td>Contraseña</td>
                                                         <td>:</td>
-                                                        <td></td>
+                                                        <td>***</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -824,7 +842,7 @@
                                                     <tr>
                                                         <td>Contraseña</td>
                                                         <td>:</td>
-                                                        <td></td>
+                                                        <td>***</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -870,7 +888,7 @@
                                                     <tr>
                                                         <td>Contraseña</td>
                                                         <td>:</td>
-                                                        <td></td>
+                                                        <td>***</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
