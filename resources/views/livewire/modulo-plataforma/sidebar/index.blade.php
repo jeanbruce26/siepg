@@ -140,7 +140,7 @@
                                 <span class="menu-title fs-4">Pagos</span>
                             </a>
                         </div>
-                        @if ($admitido)
+                        @if ($admitido && $ultima_matricula)
                             <div class="menu-item">
                                 <a class="menu-link {{ request()->is('plataforma/estado-cuenta') ? 'active' : '' }}"
                                     href="{{ route('plataforma.estado-cuenta') }}">

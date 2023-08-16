@@ -49,17 +49,18 @@ class Index extends Component
         // $this->admisiones = Admision::orderBy('cod_admi', 'desc')->get(); // obtenemos todas las admisiones
         $persona = Persona::where('id_persona', auth('plataforma')->user()->id_persona)->first(); // obtenemos la persona
         $this->inscripcion = $persona->inscripcion()->orderBy('id_inscripcion', 'desc')->first(); // obtenemos la
-        $this->filtro_proceso = $this->inscripcion->id_programa_proceso; // asignamos el valor de la inscripcion a la variable filtro_proceso
         $this->admisiones = Inscripcion::where('id_persona', $persona->id_persona)->groupBy('id_programa_proceso')->orderBy('id_inscripcion', 'desc')->get(); // obtenemos todas las inscripciones de la persona
-        $this->id_inscripcion = $this->inscripcion->id_inscripcion; // asignamos el valor de la inscripcion a la variable id_inscripcion
-        $this->expedientes = $this->inscripcion->expediente_inscripcion; // obtenemos los expedientes de la inscripcion
+        $this->id_inscripcion = $this->inscripcion ? $this->inscripcion->id_inscripcion : null; // asignamos el valor de la inscripcion a la variable id_inscripcion
+        $this->expedientes = $this->inscripcion ? $this->inscripcion->expediente_inscripcion : collect(); // obtenemos los expedientes de la inscripcion
+        $this->admitido = $persona->admitido()->orderBy('id_admitido', 'desc')->first(); // obtenemos el admitido
         $this->expedientes_model = ExpedienteAdmision::join('expediente', 'expediente.id_expediente', '=', 'expediente_admision.id_expediente')
-                                                                ->where('expediente_admision.id_admision', $this->inscripcion->programa_proceso->id_admision)
+                                                                ->where('expediente_admision.id_admision', $this->admitido ? $this->admitido->programa_proceso->id_admision : $this->inscripcion->programa_proceso->id_admision)
                                                                 ->where(function($query) {
                                                                     $query->where('expediente.expediente_tipo', 0)
-                                                                        ->orWhere('expediente.expediente_tipo', $this->inscripcion->inscripcion_tipo_programa);
+                                                                        ->orWhere('expediente.expediente_tipo', $this->admitido ? $this->admitido->programa_proceso->programa_plan->programa->programa_tipo : $this->inscripcion->inscripcion_tipo_programa);
                                                                 })->get(); // obtenemos los expedientes segun tipo de programa
-        $this->admitido = $persona->admitido()->orderBy('id_admitido', 'desc')->first(); // obtenemos el admitido
+                                                                // dd($this->expedientes_model);
+        $this->filtro_proceso = $this->admitido ? $this->admitido->id_programa_proceso : $this->inscripcion->id_programa_proceso; // asignamos el valor de la inscripcion a la variable filtro_proceso
         if($this->admitido)
         {
             $evaluacion_admitido = $this->admitido->evaluacion; // obtenemos la evaluacion del admitido

@@ -44,6 +44,10 @@ class Index extends Component
             abort(403);
         }
         $this->admitido_ciclo = AdmitidoCiclo::where('id_admitido', $this->admitido->id_admitido)->orderBy('id_admitido_ciclo', 'desc')->first();
+        if ( $this->admitido_ciclo == null )
+        {
+            abort(403);
+        }
         $this->filtro_ciclo = $this->admitido_ciclo->id_ciclo;
         $this->ciclo_data = $this->admitido_ciclo->id_ciclo;
         $this->costo_enseñanza = CostoEnseñanza::where('id_programa_plan', $this->admitido->programa_proceso->id_programa_plan)->where('id_ciclo', $this->admitido_ciclo->id_ciclo)->first();

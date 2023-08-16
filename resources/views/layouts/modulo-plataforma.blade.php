@@ -101,7 +101,7 @@
             data-kt-drawer-overlay="true"
             data-kt-drawer-toggle="#modulo_notioficaciones_button"
             data-kt-drawer-close="#modulo_notioficaciones_close"
-            data-kt-drawer-width="{default:'400px', 'md': '450px'}"
+            data-kt-drawer-width="{default:'300px', 'sm': '400px', 'md': '450px'}"
             >
             @livewire('modulo-plataforma.notificaciones.index')
         </div>

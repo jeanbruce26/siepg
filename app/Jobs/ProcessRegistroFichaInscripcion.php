@@ -14,6 +14,7 @@ use App\Models\ExpedienteAdmision;
 use App\Models\ExpedienteInscripcion;
 use App\Models\ExpedienteInscripcionSeguimiento;
 use App\Models\Inscripcion;
+use App\Models\LinkWhatsapp;
 use App\Models\Pago;
 use App\Models\Persona;
 use App\Models\ProgramaProceso;
@@ -92,11 +93,20 @@ class ProcessRegistroFichaInscripcion implements ShouldQueue
         $pdf2 = PDF::loadView('modulo-inscripcion.ficha-inscripcion', $data);
         $pdf_email = $pdf2->output();
 
+        // obtemos la informacion del grupo de whatsapp del programa seleccionado
+        $grupo_whatsapp = LinkWhatsapp::where('id_programa_proceso', $programa->id_programa_proceso)->where('id_admision', $programa->id_admision)->first();
+        $programa_nombre = $grupo_whatsapp ? ($programa->programa_plan->programa->mencion == null ? $programa->programa_plan->programa->programa . ' EN ' . $programa->programa_plan->programa->subprograma : $programa->programa_plan->programa->programa . ' EN ' . $programa->programa_plan->programa->subprograma . ' CON MENCION EN ' . $programa->programa_plan->programa->mencion) : '-';
+        $programa_nombre = strtolower($programa_nombre);
+        $programa_nombre = ucwords($programa_nombre);
+        $link = $grupo_whatsapp ? $grupo_whatsapp->link_whatsapp : '-';
+
         // enviar ficha de inscripcion por correo
         $detalle = [
             'nombre' => ucwords(strtolower($persona->nombre_completo)),
             'admision' => ucwords(strtolower($admision)),
             'correo' => $persona->correo,
+            'programa' => $programa_nombre,
+            'link' => $link,
         ];
 
         Mail::send('modulo-inscripcion.email', $detalle, function ($message) use ($detalle, $pdf_email, $nombre_pdf) {

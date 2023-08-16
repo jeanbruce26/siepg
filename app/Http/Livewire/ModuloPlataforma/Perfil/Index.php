@@ -68,10 +68,26 @@ class Index extends Component
             if (file_exists($usuario->usuario_estudiante_perfil_url)) {
                 unlink($usuario->usuario_estudiante_perfil_url);
             }
-            $persona = Persona::where('numero_documento', auth('plataforma')->user()->usuario_estudiante)->first();
+            $persona = Persona::where('id_persona', auth('plataforma')->user()->id_persona)->first();
             $inscripcion = $persona->inscripcion()->orderBy('id_inscripcion', 'desc')->first();
-            $admision = $inscripcion->programa_proceso->first()->admision->admision;
-            $path = 'Posgrado/' . $admision . '/' . auth('plataforma')->user()->usuario_estudiante . '/' . 'Perfil/';
+            $admision = null;
+            $admitido = Admitido::where('id_persona', $persona->id_persona)->orderBy('id_admitido', 'desc')->first();
+            if($admitido)
+            {
+                if($admitido->id_programa_proceso_antiguo)
+                {
+                    $admision = $admitido->programa_proceso_antiguo->admision->admision;
+                }
+                else
+                {
+                    $admision = $admitido->programa_proceso->admision->admision;
+                }
+            }
+            else
+            {
+                $admision = $inscripcion->programa_proceso->admision->admision;
+            }
+            $path = 'Posgrado/' . $admision . '/' . $persona->numero_documento . '/' . 'Perfil/';
             $filename = 'foto-perfil-' . date('HisdmY') . '.' . $this->perfil->getClientOriginalExtension();
             $nombre_db = $path.$filename;
             $this->perfil->storeAs($path, $filename, 'files_publico');
@@ -125,16 +141,12 @@ class Index extends Component
     {
         $id_persona = auth('plataforma')->user()->id_persona; // documento del usuario logueado
         $persona = Persona::where('id_persona', $id_persona)->first(); // persona logueada
-        $admitido = Admitido::where('id_persona', $persona->id_persona)->first(); // admitido del usuario logueado')
+        $admitido = Admitido::where('id_persona', $persona->id_persona)->orderBy('id_admitido', 'desc')->first(); // admitido del usuario logueado')
         if(!$persona)
         {
             abort(404);
         }
         $inscripcion = $persona->inscripcion()->orderBy('id_inscripcion', 'desc')->first(); // inscripcion del usuario logueado
-        if(!$inscripcion)
-        {
-            abort(404);
-        }
         return view('livewire.modulo-plataforma.perfil.index', [
             'persona' => $persona,
             'inscripcion' => $inscripcion,

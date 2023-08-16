@@ -27,7 +27,7 @@ class Index extends Component
         $inscripcion_persona = $persona->inscripcion()->orderBy('id_inscripcion', 'desc')->first(); // obtenemos la inscripcion de la persona del usuario autenticado en la plataforma
         $admitido = Admitido::where('id_persona', $persona->id_persona)->orderBy('id_admitido', 'desc')->first(); // obtenemos el admitido de la inscripcion de la persona del usuario autenticado en la plataforma
         $evaluacion = $admitido ? Evaluacion::where('id_evaluacion', $admitido->id_evaluacion)->first() : null; // obtenemos la evaluacion de la inscripcion de la persona del usuario autenticado en la plataforma
-        $admision = $inscripcion_persona->programa_proceso()->first()->admision; // obtenemos la admision de la inscripcion de la persona del usuario autenticado en la plataforma
+        $admision = $inscripcion_persona ? $inscripcion_persona->programa_proceso()->first()->admision : $admitido->programa_proceso->admision->admision; // obtenemos la admision de la inscripcion de la persona del usuario autenticado en la plataforma
         return view('livewire.modulo-plataforma.navbar.index', [
             'usuario' => $usuario,
             'persona' => $persona,
