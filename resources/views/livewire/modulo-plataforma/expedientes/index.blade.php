@@ -223,6 +223,11 @@
                                         @endif
                                         @php $valor = 0; @endphp
                                     @endforeach
+                                    @if (count($expedientes_model) == 0)
+                                        <tr>
+                                            <td colspan="4" class="text-center text-muted">No hay expedientes registrados</td>
+                                        </tr>
+                                    @endif
                                 </tbody>
                             </table>
                         </div>

@@ -125,6 +125,9 @@ class Index extends Component
         $persona = Persona::where('id_persona', $usuario->id_persona)->first(); // obtenemos la persona del usuario autenticado en la plataforma
         $admitido = Admitido::where('id_persona', $persona->id_persona)->orderBy('id_admitido', 'desc')->first(); // obtenemos el admitido de la inscripcion de la persona del usuario autenticado en la plataforma
         $inscripcion_ultima = Inscripcion::where('id_persona', $persona->id_persona)->orderBy('id_inscripcion', 'desc')->first(); // inscripcion del usuario logueado
+        if ($inscripcion_ultima == null){
+            abort(403, 'Pagina no autorizada');
+        }
         $inscripcion_admision = ProgramaProceso::where('id_programa_proceso', $inscripcion_ultima->id_programa_proceso)->first(); // admision de la inscripcion del usuario logueado
         $evaluacion = $admitido ? Evaluacion::where('id_evaluacion', $admitido->id_evaluacion)->first() : $inscripcion_ultima->evaluacion()->orderBy('id_evaluacion', 'desc')->first(); // evaluacion de la inscripcion del usuario logueado
         $encuestas = Encuesta::where('encuesta_estado', 1)->get(); // obtenemos las encuestas activas

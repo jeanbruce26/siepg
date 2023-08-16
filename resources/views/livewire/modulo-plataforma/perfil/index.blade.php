@@ -76,7 +76,7 @@
                                         Proceso de Admisión:
                                     </span>
                                     <span class="text-gray-800 ms-2 fw-bold">
-                                        {{ ucwords(strtolower($inscripcion->programa_proceso->admision->admision)) }}
+                                        {{ $inscripcion ? ucwords(strtolower($inscripcion->programa_proceso->admision->admision)) : ($admitido ? ucwords(strtolower($admitido->programa_proceso->admision->admision)) : 'No registrado') }}
                                     </span>
                                 </div>
                                 <div class="d-flex flex-wrap fw-semibold fs-4 mb-2 justify-content-center">
