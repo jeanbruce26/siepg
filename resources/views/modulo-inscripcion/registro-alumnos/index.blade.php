@@ -37,7 +37,7 @@
         Swal.fire({
             title: 'Guardando los datos del registro, espere un momento por favor',
             showConfirmButton: false,
-            timer: 5000,
+            timer: 3000,
             timerProgressBar: true,
             allowOutsideClick: false,
             allowEscapeKey: false,
@@ -50,7 +50,7 @@
                 let id_persona = event.detail.id_persona;
 
                 // Redirigir a la página final después de que se cierre la alerta
-                window.location.href = "{{ route('posgrado.gracias', ['id' => ':id_persona']) }}".replace(':id_persona', id_persona);
+                window.location.href = "{{ route('posgrado.credenciales-email', ['id' => ':id_persona']) }}".replace(':id_persona', id_persona);
             }
 
         })

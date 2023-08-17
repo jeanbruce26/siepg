@@ -243,10 +243,6 @@ class Index extends Component
             return redirect()->back();
         }
 
-        // Confirmacion de registro, si confirmo se redirecciona a la pagina datos de su registro, como su usuario y contraseña
-        // Luego de confirmar, guardamos los datos en la base de datos
-
-
         // Guardamos los datos de la persona
         $persona = new Persona();
         $persona->numero_documento = $this->numero_documento;
@@ -295,7 +291,7 @@ class Index extends Component
         $admitido->id_evaluacion = null;
         $admitido->id_programa_proceso = $this->programa;
         $admitido->id_programa_proceso_antiguo = null;
-        $admitido->id_tipo_estudiante = null;
+        $admitido->id_tipo_estudiante = 1;
         $admitido->admitido_estado = 1;
         $admitido->save();
 
@@ -309,10 +305,14 @@ class Index extends Component
         $usuario_estudiante->usuario_estudiante_perfil_url = '/public/assets/media/avatars/blank.png';
         $usuario_estudiante->save();
 
+        //Inactivamos el codigo del estudiante registrado
+        $updCodigo = CodigoEstudiante::where('codigo_estudiante', $this->admitido_codigo)->first();
+        $updCodigo->codigo_estudiante_estado = 0;
+        $updCodigo->save();
+
         $this->dispatchBrowserEvent('alerta_final_registro', [
             'id_persona' => $persona->id_persona,
         ]);
-
     }
 
     public function validar_registro()
@@ -405,11 +405,209 @@ class Index extends Component
                         'pais_nacimiento' => 'required|max:50',
                     ]);
                 }
+                else if($ubi_direccion == 000000)
+                {
+                    $this->validate([
+                        'numero_documento' => 'required|numeric|digits_between:8,9|unique:persona,numero_documento',
+                        'apellido_paterno' => 'required|max:50|alpha',
+                        'apellido_materno' => 'required|max:50|alpha',
+                        'nombre' => 'required|max:50|alpha',
+                        'genero' => 'required|numeric',
+                        'fecha_nacimiento' => 'required|date',
+                        'direccion' => 'required|max:100',
+                        'celular' => 'required|numeric|digits:9',
+                        'celular_opcional' => [
+                            'nullable',
+                            'numeric',
+                            'digits:9',
+                            function ($attribute, $value, $fail) {
+                                if ($this->celular_opcional) {
+                                    if ($this->celular == $this->celular_opcional) {
+                                        $fail('El celular opcional no puede ser igual al celular.');
+                                    }
+                                }
+                            },
+                        ],
+                        'correo' => [
+                            'required',
+                            'email',
+                            'max:50',
+                            function ($attribute, $value, $fail) {
+                                $query = Persona::where('correo', $value)
+                                                ->orWhere('correo_opcional', $value)
+                                                ->exists();
+                                if ($query) {
+                                    $fail('El correo ya está en uso en el campo correo o correo opcional.');
+                                }
+                            },
+                        ],
+                        'correo_opcional' => [
+                            'nullable',
+                            'email',
+                            'max:50',
+                            function ($attribute, $value, $fail) {
+                                if (!empty($value)) {
+                                    $query = Persona::where('correo', $value)
+                                                    ->orWhere('correo_opcional', $value)
+                                                    ->exists();
+                                    if ($query) {
+                                        $fail('El correo opcional ya está en uso en el campo correo o correo opcional.');
+                                    }
+                                    if($this->correo_opcional == $this->correo){
+                                        $fail('El correo opcional no puede ser igual al correo.');
+                                    }
+                                }
+                            },
+                        ],
+                        'año_egreso' => 'required|numeric',
+                        'especialidad' => 'required|max:50',
+                        'centro_trabajo' => 'required|max:50',
+                        'discapacidad' => 'required|numeric',
+                        'estado_civil' => 'required|numeric',
+                        'grado_academico' => 'required|numeric',
+                        'universidad' => 'required|numeric',
+                        'ubigeo_direccion' => 'required|numeric',
+                        'ubigeo_nacimiento' => 'required|numeric',
+                        'pais_direccion' => 'required|max:50',
+                        'pais_nacimiento' => 'nullable|max:50',
+                    ]);
+                }
+                else if($ubi_nacimiento == 000000)
+                {
+                    $this->validate([
+                        'numero_documento' => 'required|numeric|digits_between:8,9|unique:persona,numero_documento',
+                        'apellido_paterno' => 'required|max:50|alpha',
+                        'apellido_materno' => 'required|max:50|alpha',
+                        'nombre' => 'required|max:50|alpha',
+                        'genero' => 'required|numeric',
+                        'fecha_nacimiento' => 'required|date',
+                        'direccion' => 'required|max:100',
+                        'celular' => 'required|numeric|digits:9',
+                        'celular_opcional' => [
+                            'nullable',
+                            'numeric',
+                            'digits:9',
+                            function ($attribute, $value, $fail) {
+                                if ($this->celular_opcional) {
+                                    if ($this->celular == $this->celular_opcional) {
+                                        $fail('El celular opcional no puede ser igual al celular.');
+                                    }
+                                }
+                            },
+                        ],
+                        'correo' => [
+                            'required',
+                            'email',
+                            'max:50',
+                            function ($attribute, $value, $fail) {
+                                $query = Persona::where('correo', $value)
+                                                ->orWhere('correo_opcional', $value)
+                                                ->exists();
+                                if ($query) {
+                                    $fail('El correo ya está en uso en el campo correo o correo opcional.');
+                                }
+                            },
+                        ],
+                        'correo_opcional' => [
+                            'nullable',
+                            'email',
+                            'max:50',
+                            function ($attribute, $value, $fail) {
+                                if (!empty($value)) {
+                                    $query = Persona::where('correo', $value)
+                                                    ->orWhere('correo_opcional', $value)
+                                                    ->exists();
+                                    if ($query) {
+                                        $fail('El correo opcional ya está en uso en el campo correo o correo opcional.');
+                                    }
+                                    if($this->correo_opcional == $this->correo){
+                                        $fail('El correo opcional no puede ser igual al correo.');
+                                    }
+                                }
+                            },
+                        ],
+                        'año_egreso' => 'required|numeric',
+                        'especialidad' => 'required|max:50',
+                        'centro_trabajo' => 'required|max:50',
+                        'discapacidad' => 'required|numeric',
+                        'estado_civil' => 'required|numeric',
+                        'grado_academico' => 'required|numeric',
+                        'universidad' => 'required|numeric',
+                        'ubigeo_direccion' => 'required|numeric',
+                        'ubigeo_nacimiento' => 'required|numeric',
+                        'pais_direccion' => 'nullable|max:50',
+                        'pais_nacimiento' => 'required|max:50',
+                    ]);
+                }else{
+                    $this->validate([
+                        'numero_documento' => 'required|numeric|digits_between:8,9|unique:persona,numero_documento',
+                        'apellido_paterno' => 'required|max:50|alpha',
+                        'apellido_materno' => 'required|max:50|alpha',
+                        'nombre' => 'required|max:50|alpha',
+                        'genero' => 'required|numeric',
+                        'fecha_nacimiento' => 'required|date',
+                        'direccion' => 'required|max:100',
+                        'celular' => 'required|numeric|digits:9',
+                        'celular_opcional' => [
+                            'nullable',
+                            'numeric',
+                            'digits:9',
+                            function ($attribute, $value, $fail) {
+                                if ($this->celular_opcional) {
+                                    if ($this->celular == $this->celular_opcional) {
+                                        $fail('El celular opcional no puede ser igual al celular.');
+                                    }
+                                }
+                            },
+                        ],
+                        'correo' => [
+                            'required',
+                            'email',
+                            'max:50',
+                            function ($attribute, $value, $fail) {
+                                $query = Persona::where('correo', $value)
+                                                ->orWhere('correo_opcional', $value)
+                                                ->exists();
+                                if ($query) {
+                                    $fail('El correo ya está en uso en el campo correo o correo opcional.');
+                                }
+                            },
+                        ],
+                        'correo_opcional' => [
+                            'nullable',
+                            'email',
+                            'max:50',
+                            function ($attribute, $value, $fail) {
+                                if (!empty($value)) {
+                                    $query = Persona::where('correo', $value)
+                                                    ->orWhere('correo_opcional', $value)
+                                                    ->exists();
+                                    if ($query) {
+                                        $fail('El correo opcional ya está en uso en el campo correo o correo opcional.');
+                                    }
+                                    if($this->correo_opcional == $this->correo){
+                                        $fail('El correo opcional no puede ser igual al correo.');
+                                    }
+                                }
+                            },
+                        ],
+                        'año_egreso' => 'required|numeric',
+                        'especialidad' => 'required|max:50',
+                        'centro_trabajo' => 'required|max:50',
+                        'discapacidad' => 'required|numeric',
+                        'estado_civil' => 'required|numeric',
+                        'grado_academico' => 'required|numeric',
+                        'universidad' => 'required|numeric',
+                        'ubigeo_direccion' => 'required|numeric',
+                        'ubigeo_nacimiento' => 'required|numeric',
+                        'pais_direccion' => 'nullable|max:50',
+                        'pais_nacimiento' => 'nullable|max:50',
+                    ]);
+                }
             }
             else
             {
-
-                if($this->ubigeo_direccion)
+                if($this->ubigeo_direccion && $this->ubigeo_nacimiento == null)
                 {
                     $ubi_direccion = Ubigeo::find($this->ubigeo_direccion)->ubigeo;
                     if($ubi_direccion == 000000)
@@ -479,8 +677,75 @@ class Index extends Component
                             'pais_nacimiento' => 'nullable|max:50',
                         ]);
                     }
+                    else
+                    {
+                        $this->validate([
+                            'numero_documento' => 'required|numeric|digits_between:8,9|unique:persona,numero_documento',
+                            'apellido_paterno' => 'required|max:50|alpha',
+                            'apellido_materno' => 'required|max:50|alpha',
+                            'nombre' => 'required|max:50|alpha',
+                            'genero' => 'required|numeric',
+                            'fecha_nacimiento' => 'required|date',
+                            'direccion' => 'required|max:100',
+                            'celular' => 'required|numeric|digits:9',
+                            'celular_opcional' => [
+                                'nullable',
+                                'numeric',
+                                'digits:9',
+                                function ($attribute, $value, $fail) {
+                                    if ($this->celular_opcional) {
+                                        if ($this->celular == $this->celular_opcional) {
+                                            $fail('El celular opcional no puede ser igual al celular.');
+                                        }
+                                    }
+                                },
+                            ],
+                            'correo' => [
+                                'required',
+                                'email',
+                                'max:50',
+                                function ($attribute, $value, $fail) {
+                                    $query = Persona::where('correo', $value)
+                                                    ->orWhere('correo_opcional', $value)
+                                                    ->exists();
+                                    if ($query) {
+                                        $fail('El correo ya está en uso en el campo correo o correo opcional.');
+                                    }
+                                },
+                            ],
+                            'correo_opcional' => [
+                                'nullable',
+                                'email',
+                                'max:50',
+                                function ($attribute, $value, $fail) {
+                                    if (!empty($value)) {
+                                        $query = Persona::where('correo', $value)
+                                                        ->orWhere('correo_opcional', $value)
+                                                        ->exists();
+                                        if ($query) {
+                                            $fail('El correo opcional ya está en uso en el campo correo o correo opcional.');
+                                        }
+                                        if($this->correo_opcional == $this->correo){
+                                            $fail('El correo opcional no puede ser igual al correo.');
+                                        }
+                                    }
+                                },
+                            ],
+                            'año_egreso' => 'required|numeric',
+                            'especialidad' => 'required|max:50',
+                            'centro_trabajo' => 'required|max:50',
+                            'discapacidad' => 'required|numeric',
+                            'estado_civil' => 'required|numeric',
+                            'grado_academico' => 'required|numeric',
+                            'universidad' => 'required|numeric',
+                            'ubigeo_direccion' => 'required|numeric',
+                            'ubigeo_nacimiento' => 'required|numeric',
+                            'pais_direccion' => 'nullable|max:50',
+                            'pais_nacimiento' => 'nullable|max:50',
+                        ]);
+                    }
                 }
-                else if($this->ubigeo_nacimiento)
+                else if($this->ubigeo_nacimiento && $this->ubigeo_direccion == null)
                 {
                     $ubi_nacimiento = Ubigeo::find($this->ubigeo_nacimiento)->ubigeo;
                     if($ubi_nacimiento == 000000)
@@ -548,6 +813,73 @@ class Index extends Component
                             'ubigeo_nacimiento' => 'required|numeric',
                             'pais_direccion' => 'nullable|max:50',
                             'pais_nacimiento' => 'required|max:50',
+                        ]);
+                    }
+                    else
+                    {
+                        $this->validate([
+                            'numero_documento' => 'required|numeric|digits_between:8,9|unique:persona,numero_documento',
+                            'apellido_paterno' => 'required|max:50|alpha',
+                            'apellido_materno' => 'required|max:50|alpha',
+                            'nombre' => 'required|max:50|alpha',
+                            'genero' => 'required|numeric',
+                            'fecha_nacimiento' => 'required|date',
+                            'direccion' => 'required|max:100',
+                            'celular' => 'required|numeric|digits:9',
+                            'celular_opcional' => [
+                                'nullable',
+                                'numeric',
+                                'digits:9',
+                                function ($attribute, $value, $fail) {
+                                    if ($this->celular_opcional) {
+                                        if ($this->celular == $this->celular_opcional) {
+                                            $fail('El celular opcional no puede ser igual al celular.');
+                                        }
+                                    }
+                                },
+                            ],
+                            'correo' => [
+                                'required',
+                                'email',
+                                'max:50',
+                                function ($attribute, $value, $fail) {
+                                    $query = Persona::where('correo', $value)
+                                                    ->orWhere('correo_opcional', $value)
+                                                    ->exists();
+                                    if ($query) {
+                                        $fail('El correo ya está en uso en el campo correo o correo opcional.');
+                                    }
+                                },
+                            ],
+                            'correo_opcional' => [
+                                'nullable',
+                                'email',
+                                'max:50',
+                                function ($attribute, $value, $fail) {
+                                    if (!empty($value)) {
+                                        $query = Persona::where('correo', $value)
+                                                        ->orWhere('correo_opcional', $value)
+                                                        ->exists();
+                                        if ($query) {
+                                            $fail('El correo opcional ya está en uso en el campo correo o correo opcional.');
+                                        }
+                                        if($this->correo_opcional == $this->correo){
+                                            $fail('El correo opcional no puede ser igual al correo.');
+                                        }
+                                    }
+                                },
+                            ],
+                            'año_egreso' => 'required|numeric',
+                            'especialidad' => 'required|max:50',
+                            'centro_trabajo' => 'required|max:50',
+                            'discapacidad' => 'required|numeric',
+                            'estado_civil' => 'required|numeric',
+                            'grado_academico' => 'required|numeric',
+                            'universidad' => 'required|numeric',
+                            'ubigeo_direccion' => 'required|numeric',
+                            'ubigeo_nacimiento' => 'required|numeric',
+                            'pais_direccion' => 'nullable|max:50',
+                            'pais_nacimiento' => 'nullable|max:50',
                         ]);
                     }
                 }
@@ -801,7 +1133,8 @@ class Index extends Component
     public function render()
     {
 
-        return view('livewire.modulo-inscripcion.registro-alumnos.index', [
+        return view('livewire.modulo-inscripcion.registro-alumnos.index', 
+        [
             'admision_model' => Admision::all(),
             'ubigeo_model' => Ubigeo::all(),
             'genero_model' => Genero::all(),

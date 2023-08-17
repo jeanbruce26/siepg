@@ -982,6 +982,4 @@
             });
         });
     </script>
-
-
 @endpush
