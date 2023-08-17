@@ -42,6 +42,8 @@ Route::get('/inscripcion', [InscripcionController::class, 'index'])->middleware(
 Route::get('/inscripcion-pago', [InscripcionPagoController::class, 'index'])->middleware(['auth.usuario'])->name('administrador.inscripcion-pago');
 //Ruta para Admitidos en la Gestion Admision
 Route::get('/admitidos', [AdmitidoController::class, 'index'])->middleware(['auth.usuario'])->name('administrador.admitidos');
+//Ruta para la Gestionde Links de WhatsApp en la Gestion Admision
+Route::get('/links-whatsapp', [AdmisionController::class, 'links_whatsapp'])->middleware(['auth.usuario'])->name('administrador.links-whatsapp');
 
 //Gestion de Pagos
 //Ruta para ir a la vista de Canal de Pago en la Gestion de Pagos
