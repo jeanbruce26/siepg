@@ -179,7 +179,7 @@
                                 </div>
 
                                 {{-- Gestion de Admisión --}}
-                                <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->is('administrador/admision') || request()->is('administrador/inscripcion')  || request()->is('administrador/inscripcion-pago')  || request()->is('administrador/admitidos') ? 'active show border-2 border-start border-gray-300 rounded' : ''}}">
+                                <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->is('administrador/admision') || request()->is('administrador/inscripcion')  || request()->is('administrador/inscripcion-pago')  || request()->is('administrador/admitidos') || request()->routeIs('administrador.links-whatsapp') ? 'active show border-2 border-start border-gray-300 rounded' : ''}}">
                                     <span class="menu-link">
                                         <span class="menu-icon">
                                             <span class="svg-icon svg-icon-muted svg-icon-2 {{ request()->is('administrador/admision') || request()->is('administrador/inscripcion') || request()->is('administrador/inscripcion-pago') || request()->is('administrador/admitidos') ? 'text-primary' : ''}}">
@@ -231,6 +231,14 @@
                                                     <span class="bullet bullet-dot"></span>
                                                 </span>
                                                 <span class="menu-title fs-4">Admitidos</span>
+                                            </a>
+                                        </div>
+                                        <div class="menu-item">
+                                            <a class="menu-link {{ request()->routeIs('administrador.links-whatsapp') ? 'active border-3 border-start border-primary' : '' }}" href="{{ route('administrador.links-whatsapp') }}">
+                                                <span class="menu-bullet">
+                                                    <span class="bullet bullet-dot"></span>
+                                                </span>
+                                                <span class="menu-title fs-4">Links WhatsApp</span>
                                             </a>
                                         </div>
                                     </div>

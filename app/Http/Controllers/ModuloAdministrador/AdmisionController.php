@@ -11,4 +11,9 @@ class AdmisionController extends Controller
     {
         return view('modulo-administrador.gestion-admision.admision.index');
     }
+
+    public function links_whatsapp()
+    {
+        return view('modulo-administrador.gestion-admision.links-whatsapp.index');
+    }
 }
