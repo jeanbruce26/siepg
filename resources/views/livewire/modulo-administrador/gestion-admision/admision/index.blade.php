@@ -129,17 +129,30 @@
     </div>
 
     {{-- Modal Usuario --}}
-    <div wire:ignore.self class="modal fade" id="modalAdmision" tabindex="-1" aria-labelledby="modalAdmision"
-        aria-hidden="true">
+    <div wire:ignore.self class="modal fade" tabindex="-1" id="modalAdmision">
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">{{ $titulo }}</h5>
-                    <button type="button" wire:click="limpiar()" class="btn-close" data-bs-dismiss="modal"
-                        aria-label="Close"></button>
+                    <h2 class="modal-title">
+                        {{ $titulo }}
+                    </h2>
+                    <div class="btn btn-icon btn-sm btn-active-light-danger ms-2" data-bs-dismiss="modal"
+                        aria-label="Close">
+                        <span class="svg-icon svg-icon-2hx">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <rect opacity="0.3" x="2" y="2" width="20" height="20"
+                                    rx="5" fill="currentColor" />
+                                <rect x="7" y="15.3137" width="12" height="2" rx="1"
+                                    transform="rotate(-45 7 15.3137)" fill="currentColor" />
+                                <rect x="8.41422" y="7" width="12" height="2" rx="1"
+                                    transform="rotate(45 8.41422 7)" fill="currentColor" />
+                            </svg>
+                        </span>
+                    </div>
                 </div>
                 <div class="modal-body">
-                    <form novalidate>
+                    <form autocomplete="off">
                         <div class="row">
                             <div class="mb-3 col-md-6 col-sm-6">
                                 <label class="form-label">Año <span
@@ -223,8 +236,16 @@
                     </form>
                 </div>
                 <div class="modal-footer col-12 d-flex justify-content-between">
-                    <button type="button" wire:click="limpiar()" class="btn btn-secondary hover-elevate-up" data-bs-dismiss="modal">Cancelar</button>                    
-                    <button type="button" wire:click="guardarAdmision()" class="btn btn-primary hover-elevate-up">Guardar</button>
+                    <button type="button" wire:click="limpiar()" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" wire:click="guardarAdmision()" class="btn btn-primary" wire:loading.attr="disabled">
+                        <div wire:loading.remove wire:target="guardarAdmision">
+                            Guardar
+                        </div>
+                        <div wire:loading wire:target="guardarAdmision">
+                            <span class="spinner-border spinner-border-sm align-middle me-2"></span>
+                            Guardando...
+                        </div>
+                    </button>
                 </div>
             </div>
         </div>

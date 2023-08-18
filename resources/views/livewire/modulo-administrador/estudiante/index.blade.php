@@ -649,8 +649,6 @@
                                 </div>
                             </div>
                         </div>
-                        
-                        
                     </form>
                 </div>
                 @if($modo != 3)
