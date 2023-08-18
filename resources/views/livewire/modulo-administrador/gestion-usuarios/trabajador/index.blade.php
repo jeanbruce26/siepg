@@ -315,30 +315,47 @@
         </div>
 
         {{-- Modal Trabajador --}}
-        <div wire:ignore.self class="modal fade" id="modalTra" tabindex="-1" aria-labelledby="modalTra"
-            aria-hidden="true">
-            <div class="modal-dialog modal-lg">
+        <div wire:ignore.self class="modal fade" tabindex="-1" id="modalTra">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title text-uppercase" id="exampleModalLabel">{{ $titulo_modal }}</h5>
-                        <button type="button" wire:click="limpiar()" class="btn-close" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
+                        <h2 class="modal-title">
+                            {{ $titulo_modal }}
+                        </h2>
+                        <div class="btn btn-icon btn-sm btn-active-light-danger ms-2" data-bs-dismiss="modal"
+                            aria-label="Close">
+                            <span class="svg-icon svg-icon-2hx">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <rect opacity="0.3" x="2" y="2" width="20" height="20"
+                                        rx="5" fill="currentColor" />
+                                    <rect x="7" y="15.3137" width="12" height="2" rx="1"
+                                        transform="rotate(-45 7 15.3137)" fill="currentColor" />
+                                    <rect x="8.41422" y="7" width="12" height="2" rx="1"
+                                        transform="rotate(45 8.41422 7)" fill="currentColor" />
+                                </svg>
+                            </span>
+                        </div>
                     </div>
                     <div class="modal-body">
-                        <form novalidate>
+                        <form autocomplete="off">
                             <div class="row">
                                 <div class="mb-3 col-md-6">
-                                    <label class="form-label">Tipo de Documento <span class="text-danger">*</span></label>
-                                    <select class="form-select @error('tipo_documento') is-invalid  @enderror"
-                                        wire:model="tipo_documento">
-                                        <option value="" selected>Seleccione</option>
+                                    <label for="tipo_documento" class="required form-label">
+                                        Tipo de Documento
+                                    </label>
+                                    <select class="form-select @error('tipo_documento') is-invalid @enderror"
+                                        wire:model="tipo_documento" id="tipo_documento" data-control="select2"
+                                        data-placeholder="Seleccione su tipo de documento" data-allow-clear="true"
+                                        data-dropdown-parent="#modalTra">
+                                        <option></option>
                                         @foreach ($tipo_doc as $item)
                                             <option value="{{ $item->id_tipo_documento }}">{{ $item->tipo_documento }}
                                             </option>
                                         @endforeach
                                     </select>
                                     @error('tipo_documento')
-                                        <span class="error text-danger">{{ $message }}</span>
+                                        <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
 
@@ -388,15 +405,21 @@
                                 </div>
 
                                 <div class="mb-3 col-md-6">
-                                    <label class="form-label">Grado <span class="text-danger">*</span></label>
-                                    <select class="form-select @error('grado') is-invalid  @enderror" wire:model="grado">
+                                    <label for="grado" class="required form-label">
+                                        Grado
+                                    </label>
+                                    <select class="form-select @error('grado') is-invalid @enderror"
+                                        wire:model="grado" id="grado" data-control="select2"
+                                        data-placeholder="Seleccione su grado académico" data-allow-clear="true"
+                                        data-dropdown-parent="#modalTra">
+                                        <option></option>
                                         @foreach ($grado_academico as $item)
                                             <option value="{{ $item->id_grado_academico }}">{{ $item->grado_academico }}
                                             </option>
                                         @endforeach
                                     </select>
                                     @error('grado')
-                                        <span class="error text-danger">{{ $message }}</span>
+                                        <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
 
@@ -412,7 +435,7 @@
                         </form>
                     </div>
                     <div class="modal-footer col-12 d-flex justify-content-between">
-                        <button type="button" wire:click="limpiar()" class="btn btn-secondary hover-elevate-up" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" wire:click="limpiar()" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                         <button type="button" wire:click="guardarTrabajador()" class="btn btn-primary" wire:loading.attr="disabled">
                             <div wire:loading.remove wire:target="guardarTrabajador">
                                 Guardar
@@ -429,17 +452,30 @@
         </div>
 
         {{-- Modal Asiganar Tipo Trabajador --}}
-        <div wire:ignore.self class="modal fade" id="modalAsignar" tabindex="-1" aria-labelledby="modalAsignar"
-            aria-hidden="true">
-            <div class="modal-dialog modal-lg">
+        <div wire:ignore.self class="modal fade" tabindex="-1" id="modalAsignar">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title text-uppercase" id="exampleModalLabel">{{ $titulo_modal }}</h5>
-                        <button type="button" wire:click="limpiarAsignacion()" class="btn-close" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
+                        <h2 class="modal-title">
+                            {{ $titulo_modal }}
+                        </h2>
+                        <div class="btn btn-icon btn-sm btn-active-light-danger ms-2" data-bs-dismiss="modal"
+                            aria-label="Close">
+                            <span class="svg-icon svg-icon-2hx">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <rect opacity="0.3" x="2" y="2" width="20" height="20"
+                                        rx="5" fill="currentColor" />
+                                    <rect x="7" y="15.3137" width="12" height="2" rx="1"
+                                        transform="rotate(-45 7 15.3137)" fill="currentColor" />
+                                    <rect x="8.41422" y="7" width="12" height="2" rx="1"
+                                        transform="rotate(45 8.41422 7)" fill="currentColor" />
+                                </svg>
+                            </span>
+                        </div>
                     </div>
                     <div class="modal-body">
-                        <form novalidate autocomplete="off">
+                        <form autocomplete="off">
                             <div class="row">
                                 <div class="mb-3 col-md-12">
                                     <label class="form-label mb-5">Tipo de trabajador <span class="text-danger">*</span></label>
@@ -451,26 +487,32 @@
                                     @endphp
 
                                     <div class="form-check form-check-custom form-check-solid mb-3">
-                                        <input class="form-check-input me-3" type="checkbox" wire:model="docente" @if($trabajador_tipo_trabajador_docente_select) disabled @endif>
-                                        <label class="form-check-label">
-                                            <div class="fw-semibold text-gray-800">Docente</div>
-                                        </label>
-                                    </div>
-
-                                    <div class="form-check form-check-custom form-check-solid mb-3">
-                                        <input class="form-check-input me-3" type="checkbox" wire:model="coordinador" @if ($administrativo_check || $trabajador_tipo_trabajador_coordinador_select) disabled @endif>
-                                        <label class="form-check-label">
-                                            <div class="fw-semibold text-gray-800">Coordinador de Unidad</div>
-                                        </label>
-                                    </div>
-
-                                    <div class="form-check form-check-custom form-check-solid mb-3">
-                                        <input class="form-check-input me-3" type="checkbox" wire:model="administrativo_check" @if ($coordinador || $trabajador_tipo_trabajador_administrativo_select) disabled @endif>
-                                        <label class="form-check-label">
-                                            <div class="fw-semibold text-gray-800">Administrativo</div>
+                                        <input class="form-check-input" type="checkbox" wire:model="docente" id="docente" style="cursor: pointer" 
+                                        @if($trabajador_tipo_trabajador_docente_select) disabled @endif/>
+                                        <label class="fw-semibold {{ $trabajador_tipo_trabajador_docente_select ? 'text-gray-400' : 'text-gray-800' }} ms-5" for="docente"
+                                        @if(!$trabajador_tipo_trabajador_docente_select) style="cursor: pointer" @endif>
+                                            Docente
                                         </label>
                                     </div>
                                     
+                                    <div class="form-check form-check-custom form-check-solid mb-3">
+                                        <input class="form-check-input" type="checkbox" wire:model="coordinador" id="coordinador" style="cursor: pointer" 
+                                        @if($administrativo_check || $trabajador_tipo_trabajador_coordinador_select) disabled @endif/>
+                                        <label class="fw-semibold {{ $administrativo_check ||  $trabajador_tipo_trabajador_coordinador_select ? 'text-gray-400' : 'text-gray-800' }} ms-5" for="coordinador"
+                                        @if(!($administrativo_check || $trabajador_tipo_trabajador_coordinador_select)) style="cursor: pointer" @endif>
+                                        Coordinador de Unidad
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="form-check form-check-custom form-check-solid mb-3">
+                                        <input class="form-check-input" type="checkbox" wire:model="administrativo_check" id="administrativo_check" style="cursor: pointer" 
+                                        @if($coordinador || $trabajador_tipo_trabajador_administrativo_select) disabled @endif/>
+                                        <label class="fw-semibold {{ $coordinador ||  $trabajador_tipo_trabajador_administrativo_select ? 'text-gray-400' : 'text-gray-800' }} ms-5" for="administrativo_check"
+                                        @if(!($coordinador || $trabajador_tipo_trabajador_administrativo_select)) style="cursor: pointer" @endif>
+                                        Administrativo
+                                        </label>
+                                    </div>
+
                                     <div class="border-gray-200 border mt-5 mb-2"></div>
                                 </div>
 
@@ -483,18 +525,22 @@
                                     <div class="col-md-12">
                                         <div class="row">
                                             <div @if ($tipo_docentes == 2) class="mb-3 col-md-6" @else class="mb-3 col-md-12" @endif>
-                                                <label class="form-label">Tipo de Docente <span
-                                                        class="text-danger">*</span></label>
-                                                <select class="form-select @error('tipo_docentes') is-invalid  @enderror"
-                                                    wire:model="tipo_docentes">
-                                                    <option value="" selected>Seleccione</option>
+                                                <label for="tipo_docentes" class="required form-label">
+                                                    Tipo de Docente
+                                                </label>
+                                                <select class="form-select @error('tipo_docentes') is-invalid @enderror"
+                                                    wire:model="tipo_docentes" id="tipo_docentes" data-control="select2"
+                                                    data-placeholder="Seleccione el tipo de docente" data-allow-clear="true"
+                                                    data-dropdown-parent="#modalAsignar">
+                                                    <option></option>
                                                     @foreach ($tipo_docente_model as $item)
                                                         <option value="{{ $item->id_tipo_docente }}">
-                                                            {{ $item->tipo_docente }}</option>
+                                                            {{ $item->tipo_docente }}
+                                                        </option>
                                                     @endforeach
                                                 </select>
                                                 @error('tipo_docentes')
-                                                    <span class="error text-danger">{{ $message }}</span>
+                                                    <span class="text-danger">{{ $message }}</span>
                                                 @enderror
                                             </div>
                                             @if ($tipo_docentes == 2)
@@ -514,20 +560,23 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="mb-3 col-md-12">
-                                                    <label class="dorm label">Usuario <span class="text-danger">*</span></label>
-                                                    <div class="col-md-12">
-                                                        <input class="form-control @error('usuario_docente') is-invalid  @enderror" wire:model="usuario_docente" list="datalistOptions" type="text" placeholder="Ingrese el usuario a buscar..." @if(!$usua_activo) disabled @endif>
-                                                        <datalist id="datalistOptions">
-                                                            <select class="form-control @error('usuario_docente') is-invalid  @enderror" wire:model="usuario_docente">
-                                                            @foreach ($usuario_model as $item)
-                                                                <option value="{{ $item->usuario_correo }}" @if($item->usuario_estado == 0 || $item->usuario_estado == 2) disabled @endif>{{ $item->usuario_nombre }}</option>
-                                                            @endforeach
-                                                            </select>
-                                                        </datalist>
-                                                        @error('usuario_docente')
-                                                            <span class="error text-danger">{{ $message }}</span>
-                                                        @enderror
-                                                    </div>
+                                                    <label for="usuario_docente" class="required form-label">
+                                                        Usuario
+                                                    </label>
+                                                    <select class="form-select @error('usuario_docente') is-invalid @enderror"
+                                                        wire:model="usuario_docente" id="usuario_docente" data-control="select2"
+                                                        data-placeholder="Seleccione el usuario de docente" data-allow-clear="true"
+                                                        data-dropdown-parent="#modalAsignar">
+                                                        <option></option>
+                                                        @foreach ($usuario_model as $item)
+                                                            <option value="{{ $item->usuario_correo }}" @if($item->usuario_estado == 0 || $item->usuario_estado == 2) disabled @endif>
+                                                                {{ $item->usuario_nombre }} ({{ $item->usuario_correo }})
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                    @error('usuario_docente')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
                                                 </div>
                                             </div>
                                         </div>
@@ -538,30 +587,38 @@
                                     <div class="col-md-12">
                                         <div class="row">
                                             <div class="mb-3 col-md-6">
-                                                <label class="form-label">Categoria</label>
-                                                <select class="form-select @error('categoria') is-invalid  @enderror"
-                                                    wire:model="categoria">
-                                                    <option value="" selected>Seleccione</option>
+                                                <label for="categoria" class="required form-label">
+                                                    Categoria
+                                                </label>
+                                                <select class="form-select @error('categoria') is-invalid @enderror"
+                                                    wire:model="categoria" id="categoria" data-control="select2"
+                                                    data-placeholder="Seleccione la categoria" data-allow-clear="true"
+                                                    data-dropdown-parent="#modalAsignar">
+                                                    <option></option>
                                                     @foreach ($categoria_docente_model as $item)
                                                         <option value="{{ $item->id_categoria_docente }}">{{ $item->categoria_docente }}</option>
-                                                @endforeach
+                                                    @endforeach
                                                 </select>
                                                 @error('categoria')
-                                                    <span class="error text-danger">{{ $message }}</span>
+                                                    <span class="text-danger">{{ $message }}</span>
                                                 @enderror
                                             </div>
 
                                             <div class="mb-3 col-md-6">
-                                                <label class="form-label">Facultad <span class="text-danger">*</span></label>
-                                                <select class="form-select @error('facultad') is-invalid  @enderror"
-                                                    wire:model="facultad">
-                                                    <option value="" selected>Seleccione</option>
+                                                <label for="facultad" class="required form-label">
+                                                    Facultad
+                                                </label>
+                                                <select class="form-select @error('facultad') is-invalid @enderror"
+                                                    wire:model="facultad" id="facultad" data-control="select2"
+                                                    data-placeholder="Seleccione la facultad" data-allow-clear="true"
+                                                    data-dropdown-parent="#modalAsignar">
+                                                    <option></option>
                                                     @foreach ($facultad_model as $item)
                                                         <option value="{{ $item->id_facultad }}" @if($item->facultad_estado == 2) disabled @endif>{{ $item->facultad }}</option>
                                                     @endforeach
                                                 </select>
                                                 @error('facultad')
-                                                    <span class="error text-danger">{{ $message }}</span>
+                                                    <span class="text-danger">{{ $message }}</span>
                                                 @enderror
                                             </div>
                                         </div>
@@ -571,17 +628,21 @@
                                     <div class="col-md-12">
                                         <div class="row">
                                             <div class="mb-3 col-md-12">
-                                                <label class="form-label">Area <span class="text-danger">*</span></label>
-                                                <select class="form-select @error('area') is-invalid  @enderror"
-                                                    wire:model="area">
-                                                    <option value="" selected>Seleccione</option>
+                                                <label for="area" class="required form-label">
+                                                    Área
+                                                </label>
+                                                <select class="form-select @error('area') is-invalid @enderror"
+                                                    wire:model="area" id="area" data-control="select2"
+                                                    data-placeholder="Seleccione el area" data-allow-clear="true"
+                                                    data-dropdown-parent="#modalAsignar">
+                                                    <option></option>
                                                     @foreach ($area_model as $item)
                                                         <option value="{{ $item->id_area_administrativo }}">
                                                             {{ $item->area_administrativo }}</option>
                                                     @endforeach
                                                 </select>
                                                 @error('area')
-                                                    <span class="error text-danger">{{ $message }}</span>
+                                                    <span class="text-danger">{{ $message }}</span>
                                                 @enderror
                                             </div>
                                         </div>
@@ -590,20 +651,24 @@
                                 @if ($tipo_administrativo == 1 || $tipo_coordinador == 1)
                                     <div class="col-md-12">
                                         <div class="mb-3 col-md-12">
-                                            <label class="dorm label">Usuario <span class="text-danger">*</span></label>
-                                            <div class="col-md-12">
-                                                <input class="form-control @error('usuario') is-invalid  @enderror" wire:model="usuario" list="datalistOptions" type="text" placeholder="Ingrese el usuario a buscar..." @if(!$usua_activo) disabled @endif>
-                                                <datalist id="datalistOptions">
-                                                    <select class="form-control @error('usuario') is-invalid  @enderror" wire:model="usuario">
-                                                    @foreach ($usuario_model as $item)
-                                                    <option value="{{ $item->usuario_correo }}" @if($item->usuario_estado == 0 || $item->usuario_estado == 2) disabled @endif>{{ $item->usuario_nombre }}</option>
-                                                    @endforeach
-                                                    </select>
-                                                </datalist>
-                                                @error('usuario')
-                                                    <span class="error text-danger">{{ $message }}</span>
-                                                @enderror
-                                            </div>
+
+                                            <label for="usuario" class="required form-label">
+                                                Usuario
+                                            </label>
+                                            <select class="form-select @error('usuario') is-invalid @enderror"
+                                                wire:model="usuario" id="usuario" data-control="select2"
+                                                data-placeholder="Seleccione el usuario" data-allow-clear="true"
+                                                data-dropdown-parent="#modalAsignar">
+                                                <option></option>
+                                                @foreach ($usuario_model as $item)
+                                                    <option value="{{ $item->usuario_correo }}" @if($item->usuario_estado == 0 || $item->usuario_estado == 2) disabled @endif>
+                                                        {{ $item->usuario_nombre }} ({{ $item->usuario_correo }})
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            @error('usuario')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
                                         </div>
                                         <div class="border-bottom mb-3"></div>
                                     </div>
@@ -612,7 +677,7 @@
                         </form>
                     </div>
                     <div class="modal-footer col-12 d-flex justify-content-between">
-                        <button type="button" wire:click="limpiarAsignacion()" class="btn btn-secondary hover-elevate-up" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" wire:click="limpiarAsignacion()" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                         <button type="button" wire:click="asignarTrabajador()" class="btn btn-primary" wire:loading.attr="disabled">
                             <div wire:loading.remove wire:target="asignarTrabajador">
                                 Guardar
@@ -628,17 +693,30 @@
         </div>
 
         {{-- Modal Desasiganar Tipo Trabajador --}}
-        <div wire:ignore.self class="modal fade" id="modaldDesAsignar" tabindex="-1" aria-labelledby="modaldDesAsignar"
-            aria-hidden="true">
-            <div class="modal-dialog modal-lg">
+        <div wire:ignore.self class="modal fade" tabindex="-1" id="modaldDesAsignar">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title text-uppercase" id="exampleModalLabel">{{ $titulo_modal }}</h5>
-                        <button type="button" wire:click="limpiarAsignacion()" class="btn-close" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
+                        <h2 class="modal-title">
+                            {{ $titulo_modal }}
+                        </h2>
+                        <div class="btn btn-icon btn-sm btn-active-light-danger ms-2" data-bs-dismiss="modal"
+                            aria-label="Close">
+                            <span class="svg-icon svg-icon-2hx">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <rect opacity="0.3" x="2" y="2" width="20" height="20"
+                                        rx="5" fill="currentColor" />
+                                    <rect x="7" y="15.3137" width="12" height="2" rx="1"
+                                        transform="rotate(-45 7 15.3137)" fill="currentColor" />
+                                    <rect x="8.41422" y="7" width="12" height="2" rx="1"
+                                        transform="rotate(45 8.41422 7)" fill="currentColor" />
+                                </svg>
+                            </span>
+                        </div>
                     </div>
                     <div class="modal-body">
-                        <form novalidate>
+                        <form autocomplete="off">
                             <div class="row">
                                 <div class="mb-3 col-md-12">
                                     <label class="form-label">Trabajador asignado a:</label>
@@ -672,7 +750,7 @@
                         </form>
                     </div>
                     <div class="modal-footer col-12 d-flex justify-content-between">
-                        <button type="button" wire:click="limpiarAsignacion()" class="btn btn-secondary hover-elevate-up" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" wire:click="limpiarAsignacion()" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                         <button type="button" wire:click="desasignarTrabajadorAlerta()" class="btn btn-primary" wire:loading.attr="disabled">
                             <div wire:loading.remove wire:target="desasignarTrabajadorAlerta">
                                 Guardar
@@ -688,14 +766,28 @@
         </div>
 
         {{-- Modal Informacion del Trabajador --}}
-        <div wire:ignore.self class="modal fade" id="modalInfo" tabindex="-1" aria-labelledby="modalInfo"
-            aria-hidden="true">
-            <div class="modal-dialog modal-lg">
+
+        <div wire:ignore.self class="modal fade" tabindex="-1" id="modalInfo">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title text-uppercase" id="exampleModalLabel">{{ $titulo_modal }}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
+                        <h2 class="modal-title">
+                            {{ $titulo_modal }}
+                        </h2>
+                        <div class="btn btn-icon btn-sm btn-active-light-danger ms-2" data-bs-dismiss="modal"
+                            aria-label="Close">
+                            <span class="svg-icon svg-icon-2hx">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <rect opacity="0.3" x="2" y="2" width="20" height="20"
+                                        rx="5" fill="currentColor" />
+                                    <rect x="7" y="15.3137" width="12" height="2" rx="1"
+                                        transform="rotate(-45 7 15.3137)" fill="currentColor" />
+                                    <rect x="8.41422" y="7" width="12" height="2" rx="1"
+                                        transform="rotate(45 8.41422 7)" fill="currentColor" />
+                                </svg>
+                            </span>
+                        </div>
                     </div>
                     <div class="modal-body">
                         <div class="row">
@@ -987,5 +1079,328 @@
                 });
             });
         });
+
+        // Select2 de modal de nuevo y editar
+        // tipo_documento select2
+        $(document).ready(function () {
+            $('#tipo_documento').select2({
+                placeholder: 'Seleccione',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando...";
+                    }
+                }
+            });
+            $('#tipo_documento').on('change', function(){
+                @this.set('tipo_documento', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#tipo_documento').select2({
+                    placeholder: 'Seleccione',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando...";
+                        }
+                    }
+                });
+                $('#tipo_documento').on('change', function(){
+                    @this.set('tipo_documento', this.value);
+                });
+            });
+        });
+        
+        // grado select2
+        $(document).ready(function () {
+            $('#grado').select2({
+                placeholder: 'Seleccione',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando...";
+                    }
+                }
+            });
+            $('#grado').on('change', function(){
+                @this.set('grado', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#grado').select2({
+                    placeholder: 'Seleccione',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando...";
+                        }
+                    }
+                });
+                $('#grado').on('change', function(){
+                    @this.set('grado', this.value);
+                });
+            });
+        });
+        
+        //Select2 de modal de asignar
+        // tipo_docentes select2
+        $(document).ready(function () {
+            $('#tipo_docentes').select2({
+                placeholder: 'Seleccione',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando...";
+                    }
+                }
+            });
+            $('#tipo_docentes').on('change', function(){
+                @this.set('tipo_docentes', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#tipo_docentes').select2({
+                    placeholder: 'Seleccione',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando...";
+                        }
+                    }
+                });
+                $('#tipo_docentes').on('change', function(){
+                    @this.set('tipo_docentes', this.value);
+                });
+            });
+        });
+        
+        // usuario_docente select2
+        $(document).ready(function () {
+            $('#usuario_docente').select2({
+                placeholder: 'Seleccione',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: false,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando...";
+                    }
+                }
+            });
+            $('#usuario_docente').on('change', function(){
+                @this.set('usuario_docente', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#usuario_docente').select2({
+                    placeholder: 'Seleccione',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: false,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando...";
+                        }
+                    }
+                });
+                $('#usuario_docente').on('change', function(){
+                    @this.set('usuario_docente', this.value);
+                });
+            });
+        });
+
+        // categoria select2
+        $(document).ready(function () {
+            $('#categoria').select2({
+                placeholder: 'Seleccione',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando...";
+                    }
+                }
+            });
+            $('#categoria').on('change', function(){
+                @this.set('categoria', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#categoria').select2({
+                    placeholder: 'Seleccione',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando...";
+                        }
+                    }
+                });
+                $('#categoria').on('change', function(){
+                    @this.set('categoria', this.value);
+                });
+            });
+        });
+
+        // facultad select2
+        $(document).ready(function () {
+            $('#facultad').select2({
+                placeholder: 'Seleccione',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando...";
+                    }
+                }
+            });
+            $('#facultad').on('change', function(){
+                @this.set('facultad', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#facultad').select2({
+                    placeholder: 'Seleccione',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando...";
+                        }
+                    }
+                });
+                $('#facultad').on('change', function(){
+                    @this.set('facultad', this.value);
+                });
+            });
+        });
+        
+        // area select2
+        $(document).ready(function () {
+            $('#area').select2({
+                placeholder: 'Seleccione',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando...";
+                    }
+                }
+            });
+            $('#area').on('change', function(){
+                @this.set('area', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#area').select2({
+                    placeholder: 'Seleccione',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando...";
+                        }
+                    }
+                });
+                $('#area').on('change', function(){
+                    @this.set('area', this.value);
+                });
+            });
+        });
+
+        // usuario select2
+        $(document).ready(function () {
+            $('#usuario').select2({
+                placeholder: 'Seleccione',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: false,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando...";
+                    }
+                }
+            });
+            $('#usuario').on('change', function(){
+                @this.set('usuario', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#usuario').select2({
+                    placeholder: 'Seleccione',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: false,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando...";
+                        }
+                    }
+                });
+                $('#usuario').on('change', function(){
+                    @this.set('usuario', this.value);
+                });
+            });
+        });
+
     </script>
 @endpush
