@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\ModuloCoordinador\GestionDocentes;
 
+use App\Jobs\ProcessEnvioCredencialesDocentes;
 use App\Models\Docente;
 use App\Models\GradoAcademico;
 use App\Models\TipoDocente;
@@ -294,6 +295,9 @@ class Index extends Component
             $usuario->usuario_estado = 2; // 0 = Inactivo | 1 = Activo | 2 = Asignado
             $usuario->save();
 
+            // ejecutamos el proceso en segundo plano de envio de correo electrónico al usuario sus credenciales
+            ProcessEnvioCredencialesDocentes::dispatch($docente->id_docente, 'create');
+
             // emitir alerta para mostrar mensaje de éxito
             $this->dispatchBrowserEvent('alerta_docente', [
                 'title' => '¡Éxito!',
@@ -358,6 +362,9 @@ class Index extends Component
             $usuario->usuario_correo = strtolower($nombre) . '_' . strtolower(explode(' ', $this->apellido_paterno)[0]) . '@unu.edu.pe';
             $usuario->usuario_password = Hash::make($this->documento_identidad);
             $usuario->save();
+
+            // ejecutamos el proceso en segundo plano de envio de correo electrónico al usuario sus credenciales
+            ProcessEnvioCredencialesDocentes::dispatch($docente->id_docente, 'edit');
 
             // emitir alerta para mostrar mensaje de éxito
             $this->dispatchBrowserEvent('alerta_docente', [
