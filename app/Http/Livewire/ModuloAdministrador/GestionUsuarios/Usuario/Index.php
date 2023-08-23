@@ -172,7 +172,7 @@ class Index extends Component
             $usuario = Usuario::find($this->id_usuario);
             //Validar si se realizo algun cambio
             $usuarioValidar = Usuario::where('id_usuario', $this->id_usuario)
-                            ->where('usuario_nombre', $this->username)
+                            ->where(Usuario::raw('BINARY usuario_nombre'), $this->username)
                             ->where('usuario_correo', $this->correo)
                             ->first();
 
