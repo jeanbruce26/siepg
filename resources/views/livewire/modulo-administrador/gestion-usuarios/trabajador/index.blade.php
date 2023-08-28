@@ -20,7 +20,8 @@
                     </ul>
                 </div>
                 <div class="d-flex align-items-center gap-2 gap-lg-3">
-                    <a href="#" class="btn btn-primary btn-sm hover-elevate-up">Nuevo</a>
+                    <a href="#modalTra" data-bs-toggle="modal" 
+                    data-bs-target="#modalTra" wire:click="modo()" class="btn btn-primary btn-sm hover-elevate-up">Nuevo</a>
                 </div>
             </div>
         </div>
@@ -98,25 +99,18 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @php
-                                        $num = 1;
-                                    @endphp
                                     @forelse ($trabajadores as $item)
                                         <tr>
                                             <td align="center" class="fs-5">
-                                                @if ($num < 10)
-                                                    <strong>0{{ $num }}</strong>
-                                                @else
-                                                    <strong>{{ $num }}</strong>
-                                                @endif
+                                                <strong>{{ $item['id_trabajador'] }}</strong>
                                             </td>
-                                            <td align="center">{{ $item->trabajador_numero_documento }}</td>
+                                            <td align="center">{{ $item['trabajador_numero_documento'] }}</td>
                                             <td>
                                                 <div class="d-flex justify-conten-star align-items-center">
                                                     <div class="flex-shirnk-0">
-                                                        @if ($item->trabajador_perfil_url && file_exists(public_path($item->trabajador_perfil_url)))
+                                                        @if ($item['trabajador_perfil_url'] && file_exists(public_path($item['trabajador_perfil_url'])))
                                                             <img class="rounded-circle avatar-xs"
-                                                                src="{{ asset($item->trabajador_perfil_url) }}"
+                                                                src="{{ asset($item['trabajador_perfil_url']) }}"
                                                                 alt="perfil Avatar">
                                                         @else
                                                             <img class="rounded-circle avatar-xs"
@@ -125,93 +119,60 @@
                                                         @endif
                                                     </div>
                                                     <div class="ms-2">
-                                                        {{ $item->trabajador_nombre_completo }}
+                                                        {{ $item['trabajador_nombre_completo'] }}
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td align="center">{{ $item->grado_academico }}</td>
-                                            <td>{{ $item->trabajador_correo }}</td>
-                                            @php
-                                                $tra_tipo_tra = App\Models\TrabajadorTipoTrabajador::where('id_trabajador', $item->id_trabajador)->where('trabajador_tipo_trabajador_estado',1)->get();
-                                            @endphp
+                                            <td align="center">{{ $item['grado_academico'] }}</td>
+                                            <td>{{ $item['trabajador_correo'] }}</td>
                                             <td align="center" class="">
-                                                @php
-                                                    $coordinador_unidad = App\Models\Coordinador::where('id_trabajador', $item->id_trabajador)->first();
-                                                    $administrativo = App\Models\Administrativo::where('id_trabajador', $item->id_trabajador)->first();
-                                                @endphp
-                                                @if ($tra_tipo_tra)
-                                                    @if ($tra_tipo_tra->count() == 1)
-                                                        <ul style="list-style: none; padding: 0; margin: 0;">
-                                                        @foreach ($tra_tipo_tra as $item2)
-                                                            @if ($item2->id_tipo_trabajador == 1)
+                                                <ul style="list-style: none; padding: 0; margin: 0;">
+                                                    @forelse ($item['trabajador_tipo_trabajador'] as $item2)
+                                                        @if ($item2['id_tipo_trabajador'] == 1)
+                                                            @if ($item['docente'])
                                                                 Docente
-                                                                {{-- TIPO DE DOCENTE --}}
-                                                                @if ($item->trabajador->docente->id_tipo_docente == 1)
+                                                                @if ($item['docente']['id_tipo_docente'] == 1)
                                                                     <li class="text-gray-500">
                                                                         (INTERNO)
-                                                                    </li> 
+                                                                    </li>
                                                                 @else 
                                                                     <li class="text-gray-500">
                                                                         (EXTERNO)
                                                                     </li>
                                                                 @endif
                                                             @endif
-                                                            @if ($item2->id_tipo_trabajador == 2)
-                                                                Coordinador de Unidad
-                                                                @if ($coordinador_unidad)
-                                                                    <li class="text-gray-500">
-                                                                        ({{ $coordinador_unidad->facultad->facultad }})
-                                                                    </li>
-                                                                @endif
+                                                        @endif
+                                                        @if ($item2['id_tipo_trabajador'] == 2)
+                                                            Coordinador de Unidad
+                                                            @if ($item['coordinador'])
+                                                                <li class="text-gray-500">
+                                                                    ({{ $item['coordinador']['facultad']['facultad'] }})
+                                                                </li>
                                                             @endif
-                                                            @if ($item2->id_tipo_trabajador == 3)
-                                                                Administrativo
-                                                                @if ($administrativo)
-                                                                    <li class="text-gray-500">
-                                                                        ({{ $administrativo->area_administrativo->area_administrativo }})
-                                                                    </li>
-                                                                @endif
+                                                        @endif
+                                                        @if ($item2['id_tipo_trabajador'] == 3)
+                                                            Administrativo
+                                                            @if ($item['administrativo'])
+                                                                <li class="text-gray-500">
+                                                                    ({{ $item['administrativo']['area_administrativo']['area_administrativo'] }})
+                                                                </li>
                                                             @endif
-                                                        @endforeach
-                                                        </ul>
-                                                    @else
-                                                        <ul style="list-style: none; padding: 0; margin: 0;">
-                                                        @foreach ($tra_tipo_tra as $item2)
-                                                            @if ($item2->id_tipo_trabajador == 1)
-                                                                <li>Docente</li> 
-                                                            @endif
-                                                            @if ($item2->id_tipo_trabajador == 2)
-                                                                <li>Coordinador de Unidad</li> 
-                                                                @if ($coordinador_unidad)
-                                                                    <li class="text-gray-500">
-                                                                        ({{ $coordinador_unidad->facultad->facultad }})
-                                                                    </li>
-                                                                @endif
-                                                            @endif
-                                                            @if ($item2->id_tipo_trabajador == 3)
-                                                                <li>Administrativo</li> 
-                                                                @if ($administrativo)
-                                                                    <li class="text-gray-500">
-                                                                        ({{ $administrativo->area_administrativo->area_administrativo }})
-                                                                    </li>
-                                                                @endif
-                                                            @endif
-                                                        @endforeach
-                                                        </ul>
-                                                    @endif
-                                                @endif
-                                                @if($tra_tipo_tra->count() == 0)
-                                                    No asignado
-                                                @endif
+                                                        @endif
+                                                    @empty
+                                                        <li class="text-gray-500">
+                                                            NO ASIGNADO
+                                                        </li>
+                                                    @endforelse
+                                                </ul>
                                             </td>
                                             <td align="center">
-                                                @if ($item->trabajador_estado == 1)
+                                                @if ($item['trabajador_estado'] == 1)
                                                     <span style="cursor: pointer;"
-                                                        wire:click="cargarAlerta({{ $item->id_trabajador }})"
+                                                        wire:click="cargarAlerta({{ $item['id_trabajador'] }})"
                                                         class="badge text-bg-success text-light fs-6 px-3 py-2">Activo</span>
                                                 @else
                                                     <span style="cursor: pointer;"
-                                                        wire:click="cargarAlerta({{ $item->id_trabajador }})"
+                                                        wire:click="cargarAlerta({{ $item['id_trabajador'] }})"
                                                         class="badge text-bg-danger text-light fs-6 px-3 py-2">Inactivo</span>
                                                 @endif
                                             </td>
@@ -230,24 +191,24 @@
                                                 <div class="dropdown-menu dropdown-menu-end menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
                                                     <div class="menu-item px-3">
                                                         <a href="#modalTra"
-                                                        wire:click="cargarTrabajador({{ $item->id_trabajador }})" 
+                                                        wire:click="cargarTrabajador({{ $item['id_trabajador'] }})" 
                                                         class="menu-link px-3" data-bs-toggle="modal" 
                                                         data-bs-target="#modalTra">
                                                             Editar
                                                         </a>
                                                     </div>
-                                                    @if ($item->trabajador_estado == 1)
+                                                    @if ($item['trabajador_estado'] == 1)
                                                         <div class="menu-item px-3">
                                                             <a href="#modalAsignar"
-                                                            wire:click="cargarTrabajadorId({{ $item->id_trabajador }},1)" class="menu-link px-3" data-bs-toggle="modal" 
+                                                            wire:click="cargarTrabajadorId({{ $item['id_trabajador'] }},1)" class="menu-link px-3" data-bs-toggle="modal" 
                                                             data-bs-target="#modalAsignar">
                                                                 Asignar
                                                             </a>
                                                         </div>
-                                                        @if ($tra_tipo_tra->count() != 0)
+                                                        @if ($item['trabajador_tipo_trabajador']->count() != 0)
                                                             <div class="menu-item px-3">
                                                                 <a href="#modaldDesAsignar"
-                                                                wire:click="cargarTrabajadorId({{ $item->id_trabajador }},2)" 
+                                                                wire:click="cargarTrabajadorId({{ $item['id_trabajador'] }},2)" 
                                                                 data-bs-toggle="modal"
                                                                 data-bs-target="#modaldDesAsignar"
                                                                 class="menu-link px-3">
@@ -258,7 +219,7 @@
                                                     @endif
                                                     <div class="menu-item px-3">
                                                         <a  href="#modalInfo"
-                                                        wire:click="cargarInfoTrabajador({{ $item->id_trabajador }})"
+                                                        wire:click="cargarInfoTrabajador({{ $item['id_trabajador'] }})"
                                                         data-bs-toggle="modal"
                                                         data-bs-target="#modalInfo" class="menu-link px-3">
                                                             Datalle
@@ -267,20 +228,17 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        @php
-                                            $num++;
-                                        @endphp
                                     @empty
                                         @if ($search != '')
                                             <tr>
-                                                <td colspan="7" class="text-center text-muted">
+                                                <td colspan="8" class="text-center text-muted">
                                                     No se encontraron resultados para la busqueda
                                                     "{{ $search }}"
                                                 </td>
                                             </tr>
                                         @else
                                             <tr>
-                                                <td colspan="7" class="text-center text-muted">
+                                                <td colspan="8" class="text-center text-muted">
                                                     No hay registros
                                                 </td>
                                             </tr>
@@ -289,25 +247,6 @@
                                 </tbody>
                             </table>
                         </div>
-                        {{-- paginacion de la tabla --}}
-                        @if ($trabajadores->hasPages())
-                            <div class="d-flex justify-content-between mt-5">
-                                <div class="d-flex align-items-center text-gray-700">
-                                    Mostrando {{ $trabajadores->firstItem() }} - {{ $trabajadores->lastItem() }} de
-                                    {{ $trabajadores->total() }} registros
-                                </div>
-                                <div>
-                                    {{ $trabajadores->links() }}
-                                </div>
-                            </div>
-                        @else
-                            <div class="d-flex justify-content-between mt-5">
-                                <div class="d-flex align-items-center text-gray-700">
-                                    Mostrando {{ $trabajadores->firstItem() }} - {{ $trabajadores->lastItem() }} de
-                                    {{ $trabajadores->total() }} registros
-                                </div>
-                            </div>
-                        @endif
                     </div>
                 </div>
 
@@ -479,52 +418,39 @@
                             <div class="row">
                                 <div class="mb-3 col-md-12">
                                     <label class="form-label mb-5">Tipo de trabajador <span class="text-danger">*</span></label>
-
-                                    @php
-                                        $trabajador_tipo_trabajador_docente_select = App\Models\TrabajadorTipoTrabajador::where('id_trabajador',$trabajador_id)->where('id_tipo_trabajador',1)->where('trabajador_tipo_trabajador_estado',1)->first();
-                                        $trabajador_tipo_trabajador_coordinador_select = App\Models\TrabajadorTipoTrabajador::where('id_trabajador',$trabajador_id)->where('id_tipo_trabajador',2)->where('trabajador_tipo_trabajador_estado',1)->first();
-                                        $trabajador_tipo_trabajador_administrativo_select = App\Models\TrabajadorTipoTrabajador::where('id_trabajador',$trabajador_id)->where('id_tipo_trabajador',3)->where('trabajador_tipo_trabajador_estado',1)->first();
-                                    @endphp
-
                                     <div class="form-check form-check-custom form-check-solid mb-3">
-                                        <input class="form-check-input" type="checkbox" wire:model="docente" id="docente" style="cursor: pointer" 
+                                        <input class="form-check-input" type="checkbox" wire:model="docente_check" id="docente_check" style="cursor: pointer" 
                                         @if($trabajador_tipo_trabajador_docente_select) disabled @endif/>
-                                        <label class="fw-semibold {{ $trabajador_tipo_trabajador_docente_select ? 'text-gray-400' : 'text-gray-800' }} ms-5" for="docente"
+                                        <label class="fw-semibold {{ $trabajador_tipo_trabajador_docente_select ? 'text-gray-400' : 'text-gray-800' }} ms-5" for="docente_check"
                                         @if(!$trabajador_tipo_trabajador_docente_select) style="cursor: pointer" @endif>
                                             Docente
                                         </label>
                                     </div>
                                     
                                     <div class="form-check form-check-custom form-check-solid mb-3">
-                                        <input class="form-check-input" type="checkbox" wire:model="coordinador" id="coordinador" style="cursor: pointer" 
-                                        @if($administrativo_check || $trabajador_tipo_trabajador_coordinador_select) disabled @endif/>
-                                        <label class="fw-semibold {{ $administrativo_check ||  $trabajador_tipo_trabajador_coordinador_select ? 'text-gray-400' : 'text-gray-800' }} ms-5" for="coordinador"
-                                        @if(!($administrativo_check || $trabajador_tipo_trabajador_coordinador_select)) style="cursor: pointer" @endif>
+                                        <input class="form-check-input" type="checkbox" wire:model="coordinador_check" id="coordinador_check" style="cursor: pointer" 
+                                        @if($administrativo_check == true || $trabajador_tipo_trabajador_coordinador_select) disabled @endif/>
+                                        <label class="fw-semibold {{ $administrativo_check == true ||  $trabajador_tipo_trabajador_coordinador_select ? 'text-gray-400' : 'text-gray-800' }} ms-5" for="coordinador_check"
+                                        @if(!($administrativo_check == true || $trabajador_tipo_trabajador_coordinador_select)) style="cursor: pointer" @endif>
                                         Coordinador de Unidad
                                         </label>
                                     </div>
                                     
                                     <div class="form-check form-check-custom form-check-solid mb-3">
                                         <input class="form-check-input" type="checkbox" wire:model="administrativo_check" id="administrativo_check" style="cursor: pointer" 
-                                        @if($coordinador || $trabajador_tipo_trabajador_administrativo_select) disabled @endif/>
-                                        <label class="fw-semibold {{ $coordinador ||  $trabajador_tipo_trabajador_administrativo_select ? 'text-gray-400' : 'text-gray-800' }} ms-5" for="administrativo_check"
-                                        @if(!($coordinador || $trabajador_tipo_trabajador_administrativo_select)) style="cursor: pointer" @endif>
+                                        @if($coordinador_check == true || $trabajador_tipo_trabajador_administrativo_select) disabled @endif/>
+                                        <label class="fw-semibold {{ $coordinador_check == true ||  $trabajador_tipo_trabajador_administrativo_select ? 'text-gray-400' : 'text-gray-800' }} ms-5" for="administrativo_check"
+                                        @if(!($coordinador_check == true || $trabajador_tipo_trabajador_administrativo_select)) style="cursor: pointer" @endif>
                                         Administrativo
                                         </label>
                                     </div>
 
                                     <div class="border-gray-200 border mt-5 mb-2"></div>
                                 </div>
-
-                                @php
-                                    $usua_activo = App\Models\Usuario::where('usuario_estado',1)->first();
-                                @endphp
-                                
-
                                 @if ($tipo_docente == 1)
                                     <div class="col-md-12">
                                         <div class="row">
-                                            <div @if ($tipo_docentes == 2) class="mb-3 col-md-6" @else class="mb-3 col-md-12" @endif>
+                                            <div class="mb-3 col-md-6">
                                                 <label for="tipo_docentes" class="required form-label">
                                                     Tipo de Docente
                                                 </label>
@@ -543,45 +469,67 @@
                                                     <span class="text-danger">{{ $message }}</span>
                                                 @enderror
                                             </div>
+                                            <div class="mb-3 col-md-6">
+                                                <label for="categoria_docente" class="required form-label">
+                                                    Categoria Docente
+                                                </label>
+                                                <select class="form-select @error('categoria_docente') is-invalid @enderror"
+                                                    wire:model="categoria_docente" id="categoria_docente" data-control="select2"
+                                                    data-placeholder="Seleccione la categoria" data-allow-clear="true"
+                                                    data-dropdown-parent="#modalAsignar">
+                                                    <option></option>
+                                                    @foreach ($categoria_docente_model as $item)
+                                                        @if($tipo_docentes)
+                                                            @if($item->categoria_docente != 'DOCENTE CONTRATADO' && $tipo_docentes == 1)
+                                                                <option value="{{ $item->id_categoria_docente }}">{{ $item->categoria_docente }}</option>
+                                                            @else
+                                                                @if($item->categoria_docente == 'DOCENTE CONTRATADO' && $tipo_docentes == 2)
+                                                                    <option value="{{ $item->id_categoria_docente }}">{{ $item->categoria_docente }}</option>
+                                                                @endif
+                                                                @if($item->categoria_docente == 'SIN CATEGORIA')
+                                                                    <option value="{{ $item->id_categoria_docente }}">{{ $item->categoria_docente }}</option>
+                                                                @endif
+                                                            @endif
+                                                        @endif
+                                                    @endforeach
+                                                </select>
+                                                @error('categoria_docente')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
                                             @if ($tipo_docentes == 2)
-                                                <div class="mb-3 col-md-6">
-                                                    <label class="form-label">Curriculum Vitae <span
-                                                            class="text-danger">*</span></label>
-                                                    <input type="file"
-                                                        class="form-control @error('cv') is-invalid  @enderror"
-                                                        wire:model="cv" accept=".pdf">
+                                                <div class="mb-3 col-md-12">
+                                                    <label for="cv" class="required form-label">
+                                                        Curriculum Vitae
+                                                    </label>
+                                                    <input type="file" class="form-control @error('cv') is-invalid  @enderror" wire:model="cv" accept=".pdf">
                                                     @error('cv')
                                                         <span class="error text-danger">{{ $message }}</span>
                                                     @enderror
                                                 </div>
                                             @endif
-                                        </div>
-                                        <div class="border-bottom mb-3"></div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="mb-3 col-md-12">
-                                                    <label for="usuario_docente" class="required form-label">
-                                                        Usuario
-                                                    </label>
-                                                    <select class="form-select @error('usuario_docente') is-invalid @enderror"
-                                                        wire:model="usuario_docente" id="usuario_docente" data-control="select2"
-                                                        data-placeholder="Seleccione el usuario de docente" data-allow-clear="true"
-                                                        data-dropdown-parent="#modalAsignar">
-                                                        <option></option>
-                                                        @foreach ($usuario_model as $item)
-                                                            <option value="{{ $item->usuario_correo }}" @if($item->usuario_estado == 0 || $item->usuario_estado == 2) disabled @endif>
-                                                                {{ $item->usuario_nombre }} ({{ $item->usuario_correo }})
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                    @error('usuario_docente')
-                                                        <span class="text-danger">{{ $message }}</span>
-                                                    @enderror
-                                                </div>
+                                            <div class="mb-3 col-md-12">
+                                                <label for="usuario_docente" class="required form-label">
+                                                    Usuario Docente
+                                                </label>
+                                                <select class="form-select @error('usuario_docente') is-invalid @enderror"
+                                                    wire:model="usuario_docente" id="usuario_docente" data-control="select2"
+                                                    data-placeholder="Seleccione el usuario de docente" data-allow-clear="true"
+                                                    data-dropdown-parent="#modalAsignar">
+                                                    <option></option>
+                                                    @foreach ($usuario_model as $item)
+                                                        <option value="{{ $item->usuario_correo }}" @if($item->usuario_estado == 0 || $item->usuario_estado == 2) disabled @endif>
+                                                            {{ $item->usuario_nombre }} ({{ $item->usuario_correo }})
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                                @error('usuario_docente')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                         </div>
-                                        <div class="border-bottom mb-3"></div>
                                     </div>
+                                    <div class="border-bottom mb-3 mt-3"></div>
                                 @endif
                                 @if ($tipo_coordinador == 1)
                                     <div class="col-md-12">
@@ -596,7 +544,9 @@
                                                     data-dropdown-parent="#modalAsignar">
                                                     <option></option>
                                                     @foreach ($categoria_docente_model as $item)
-                                                        <option value="{{ $item->id_categoria_docente }}">{{ $item->categoria_docente }}</option>
+                                                        @if($item->categoria_docente != 'DOCENTE CONTRATADO')
+                                                            <option value="{{ $item->id_categoria_docente }}">{{ $item->categoria_docente }}</option>
+                                                        @endif
                                                     @endforeach
                                                 </select>
                                                 @error('categoria')
@@ -614,7 +564,7 @@
                                                     data-dropdown-parent="#modalAsignar">
                                                     <option></option>
                                                     @foreach ($facultad_model as $item)
-                                                        <option value="{{ $item->id_facultad }}" @if($item->facultad_estado == 2) disabled @endif>{{ $item->facultad }}</option>
+                                                        <option value="{{ $item->id_facultad }}" @if($item->facultad_asignado == 1) disabled @endif>{{ $item->facultad }}</option>
                                                     @endforeach
                                                 </select>
                                                 @error('facultad')
@@ -651,9 +601,8 @@
                                 @if ($tipo_administrativo == 1 || $tipo_coordinador == 1)
                                     <div class="col-md-12">
                                         <div class="mb-3 col-md-12">
-
                                             <label for="usuario" class="required form-label">
-                                                Usuario
+                                                Usuario @if($tipo_administrativo == 1) Administrativo @else Coordinador @endif
                                             </label>
                                             <select class="form-select @error('usuario') is-invalid @enderror"
                                                 wire:model="usuario" id="usuario" data-control="select2"
@@ -670,8 +619,8 @@
                                                 <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
-                                        <div class="border-bottom mb-3"></div>
                                     </div>
+                                    <div class="border-bottom mb-3 mt-3"></div>
                                 @endif
                             </div>
                         </form>
@@ -722,28 +671,32 @@
                                     <label class="form-label">Trabajador asignado a:</label>
 
                                     <div class="form-check form-check-custom form-check-solid mb-3">
-                                        <input class="form-check-input me-3" type="checkbox" wire:model="docente" 
-                                            @if ($docente == false) disabled @endif>
-                                        <label class="form-check-label">
-                                            <div class="fw-semibold text-gray-800">Docente</div>
-                                        </label>
-                                    </div>
-
-                                    <div class="form-check form-check-custom form-check-solid mb-3">
-                                        <input class="form-check-input me-3" type="checkbox" wire:model="coordinador"
-                                            @if ($coordinador == false) disabled @endif>
-                                        <label class="form-check-label">
-                                            <div class="fw-semibold text-gray-800">Coordinador de Unidad</div>
-                                        </label>
-                                    </div>
-                                    <div class="form-check form-check-custom form-check-solid mb-3">
-                                        <input class="form-check-input me-3" type="checkbox" wire:model="administrativo_check"
-                                            @if ($administrativo_check == false) disabled @endif>
-                                        <label class="form-check-label">
-                                            <div class="fw-semibold text-gray-800">Administrativo</div>
+                                        <input class="form-check-input" type="checkbox" wire:model="docente_check" id="docente_check_desasignar" style="cursor: pointer" 
+                                        @if(!$trabajador_tipo_trabajador_docente_select) disabled @endif/>
+                                        <label class="fw-semibold {{ (!$trabajador_tipo_trabajador_docente_select) ? 'text-gray-400' : 'text-gray-800' }} ms-5" for="docente_check_desasignar"
+                                        @if($trabajador_tipo_trabajador_docente_select) style="cursor: pointer" @endif>
+                                            Docente
                                         </label>
                                     </div>
                                     
+                                    <div class="form-check form-check-custom form-check-solid mb-3">
+                                        <input class="form-check-input" type="checkbox" wire:model="coordinador_check" id="coordinador_check_desasignar" style="cursor: pointer" 
+                                        @if(!$trabajador_tipo_trabajador_coordinador_select) disabled @endif/>
+                                        <label class="fw-semibold {{ !$trabajador_tipo_trabajador_coordinador_select ? 'text-gray-400' : 'text-gray-800' }} ms-5" for="coordinador_check_desasignar"
+                                        @if($trabajador_tipo_trabajador_coordinador_select) style="cursor: pointer" @endif>
+                                        Coordinador de Unidad
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="form-check form-check-custom form-check-solid mb-3">
+                                        <input class="form-check-input" type="checkbox" wire:model="administrativo_check" id="administrativo_check_desasignar" style="cursor: pointer" 
+                                        @if(!$trabajador_tipo_trabajador_administrativo_select) disabled @endif/>
+                                        <label class="fw-semibold {{ (!$trabajador_tipo_trabajador_administrativo_select) ? 'text-gray-400' : 'text-gray-800' }} ms-5" for="administrativo_check_desasignar"
+                                        @if($trabajador_tipo_trabajador_administrativo_select) style="cursor: pointer" @endif>
+                                        Administrativo
+                                        </label>
+                                    </div>
+
                                     <div class="border-bottom mt-3"></div>
                                 </div>
                             </div>
@@ -766,7 +719,6 @@
         </div>
 
         {{-- Modal Informacion del Trabajador --}}
-
         <div wire:ignore.self class="modal fade" tabindex="-1" id="modalInfo">
             <div class="modal-dialog modal-lg modal-dialog-scrollable">
                 <div class="modal-content">
@@ -1198,6 +1150,46 @@
                 });
                 $('#tipo_docentes').on('change', function(){
                     @this.set('tipo_docentes', this.value);
+                });
+            });
+        });
+
+        // categoria_docente select2
+        $(document).ready(function () {
+            $('#categoria_docente').select2({
+                placeholder: 'Seleccione',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando...";
+                    }
+                }
+            });
+            $('#categoria_docente').on('change', function(){
+                @this.set('categoria_docente', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#categoria_docente').select2({
+                    placeholder: 'Seleccione',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando...";
+                        }
+                    }
+                });
+                $('#categoria_docente').on('change', function(){
+                    @this.set('categoria_docente', this.value);
                 });
             });
         });

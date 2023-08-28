@@ -125,7 +125,7 @@
                                                     @if ($item->pago_verificacion == 2)
                                                         <span class="badge badge-success fs-6">Validado</span>
                                                     @elseif ($item->pago_verificacion == 1)
-                                                        <span class="badge badge-warning fs-6">No Verificado</span>
+                                                        <span class="badge badge-warning fs-6">Pendiente</span>
                                                     @elseif ($item->pago_verificacion == 0 && $item->pago_estado == 0)
                                                         <span class="badge badge-danger fs-6">Rechazado</span>
                                                     @elseif ($item->pago_verificacion == 0 && ($item->pago_estado == 1 || $item->pago_estado == 2))

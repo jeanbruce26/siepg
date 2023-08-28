@@ -188,7 +188,7 @@
                                 <label for="fecha_nacimiento" class="required form-label">
                                     Fecha de Nacimiento
                                 </label>
-                                <input type="date" wire:model="fecha_nacimiento" class="form-control @error('fecha_nacimiento') is-invalid @enderror" id="fecha_nacimiento">
+                                <input type="date" wire:model="fecha_nacimiento" class="form-control @error('fecha_nacimiento') is-invalid @enderror" id="fecha_nacimiento" max="{{ date('Y-m-d') }}">
                                 @error('fecha_nacimiento')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror

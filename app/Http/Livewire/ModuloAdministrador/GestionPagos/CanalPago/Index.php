@@ -111,32 +111,34 @@ class Index extends Component
     //Guardar y actualizar canal de pago
     public function guardarCanalPago()
     {
-        if($this->modo == 1){
-            //Validamos los datos ingresados
+        if($this->modo == 1){//Modo 1 = crear
             $this->validate([
                 'canalPago' => 'required|string'
             ]);
 
-            $canalPago = new CanalPago();//Creamos un nuevo objeto de tipo CanalPago
-            $canalPago->canal_pago = $this->canalPago;//Asignamos el nombre del canal de pago
-            $canalPago->canal_pago_estado = 1;//Asignamos el estado del canal de pago
-            $canalPago->save();//Guardamos los cambios realizados
+            $canalPago = new CanalPago();
+            $canalPago->canal_pago = $this->canalPago;
+            $canalPago->canal_pago_estado = 1;
+            $canalPago->save();
 
-            //Mostramos un mensaje de exito de creacion
             $this->alertaCanalPago('¡Éxito!', 'El Canal de Pago ' . $canalPago->canal_pago . ' ha sido creado satisfactoriamente.', 'success', 'Aceptar', 'success');
-        }else{
-            //Validamos los datos ingresados
+
+        }else{//Modo 2 = actualizar
             $this->validate([
                 'canalPago' => 'required|string'
             ]);
 
-            $canalPago = CanalPago::find($this->canalPago_id);//Buscamos el canal de pago a actualizar
-            $canalPago->canal_pago = $this->canalPago;//Actualizamos el nombre del canal de pago
-            $canalPago->save();//Guardamos los cambios realizados
-
-            //Mostramos un mensaje de exito de actualizacion
-            $this->alertaCanalPago('¡Éxito!', 'El Canal de Pago ' . $canalPago->canal_pago . ' ha sido actualizado satisfactoriamente.', 'success', 'Aceptar', 'success');
-
+            //Validar si no se hicieron cambios
+            $validarCanalPago = CanalPago::find($this->canalPago_id);
+            if($validarCanalPago->canal_pago == $this->canalPago){
+                $this->alertaCanalPago('¡Información!', 'No se realizaron cambios en el Canal de Pago' . $validarCanalPago->canal_pago . '.', 'info', 'Aceptar', 'info');
+            }else{
+                $canalPago = CanalPago::find($this->canalPago_id);
+                $canalPago->canal_pago = $this->canalPago;
+                $canalPago->save();
+    
+                $this->alertaCanalPago('¡Éxito!', 'El Canal de Pago ' . $canalPago->canal_pago . ' ha sido actualizado satisfactoriamente.', 'success', 'Aceptar', 'success');
+            }
         }
 
         //Cerramos el modal

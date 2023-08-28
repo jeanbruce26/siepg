@@ -38,7 +38,7 @@
                                     </span>
                                     Filtro
                                 </a>
-                                <div class="menu menu-sub menu-sub-dropdown w-250px w-md-300px" data-kt-menu="true" id="menu_expediente" wire:ignore.self>
+                                <div class="menu menu-sub menu-sub-dropdown w-250px w-md-300px" data-kt-menu="true" id="menu_pago" wire:ignore.self>
                                     <div class="px-7 py-5">
                                         <div class="fs-5 text-dark fw-bold">
                                             Opciones de filtrado
@@ -79,9 +79,9 @@
                                         <th scope="col">Operación</th>
                                         <th scope="col">Monto</th>
                                         <th scope="col">Fecha</th>
-                                        {{-- <th scope="col">Canal de Pago</th> --}}
                                         <th scope="col">Concepto</th>
                                         <th scope="col" class="col-md-1">Estado</th>
+                                        <th scope="col" class="col-md-1">Verificación</th>
                                         <th scope="col" class="col-md-2">Acciones</th>
                                     </tr>
                                 </thead>
@@ -93,17 +93,27 @@
                                             <td align="center">{{ $item->pago_operacion }}</td>
                                             <td align="center">S/. {{ $item->pago_monto }}</td>
                                             <td align="center">{{ date('d/m/Y', strtotime($item->pago_fecha)) }}</td>
-                                            {{-- <td align="center">{{ $item->canal_pago->canal_pago }}</td> --}}
                                             <td align="center">{{ $item->concepto_pago->concepto_pago }}</td>
                                             <td align="center">
-                                                @if ($item->pago_estado == 1)
-                                                    <span class="badge badge-light-warning fs-6 px-3 py-2">Pagado</span>
-                                                @else
-                                                    @if($item->pago_estado == 2)
-                                                        <span class="badge badge-light-info fs-6 px-3 py-2">Verificado</span>
+                                                @if ($item->pago_estado == 0)
+                                                    <span class="badge badge-light-danger fs-6 px-3 py-2">Rechazado</span> 
+                                                @elseif($item->pago_estado == 1)
+                                                    <span class="badge badge-light-info fs-6 px-3 py-2">Pagado</span>
+                                                @elseif($item->pago_estado == 2)
+                                                    <span class="badge badge-light-primary fs-6 px-3 py-2">Asignado</span>
+                                                @endif
+                                            </td>
+                                            <td align="center">
+                                                @if ($item->pago_verificacion == 0)
+                                                    @if($item->pago_estado == 0)
+                                                        <span class="badge badge-light-danger fs-6 px-3 py-2">Rechazado</span>
                                                     @else
-                                                        <span class="badge badge-light-success fs-6 px-3 py-2">Inscrito</span>
+                                                        <span class="badge badge-light-warning fs-6 px-3 py-2">Observado</span>
                                                     @endif
+                                                @elseif($item->pago_verificacion == 1)
+                                                    <span class="badge badge-light-info fs-6 px-3 py-2">Pendiente</span>
+                                                @elseif($item->pago_verificacion == 2)
+                                                    <span class="badge badge-light-success fs-6 px-3 py-2">Verificado</span>
                                                 @endif
                                             </td>
                                             <td align="center">
@@ -127,16 +137,22 @@
                                                             Editar
                                                         </a>
                                                     </div>
-                                                </div>
-                                                @if ($item->pago_estado == 1)
-                                                    <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
+                                                    <div class="menu-item px-3">
+                                                        <a href="#modalPago"
+                                                        wire:click="cargarIdPago({{ $item->id_pago }})"
+                                                        class="menu-link px-3" data-bs-toggle="modal" 
+                                                        data-bs-target="#modalPago">
+                                                            Ver Pago
+                                                        </a>
+                                                    </div>
+                                                    @if (($item->pago_estado == 1 && $item->pago_verificacion == 1) || ($item->pago_estado == 0 && $item->pago_verificacion == 0))
                                                         <div class="menu-item px-3">
                                                             <a wire:click="eliminar({{ $item->id_pago }})" class="menu-link px-3">
                                                                 Eliminar
                                                             </a>
                                                         </div>
-                                                    </div>
-                                                @endif
+                                                    @endif
+                                                </div>
                                             </td>
                                         </tr>
                                         @empty
@@ -184,71 +200,112 @@
     </div>
 
     {{-- Modal Sede --}}
-    <div wire:ignore.self class="modal fade" id="modalPago" tabindex="-1" aria-labelledby="modalPago"
-        aria-hidden="true">
+    <div wire:ignore.self class="modal fade" tabindex="-1" id="modalPago">
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">{{ $titulo }}</h5>
-                    <button type="button" wire:click="limpiar()" class="btn-close" data-bs-dismiss="modal"
-                        aria-label="Close"></button>
+                    <h2 class="modal-title">
+                        {{ $titulo }}
+                    </h2>
+                    <div class="btn btn-icon btn-sm btn-active-light-danger ms-2" data-bs-dismiss="modal"
+                        aria-label="Close">
+                        <span class="svg-icon svg-icon-2hx">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <rect opacity="0.3" x="2" y="2" width="20" height="20"
+                                    rx="5" fill="currentColor" />
+                                <rect x="7" y="15.3137" width="12" height="2" rx="1"
+                                    transform="rotate(-45 7 15.3137)" fill="currentColor" />
+                                <rect x="8.41422" y="7" width="12" height="2" rx="1"
+                                    transform="rotate(45 8.41422 7)" fill="currentColor" />
+                            </svg>
+                        </span>
+                    </div>
                 </div>
                 <div class="modal-body">
-                    <form novalidate>
+                    <form autocomplete="off">
                         <div class="row g-3">
                             <div class="mb-3 col-md-4">
-                                <label class="form-label">Documento <span class="text-danger">*</span></label>
-                                <input wire:model="documento" type="text" class="form-control @error('documento') is-invalid  @enderror" placeholder="Ingrese número de documento">
+                                <label for="documento" class="required form-label">
+                                    Documento
+                                </label>
+                                <input type="text" wire:model="documento" 
+                                    class="form-control @error('documento') is-invalid @enderror"
+                                    placeholder="Ingrese su número de documento" id="documento"/>
                                 @error('documento') 
                                     <span class="error text-danger" >{{ $message }}</span> 
                                 @enderror
                             </div>
                             <div class="mb-3 col-md-4">
-                                <label class="form-label">Número de Operación <span class="text-danger">*</span></label>
-                                <input wire:model="numero_operacion" type="text" class="form-control mb-2 @error('numero_operacion') is-invalid  @enderror" placeholder="Ingrese el número de operación">
+                                <label for="numero_operacion" class="required form-label">
+                                    Número de Operación
+                                </label>
+                                <input type="text" wire:model="numero_operacion" 
+                                    class="form-control @error('numero_operacion') is-invalid @enderror"
+                                    placeholder="Ingrese su número de operación" id="numero_operacion"/>
                                 <div class="mt-1 text-muted">
                                     <strong>Nota: </strong>Omitir los ceros iniciales.
                                 </div>
                                 @error('numero_operacion') 
-                                <span class="error text-danger" >{{ $message }}</span> 
+                                <span class="error text-danger" >{{ $message }}</span>
                                 @enderror
                             </div>
                             <div class="mb-3 col-md-4">
-                                <label class="form-label">Monto <span class="text-danger">*</span></label>
-                                <input wire:model="monto" type="text" class="form-control @error('monto') is-invalid  @enderror" placeholder="Ingrese el monto en soles">
+                                <label for="monto" class="required form-label">
+                                    Monto
+                                </label>
+                                <input type="text" wire:model="monto" 
+                                    class="form-control @error('monto') is-invalid @enderror"
+                                    placeholder="Ingrese el monto en soles" id="monto"/>
                                 @error('monto') 
                                     <span class="error text-danger" >{{ $message }}</span> 
                                 @enderror
                             </div>
                             <div class="mb-3 col-md-4">
-                                <label class="form-label">Fecha de Pago <span class="text-danger">*</span></label>
-                                <input wire:model="fecha_pago" type="text" class="form-control @error('fecha_pago') is-invalid  @enderror" placeholder="Ingrese la fecha de pago">
-                                @error('fecha_pago') 
-                                    <span class="error text-danger" >{{ $message }}</span> 
+                                <label for="fecha_pago" class="required form-label">
+                                    Fecha de Pago
+                                </label>
+                                <input type="date" wire:model="fecha_pago" class="form-control @error('fecha_pago') is-invalid @enderror" id="fecha_pago" max="{{ date('Y-m-d') }}" >
+                                @error('fecha_pago')
+                                    <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
                             <div class="mb-3 col-md-4">
-                                <label class="form-label">Canal de Pago <span class="text-danger">*</span></label>
-                                <select class="form-select @error('canal_pago') is-invalid  @enderror" wire:model="canal_pago">
-                                    <option value="" selected>Seleccione</option>
+                                <label for="canal_pago" class="required form-label">
+                                    Canal de Pago
+                                </label>
+                                <select class="form-select @error('canal_pago') is-invalid @enderror"
+                                    wire:model="canal_pago" id="canal_pago" data-control="select2"
+                                    data-placeholder="Seleccione su canal de pago" data-allow-clear="true"
+                                    data-dropdown-parent="#modalPago">
+                                    <option></option>
                                     @foreach ($canalPago as $item)
-                                        <option value="{{$item->id_canal_pago}}">{{$item->canal_pago}}</option>
+                                        @if($item->canal_pago_estado == 1)
+                                            <option value="{{$item->id_canal_pago}}">{{$item->canal_pago}}</option>
+                                        @endif
                                     @endforeach
                                 </select>
                                 @error('canal_pago')
-                                    <span class="error text-danger" >{{ $message }}</span> 
+                                    <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
                             <div class="mb-3 col-md-4">
-                                <label class="form-label">Concepto de Pago <span class="text-danger">*</span></label>
-                                <select class="form-select @error('concepto_pago') is-invalid  @enderror" wire:model="concepto_pago">
-                                    <option value="" selected>Seleccione</option>
+                                <label for="concepto_pago" class="required form-label">
+                                    Concepto de Pago
+                                </label>
+                                <select class="form-select @error('concepto_pago') is-invalid @enderror"
+                                    wire:model="concepto_pago" id="concepto_pago" data-control="select2"
+                                    data-placeholder="Seleccione su concepto de pago" data-allow-clear="true"
+                                    data-dropdown-parent="#modalPago">
+                                    <option></option>
                                     @foreach ($conceptoPago as $item)
-                                        <option value="{{$item->id_concepto_pago}}">{{$item->concepto_pago}}</option>
+                                        @if($item->concepto_pago_estado == 1)
+                                            <option value="{{$item->id_concepto_pago}}">{{$item->concepto_pago}}</option>
+                                        @endif
                                     @endforeach
                                 </select>
                                 @error('concepto_pago')
-                                    <span class="error text-danger" >{{ $message }}</span> 
+                                    <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
                             <div class="mb-3 col-md-12">
@@ -267,8 +324,15 @@
                     </form>
                 </div>
                 <div class="modal-footer col-12 d-flex justify-content-between">
-                    <button type="button" wire:click="limpiar()" class="btn btn-secondary hover-elevate-up" data-bs-dismiss="modal">Cancelar</button>                    
-                    <button type="button" wire:click="guardarAdmision()" class="btn btn-primary hover-elevate-up">Guardar</button>
+                    <button type="button" wire:click="limpiar()" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" wire:click="guardarPago" class="btn btn-primary" wire:loading.attr="disabled" wire:target="guardarPago">
+                        <div wire:loading.remove wire:target="guardarPago">
+                            Guardar
+                        </div>
+                        <div wire:loading wire:target="guardarPago">
+                            Procesando <span class="spinner-border spinner-border-sm align-middle ms-2">
+                        </div>
+                    </button>
                 </div>
             </div>
         </div>
@@ -315,6 +379,87 @@
                 });
                 $('#filtro_proceso').on('change', function(){
                     @this.set('filtro_proceso', this.value);
+                });
+            });
+        });
+
+
+        //Select2 de Modal Pago
+        // canal_pago select2
+        $(document).ready(function () {
+            $('#canal_pago').select2({
+                placeholder: 'Seleccione',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando...";
+                    }
+                }
+            });
+            $('#canal_pago').on('change', function(){
+                @this.set('canal_pago', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#canal_pago').select2({
+                    placeholder: 'Seleccione',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando...";
+                        }
+                    }
+                });
+                $('#canal_pago').on('change', function(){
+                    @this.set('canal_pago', this.value);
+                });
+            });
+        });
+        // concepto_pago select2
+        $(document).ready(function () {
+            $('#concepto_pago').select2({
+                placeholder: 'Seleccione',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando...";
+                    }
+                }
+            });
+            $('#concepto_pago').on('change', function(){
+                @this.set('concepto_pago', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#concepto_pago').select2({
+                    placeholder: 'Seleccione',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando...";
+                        }
+                    }
+                });
+                $('#concepto_pago').on('change', function(){
+                    @this.set('concepto_pago', this.value);
                 });
             });
         });
