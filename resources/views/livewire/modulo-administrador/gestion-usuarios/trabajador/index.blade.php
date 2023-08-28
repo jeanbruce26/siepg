@@ -102,15 +102,15 @@
                                     @forelse ($trabajadores as $item)
                                         <tr>
                                             <td align="center" class="fs-5">
-                                                <strong>{{ $item->id_trabajador }}</strong>
+                                                <strong>{{ $item['id_trabajador'] }}</strong>
                                             </td>
-                                            <td align="center">{{ $item->trabajador_numero_documento }}</td>
+                                            <td align="center">{{ $item['trabajador_numero_documento'] }}</td>
                                             <td>
                                                 <div class="d-flex justify-conten-star align-items-center">
                                                     <div class="flex-shirnk-0">
-                                                        @if ($item->trabajador_perfil_url && file_exists(public_path($item->trabajador_perfil_url)))
+                                                        @if ($item['trabajador_perfil_url'] && file_exists(public_path($item['trabajador_perfil_url'])))
                                                             <img class="rounded-circle avatar-xs"
-                                                                src="{{ asset($item->trabajador_perfil_url) }}"
+                                                                src="{{ asset($item['trabajador_perfil_url']) }}"
                                                                 alt="perfil Avatar">
                                                         @else
                                                             <img class="rounded-circle avatar-xs"
@@ -119,103 +119,60 @@
                                                         @endif
                                                     </div>
                                                     <div class="ms-2">
-                                                        {{ $item->trabajador_nombre_completo }}
+                                                        {{ $item['trabajador_nombre_completo'] }}
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td align="center">{{ $item->grado_academico }}</td>
-                                            <td>{{ $item->trabajador_correo }}</td>
-                                            @php
-                                                $tra_tipo_tra = App\Models\TrabajadorTipoTrabajador::where('id_trabajador', $item->id_trabajador)->where('trabajador_tipo_trabajador_estado',1)->get();
-                                            @endphp
+                                            <td align="center">{{ $item['grado_academico'] }}</td>
+                                            <td>{{ $item['trabajador_correo'] }}</td>
                                             <td align="center" class="">
-                                                @php
-                                                    $coordinador_unidad = App\Models\Coordinador::where('id_trabajador', $item->id_trabajador)->first();
-                                                    $administrativo = App\Models\Administrativo::where('id_trabajador', $item->id_trabajador)->first();
-                                                @endphp
-                                                @if ($tra_tipo_tra)
-                                                    @if ($tra_tipo_tra->count() == 1)
-                                                        <ul style="list-style: none; padding: 0; margin: 0;">
-                                                        @foreach ($tra_tipo_tra as $item2)
-                                                            @if ($item2->id_tipo_trabajador == 1)
+                                                <ul style="list-style: none; padding: 0; margin: 0;">
+                                                    @forelse ($item['trabajador_tipo_trabajador'] as $item2)
+                                                        @if ($item2['id_tipo_trabajador'] == 1)
+                                                            @if ($item['docente'])
                                                                 Docente
-                                                                {{-- TIPO DE DOCENTE --}}
-                                                                @if ($item2->trabajador->docente->id_tipo_docente == 1)
+                                                                @if ($item['docente']['id_tipo_docente'] == 1)
                                                                     <li class="text-gray-500">
                                                                         (INTERNO)
-                                                                    </li> 
+                                                                    </li>
                                                                 @else 
                                                                     <li class="text-gray-500">
                                                                         (EXTERNO)
                                                                     </li>
                                                                 @endif
                                                             @endif
-                                                            @if ($item2->id_tipo_trabajador == 2)
-                                                                Coordinador de Unidad
-                                                                @if ($coordinador_unidad)
-                                                                    <li class="text-gray-500">
-                                                                        ({{ $coordinador_unidad->facultad->facultad }})
-                                                                    </li>
-                                                                @endif
+                                                        @endif
+                                                        @if ($item2['id_tipo_trabajador'] == 2)
+                                                            Coordinador de Unidad
+                                                            @if ($item['coordinador'])
+                                                                <li class="text-gray-500">
+                                                                    ({{ $item['coordinador']['facultad']['facultad'] }})
+                                                                </li>
                                                             @endif
-                                                            @if ($item2->id_tipo_trabajador == 3)
-                                                                Administrativo
-                                                                @if ($administrativo)
-                                                                    <li class="text-gray-500">
-                                                                        ({{ $administrativo->area_administrativo->area_administrativo }})
-                                                                    </li>
-                                                                @endif
+                                                        @endif
+                                                        @if ($item2['id_tipo_trabajador'] == 3)
+                                                            Administrativo
+                                                            @if ($item['administrativo'])
+                                                                <li class="text-gray-500">
+                                                                    ({{ $item['administrativo']['area_administrativo']['area_administrativo'] }})
+                                                                </li>
                                                             @endif
-                                                        @endforeach
-                                                        </ul>
-                                                    @else
-                                                        <ul style="list-style: none; padding: 0; margin: 0;">
-                                                        @foreach ($tra_tipo_tra as $item2)
-                                                            @if ($item2->id_tipo_trabajador == 1)
-                                                                <li>Docente</li>
-                                                                {{-- TIPO DE DOCENTE --}}
-                                                                @if ($item2->trabajador->docente->id_tipo_docente == 1)
-                                                                    <li class="text-gray-500">
-                                                                        (INTERNO)
-                                                                    </li> 
-                                                                @else 
-                                                                    <li class="text-gray-500">
-                                                                        (EXTERNO)
-                                                                    </li>
-                                                                @endif
-                                                            @endif
-                                                            @if ($item2->id_tipo_trabajador == 2)
-                                                                <li>Coordinador de Unidad</li> 
-                                                                @if ($coordinador_unidad)
-                                                                    <li class="text-gray-500">
-                                                                        ({{ $coordinador_unidad->facultad->facultad }})
-                                                                    </li>
-                                                                @endif
-                                                            @endif
-                                                            @if ($item2->id_tipo_trabajador == 3)
-                                                                <li>Administrativo</li> 
-                                                                @if ($administrativo)
-                                                                    <li class="text-gray-500">
-                                                                        ({{ $administrativo->area_administrativo->area_administrativo }})
-                                                                    </li>
-                                                                @endif
-                                                            @endif
-                                                        @endforeach
-                                                        </ul>
-                                                    @endif
-                                                @endif
-                                                @if($tra_tipo_tra->count() == 0)
-                                                    No asignado
-                                                @endif
+                                                        @endif
+                                                    @empty
+                                                        <li class="text-gray-500">
+                                                            NO ASIGNADO
+                                                        </li>
+                                                    @endforelse
+                                                </ul>
                                             </td>
                                             <td align="center">
-                                                @if ($item->trabajador_estado == 1)
+                                                @if ($item['trabajador_estado'] == 1)
                                                     <span style="cursor: pointer;"
-                                                        wire:click="cargarAlerta({{ $item->id_trabajador }})"
+                                                        wire:click="cargarAlerta({{ $item['id_trabajador'] }})"
                                                         class="badge text-bg-success text-light fs-6 px-3 py-2">Activo</span>
                                                 @else
                                                     <span style="cursor: pointer;"
-                                                        wire:click="cargarAlerta({{ $item->id_trabajador }})"
+                                                        wire:click="cargarAlerta({{ $item['id_trabajador'] }})"
                                                         class="badge text-bg-danger text-light fs-6 px-3 py-2">Inactivo</span>
                                                 @endif
                                             </td>
@@ -234,24 +191,24 @@
                                                 <div class="dropdown-menu dropdown-menu-end menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
                                                     <div class="menu-item px-3">
                                                         <a href="#modalTra"
-                                                        wire:click="cargarTrabajador({{ $item->id_trabajador }})" 
+                                                        wire:click="cargarTrabajador({{ $item['id_trabajador'] }})" 
                                                         class="menu-link px-3" data-bs-toggle="modal" 
                                                         data-bs-target="#modalTra">
                                                             Editar
                                                         </a>
                                                     </div>
-                                                    @if ($item->trabajador_estado == 1)
+                                                    @if ($item['trabajador_estado'] == 1)
                                                         <div class="menu-item px-3">
                                                             <a href="#modalAsignar"
-                                                            wire:click="cargarTrabajadorId({{ $item->id_trabajador }},1)" class="menu-link px-3" data-bs-toggle="modal" 
+                                                            wire:click="cargarTrabajadorId({{ $item['id_trabajador'] }},1)" class="menu-link px-3" data-bs-toggle="modal" 
                                                             data-bs-target="#modalAsignar">
                                                                 Asignar
                                                             </a>
                                                         </div>
-                                                        @if ($tra_tipo_tra->count() != 0)
+                                                        @if ($item['trabajador_tipo_trabajador']->count() != 0)
                                                             <div class="menu-item px-3">
                                                                 <a href="#modaldDesAsignar"
-                                                                wire:click="cargarTrabajadorId({{ $item->id_trabajador }},2)" 
+                                                                wire:click="cargarTrabajadorId({{ $item['id_trabajador'] }},2)" 
                                                                 data-bs-toggle="modal"
                                                                 data-bs-target="#modaldDesAsignar"
                                                                 class="menu-link px-3">
@@ -262,7 +219,7 @@
                                                     @endif
                                                     <div class="menu-item px-3">
                                                         <a  href="#modalInfo"
-                                                        wire:click="cargarInfoTrabajador({{ $item->id_trabajador }})"
+                                                        wire:click="cargarInfoTrabajador({{ $item['id_trabajador'] }})"
                                                         data-bs-toggle="modal"
                                                         data-bs-target="#modalInfo" class="menu-link px-3">
                                                             Datalle
@@ -274,14 +231,14 @@
                                     @empty
                                         @if ($search != '')
                                             <tr>
-                                                <td colspan="7" class="text-center text-muted">
+                                                <td colspan="8" class="text-center text-muted">
                                                     No se encontraron resultados para la busqueda
                                                     "{{ $search }}"
                                                 </td>
                                             </tr>
                                         @else
                                             <tr>
-                                                <td colspan="7" class="text-center text-muted">
+                                                <td colspan="8" class="text-center text-muted">
                                                     No hay registros
                                                 </td>
                                             </tr>
@@ -290,25 +247,6 @@
                                 </tbody>
                             </table>
                         </div>
-                        {{-- paginacion de la tabla --}}
-                        @if ($trabajadores->hasPages())
-                            <div class="d-flex justify-content-between mt-5">
-                                <div class="d-flex align-items-center text-gray-700">
-                                    Mostrando {{ $trabajadores->firstItem() }} - {{ $trabajadores->lastItem() }} de
-                                    {{ $trabajadores->total() }} registros
-                                </div>
-                                <div>
-                                    {{ $trabajadores->links() }}
-                                </div>
-                            </div>
-                        @else
-                            <div class="d-flex justify-content-between mt-5">
-                                <div class="d-flex align-items-center text-gray-700">
-                                    Mostrando {{ $trabajadores->firstItem() }} - {{ $trabajadores->lastItem() }} de
-                                    {{ $trabajadores->total() }} registros
-                                </div>
-                            </div>
-                        @endif
                     </div>
                 </div>
 

@@ -3,17 +3,24 @@
 namespace App\Http\Livewire\ModuloAdministrador\GestionPagos\Pago;
 
 use App\Models\Admision;
+use App\Models\Admitido;
+use App\Models\AdmitidoCiclo;
 use App\Models\CanalPago;
 use App\Models\ConceptoPago;
+use App\Models\ConstanciaIngreso;
 use App\Models\Inscripcion;
+use App\Models\Matricula;
+use App\Models\Mensualidad;
 use App\Models\Pago;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 
 class Index extends Component
 {
 
     use WithPagination;
+    use WithFileUploads;
     protected $paginationTheme = 'bootstrap';//paginacion de bootstrap
     
     // Para poder agregar los parámetros de búsqueda en la URL 
@@ -42,6 +49,8 @@ class Index extends Component
     public $filtroProceso;
     public $filtro_proceso;
 
+    public $validarDatosModal = false;
+
     protected $listeners = ['render', 'deletePago'];// Para escuchar estos dos eventos
 
     public function updated($propertyName)
@@ -68,6 +77,8 @@ class Index extends Component
         $this->resetErrorBag();// Eliminamos los errores de la validación
         $this->reset('documento','numero_operacion','monto','fecha_pago','voucher_url','canal_pago','concepto_pago'); // Reseteamos las vatiables de la vista
         $this->modo = 1;// Modo nuevo o agregar
+        $this->validarDatosModal = false;
+        $this->iteracion++;// Para que se limpie el campo de archivo
         $this->titulo = "Crear Pago";
     }
 
@@ -127,19 +138,116 @@ class Index extends Component
 
     public function validacionDatos()
     {
-        // Validación de número de operación, dni y fecha repetidos
-        $validar = Pago::where('pago_operacion', $this->numero_operacion)->first();
-        if ($validar) {
-            if($validar->pago_documento == $this->documento && $validar->pago_fecha == $this->fecha_pago){
-                $this->alertaPago('¡Información!', 'El número de operación y el DNI ya fueron registrados en el sistema.', 'info', 'Aceptar', 'info');
-                return back();// Retornamos
-            }else if ($validar->pago_fecha == $this->fecha_pago) {
-                $this->alertaPago('¡Información!', 'El número de operación ya se encuentra registrado en el sistema.', 'info', 'Aceptar', 'info');
-                return back();// Retornamos
-            }else if($validar->pago_documento == $this->documento){
-                $this->alertaPago('¡Información!', 'El número de operación y el DNI ya existen en el sistema.', 'info', 'Aceptar', 'info');
+        //Si el modo es actualizar, validamos que no se hayan realizado cambios
+        if($this->modo == 2)
+        {
+            $validarPago = Pago::find($this->pago_id);
+            if(($validarPago->pago_documento != $this->documento || $validarPago->pago_operacion != $this->numero_operacion || $validarPago->monto != $this->monto || $validarPago->pago_fecha != $this->fecha_pago || $validarPago->id_canal_pago != $this->canal_pago || $validarPago->id_concepto_pago != $this->concepto_pago) && $this->voucher_url == null)
+            {
+                $this->alertaPago('¡Información!', 'No se realizaron cambios en el pago seleccionado.', 'info', 'Aceptar', 'info');
+                $this->validarDatosModal = true;
                 return back();// Retornamos
             }
+
+            // Validación de número de operación, dni y fecha repetidos
+            $validar1 = Pago::where('pago_operacion', $this->numero_operacion)
+                    ->where('pago_documento', $this->documento)
+                    ->where('pago_fecha', $this->fecha_pago)
+                    ->where('pago_estado', '!=', '0')
+                    ->where('id_pago', '!=' , strval($this->pago_id))->get();
+            $validar2 = Pago::where('pago_operacion', $this->numero_operacion)
+                    ->where('pago_fecha', $this->fecha_pago)
+                    ->where('pago_estado', '!=', '0')
+                    ->where('id_pago', '!=', strval($this->pago_id))->get();
+            $validar3 = Pago::where('pago_operacion', $this->numero_operacion)
+                    ->where('pago_documento', $this->documento)
+                    ->where('pago_estado', '!=', '0')
+                    ->where('id_pago', '!=', strval($this->pago_id))->get();
+        }
+        else
+        {
+            // Validación de número de operación, dni y fecha repetidos
+            $validar1 = Pago::where('pago_operacion', $this->numero_operacion)
+                    ->where('pago_documento', $this->documento)
+                    ->where('pago_estado', '!=', '0')
+                    ->where('pago_fecha', $this->fecha_pago)->get();
+            $validar2 = Pago::where('pago_operacion', $this->numero_operacion)
+                    ->where('pago_estado', '!=', '0')
+                    ->where('pago_fecha', $this->fecha_pago)->get();
+            $validar3 = Pago::where('pago_operacion', $this->numero_operacion)
+                    ->where('pago_estado', '!=', '0')
+                    ->where('pago_documento', $this->documento)->get();
+        }
+
+        if($validar1->count() > 0){
+            $this->alertaPago('¡Información!', 'El número de operación y el DNI ya fueron registrados en el sistema.', 'info', 'Aceptar', 'info');
+            $this->validarDatosModal = true;
+            return back();// Retornamos
+        }else if ($validar2->count() > 0){
+            $this->alertaPago('¡Información!', 'El número de operación ya se encuentra registrado en el sistema.', 'info', 'Aceptar', 'info');
+            $this->validarDatosModal = true;
+            return back();// Retornamos
+        }else if($validar3->count() > 0){
+            $this->alertaPago('¡Información!', 'El número de operación y el DNI ya existen en el sistema.', 'info', 'Aceptar', 'info');
+            $this->validarDatosModal = true;
+            return back();// Retornamos
+        }
+    }
+
+    public function asignarConceptoPago($pago, $admitido)
+    {
+        if($pago->id_concepto_pago == 1)// Si el concepto de pago es "Inscripción"
+        {
+            // Obtener el último código de inscripción
+            $ultimo_codifo_inscripcion = Inscripcion::orderBy('inscripcion_codigo','DESC')->first();
+            // Generar el código de inscripción
+            if($ultimo_codifo_inscripcion == null)
+            {
+                $codigo_inscripcion = 'IN0001';// Si no existen códigos anteriores
+            }else
+            {
+                $codigo_inscripcion = $ultimo_codifo_inscripcion->inscripcion_codigo;
+                $codigo_inscripcion = substr($codigo_inscripcion, 2, 6);// Obtenemos el código apartir del 3er caracter, agarrando los 6 primeros caracteres de la cadena
+                $codigo_inscripcion = intval($codigo_inscripcion) + 1;// Convertimos la variable en entero, y le incrementamos 1 al valor obtenido
+                $codigo_inscripcion = str_pad($codigo_inscripcion, 4, "0", STR_PAD_LEFT);// Formateamos la cadena con una longitud de 4, agregando ceros "0" a la izquierda si es necesario, o la cadena es menor que 4
+                $codigo_inscripcion = 'IN'.$codigo_inscripcion;// Concatenamos el código, con el formato requerido "IN"
+            }
+
+            // Crear la inscripcion
+            $inscripcion = new Inscripcion();
+            $inscripcion->inscripcion_codigo = $codigo_inscripcion;
+            $inscripcion->inscripcion_estado = 1;
+            $inscripcion->id_pago = $pago->id_pago;
+            $inscripcion->id_programa_proceso = null;
+            $inscripcion->save();
+        }
+        else if($pago->id_concepto_pago == 2 || $pago->id_concepto_pago == 4 || $pago->id_concepto_pago == 6)//Si el concepto de pago es "Constancia de Ingreso"
+        {
+            // registrar constancia de ingreso
+            $constancia = new ConstanciaIngreso();
+            $constancia->constancia_ingreso_fecha = date('Y-m-d');
+            $constancia->id_pago = $pago->id_pago;
+            $constancia->id_admitido = $admitido->id_admitido;
+            $constancia->constancia_ingreso_estado = 1;
+            $constancia->save();
+        }
+        else if($pago->id_concepto_pago == 7)//Si el concepto de pago es "Costo por Enseñanza"
+        {
+            // buscar la matricula del admitido
+            $ciclo = AdmitidoCiclo::where('id_admitido', $admitido->id_admitido)->where('admitido_ciclo_estado', 1)->orderBy('id_admitido_ciclo', 'desc')->first();
+            $matricula = Matricula::where('id_admitido', $admitido->id_admitido)->where('id_ciclo', $ciclo->id_ciclo)->where('matricula_estado', 1)->first();
+            // registrar mensualidad
+            $mensualidad = new Mensualidad();
+            $mensualidad->id_matricula = $matricula->id_matricula;
+            $mensualidad->id_pago = $pago->id_pago;
+            $mensualidad->id_admitido = $admitido->id_admitido;
+            $mensualidad->mensualidad_fecha_creacion = date('Y-m-d H:i:s');
+            $mensualidad->mensualidad_estado = 1;
+            $mensualidad->save();
+
+            // cambiar de estado
+            $pago->pago_estado = 2;
+            $pago->save();
         }
     }
 
@@ -152,70 +260,75 @@ class Index extends Component
                 'documento' => 'required|digits_between:8,9|numeric',
                 'monto' => 'required|numeric',
                 'fecha_pago' => 'required|date',
-                'voucher_url' => 'required',
                 'canal_pago' => 'required|numeric',
-                'concepto_pago' => 'required|numeric'
+                'concepto_pago' => 'required|numeric',
+                'voucher_url' => 'required',
             ]);
 
             $this->validacionDatos();// Validamos los datos repetidos de DNI, nro de operación y fecha
 
-            // validar si el monto ingresado es igual al monto por concepto de seleccionado
-            $concepto_pago_monto = ConceptoPago::where('id_concepto_pago', $this->concepto_pago)->first()->concepto_pago_monto;
-            if($this->monto_operacion != $concepto_pago_monto)
+            if($this->validarDatosModal == false)
             {
-                $this->alertaPago('¡Error!', 'El monto ingresado no es igual al monto por concepto seleccionado', 'info', 'Cerrar', 'danger');
-                return redirect()->back();// Retornamos
-            }
-
-            // Crear el pago con los datos ingresados en el sistema
-            $pago = new Pago();
-            $pago->pago_documento = $this->documento_identidad;
-            $pago->pago_operacion = $this->numero_operacion;
-            $pago->pago_monto = $this->monto_operacion;
-            $pago->pago_fecha = $this->fecha_pago;
-            $pago->pago_estado = 1;
-            $pago->pago_verificacion = 1;
-            if($this->voucher_url)
-            {
-                $admision = Admision::where('admision_estado', 1)->first()->admision;
-                $path = 'Posgrado/' . $admision . '/' . $this->documento_identidad . '/' . 'Voucher/';// Ruta del voucher
-                $filename = 'voucher-pago.' . $this->voucher_url->getClientOriginalExtension();// Nombre del voucher con su extención
-                $nombre_db = $path.$filename;
-                $data = $this->voucher_url;
-                $data->storeAs($path, $filename, 'files_publico');// Guardamos el voucher
-                $pago->pago_voucher_url = $nombre_db;
-            }
-            $pago->id_canal_pago = $this->canal_pago;
-            $pago->id_concepto_pago = 1;
-            $pago->save();            
-
-            // Si el concepto de pago es "Inscripción", creamos su inscripción
-            if($pago->id_concepto_pago == 1){
-                // Obtener el último código de inscripción
-                $ultimo_codifo_inscripcion = Inscripcion::orderBy('inscripcion_codigo','DESC')->first();
-                // Generar el código de inscripción
-                if($ultimo_codifo_inscripcion == null)
+                // validar si el monto ingresado es igual al monto por concepto de seleccionado
+                $concepto_pago_monto = ConceptoPago::where('id_concepto_pago', $this->concepto_pago)->first();
+                if($this->monto < $concepto_pago_monto->concepto_pago_monto)
                 {
-                    $codigo_inscripcion = 'IN0001';// Si no existen códigos anteriores 
-                }else
-                {
-                    $codigo_inscripcion = $ultimo_codifo_inscripcion->inscripcion_codigo;
-                    $codigo_inscripcion = substr($codigo_inscripcion, 2, 6);// Obtenemos el código apartir del 3er caracter, agarrando los 6 primeros caracteres de la cadena
-                    $codigo_inscripcion = intval($codigo_inscripcion) + 1;// Convertimos la variable en entero, y le incrementamos 1 al valor obtenido
-                    $codigo_inscripcion = str_pad($codigo_inscripcion, 4, "0", STR_PAD_LEFT);// Formateamos la cadena con una longitud de 4, agregando ceros "0" a la izquierda si es necesario, o la cadena es menor que 4
-                    $codigo_inscripcion = 'IN'.$codigo_inscripcion;// Concatenamos el código, con el formato requerido "IN"
+                    $this->alertaPago('¡Error!', 'El monto ingresado es menor al monto por concepto seleccionado', 'error', 'Cerrar', 'danger');
+                    return redirect()->back();// Retornamos
                 }
 
-                // Crear la inscripcion
-                $inscripcion = new Inscripcion();
-                $inscripcion->inscripcion_codigo = $codigo_inscripcion;
-                $inscripcion->inscripcion_estado = 1;
-                $inscripcion->id_pago = $pago->id_pago;
-                $inscripcion->id_programa_proceso = null;
-                $inscripcion->save();
-            }
+                $validarAdmitido = Admitido::join('persona', 'admitido.id_persona', '=', 'persona.id_persona')
+                                            ->where('numero_documento', $this->documento)
+                                            ->first();
+                if($validarAdmitido == null && $this->concepto_pago != 1)
+                {
+                    $this->alertaPago('¡Error!', 'El DNI ingresado no pertenece a ningún estudiante admitido para el concepto de '.$concepto_pago_monto->concepto_pago.'.', 'error', 'Cerrar', 'danger');
+                    return redirect()->back();// Retornamos
+                }
+                if($validarAdmitido != null && $this->concepto_pago == 7)
+                {
+                    // buscar la matricula del admitido
+                    $ciclo = AdmitidoCiclo::where('id_admitido', $validarAdmitido->id_admitido)->where('admitido_ciclo_estado', 1)->orderBy('id_admitido_ciclo', 'desc')->first();
+                    if($ciclo == null)
+                    {
+                        $this->alertaPago('¡Error!', 'El estudiante no tiene matrícula activa.', 'error', 'Cerrar', 'danger');
+                        return redirect()->back();// Retornamos
+                    }
+                    $matricula = Matricula::where('id_admitido', $validarAdmitido->id_admitido)->where('id_ciclo', $ciclo->id_ciclo)->where('matricula_estado', 1)->first();
+                    if($matricula == null)
+                    {
+                        $this->alertaPago('¡Error!', 'El estudiante no tiene matrícula activa.', 'error', 'Cerrar', 'danger');
+                        return redirect()->back();// Retornamos
+                    }
+                }
+                dd($validarAdmitido);
 
-            $this->alertaPago('¡Éxito!', 'El pago ' . $pago->pago_operacion . ' por concepto de ' . $pago->concepto_pago->concepto_pago . ' ha sido creado satisfactoriamente.', 'success', 'Aceptar', 'success');
+                // Crear el pago con los datos ingresados en el sistema
+                $pago = new Pago();
+                $pago->pago_documento = $this->documento;
+                $pago->pago_operacion = $this->numero_operacion;
+                $pago->pago_monto = $this->monto;
+                $pago->pago_fecha = $this->fecha_pago;
+                $pago->pago_estado = 1;
+                $pago->pago_verificacion = 1;
+                if($this->voucher_url)
+                {
+                    $admision = Admision::where('admision_estado', 1)->first()->admision;
+                    $path = 'Posgrado/' . $admision . '/' . $this->documento . '/' . 'Voucher/';// Ruta del voucher
+                    $filename = 'voucher-pago.' . $this->voucher_url->getClientOriginalExtension();// Nombre del voucher con su extención
+                    $nombre_db = $path.$filename;
+                    $data = $this->voucher_url;
+                    $data->storeAs($path, $filename, 'files_publico');// Guardamos el voucher
+                    $pago->pago_voucher_url = $nombre_db;
+                }
+                $pago->id_canal_pago = $this->canal_pago;
+                $pago->id_concepto_pago = $this->concepto_pago;
+                $pago->save();
+
+                // $this->asignarConceptoPago($pago, $validarAdmitido);
+
+                $this->alertaPago('¡Éxito!', 'El pago ' . $pago->pago_operacion . ' por concepto de ' . $pago->concepto_pago->concepto_pago . ' ha sido creado satisfactoriamente.', 'success', 'Aceptar', 'success');
+            }
 
         }else{// Modo actualizar o editar
             // Validamos los campos de la vista
@@ -230,31 +343,34 @@ class Index extends Component
             ]);
 
             $this->validacionDatos();// Validamos los datos repetidos de DNI, nro de operación y fecha
-
-            $pago = Pago::find($this->pago_id);
-            $pago->pago_documento = $this->documento;
-            $pago->pago_operacion = $this->numero_operacion;
-            $pago->pago_monto = $this->monto;
-            $pago->pago_fecha = $this->fecha_pago;
-            if($this->voucher_url)
+            
+            if($this->validarDatosModal == false)
             {
-                if (file_exists($pago->pago_voucher_url)) {
-                    unlink($pago->pago_voucher_url);// Si el voucher existe, se elimina para que no haya problemas al momento de asignar un nuevo voucher de pago
+                $pago = Pago::find($this->pago_id);
+                $pago->pago_documento = $this->documento;
+                $pago->pago_operacion = $this->numero_operacion;
+                $pago->pago_monto = $this->monto;
+                $pago->pago_fecha = $this->fecha_pago;
+                if($this->voucher_url)
+                {
+                    if (file_exists($pago->pago_voucher_url)) {
+                        unlink($pago->pago_voucher_url);// Si el voucher existe, se elimina para que no haya problemas al momento de asignar un nuevo voucher de pago
+                    }
+                    $admision = Admision::where('admision_estado', 1)->first()->admision;
+                    $path = 'Posgrado/' . $admision . '/' . $this->documento . '/' . 'Voucher/';// Ruta del voucher
+                    $filename = 'voucher-pago.' . $this->voucher_url->getClientOriginalExtension();// Nombre del voucher con su extención
+                    $nombre_db = $path.$filename;
+                    $data = $this->voucher_url;
+                    $data->storeAs($path, $filename, 'files_publico');// Guardamos el voucher
+                    $pago->pago_voucher_url = $nombre_db;
                 }
-                $admision = Admision::where('admision_estado', 1)->first()->admision;
-                $path = 'Posgrado/' . $admision . '/' . $this->documento_identidad . '/' . 'Voucher/';// Ruta del voucher
-                $filename = 'voucher-pago.' . $this->voucher_url->getClientOriginalExtension();// Nombre del voucher con su extención
-                $nombre_db = $path.$filename;
-                $data = $this->voucher_url;
-                $data->storeAs($path, $filename, 'files_publico');// Guardamos el voucher
-                $pago->pago_voucher_url = $nombre_db;
+                // $pago->pago_voucher_url = $this->voucher_url;
+                $pago->id_canal_pago = $this->canal_pago;
+                $pago->id_concepto_pago = $this->concepto_pago;
+                $pago->save();
+    
+                $this->alertaPago('¡Éxito!', 'El pago ' . $pago->pago_operacion . ' por concepto de ' . $pago->concepto_pago->concepto_pago . ' ha sido actualizado satisfactoriamente.', 'success', 'Aceptar', 'success');
             }
-            // $pago->pago_voucher_url = $this->voucher_url;
-            $pago->id_canal_pago = $this->canal_pago;
-            $pago->id_concepto_pago = $this->concepto_pago;
-            $pago->save();
-
-            $this->alertaPago('¡Éxito!', 'El pago ' . $pago->pago_operacion . ' por concepto de ' . $pago->concepto_pago->concepto_pago . ' ha sido actualizado satisfactoriamente.', 'success', 'Aceptar', 'success');
         }
 
         // Cerramos el modal

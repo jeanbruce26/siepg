@@ -19,56 +19,56 @@ use App\Http\Controllers\ModuloAdministrador\UsuarioTrabajadorController;
 use Illuminate\Support\Facades\Route;
 
 //Vista del Dashboard. El inicio la parte administrativa del sistema
-Route::get('/', [DashboardController::class, 'dashboard'])->middleware(['auth.usuario'])->name('administrador.dashboard');
+Route::get('/', [DashboardController::class, 'dashboard'])->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.dashboard');
 
 //Gestion de Usuarios
 //Ruta para ir a la vista de Usuario en la Gestion de Usuarios
-Route::get('/perfil', [DashboardController::class, 'perfil'])->middleware(['auth.usuario'])->name('administrador.perfil');
+Route::get('/perfil', [DashboardController::class, 'perfil'])->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.perfil');
 //Ruta para ir a la vista de Usuario en la Gestion de Usuarios
-Route::get('/usuario', [UsuarioTrabajadorController::class, 'index'])->middleware(['auth.usuario'])->name('administrador.usuario');
+Route::get('/usuario', [UsuarioTrabajadorController::class, 'index'])->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.usuario');
 //Ruta para ir a la vista de Trabajador en la Gestion de Usuarios
-Route::get('/trabajador', [TrabajadorController::class, 'index'])->middleware(['auth.usuario'])->name('administrador.trabajador');
+Route::get('/trabajador', [TrabajadorController::class, 'index'])->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.trabajador');
 
 //Estudiantes
 //Ruta para ir a la vista de Estudiantes
-Route::get('/estudiante', [EstudianteController::class, 'index'])->middleware(['auth.usuario'])->name('administrador.estudiante'); // No hay controlador
+Route::get('/estudiante', [EstudianteController::class, 'index'])->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.estudiante'); // No hay controlador
 
 //Gestion Admision
 //Ruta para ir a la vista de Admision en la Gestion Admision
-Route::get('/admision', [AdmisionController::class, 'index'])->middleware(['auth.usuario'])->name('administrador.admision');
+Route::get('/admision', [AdmisionController::class, 'index'])->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.admision');
 //Ruta para ir a la vista de Inscripción en la Gestion Admision
-Route::get('/inscripcion', [InscripcionController::class, 'index'])->middleware(['auth.usuario'])->name('administrador.inscripcion');
+Route::get('/inscripcion', [InscripcionController::class, 'index'])->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.inscripcion');
 //Inscripcion Pago en la Gestion Admision
-Route::get('/inscripcion-pago', [InscripcionPagoController::class, 'index'])->middleware(['auth.usuario'])->name('administrador.inscripcion-pago');
+Route::get('/inscripcion-pago', [InscripcionPagoController::class, 'index'])->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.inscripcion-pago');
 //Ruta para Admitidos en la Gestion Admision
-Route::get('/admitidos', [AdmitidoController::class, 'index'])->middleware(['auth.usuario'])->name('administrador.admitidos');
+Route::get('/admitidos', [AdmitidoController::class, 'index'])->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.admitidos');
 //Ruta para la Gestionde Links de WhatsApp en la Gestion Admision
-Route::get('/links-whatsapp', [AdmisionController::class, 'links_whatsapp'])->middleware(['auth.usuario'])->name('administrador.links-whatsapp');
+Route::get('/links-whatsapp', [AdmisionController::class, 'links_whatsapp'])->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.links-whatsapp');
 
 //Gestion de Pagos
 //Ruta para ir a la vista de Canal de Pago en la Gestion de Pagos
-Route::get('/canal-pago', [CanalPagoController ::class, 'index'])->middleware(['auth.usuario'])->name('administrador.canal-pago'); // No hay controlador
+Route::get('/canal-pago', [CanalPagoController ::class, 'index'])->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.canal-pago'); // No hay controlador
 //Ruta para ir a la vista de Concepto de Pago en la Gestion de Pagos
-Route::get('/concepto-pago', [ConceptoPagoController::class, 'index'])->middleware(['auth.usuario'])->name('administrador.concepto-pago'); // No hay controlador
+Route::get('/concepto-pago', [ConceptoPagoController::class, 'index'])->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.concepto-pago'); // No hay controlador
 //Ruta para ir a la vista de Pago en la Gestion de Pagos
-Route::get('/pago', [PagoController::class, 'index'])->middleware(['auth.usuario'])->name('administrador.pago');
+Route::get('/pago', [PagoController::class, 'index'])->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.pago');
 
 //Configuracion
 //Ruta para ir a la vista de Programa en Configuracion
-Route::get('/programa', [ProgramaController::class, 'index'])->middleware(['auth.usuario'])->name('administrador.programa');
+Route::get('/programa', [ProgramaController::class, 'index'])->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.programa');
 //Ruta para ir a la vista de Gestion de Plan y Proceso de Programa en Configuracion | Esta ruta de la vista está dentro de la vista de programa
-Route::get('/programa/{id}/gestion-plan-proceso', [ProgramaController::class, 'plan_proceso'])->middleware(['auth.usuario'])->name('administrador.programa.gestion-plan-proceso');
+Route::get('/programa/{id}/gestion-plan-proceso', [ProgramaController::class, 'plan_proceso'])->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.programa.gestion-plan-proceso');
 //Ruta para ir a la vista de Plan en Configuracion
-Route::get('/plan', [PlanController::class, 'index'])->middleware(['auth.usuario'])->name('administrador.plan');
+Route::get('/plan', [PlanController::class, 'index'])->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.plan');
 //Ruta para ir a la vista de Sede en Configuracion
-Route::get('/sede', [SedeController::class, 'index'])->middleware(['auth.usuario'])->name('administrador.sede');
+Route::get('/sede', [SedeController::class, 'index'])->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.sede');
 //Ruta para ir a la vista de Expediente en Configuracion
-Route::get('/expediente', [ExpedienteController::class, 'index'])->middleware(['auth.usuario'])->name('administrador.expediente');
+Route::get('/expediente', [ExpedienteController::class, 'index'])->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.expediente');
 //Ruta para ir a la vista de Gestion de Admision de Expediente en Configuracion | Esta ruta de la vista está dentro de la vista de expediente
-Route::get('/expediente/{id}/gestion-admision', [ExpedienteController::class, 'admision'])->middleware(['auth.usuario'])->name('administrador.expediente.gestion-admision');
+Route::get('/expediente/{id}/gestion-admision', [ExpedienteController::class, 'admision'])->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.expediente.gestion-admision');
 //Ruta para ir a la vista de Gestion de Vistas para Evaluación de Expediente en Configuracion | Esta ruta de la vista está dentro de la vista de expediente
-Route::get('/expediente/{id}/gestion-vistas-evaluacion', [ExpedienteController::class, 'evaluacion'])->middleware(['auth.usuario'])->name('administrador.expediente.gestion-vistas-evaluacion');
+Route::get('/expediente/{id}/gestion-vistas-evaluacion', [ExpedienteController::class, 'evaluacion'])->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.expediente.gestion-vistas-evaluacion');
 //Ruta para ir a la vista de Gestion de Tipo de Seguimiento de Expediente en Configuracion | Esta ruta de la vista está dentro de la vista de expediente
-Route::get('/expediente/{id}/gestion-tipo-seguimiento', [ExpedienteController::class, 'seguimiento'])->middleware(['auth.usuario'])->name('administrador.expediente.gestion-tipo-seguimiento');
+Route::get('/expediente/{id}/gestion-tipo-seguimiento', [ExpedienteController::class, 'seguimiento'])->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.expediente.gestion-tipo-seguimiento');
 //Ruta para ir a la vista de Tipo de Seguimiento en Configuracion
-Route::get('/tipo-seguimiento', [TipoSeguimientoController::class, 'index'])->middleware(['auth.usuario'])->name('administrador.tipo-seguimiento');
+Route::get('/tipo-seguimiento', [TipoSeguimientoController::class, 'index'])->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.tipo-seguimiento');

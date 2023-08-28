@@ -22,18 +22,16 @@ use Livewire\WithPagination;
 class Index extends Component
 {
     use WithFileUploads;
-    use WithPagination;
-    protected $paginationTheme = 'bootstrap';//paginacion de bootstrap
     
     protected $queryString = [
         'search' => ['except' => ''],
-        'mostrar' => ['except' => '10'],
-        'tipo' => ['except' => 'all'],
+        'tipo' => ['except' => 'all', 'as' => 't'],
+        'data_tipo' => ['except' => 'all', 'as' => 'dt'],
     ];
 
     public $search = '';
-    public $mostrar = 10;
     public $tipo = 'all';
+    public $data_tipo = 'all';
     public $titulo_modal = 'Crear Trabajador';
 
     public $tipo_documento;
@@ -1207,35 +1205,12 @@ class Index extends Component
     //Limpiamos los filtros
     public function resetear_filtro()
     {
-        $this->reset(['tipo','mostrar']);
-        $this->tipo = 'all';
-        $this->mostrar = '10';
+        $this->reset(['tipo', 'data_tipo']);
     }
 
     public function filtrar()
     {
-        $tip = $this->tipo;
-        $buscar = $this->search;
-
-        if($this->tipo == 'all'){
-            $trabajadores = TrabajadorModel::join('grado_academico','trabajador.id_grado_academico','=','grado_academico.id_grado_academico')
-                    ->where('trabajador_nombre','LIKE',"%{$this->search}%")
-                    ->orWhere('trabajador_apellido','LIKE',"%{$this->search}%")
-                    ->orderBy('id_trabajador','DESC')
-                    ->paginate($this->mostrar);
-        }else{
-            $trabajadores = TrabajadorTipoTrabajador::join('trabajador','trabajador_tipo_trabajador.id_trabajador','=','trabajador.id_trabajador')
-                ->where(function($query) use ($tip){
-                    $query->where('trabajador_tipo_trabajador.id_tipo_trabajador',$tip)
-                        ->where('trabajador_tipo_trabajador.trabajador_tipo_trabajador_estado',1);
-                })
-                ->where(function($query) use ($buscar){
-                    $query->where('trabajador.trabajador_nombre','LIKE',"%{$buscar}%")
-                        ->orWhere('trabajador.trabajador_apellido','LIKE',"%{$buscar}%");
-                    })
-                ->orderBy('id_trabajador_tipo_trabajador','DESC')
-                ->paginate($this->mostrar);
-        }
+        $this->data_tipo = $this->tipo;
     }
 
     public function mount()
@@ -1245,24 +1220,24 @@ class Index extends Component
         $this->trabajador_tipo_trabajador_administrativo_select = collect();
     }
 
-    public function updatedTrabajadores($trabajadores)
-    {
-        $this->resetPage();
-    }
-
     public function render()
     {
-        $tip = $this->tipo;
+        $tip = $this->data_tipo;
         $buscar = $this->search;
 
-        if($this->tipo == 'all'){
-            $trabajadores = TrabajadorModel::join('grado_academico','trabajador.id_grado_academico','=','grado_academico.id_grado_academico')
-                    ->where('trabajador_nombre','LIKE',"%{$this->search}%")
-                    ->orWhere('trabajador_apellido','LIKE',"%{$this->search}%")
+        $trabajadores = collect();
+
+        if($this->data_tipo == 'all') {
+            $trabjadores_model = TrabajadorModel::join('grado_academico','trabajador.id_grado_academico','=','grado_academico.id_grado_academico')
+                    ->where(function ($query) {
+                        $query->where('trabajador.trabajador_nombre','LIKE',"%{$this->search}%")
+                            ->orWhere('trabajador.trabajador_apellido','LIKE',"%{$this->search}%");
+                    })
                     ->orderBy('id_trabajador','DESC')
-                    ->paginate($this->mostrar);
+                    ->get();
         }else{
-            $trabajadores = TrabajadorTipoTrabajador::join('trabajador','trabajador_tipo_trabajador.id_trabajador','=','trabajador.id_trabajador')
+            $trabjadores_model = TrabajadorTipoTrabajador::join('trabajador','trabajador_tipo_trabajador.id_trabajador','=','trabajador.id_trabajador')
+                ->join('grado_academico','trabajador.id_grado_academico','=','grado_academico.id_grado_academico')
                 ->where(function($query) use ($tip){
                     $query->where('trabajador_tipo_trabajador.id_tipo_trabajador',$tip)
                         ->where('trabajador_tipo_trabajador.trabajador_tipo_trabajador_estado',1);
@@ -1271,8 +1246,29 @@ class Index extends Component
                     $query->where('trabajador.trabajador_nombre','LIKE',"%{$buscar}%")
                         ->orWhere('trabajador.trabajador_apellido','LIKE',"%{$buscar}%");
                     })
-                ->orderBy('id_trabajador_tipo_trabajador','DESC')
-                ->paginate($this->mostrar);
+                ->orderBy('trabajador.id_trabajador','DESC')
+                ->get();
+        }
+
+        foreach ($trabjadores_model as $trabajador) {
+            $trabajador_tipo_trabajador = TrabajadorTipoTrabajador::where('id_trabajador',$trabajador->id_trabajador)->where('trabajador_tipo_trabajador_estado',1)->get();
+            $coordinador = Coordinador::where('id_trabajador',$trabajador->id_trabajador)->where('coordinador_estado',1)->first();
+            $administrativo = Administrativo::where('id_trabajador',$trabajador->id_trabajador)->where('administrativo_estado',1)->first();
+            $docente = Docente::where('id_trabajador',$trabajador->id_trabajador)->where('docente_estado',1)->first();
+
+            $trabajadores->push([
+                'id_trabajador' => $trabajador->id_trabajador,
+                'trabajador_nombre_completo' => $trabajador->trabajador_nombre_completo,
+                'trabajador_numero_documento' => $trabajador->trabajador_numero_documento,
+                'trabajador_correo' => $trabajador->trabajador_correo,
+                'grado_academico' => $trabajador->grado_academico,
+                'trabajador_perfil_url' => $trabajador->trabajador_perfil_url,
+                'trabajador_estado' => $trabajador->trabajador_estado,
+                'trabajador_tipo_trabajador' => $trabajador_tipo_trabajador,
+                'coordinador' => $coordinador,
+                'administrativo' => $administrativo,
+                'docente' => $docente,
+            ]);
         }
 
         $tipo_trabajadores = TipoTrabajador::where('id_tipo_trabajador','!=','4')->get();

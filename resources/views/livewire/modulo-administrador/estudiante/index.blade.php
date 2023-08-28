@@ -280,9 +280,9 @@
                                         Fecha de Nacimiento
                                     </label>
                                         <input type="date" wire:model="fecha_nacimiento" class="form-control @error('fecha_nacimiento') is-invalid @enderror" id="fecha_nacimiento" {{ $modo == 3 ? 'readonly' : '' }}>
-                                        @error('fecha_nacimiento')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
+                                    @error('fecha_nacimiento')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
                                 </div>
                                 <div class="col-md-4">
                                     <label for="genero" class="{{ $modo != 3 ? 'required' : ''}} form-label">
@@ -671,6 +671,7 @@
     </div>
 
 </div>
+
 @push('scripts')
     <script>
         //Select2 de Filtro
