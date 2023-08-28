@@ -100,11 +100,7 @@
                                                 @elseif($item->pago_estado == 1)
                                                     <span class="badge badge-light-info fs-6 px-3 py-2">Pagado</span>
                                                 @elseif($item->pago_estado == 2)
-                                                    @if($item->id_concepto_pago == 1)
-                                                        <span class="badge badge-light-primary fs-6 px-3 py-2">Inscrito</span>
-                                                    @else
-                                                        <span class="badge badge-light-success fs-6 px-3 py-2">Asignado</span>
-                                                    @endif
+                                                    <span class="badge badge-light-primary fs-6 px-3 py-2">Asignado</span>
                                                 @endif
                                             </td>
                                             <td align="center">

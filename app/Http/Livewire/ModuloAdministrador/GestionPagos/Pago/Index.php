@@ -199,14 +199,14 @@ class Index extends Component
         if($pago->id_concepto_pago == 1)// Si el concepto de pago es "Inscripción"
         {
             // Obtener el último código de inscripción
-            $ultimo_codifo_inscripcion = Inscripcion::orderBy('inscripcion_codigo','DESC')->first();
+            $ultimo_codido_inscripcion = Inscripcion::orderBy('inscripcion_codigo','DESC')->first();
             // Generar el código de inscripción
-            if($ultimo_codifo_inscripcion == null)
+            if($ultimo_codido_inscripcion == null)
             {
                 $codigo_inscripcion = 'IN0001';// Si no existen códigos anteriores
             }else
             {
-                $codigo_inscripcion = $ultimo_codifo_inscripcion->inscripcion_codigo;
+                $codigo_inscripcion = $ultimo_codido_inscripcion->inscripcion_codigo;
                 $codigo_inscripcion = substr($codigo_inscripcion, 2, 6);// Obtenemos el código apartir del 3er caracter, agarrando los 6 primeros caracteres de la cadena
                 $codigo_inscripcion = intval($codigo_inscripcion) + 1;// Convertimos la variable en entero, y le incrementamos 1 al valor obtenido
                 $codigo_inscripcion = str_pad($codigo_inscripcion, 4, "0", STR_PAD_LEFT);// Formateamos la cadena con una longitud de 4, agregando ceros "0" a la izquierda si es necesario, o la cadena es menor que 4
@@ -244,10 +244,6 @@ class Index extends Component
             $mensualidad->mensualidad_fecha_creacion = date('Y-m-d H:i:s');
             $mensualidad->mensualidad_estado = 1;
             $mensualidad->save();
-
-            // cambiar de estado
-            $pago->pago_estado = 2;
-            $pago->save();
         }
     }
 
@@ -386,8 +382,31 @@ class Index extends Component
         $this->alertaConfirmacion('¿Estás seguro?', '¿Desea eliminar el pago seleccionado?', 'question', 'Eliminar', 'Cancelar', 'primary', 'danger', 'deletePago', $pago_id);
     }
 
+    public function deleteConceptoPago($pago)
+    {
+        if($pago->id_concepto_pago == 1)// Si el concepto de pago es "Inscripción"
+        {
+            //Borrar la inscripción del pago seleccionado
+            $deleteInscripcion = Inscripcion::where('id_pago', $pago->id_pago)->first();
+            $deleteInscripcion->delete();
+        }
+        else if($pago->id_concepto_pago == 2 || $pago->id_concepto_pago == 4 || $pago->id_concepto_pago == 6)//Si el concepto de pago es "Constancia de Ingreso"
+        {
+            //Borrar la constancia de ingreso del pago seleccionado
+            $deleteConstancia = ConstanciaIngreso::where('id_pago', $pago->id_pago)->first();
+            $deleteConstancia->delete();
+        }
+        else if($pago->id_concepto_pago == 7)//Si el concepto de pago es "Costo por Enseñanza"
+        {
+            //Borrar la mensualidad del pago seleccionado
+            $deleteMensualidad = Mensualidad::where('id_pago', $pago->id_pago)->first();
+            $deleteMensualidad->delete();
+        }
+    }
+
     public function deletePago(Pago $pago)
     {
+        $this->deleteConceptoPago($pago);
         $pago->delete();
         $this->alertaPago('¡Éxito!', 'El pago ' . $pago->pago_operacion . ' por concepto de ' . $pago->concepto_pago->concepto_pago . ' ha sido eliminado satisfactoriamente.', 'success', 'Aceptar', 'success');
     }
