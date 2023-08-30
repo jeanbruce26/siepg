@@ -33,6 +33,7 @@ class Index extends Component
     public $plan_nuevo;
     public $resolucion;
     public $resolucion_file;
+    public $check_cambio_plan = false;
 
     // variables
     public $id_reingreso;
@@ -48,14 +49,23 @@ class Index extends Component
 
     public function updated($propertyName)
     {
-        $this->validateOnly($propertyName, [
-            'programa' => 'required',
-            'programa_reingreso' => 'required',
-            'plan' => 'required',
-            'plan_nuevo' => 'required',
-            'resolucion' => 'required|string|max:255',
-            'resolucion_file' => 'nullable|mimes:pdf|max:10240',
-        ]);
+        if ($this->check_cambio_plan) {
+            $this->validateOnly($propertyName, [
+                'programa' => 'required',
+                'programa_reingreso' => 'required',
+                'plan' => 'required',
+                'plan_nuevo' => 'required',
+                'resolucion' => 'required|string|max:255',
+                'resolucion_file' => 'nullable|mimes:pdf|max:10240',
+            ]);
+        } else {
+            $this->validateOnly($propertyName, [
+                'programa' => 'required',
+                'plan' => 'required',
+                'resolucion' => 'required|string|max:255',
+                'resolucion_file' => 'nullable|mimes:pdf|max:10240',
+            ]);
+        }
     }
 
     public function modo()
@@ -74,6 +84,7 @@ class Index extends Component
             'plan_nuevo',
             'resolucion',
             'resolucion_file',
+            'check_cambio_plan',
         ]);
         $this->resetErrorBag();
         $this->resetValidation();
@@ -92,14 +103,23 @@ class Index extends Component
 
     public function guardar_reingreso()
     {
-        $this->validate([
-            'programa' => 'required',
-            'programa_reingreso' => 'required',
-            'plan' => 'required',
-            'plan_nuevo' => 'required',
-            'resolucion' => 'required|string|max:255',
-            'resolucion_file' => 'nullable|mimes:pdf|max:10240',
-        ]);
+        if ($this->check_cambio_plan) {
+            $this->validate([
+                'programa' => 'required',
+                'programa_reingreso' => 'required',
+                'plan' => 'required',
+                'plan_nuevo' => 'required',
+                'resolucion' => 'required|string|max:255',
+                'resolucion_file' => 'nullable|mimes:pdf|max:10240',
+            ]);
+        } else {
+            $this->validate([
+                'programa' => 'required',
+                'plan' => 'required',
+                'resolucion' => 'required|string|max:255',
+                'resolucion_file' => 'nullable|mimes:pdf|max:10240',
+            ]);
+        }
 
         $admitidos = Admitido::join('programa_proceso', 'admitido.id_programa_proceso', 'programa_proceso.id_programa_proceso')
             ->join('programa_plan', 'programa_proceso.id_programa_plan', 'programa_plan.id_programa_plan')
@@ -116,8 +136,13 @@ class Index extends Component
             $reingreso = new Reingreso();
             $reingreso->reingreso_codigo = $codigo;
             $reingreso->id_admitido = $admitido->id_admitido;
-            $reingreso->id_programa_proceso = $this->programa_reingreso;
-            $reingreso->id_programa_proceso_antiguo = $admitido->id_programa_proceso;
+            if ($this->check_cambio_plan) {
+                $reingreso->id_programa_proceso = $this->programa_reingreso;
+                $reingreso->id_programa_proceso_antiguo = $admitido->id_programa_proceso;
+            } else {
+                $reingreso->id_programa_proceso = $admitido->id_programa_proceso;
+                $reingreso->id_programa_proceso_antiguo = $admitido->id_programa_proceso;
+            }
             $reingreso->id_tipo_reingreso = 2; // reingreso masivo
             $reingreso->reingreso_resolucion = $this->resolucion;
             if ($this->resolucion_file) {
@@ -134,9 +159,16 @@ class Index extends Component
             $reingreso->save();
 
             // actualizar admitido
-            $admitido->id_programa_proceso_antiguo = $admitido->id_programa_proceso;
-            $admitido->id_programa_proceso = $this->programa_reingreso;
-            $admitido->save();
+            if ($this->check_cambio_plan) {
+                $admitido->id_programa_proceso_antiguo = $admitido->id_programa_proceso;
+                $admitido->id_programa_proceso = $this->programa_reingreso;
+                $admitido->save();
+            }
+
+            // asignar las nuevas notas de los cursos a su nuevo programa
+            if ($this->check_cambio_plan) {
+                //...
+            }
         }
 
         // cerrar modal

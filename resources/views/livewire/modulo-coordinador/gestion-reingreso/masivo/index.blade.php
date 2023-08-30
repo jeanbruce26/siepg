@@ -281,6 +281,14 @@
                 <div class="modal-body">
                     <form autocomplete="off" class="row g-5">
                         <div class="col-md-12">
+                            <div class="form-check form-switch form-check-custom form-check-success">
+                                <input class="form-check-input " type="checkbox" value="" wire:model="check_cambio_plan" id="check_cambio_plan"/>
+                                <label class="form-check-label text-gray-800 fw-semibold fs-6" for="check_cambio_plan">
+                                    Realizar cambio de Plan
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
                             <label for="programa" class="required form-label">
                                 Porgrama Académico
                             </label>
@@ -324,6 +332,7 @@
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
+                        @if ($check_cambio_plan)
                         <div class="col-md-12">
                             <label for="plan_nuevo" class="required form-label">
                                 Plan Académico al que desea reingresar
@@ -368,6 +377,7 @@
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
+                        @endif
                         <div class="col-md-12">
                             <label for="resolucion" class="required form-label">
                                 Nombre de Resolución
