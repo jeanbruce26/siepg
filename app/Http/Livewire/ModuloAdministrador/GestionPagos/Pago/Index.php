@@ -12,6 +12,8 @@ use App\Models\Inscripcion;
 use App\Models\Matricula;
 use App\Models\Mensualidad;
 use App\Models\Pago;
+use App\Models\PagoObservacion;
+use Illuminate\Support\Facades\File;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -44,6 +46,11 @@ class Index extends Component
     public $voucher_url;
     public $canal_pago;
     public $concepto_pago;
+    
+    //Variable para modal de Ver Pago
+    public $observacion;
+    public $valida_pago_verificacion;
+    public $valida_pago_estado;
 
     // Variables para filtrar los pagos
     public $filtroProceso;
@@ -75,7 +82,7 @@ class Index extends Component
     public function limpiar()
     {
         $this->resetErrorBag();// Eliminamos los errores de la validación
-        $this->reset('documento','numero_operacion','monto','fecha_pago','voucher_url','canal_pago','concepto_pago'); // Reseteamos las vatiables de la vista
+        $this->reset('documento','numero_operacion','monto','fecha_pago','voucher_url','canal_pago','concepto_pago','observacion');// Limpiamos las variables
         $this->modo = 1;// Modo nuevo o agregar
         $this->validarDatosModal = false;
         $this->iteracion++;// Para que se limpie el campo de archivo
@@ -121,6 +128,37 @@ class Index extends Component
         $this->fecha_pago = $pago->pago_fecha;
         $this->canal_pago = $pago->id_canal_pago;
         $this->concepto_pago = $pago->id_concepto_pago;
+    }
+
+    public function cargarVerPago(Pago $pago)
+    {
+        $this->limpiar();
+        $this->modo = 3;// Modo ver
+        $this->titulo = 'Ver Pago';
+        $this->pago_id = $pago->id_pago;
+        $this->voucher_url = $pago->pago_voucher_url;
+
+        $this->valida_pago_verificacion = $pago->pago_verificacion;
+        $this->valida_pago_estado = $pago->pago_estado;
+
+        $this->documento = $pago->pago_documento;
+        $this->numero_operacion = $pago->pago_operacion;
+        $this->monto = number_format($pago->pago_monto,2);//Formateamos el monto con dos decimales
+        $this->fecha_pago = date('d/m/Y', strtotime($pago->pago_fecha));
+        $this->canal_pago = $pago->canal_pago->canal_pago;
+        
+        if ($pago->pago_observacion->count() > 0) {
+            if($pago->pago_observacion->first()->pago_observacion_estado == 1)
+            {
+                $this->observacion = $pago->pago_observacion->first()->pago_observacion;
+            }elseif($pago->pago_observacion->first()->pago_observacion_estado == 2){
+                $this->observacion = $pago->pago_observacion->first()->pago_observacion;
+            }else{
+                $this->observacion = '';
+            }
+        }else{
+            $this->observacion = '';
+        }
     }
 
     //Filtra los pagos por proceso
@@ -222,7 +260,7 @@ class Index extends Component
             $inscripcion->save();
         }
         else if($pago->id_concepto_pago == 2 || $pago->id_concepto_pago == 4 || $pago->id_concepto_pago == 6)//Si el concepto de pago es "Constancia de Ingreso"
-        {
+        {   
             // registrar constancia de ingreso
             $constancia = new ConstanciaIngreso();
             $constancia->constancia_ingreso_fecha = date('Y-m-d');
@@ -297,7 +335,6 @@ class Index extends Component
                         return redirect()->back();// Retornamos
                     }
                 }
-                dd($validarAdmitido);
 
                 // Crear el pago con los datos ingresados en el sistema
                 $pago = new Pago();
@@ -321,7 +358,7 @@ class Index extends Component
                 $pago->id_concepto_pago = $this->concepto_pago;
                 $pago->save();
 
-                // $this->asignarConceptoPago($pago, $validarAdmitido);
+                $this->asignarConceptoPago($pago, $validarAdmitido);
 
                 $this->alertaPago('¡Éxito!', 'El pago ' . $pago->pago_operacion . ' por concepto de ' . $pago->concepto_pago->concepto_pago . ' ha sido creado satisfactoriamente.', 'success', 'Aceptar', 'success');
             }
@@ -377,6 +414,145 @@ class Index extends Component
         $this->limpiar();
     }
 
+    public function validar_pago()
+    {
+        // validacion de los campos
+        $this->validate([
+            'observacion' => 'nullable|max:255',
+        ]);
+
+        // almacenar los datos
+        $pago = Pago::find($this->pago_id);
+        $pago->pago_verificacion = 2;
+        $pago->save();
+
+        // almacenar los datos de observacion
+        $observacion = PagoObservacion::where('id_pago', $this->pago_id)->where('pago_observacion_estado', 1)->orderBy('id_pago_observacion', 'desc')->first();
+        if ($observacion) {
+            $observacion->pago_observacion_estado = 0;
+            $observacion->save();
+        }else{
+            if ($this->observacion != '' || $this->observacion != null) {
+                $observacion = new PagoObservacion();
+                $observacion->pago_observacion = $this->observacion;
+                $observacion->id_pago = $this->pago_id;
+                $observacion->pago_observacion_creacion = now();
+                $observacion->pago_observacion_estado = 1;
+                $observacion->save();
+            }
+        }
+
+        //Mostramos alerta de confirmacion
+        $this->alertaPago('¡Validado!', 'El pago ha sido validado satisfactoriamente.', 'success', 'Aceptar', 'success');
+
+        // cerra el modal
+        $this->dispatchBrowserEvent('modal', [
+            'titleModal' => '#modalVerPago'
+        ]);
+
+        // limpiar los campos
+        $this->limpiar();
+    }
+
+    public function observar_pago()
+    {
+        // validacion de los campos
+        $this->validate([
+            'observacion' => 'required|max:255',
+        ]);
+
+        // almacenar los datos
+        $pago = Pago::find($this->pago_id);
+        $pago->pago_verificacion = 0;
+        $pago->save();
+
+        // almacenar los datos de observacion
+        $observacion = PagoObservacion::where('id_pago', $this->pago_id)->where('pago_observacion_estado', 1)->orderBy('id_pago_observacion', 'desc')->first();
+        if ($observacion) {
+            $observacion->pago_observacion = $this->observacion;
+            $observacion->pago_observacion_estado = 1;
+            $observacion->save();
+        }else{
+            if ($this->observacion != '' || $this->observacion != null) {
+                $observacion = new PagoObservacion();
+                $observacion->pago_observacion = $this->observacion;
+                $observacion->id_pago = $this->pago_id;
+                $observacion->pago_observacion_creacion = now();
+                $observacion->pago_observacion_estado = 1;
+                $observacion->save();
+            }
+        }
+
+        // mostramos alerta de confirmacion
+        $this->alertaPago('¡Observado!', 'El pago ha sido observado satisfactoriamente.', 'success', 'Aceptar', 'success');
+
+        // cerra el modal
+        $this->dispatchBrowserEvent('modal', [
+            'titleModal' => '#modalVerPago'
+        ]);
+
+        // limpiar los campos
+        $this->limpiar();
+    }
+
+    public function rechazar_pago()
+    {
+        $this->validate([
+            'observacion' => 'required|max:255',
+        ]);
+
+        $pago = Pago::find($this->pago_id);
+        $pago->pago_estado = 0;
+        $pago->pago_verificacion = 0;
+        $pago->pago_leido = 1;
+        if($pago->pago_voucher_url)
+        {
+            File::delete($pago->pago_voucher_url);
+        }
+        $pago->pago_voucher_url = null;
+        $pago->save();
+
+        // eliminar la constancia de ingreso
+        $constancia = ConstanciaIngreso::where('id_pago', $this->pago_id)->orderBy('id_constancia_ingreso')->first();
+        if($constancia)
+        {
+            $constancia->constancia_ingreso_codigo = null;
+            if($constancia->constancia_ingreso_url)
+            {
+                File::delete($constancia->constancia_ingreso_url);
+            }
+            $constancia->constancia_ingreso_url = null;
+            $constancia->save();
+        }
+
+        // almacenar los datos de observacion
+        $observacion = PagoObservacion::where('id_pago', $this->pago_id)->where('pago_observacion_estado', 1)->orderBy('id_pago_observacion', 'desc')->first();
+        if ($observacion) {
+            $observacion->pago_observacion = $this->observacion;
+            $observacion->pago_observacion_estado = 2;// 2 = Rechazado
+            $observacion->save();
+        }else{
+            if ($this->observacion != '' || $this->observacion != null) {
+                $observacion = new PagoObservacion();
+                $observacion->pago_observacion = $this->observacion;
+                $observacion->id_pago = $this->pago_id;
+                $observacion->pago_observacion_creacion = now();
+                $observacion->pago_observacion_estado = 2;// 2 = Rechazado
+                $observacion->save();
+            }
+        }
+
+        $this->alertaPago('¡Rechazado!', 'El pago ha sido rechazado satisfactoriamente.', 'success', 'Aceptar', 'success');
+
+        // cerra el modal
+        $this->dispatchBrowserEvent('modal', [
+            'titleModal' => '#modalVerPago'
+        ]);
+
+        // limpiar los campos
+        $this->limpiar();
+    }
+
     public function eliminar($pago_id)
     {
         $this->alertaConfirmacion('¿Estás seguro?', '¿Desea eliminar el pago seleccionado?', 'question', 'Eliminar', 'Cancelar', 'primary', 'danger', 'deletePago', $pago_id);
@@ -407,6 +583,11 @@ class Index extends Component
     public function deletePago(Pago $pago)
     {
         $this->deleteConceptoPago($pago);
+        //Borramos todas las observaciones del pago seleccionado
+        $observaciones = PagoObservacion::where('id_pago', $pago->id_pago)->get();
+        foreach ($observaciones as $observacion) {
+            $observacion->delete();
+        }
         $pago->delete();
         $this->alertaPago('¡Éxito!', 'El pago ' . $pago->pago_operacion . ' por concepto de ' . $pago->concepto_pago->concepto_pago . ' ha sido eliminado satisfactoriamente.', 'success', 'Aceptar', 'success');
     }

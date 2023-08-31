@@ -139,9 +139,9 @@
                                                     </div>
                                                     <div class="menu-item px-3">
                                                         <a href="#modalPago"
-                                                        wire:click="cargarIdPago({{ $item->id_pago }})"
+                                                        wire:click="cargarVerPago({{ $item->id_pago }})"
                                                         class="menu-link px-3" data-bs-toggle="modal" 
-                                                        data-bs-target="#modalPago">
+                                                        data-bs-target="#modalVerPago">
                                                             Ver Pago
                                                         </a>
                                                     </div>
@@ -333,6 +333,166 @@
                             Procesando <span class="spinner-border spinner-border-sm align-middle ms-2">
                         </div>
                     </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- modal pago --}}
+    <div wire:ignore.self class="modal fade" tabindex="-1" id="modalVerPago">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">
+                        {{ $titulo }}
+                    </h2>
+                    <div class="btn btn-icon btn-sm btn-active-light-danger ms-2" data-bs-dismiss="modal"
+                        aria-label="Close">
+                        <span class="svg-icon svg-icon-2hx">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <rect opacity="0.3" x="2" y="2" width="20" height="20"
+                                    rx="5" fill="currentColor" />
+                                <rect x="7" y="15.3137" width="12" height="2" rx="1"
+                                    transform="rotate(-45 7 15.3137)" fill="currentColor" />
+                                <rect x="8.41422" y="7" width="12" height="2" rx="1"
+                                    transform="rotate(45 8.41422 7)" fill="currentColor" />
+                            </svg>
+                        </span>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <form autocomplete="off">
+                        <div class="mb-5">
+                            <div class="row">
+                                <div class="row mb-1">
+                                    <h6 class="fw-bold">Datos Personales</h6>
+                                </div>
+                                <table class="ms-4">
+                                    <tbody>
+                                        <tr>
+                                            <td  width="160">Documento</td>
+                                            <td  width="20">:</td>
+                                            <td>{{ $documento }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Número de Operación</td>
+                                            <td>:</td>
+                                            <td>{{ $numero_operacion }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Monto</td>
+                                            <td>:</td>
+                                            <td>{{ $monto }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Fecha</td>
+                                            <td>:</td>
+                                            <td>{{ $fecha_pago }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Concepto</td>
+                                            <td>:</td>
+                                            <td>{{ $canal_pago }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="mb-5">
+                            <label for="expediente" class="form-label d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold">
+                                    Voucher
+                                </span>
+                                @if(file_exists($voucher_url))
+                                    <a href="{{ asset($voucher_url) }}" target="_blank" class="btn btn-sm btn-light-info">
+                                        Ver Voucher Completo
+                                    </a>
+                                @endif
+                            </label>
+                            <div class="form-control">
+                                @if(file_exists($voucher_url))
+                                    <img src="{{ asset($voucher_url) }}" alt="voucher_url" class="img-fluid rounded">
+                                @else
+                                    @if($valida_pago_estado == 0)
+                                        <div class="alert alert-danger d-flex align-items-center p-5">
+                                            <i class="ki-duotone ki-delete-folder fs-2hx text-danger me-4">
+                                                <i class="path1"></i>
+                                                <i class="path2"></i>
+                                            </i>
+                                            <div class="d-flex flex-column">
+                                                <h4 class="mb-1 text-danger">Voucher Rechazado</h4>
+                                                <span>Lamentamos informarle que el voucher de pago ha sido eliminado del sistema debido a que su pago ha sido rechazado.</span>
+                                            </div>
+                                        </div>
+                                    @else
+                                        <div class="alert alert-warning d-flex align-items-center p-5">
+                                            <i class="ki-duotone ki-search-list fs-2hx text-warning me-4">
+                                                <i class="path1"></i>
+                                                <i class="path2"></i>
+                                                <i class="path3"></i>
+                                            </i>
+                                            <div class="d-flex flex-column">
+                                                <h4 class="mb-1 text-warning">Voucher no encontrado</h4>
+                                                <span>Lamentablemente, no se ha podido encontrar el voucher en el sistema.</span>
+                                            </div>
+                                        </div>
+                                    @endif
+                                @endif
+                            </div>
+                        </div>
+                        @if($valida_pago_verificacion == 2 || $observacion == null || $observacion = '')
+                            
+                        @else
+                            <div class="">
+                                <label for="observacion" class="form-label">
+                                    Observacion
+                                </label>
+                                <textarea class="form-control @error('observacion') is-invalid @enderror" id="observacion" wire:model="observacion" rows="3" @if($valida_pago_verificacion == 2 || $valida_pago_estado == 0) readonly @endif ></textarea>
+                                @error('observacion')
+                                    <div class="text-danger">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                        @endif
+                    </form>
+                </div>
+                <div class="modal-footer d-flex align-items-center @if($valida_pago_verificacion == 2 || $valida_pago_estado == 0) justify-content-end @else justify-content-between @endif">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" wire:click="limpiar">
+                        Cerrar
+                    </button>
+                    @if($valida_pago_verificacion == 2 || $valida_pago_estado == 0)
+                        
+                    @else
+                    {{-- //Hacer que cuando sea pequeño la pantalla, se ordene bonito --}}
+                    <div class="d-flex gap-2 justify-content-end align-items-center">
+                        <button type="button" wire:click="rechazar_pago" class="btn btn-danger" wire:loading.attr="disabled">
+                            <div wire:loading.remove wire:target="rechazar_pago">
+                                Rechazar
+                            </div>
+                            <div wire:loading wire:target="rechazar_pago">
+                                Procesando...
+                            </div>
+                        </button>
+                        <button type="button" wire:click="observar_pago" class="btn btn-warning" wire:loading.attr="disabled">
+                            <div wire:loading.remove wire:target="observar_pago">
+                                Observar
+                            </div>
+                            <div wire:loading wire:target="observar_pago">
+                                Procesando...
+                            </div>
+                        </button>
+                        <button type="button" wire:click="validar_pago" class="btn btn-primary" wire:loading.attr="disabled">
+                            <div wire:loading.remove wire:target="validar_pago">
+                                Validar
+                            </div>
+                            <div wire:loading wire:target="validar_pago">
+                                Procesando...
+                            </div>
+                        </button>
+                    </div>
+                    @endif
                 </div>
             </div>
         </div>
