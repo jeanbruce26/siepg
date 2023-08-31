@@ -78,7 +78,7 @@
                     </a>
                 </div>
                 <div data-kt-menu-trigger="click"
-                    class="menu-item menu-accordion {{ request()->is('plataforma/estado-cuenta') || request()->routeIs('plataforma.pago') ? 'show active' : '' }}">
+                    class="menu-item menu-accordion {{ request()->routeIs('coordinador.reingreso.masivo') || request()->routeIs('coordinador.reingreso.individual') ? 'show active' : '' }}">
                     <span class="menu-link">
                         <span class="menu-icon">
                             <i class="ki-duotone ki-update-folder fs-1">
