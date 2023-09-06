@@ -57,6 +57,17 @@
                                                 </select>
                                             </div>
                                         </div>
+                                        <div class="mb-5">
+                                            <label class="form-label fw-semibold">Concepto de Pago:</label>
+                                            <div>
+                                                <select class="form-select" wire:model="filtro_concepto" id="filtro_concepto"  data-control="select2" data-placeholder="Seleccione el concepto de pago">
+                                                    <option></option>
+                                                    @foreach ($conceptoPago as $item)
+                                                        <option value="{{ $item->id_concepto_pago }}">{{ $item->concepto_pago }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
                                         <div class="d-flex justify-content-end">
                                             <button type="button" wire:click="resetear_filtro" class="btn btn-sm btn-light btn-active-light-primary me-2" data-kt-menu-dismiss="true">Resetear</button>
                                             <button type="button" class="btn btn-sm btn-primary" data-kt-menu-dismiss="true" wire:click="filtrar">Aplicar</button>
@@ -539,6 +550,45 @@
                 });
                 $('#filtro_proceso').on('change', function(){
                     @this.set('filtro_proceso', this.value);
+                });
+            });
+        });
+        // filtro_concepto select2
+        $(document).ready(function () {
+            $('#filtro_concepto').select2({
+                placeholder: 'Seleccione',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando...";
+                    }
+                }
+            });
+            $('#filtro_concepto').on('change', function(){
+                @this.set('filtro_concepto', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#filtro_concepto').select2({
+                    placeholder: 'Seleccione',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando...";
+                        }
+                    }
+                });
+                $('#filtro_concepto').on('change', function(){
+                    @this.set('filtro_concepto', this.value);
                 });
             });
         });

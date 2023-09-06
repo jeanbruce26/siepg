@@ -29,6 +29,7 @@ class Index extends Component
     protected $queryString = [
         'search' => ['except' => ''],
         'filtroProceso' => ['except' => ''],
+        'filtroConcepto' => ['except' => ''],
     ];
 
     // Definimos las variables para la vista del componente Livewire
@@ -55,6 +56,12 @@ class Index extends Component
     // Variables para filtrar los pagos
     public $filtroProceso;
     public $filtro_proceso;
+    public $filtroConcepto;
+    public $filtro_concepto;
+
+    public $canalPago;
+    public $conceptoPago;
+    public $aniosUnicos;
 
     public $validarDatosModal = false;
 
@@ -164,14 +171,17 @@ class Index extends Component
     //Filtra los pagos por proceso
     public function filtrar()
     {
-        $this->resetear_filtro();
         $this->filtroProceso = $this->filtro_proceso;
+        $this->filtroConcepto = $this->filtro_concepto;
     }
 
     //Limpiar el filtro de proceso
     public function resetear_filtro()
     {
-        $this->reset('filtroProceso','filtro_proceso');
+        $this->reset('filtroProceso','filtro_proceso','filtroConcepto','filtro_concepto');
+        $admisionActivo = Admision::where('admision_estado', 1)->first()->admision_año;
+        $this->filtroProceso = $admisionActivo;
+        $this->filtro_proceso = $admisionActivo;
     }
 
     public function validacionDatos()
@@ -592,29 +602,48 @@ class Index extends Component
         $this->alertaPago('¡Éxito!', 'El pago ' . $pago->pago_operacion . ' por concepto de ' . $pago->concepto_pago->concepto_pago . ' ha sido eliminado satisfactoriamente.', 'success', 'Aceptar', 'success');
     }
 
+    public function mount()
+    {
+        if ($this->filtroProceso == null || $this->filtroProceso == "")
+        {
+            $admisionActivo = Admision::where('admision_estado', 1)->first()->admision_año;
+            $this->filtroProceso = $admisionActivo;
+            $this->filtro_proceso = $admisionActivo;
+        }
+        else
+        {
+            $this->filtro_proceso = $this->filtroProceso;
+        }
+
+        $this->canalPago = CanalPago::all();
+        $this->conceptoPago = ConceptoPago::all();
+        $this->aniosUnicos = Pago::selectRaw('YEAR(pago_fecha) as anio')
+                            ->groupBy('anio')
+                            ->pluck('anio');
+    }
+
     public function render()
     {
+        if ($this->filtroProceso == null || $this->filtroProceso == "")
+        {
+            $admisionActivo = Admision::where('admision_estado', 1)->first()->admision_año;
+            $this->filtroProceso = $admisionActivo;
+            $this->filtro_proceso = $admisionActivo;
+        }
+
         $pago_model = Pago::where(function ($query){
                             $query->where('pago_fecha','LIKE',"%{$this->search}%")
                             ->orWhere('pago_documento','LIKE',"%{$this->search}%")
                             ->orWhere('pago_operacion','LIKE',"%{$this->search}%")
                             ->orWhere('id_pago','LIKE',"%{$this->search}%");
                         })
-                        ->whereYear('pago_fecha', $this->filtroProceso == null ? '!=' : '=', strval($this->filtroProceso))
+                        ->whereYear('pago_fecha', $this->filtroProceso)
+                        ->where('id_concepto_pago', 'LIKE', "%{$this->filtroConcepto}%")
                         ->orderBy('id_pago','DESC')
                         ->paginate(200);
 
-        $canalPago = CanalPago::all();
-        $conceptoPago = ConceptoPago::all();
-        $aniosUnicos = Pago::selectRaw('YEAR(pago_fecha) as anio')
-                            ->groupBy('anio')
-                            ->pluck('anio');
-
         return view('livewire.modulo-administrador.gestion-pagos.pago.index', [
             'pago_model' => $pago_model,
-            'canalPago' => $canalPago,
-            'conceptoPago' => $conceptoPago,
-            'aniosUnicos' => $aniosUnicos
         ]);
     }
 
