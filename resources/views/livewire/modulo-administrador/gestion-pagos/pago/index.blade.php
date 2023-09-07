@@ -119,10 +119,10 @@
                                                     @if($item->pago_estado == 0)
                                                         <span class="badge badge-light-danger fs-6 px-3 py-2">Rechazado</span>
                                                     @else
-                                                        <span class="badge badge-light-warning fs-6 px-3 py-2">Observado</span>
+                                                        <span class="badge badge-light-danger fs-6 px-3 py-2">Observado</span>
                                                     @endif
                                                 @elseif($item->pago_verificacion == 1)
-                                                    <span class="badge badge-light-info fs-6 px-3 py-2">Pendiente</span>
+                                                    <span class="badge badge-light-warning fs-6 px-3 py-2">Pendiente</span>
                                                 @elseif($item->pago_verificacion == 2)
                                                     <span class="badge badge-light-success fs-6 px-3 py-2">Verificado</span>
                                                 @endif
@@ -452,9 +452,6 @@
                                 @endif
                             </div>
                         </div>
-                        @if($valida_pago_verificacion == 2 || $observacion == null || $observacion = '')
-                            
-                        @else
                             <div class="">
                                 <label for="observacion" class="form-label">
                                     Observacion
@@ -466,7 +463,6 @@
                                     </div>
                                 @enderror
                             </div>
-                        @endif
                     </form>
                 </div>
                 <div class="modal-footer d-flex align-items-center @if($valida_pago_verificacion == 2 || $valida_pago_estado == 0) justify-content-end @else justify-content-between @endif">

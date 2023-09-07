@@ -18,8 +18,8 @@
         <div id="kt_app_sidebar_menu_wrapper" class="app-sidebar-wrapper hover-scroll-overlay-y my-5" data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-height="auto" data-kt-scroll-dependencies="#kt_app_sidebar_logo, #kt_app_sidebar_footer" data-kt-scroll-wrappers="#kt_app_sidebar_menu" data-kt-scroll-offset="5px" data-kt-scroll-save-state="true">
             <div class="menu menu-column menu-rounded menu-sub-indention px-3" id="#kt_app_sidebar_menu" data-kt-menu="true" data-kt-menu-expand="false">
                 <div class="menu-item">
-                    {{-- {{ request()->is('administrador') ? 'active' : '' }} -> sirve para poner activo el modulo --}}
-                    <a class="menu-link {{ request()->is('area-contable') ? 'active' : '' }}" href="{{ route('contable.inicio') }}">
+                    {{-- {{ $route === 'administrador' ? 'active' : '' }} -> sirve para poner activo el modulo --}}
+                    <a class="menu-link {{ $route === 'contable.inicio' ? 'active' : '' }}" href="{{ route('contable.inicio') }}">
                         <span class="menu-icon">
                             <i class="ki-duotone ki-category fs-1">
                                 <i class="path1"></i>
@@ -37,7 +37,7 @@
                     </div>
                 </div>
                 <div class="menu-item">
-                    <a class="menu-link {{ request()->is('plataforma/expedientes') ? 'active' : '' }}" href="">
+                    <a class="menu-link {{ $route === '' ? 'active' : '' }}" href="">
                         <span class="menu-icon">
                             <i class="ki-duotone ki-abstract-26 fs-1">
                                 <i class="path1"></i>
@@ -48,7 +48,7 @@
                     </a>
                 </div>
                 <div class="menu-item">
-                    <a class="menu-link {{ request()->is('area-contable/pagos') ? 'active' : '' }}" href="{{ route('contable.pago') }}">
+                    <a class="menu-link {{ $route === 'contable.pago' ? 'active' : '' }}" href="{{ route('contable.pago') }}">
                         <span class="menu-icon">
                             <i class="ki-duotone ki-office-bag fs-1">
                                 <i class="path1"></i>
@@ -58,6 +58,13 @@
                             </i>
                         </span>
                         <span class="menu-title fs-4">Pagos</span>
+                        @if($pago > 0)
+                            <div class="btn btn-icon btn-custom btn-icon-muted btn-active-light btn-active-color-primary w-35px h-15px position-relative" id="kt_drawer_chat_toggle">
+                                <span class="badge badge-circle badge-warning badge-sm">{{ $pago }}</span>
+                                <span class="bullet bullet-dot bg-danger h-6px w-6px position-absolute translate-middle top-0 start-75 animation-blink">
+                                </span>
+                            </div>
+                        @endif
                     </a>
                 </div>
                 {{-- <div data-kt-menu-trigger="click" class="menu-item menu-accordion">

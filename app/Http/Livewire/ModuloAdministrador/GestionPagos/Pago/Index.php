@@ -370,6 +370,8 @@ class Index extends Component
 
                 $this->asignarConceptoPago($pago, $validarAdmitido);
 
+                $this->emit('actualizar_notificacion_pagos');
+
                 $this->alertaPago('¡Éxito!', 'El pago ' . $pago->pago_operacion . ' por concepto de ' . $pago->concepto_pago->concepto_pago . ' ha sido creado satisfactoriamente.', 'success', 'Aceptar', 'success');
             }
 
@@ -452,6 +454,8 @@ class Index extends Component
             }
         }
 
+        $this->emit('actualizar_notificacion_pagos');
+
         //Mostramos alerta de confirmacion
         $this->alertaPago('¡Validado!', 'El pago ha sido validado satisfactoriamente.', 'success', 'Aceptar', 'success');
 
@@ -492,6 +496,8 @@ class Index extends Component
                 $observacion->save();
             }
         }
+
+        $this->emit('actualizar_notificacion_pagos');
 
         // mostramos alerta de confirmacion
         $this->alertaPago('¡Observado!', 'El pago ha sido observado satisfactoriamente.', 'success', 'Aceptar', 'success');
@@ -552,6 +558,8 @@ class Index extends Component
             }
         }
 
+        $this->emit('actualizar_notificacion_pagos');
+
         $this->alertaPago('¡Rechazado!', 'El pago ha sido rechazado satisfactoriamente.', 'success', 'Aceptar', 'success');
 
         // cerra el modal
@@ -599,6 +607,9 @@ class Index extends Component
             $observacion->delete();
         }
         $pago->delete();
+
+        $this->emit('actualizar_notificacion_pagos');
+
         $this->alertaPago('¡Éxito!', 'El pago ' . $pago->pago_operacion . ' por concepto de ' . $pago->concepto_pago->concepto_pago . ' ha sido eliminado satisfactoriamente.', 'success', 'Aceptar', 'success');
     }
 
