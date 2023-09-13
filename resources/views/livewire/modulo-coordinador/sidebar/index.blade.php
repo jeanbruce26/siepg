@@ -49,8 +49,9 @@
                         </span>
                     </a>
                 </div>
-                <div class="menu-item">
-                    <a class="menu-link {{ request()->routeIs('coordinador.cursos') ? 'active' : '' }}" href="{{ route('coordinador.cursos') }}">
+                <div data-kt-menu-trigger="click"
+                    class="menu-item menu-accordion {{ request()->routeIs('coordinador.cursos') || request()->routeIs('coordinador.equivalencias') ? 'show active' : '' }}">
+                    <span class="menu-link">
                         <span class="menu-icon">
                             <i class="ki-duotone ki-book fs-1">
                                 <i class="path1"></i>
@@ -59,10 +60,33 @@
                                 <i class="path4"></i>
                             </i>
                         </span>
-                        <span class="menu-title fw-semibold fs-4">
-                            Gestión de Cursos
-                        </span>
-                    </a>
+                        <span class="menu-title fw-semibold fs-4">Gestión de Cursos</span>
+                        <span class="menu-arrow"></span>
+                    </span>
+                    <div class="menu-sub menu-sub-accordion menu-active-bg">
+                        <div class="menu-item">
+                            <a class="menu-link {{ request()->routeIs('coordinador.cursos') ? 'active' : '' }}"
+                                href="{{ route('coordinador.cursos') }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title fs-4">
+                                    Cursos
+                                </span>
+                            </a>
+                        </div>
+                        <div class="menu-item">
+                            <a class="menu-link {{ request()->routeIs('coordinador.equivalencias') ? 'active' : '' }}"
+                                href="{{ route('coordinador.equivalencias') }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title fs-4">
+                                    Equivalencias de Cursos
+                                </span>
+                            </a>
+                        </div>
+                    </div>
                 </div>
                 <div class="menu-item">
                     <a class="menu-link {{ request()->routeIs('coordinador.matriculas') ? 'active' : '' }}" href="{{ route('coordinador.matriculas') }}">
@@ -81,7 +105,7 @@
                     class="menu-item menu-accordion {{ request()->routeIs('coordinador.reingreso.masivo') || request()->routeIs('coordinador.reingreso.individual') ? 'show active' : '' }}">
                     <span class="menu-link">
                         <span class="menu-icon">
-                            <i class="ki-duotone ki-update-folder fs-1">
+                            <i class="ki-duotone ki-abstract-37 fs-1">
                                 <i class="path1"></i>
                                 <i class="path2"></i>
                             </i>
@@ -106,6 +130,39 @@
                                     <span class="bullet bullet-dot"></span>
                                 </span>
                                 <span class="menu-title fs-4">Masivo</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div data-kt-menu-trigger="click"
+                    class="menu-item menu-accordion {{ request()->routeIs('coordinador.reingreso.masivo') || request()->routeIs('coordinador.reingreso.individual') ? 'show active' : '' }}">
+                    <span class="menu-link">
+                        <span class="menu-icon">
+                            <i class="ki-duotone ki-abstract-42 fs-1">
+                                <i class="path1"></i>
+                                <i class="path2"></i>
+                            </i>
+                        </span>
+                        <span class="menu-title fw-semibold fs-4">Gestión de Retiro</span>
+                        <span class="menu-arrow"></span>
+                    </span>
+                    <div class="menu-sub menu-sub-accordion menu-active-bg">
+                        <div class="menu-item">
+                            <a class="menu-link {{ request()->routeIs('coordinador.reingreso.individual') ? 'active' : '' }}"
+                                href="{{ route('coordinador.reingreso.individual') }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title fs-4">Individual</span>
+                            </a>
+                        </div>
+                        <div class="menu-item">
+                            <a class="menu-link {{ request()->routeIs('coordinador.reingreso.masivo') ? 'active' : '' }}"
+                                href="{{ route('coordinador.reingreso.masivo') }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title fs-4">Paralizar Programa</span>
                             </a>
                         </div>
                     </div>
