@@ -164,6 +164,7 @@ class Equivalencia extends Component
         // verificar si la equivalencia ya existe en la base de datos
         $equivalencia_db = EquivalenciaCursos::where('id_curso', $this->curso)
             ->where('id_curso_equivalente', $this->curso_equivalencia)
+            ->where('equivalencia_estado', 1)
             ->first();
 
         if ($equivalencia_db) {
