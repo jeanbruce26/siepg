@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\ModuloAreaContable\Sidebar;
+namespace App\Http\Livewire\ModuloAdministrador\Sidebar;
 
 use App\Models\Pago;
 use Livewire\Component;
@@ -17,12 +17,11 @@ class Index extends Component
     public function mount()
     {
         $this->route = request()->route()->getName();
-        // dd($this->route);
     }
 
     public function render()
     {
         $this->pago = Pago::where('pago_verificacion', 1)->count();
-        return view('livewire.modulo-area-contable.sidebar.index');
+        return view('livewire.modulo-administrador.sidebar.index');
     }
 }

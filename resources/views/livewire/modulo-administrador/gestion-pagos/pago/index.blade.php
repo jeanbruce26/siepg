@@ -57,6 +57,17 @@
                                                 </select>
                                             </div>
                                         </div>
+                                        <div class="mb-5">
+                                            <label class="form-label fw-semibold">Concepto de Pago:</label>
+                                            <div>
+                                                <select class="form-select" wire:model="filtro_concepto" id="filtro_concepto"  data-control="select2" data-placeholder="Seleccione el concepto de pago">
+                                                    <option></option>
+                                                    @foreach ($conceptoPago as $item)
+                                                        <option value="{{ $item->id_concepto_pago }}">{{ $item->concepto_pago }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
                                         <div class="d-flex justify-content-end">
                                             <button type="button" wire:click="resetear_filtro" class="btn btn-sm btn-light btn-active-light-primary me-2" data-kt-menu-dismiss="true">Resetear</button>
                                             <button type="button" class="btn btn-sm btn-primary" data-kt-menu-dismiss="true" wire:click="filtrar">Aplicar</button>
@@ -108,10 +119,10 @@
                                                     @if($item->pago_estado == 0)
                                                         <span class="badge badge-light-danger fs-6 px-3 py-2">Rechazado</span>
                                                     @else
-                                                        <span class="badge badge-light-warning fs-6 px-3 py-2">Observado</span>
+                                                        <span class="badge badge-light-danger fs-6 px-3 py-2">Observado</span>
                                                     @endif
                                                 @elseif($item->pago_verificacion == 1)
-                                                    <span class="badge badge-light-info fs-6 px-3 py-2">Pendiente</span>
+                                                    <span class="badge badge-light-warning fs-6 px-3 py-2">Pendiente</span>
                                                 @elseif($item->pago_verificacion == 2)
                                                     <span class="badge badge-light-success fs-6 px-3 py-2">Verificado</span>
                                                 @endif
@@ -441,9 +452,6 @@
                                 @endif
                             </div>
                         </div>
-                        @if($valida_pago_verificacion == 2 || $observacion == null || $observacion = '')
-                            
-                        @else
                             <div class="">
                                 <label for="observacion" class="form-label">
                                     Observacion
@@ -455,7 +463,6 @@
                                     </div>
                                 @enderror
                             </div>
-                        @endif
                     </form>
                 </div>
                 <div class="modal-footer d-flex align-items-center @if($valida_pago_verificacion == 2 || $valida_pago_estado == 0) justify-content-end @else justify-content-between @endif">
@@ -539,6 +546,45 @@
                 });
                 $('#filtro_proceso').on('change', function(){
                     @this.set('filtro_proceso', this.value);
+                });
+            });
+        });
+        // filtro_concepto select2
+        $(document).ready(function () {
+            $('#filtro_concepto').select2({
+                placeholder: 'Seleccione',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function () {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function () {
+                        return "Buscando...";
+                    }
+                }
+            });
+            $('#filtro_concepto').on('change', function(){
+                @this.set('filtro_concepto', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#filtro_concepto').select2({
+                    placeholder: 'Seleccione',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function () {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function () {
+                            return "Buscando...";
+                        }
+                    }
+                });
+                $('#filtro_concepto').on('change', function(){
+                    @this.set('filtro_concepto', this.value);
                 });
             });
         });

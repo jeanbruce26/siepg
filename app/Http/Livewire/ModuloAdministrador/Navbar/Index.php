@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\ModuloAdministrador\Navbar;
 
+use App\Models\Admision;
 use Livewire\Component;
 
 class Index extends Component
@@ -32,6 +33,7 @@ class Index extends Component
         }
         $this->coordinador = $this->trabajador->coordinador; // asignamos el coordinador del usuario logueado a la variable coordinador
         $this->docente = $this->trabajador->docente; // asignamos el docente del usuario logueado a la variable docente
+
     }
 
     public function cerrar_sesion()
@@ -81,6 +83,10 @@ class Index extends Component
 
     public function render()
     {
-        return view('livewire.modulo-administrador.navbar.index');
+        $admision = Admision::where('admision_estado', 1)->first()->admision;
+
+        return view('livewire.modulo-administrador.navbar.index', [
+            'admision' => $admision
+        ]);
     }
 }
