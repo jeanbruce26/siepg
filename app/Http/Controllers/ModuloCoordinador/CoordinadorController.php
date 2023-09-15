@@ -237,4 +237,9 @@ class CoordinadorController extends Controller
     {
         return view('modulo-coordinador.gestion-reingreso.masivo.index');
     }
+
+    public function retiro()
+    {
+        return view('modulo-coordinador.gestion-retiro.index');
+    }
 }

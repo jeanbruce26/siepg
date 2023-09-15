@@ -134,38 +134,18 @@
                         </div>
                     </div>
                 </div>
-                <div data-kt-menu-trigger="click"
-                    class="menu-item menu-accordion {{ request()->routeIs('coordinador.reingreso.masivo') || request()->routeIs('coordinador.reingreso.individual') ? 'show active' : '' }}">
-                    <span class="menu-link">
+                <div class="menu-item">
+                    <a class="menu-link {{ request()->routeIs('coordinador.retiro') ? 'active' : '' }}" href="{{ route('coordinador.retiro') }}">
                         <span class="menu-icon">
                             <i class="ki-duotone ki-abstract-42 fs-1">
                                 <i class="path1"></i>
                                 <i class="path2"></i>
                             </i>
                         </span>
-                        <span class="menu-title fw-semibold fs-4">Gestión de Retiro</span>
-                        <span class="menu-arrow"></span>
-                    </span>
-                    <div class="menu-sub menu-sub-accordion menu-active-bg">
-                        <div class="menu-item">
-                            <a class="menu-link {{ request()->routeIs('coordinador.reingreso.individual') ? 'active' : '' }}"
-                                href="{{ route('coordinador.reingreso.individual') }}">
-                                <span class="menu-bullet">
-                                    <span class="bullet bullet-dot"></span>
-                                </span>
-                                <span class="menu-title fs-4">Individual</span>
-                            </a>
-                        </div>
-                        <div class="menu-item">
-                            <a class="menu-link {{ request()->routeIs('coordinador.reingreso.masivo') ? 'active' : '' }}"
-                                href="{{ route('coordinador.reingreso.masivo') }}">
-                                <span class="menu-bullet">
-                                    <span class="bullet bullet-dot"></span>
-                                </span>
-                                <span class="menu-title fs-4">Paralizar Programa</span>
-                            </a>
-                        </div>
-                    </div>
+                        <span class="menu-title fw-semibold fs-4">
+                            Gestión de Retiro
+                        </span>
+                    </a>
                 </div>
                 <div class="menu-item">
                     <a class="menu-link {{ request()->routeIs('coordinador.reporte-pagos') || request()->routeIs('coordinador.reporte-programas') ? 'active' : '' }}" href="{{ route('coordinador.reporte-pagos') }}">
