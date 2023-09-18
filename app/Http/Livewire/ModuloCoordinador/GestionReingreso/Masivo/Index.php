@@ -250,6 +250,7 @@ class Index extends Component
                 $query->where('reingreso.reingreso_codigo', 'like', '%' . $this->search . '%')
                     ->orWhere('persona.nombre_completo', 'like', '%' . $this->search . '%');
             })
+            ->where('reingreso.id_tipo_reingreso', 2) // reingreso masivo
             ->orderBy('id_reingreso', 'desc')
             ->paginate(20);
 
