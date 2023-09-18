@@ -1,5 +1,5 @@
 @extends('layouts.modulo-coordinador')
-@section('title', 'Gestion de Reingreso Masivo - Direccitor de Unidad - Escuela de Posgrado')
+@section('title', 'Gestión de Reingreso Masivo - Director de Unidad - Escuela de Posgrado')
 @section('content')
 @livewire('modulo-coordinador.gestion-reingreso.masivo.index')
 @endsection

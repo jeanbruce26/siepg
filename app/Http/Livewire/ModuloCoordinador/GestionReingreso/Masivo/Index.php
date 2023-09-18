@@ -5,8 +5,6 @@ namespace App\Http\Livewire\ModuloCoordinador\GestionReingreso\Masivo;
 use App\Models\Admision;
 use App\Models\Admitido;
 use App\Models\Plan;
-use App\Models\Programa;
-use App\Models\ProgramaPlan;
 use App\Models\ProgramaProceso;
 use App\Models\Reingreso;
 use Livewire\Component;
