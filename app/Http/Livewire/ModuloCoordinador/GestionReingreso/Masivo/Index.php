@@ -2,7 +2,9 @@
 
 namespace App\Http\Livewire\ModuloCoordinador\GestionReingreso\Masivo;
 
+use App\Models\Admision;
 use App\Models\Admitido;
+use App\Models\Plan;
 use App\Models\Programa;
 use App\Models\ProgramaPlan;
 use App\Models\ProgramaProceso;
@@ -29,11 +31,11 @@ class Index extends Component
     public $modo = 'create';
     public $programa;
     public $programa_reingreso;
-    public $plan;
+    public $proceso;
     public $plan_nuevo;
     public $resolucion;
     public $resolucion_file;
-    public $check_cambio_plan = false;
+    public $check_cambio_plan = 1;
 
     // variables
     public $id_reingreso;
@@ -53,15 +55,15 @@ class Index extends Component
             $this->validateOnly($propertyName, [
                 'programa' => 'required',
                 'programa_reingreso' => 'required',
-                'plan' => 'required',
+                'proceso' => 'required',
                 'plan_nuevo' => 'required',
-                'resolucion' => 'required|string|max:255',
+                'resolucion' => 'required|max:255',
                 'resolucion_file' => 'nullable|mimes:pdf|max:10240',
             ]);
         } else {
             $this->validateOnly($propertyName, [
                 'programa' => 'required',
-                'plan' => 'required',
+                'proceso' => 'required',
                 'resolucion' => 'required|string|max:255',
                 'resolucion_file' => 'nullable|mimes:pdf|max:10240',
             ]);
@@ -79,9 +81,9 @@ class Index extends Component
     {
         $this->reset([
             'programa',
-            'programa_reingreso',
-            'plan',
+            'proceso',
             'plan_nuevo',
+            'programa_reingreso',
             'resolucion',
             'resolucion_file',
             'check_cambio_plan',
@@ -95,51 +97,67 @@ class Index extends Component
         $this->resetPage();
     }
 
-    public function updatedPrograma($id_programa)
+    public function updatedPrograma($id_programa_proceso)
     {
-        $programa = Programa::find($id_programa);
+        $programa = ProgramaProceso::join('programa_plan', 'programa_proceso.id_programa_plan', 'programa_plan.id_programa_plan')
+            ->join('programa', 'programa_plan.id_programa', 'programa.id_programa')
+            ->where('programa_proceso.id_programa_proceso', $id_programa_proceso)
+            ->first();
         $this->tipo_programa = $programa->programa_tipo;
     }
 
     public function guardar_reingreso()
     {
-        if ($this->check_cambio_plan) {
+        $this->validate([
+            'check_cambio_plan' => 'required',
+        ]);
+
+        if ($this->check_cambio_plan == 1) {
             $this->validate([
+                'proceso' => 'required',
                 'programa' => 'required',
-                'programa_reingreso' => 'required',
-                'plan' => 'required',
-                'plan_nuevo' => 'required',
                 'resolucion' => 'required|string|max:255',
                 'resolucion_file' => 'nullable|mimes:pdf|max:10240',
             ]);
         } else {
             $this->validate([
+                'proceso' => 'required',
                 'programa' => 'required',
-                'plan' => 'required',
+                'plan_nuevo' => 'required',
+                'programa_reingreso' => 'required',
                 'resolucion' => 'required|string|max:255',
                 'resolucion_file' => 'nullable|mimes:pdf|max:10240',
             ]);
         }
 
-        $admitidos = Admitido::join('programa_proceso', 'admitido.id_programa_proceso', 'programa_proceso.id_programa_proceso')
-            ->join('programa_plan', 'programa_proceso.id_programa_plan', 'programa_plan.id_programa_plan')
-            ->join('programa', 'programa_plan.id_programa', 'programa.id_programa')
-            ->join('plan', 'programa_plan.id_plan', 'plan.id_plan')
-            ->where('programa.id_programa', $this->programa)
-            ->where('programa_plan.id_programa_plan', $this->plan)
+        $admitidos = Admitido::where('id_programa_proceso', $this->programa)
+            ->where('admitido_estado', 2) // 1 = admitido normal | 2 = retirado | 0 = desactivado
             ->get();
+
+        // verificar si hay estudiantes admitidos que sea retirados
+        if (count($admitidos) == 0) {
+            $this->dispatchBrowserEvent('alerta-basica', [
+                'title' => '¡Error!',
+                'text' => 'No hay estudiantes retirados en el proceso seleccionado, por favor verifique e intente nuevamente.',
+                'icon' => 'error',
+                'confirmButtonText' => 'Aceptar',
+                'color' => 'danger'
+            ]);
+            return;
+        }
 
         $codigo = date('YmdHis');
         $codigo = 'R' . $codigo . 'M';
 
         foreach ($admitidos as $admitido) {
+            // crear reingreso masivo
             $reingreso = new Reingreso();
             $reingreso->reingreso_codigo = $codigo;
             $reingreso->id_admitido = $admitido->id_admitido;
-            if ($this->check_cambio_plan) {
+            if ($this->check_cambio_plan == 2) { // si se cambia de plan
                 $reingreso->id_programa_proceso = $this->programa_reingreso;
                 $reingreso->id_programa_proceso_antiguo = $admitido->id_programa_proceso;
-            } else {
+            } else { // no se cambia de plan
                 $reingreso->id_programa_proceso = $admitido->id_programa_proceso;
                 $reingreso->id_programa_proceso_antiguo = $admitido->id_programa_proceso;
             }
@@ -158,12 +176,15 @@ class Index extends Component
             $reingreso->reingreso_estado = 1;
             $reingreso->save();
 
-            // actualizar admitido
-            if ($this->check_cambio_plan) {
+            // actualizar programa del admitido
+            if ($this->check_cambio_plan == 2) {
                 $admitido->id_programa_proceso_antiguo = $admitido->id_programa_proceso;
                 $admitido->id_programa_proceso = $this->programa_reingreso;
-                $admitido->save();
             }
+
+            // actualizar el estado del admitido
+            $admitido->admitido_estado = 1; // 1 = admitido normal | 2 = retirado | 0 = desactivado
+            $admitido->save();
 
             // asignar las nuevas notas de los cursos a su nuevo programa
             if ($this->check_cambio_plan) {
@@ -192,34 +213,36 @@ class Index extends Component
 
     public function render()
     {
-        $programas = Programa::join('facultad', 'programa.id_facultad', 'facultad.id_facultad')
-            ->where('facultad.id_facultad', $this->facultad->id_facultad)
-            ->get();
+        // paso 1
 
-        if ($this->programa) {
-            $planes = ProgramaPlan::join('programa', 'programa_plan.id_programa', 'programa.id_programa')
-                ->join('plan', 'programa_plan.id_plan', 'plan.id_plan')
+        $procesos = Admision::orderBy('admision', 'desc')->get();
+
+        $programas = $this->proceso ?
+            ProgramaProceso::join('programa_plan', 'programa_proceso.id_programa_plan', 'programa_plan.id_programa_plan')
+                ->join('programa', 'programa_plan.id_programa', 'programa.id_programa')
                 ->join('facultad', 'programa.id_facultad', 'facultad.id_facultad')
-                ->where('programa.id_programa', $this->programa)
-                ->orderBy('plan.plan', 'desc')
-                ->get();
-        } else {
-            $planes = collect();
-        }
+                ->where('facultad.id_facultad', $this->facultad->id_facultad)
+                ->where('programa_proceso.id_admision', $this->proceso)
+                ->get() :
+            collect();
 
-        if ($this->plan_nuevo) {
-            $programas_reingreso = ProgramaProceso::join('programa_plan', 'programa_proceso.id_programa_plan', 'programa_plan.id_programa_plan')
+        // paso 2
+
+        $planes = Plan::orderBy('plan.plan', 'desc')->get();
+
+        $programas_reingreso = $this->plan_nuevo ?
+            ProgramaProceso::join('programa_plan', 'programa_proceso.id_programa_plan', 'programa_plan.id_programa_plan')
                 ->join('programa', 'programa_plan.id_programa', 'programa.id_programa')
                 ->join('plan', 'programa_plan.id_plan', 'plan.id_plan')
                 ->join('facultad', 'programa.id_facultad', 'facultad.id_facultad')
+                ->join('admision', 'programa_proceso.id_admision', 'admision.id_admision')
                 ->where('plan.id_plan', $this->plan_nuevo)
                 ->where('programa.id_facultad', $this->facultad->id_facultad)
                 ->where('programa.programa_tipo', $this->tipo_programa)
-                ->get();
-        } else {
-            $programas_reingreso = collect();
-        }
+                ->get() :
+            collect();
 
+        // reingreso
         $reingresos = Reingreso::join('admitido', 'reingreso.id_admitido', 'admitido.id_admitido')
             ->join('persona', 'admitido.id_persona', 'persona.id_persona')
             ->join('programa_proceso', 'admitido.id_programa_proceso', 'programa_proceso.id_programa_proceso')
@@ -234,8 +257,9 @@ class Index extends Component
 
         return view('livewire.modulo-coordinador.gestion-reingreso.masivo.index', [
             'reingresos' => $reingresos,
-            'planes' => $planes,
+            'procesos' => $procesos,
             'programas' => $programas,
+            'planes' => $planes,
             'programas_reingreso' => $programas_reingreso,
         ]);
     }
