@@ -17,18 +17,6 @@
                     </li>
                 </ul>
             </div>
-            {{-- @if ($admitido)
-                verificamos si la admision existe y si es la activa a la que le pertenece al usuario admitido
-                @if ($admision)
-                    @if ($admision->admision_fecha_inicio_matricula <= date('Y-m-d') && $admision->admision_fecha_fin_matricula_extemporanea >= date('Y-m-d'))
-                        <div class="d-flex align-items-center gap-2 gap-lg-3">
-                            <a href="#modal_pago_plataforma" wire:click="modo" class="btn fw-bold btn-primary" data-bs-toggle="modal" data-bs-target="#modal_pago_plataforma">
-                                Nuevo Pago
-                            </a>
-                        </div>
-                    @endif
-                @endif
-            @endif --}}
         </div>
     </div>
     <div id="kt_app_content" class="app-content flex-column-fluid">
@@ -48,9 +36,57 @@
                             </span>
                         </div>
                     </div>
+
+                    <div class="row mb-5 g-5">
+                        <div class="col-md-4">
+                            <div class="card shadow-sm">
+                                <div class="pt-8 pb-6 px-7">
+                                    <div class="card-title d-flex flex-column">
+                                        <span class="fs-3hx fw-bold text-gray-800 me-2 lh-1 ls-n2">
+                                            S/. {{ number_format($monto_total, 2, ',', ' ') }}
+                                        </span>
+                                        <br>
+                                        <span class="text-gray-700 pt-1 fw-bold fs-4">
+                                            Monto Total a Pagar
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card shadow-sm">
+                                <div class="pt-8 pb-6 px-7">
+                                    <div class="card-title d-flex flex-column">
+                                        <span class="fs-3hx fw-bold text-danger me-2 lh-1 ls-n2">
+                                            S/. {{ number_format($deuda, 2, ',', ' ') }}
+                                        </span>
+                                        <br>
+                                        <span class="text-gray-700 pt-1 fw-bold fs-4">
+                                            Deuda
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card bg-light-success card-bordered shadow-sm">
+                                <div class="pt-8 pb-6 px-7">
+                                    <div class="card-title d-flex flex-column">
+                                        <span class="fs-3hx fw-bold text-success me-2 lh-1 ls-n2">
+                                            S/. {{ number_format($monto_pagado, 2, ',', ' ') }}
+                                        </span>
+                                        <br>
+                                        <span class="text-gray-700 pt-1 fw-bold fs-4">
+                                            Monto Total Pagado
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     {{-- header de la tabla --}}
                     <div class="card p-5 mb-5">
-                        <div class="row mb-5 g-3">
+                        <div class="row g-3">
                             <div class="col-md-4">
                                 <button type="button" class="btn btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary btn-center fw-bold w-100px w-md-125px"
                                     data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start">
@@ -77,16 +113,16 @@
                                     <form class="px-7 py-5" wire:submit.prevent="aplicar_filtro">
                                         <div class="mb-10">
                                             <label class="form-label fw-semibold">
-                                                Ciclo Académico:
+                                                Matriculas:
                                             </label>
                                             <div>
-                                                <select class="form-select" wire:model="filtro_ciclo"
-                                                    id="filtro_ciclo" data-control="select2"
-                                                    data-placeholder="Seleccione su ciclo académico">
+                                                <select class="form-select" wire:model="filtro_matricula"
+                                                    id="filtro_matricula" data-control="select2"
+                                                    data-placeholder="Seleccione su matricua">
                                                     <option value=""></option>
-                                                    @foreach ($ciclos as $item)
-                                                        <option value="{{ $item->id_ciclo }}">
-                                                            CICLO {{ $item->ciclo->ciclo }}
+                                                    @foreach ($matriculas as $item)
+                                                        <option value="{{ $item->id_matricula }}">
+                                                            Matricula N° {{ $loop->iteration }}
                                                         </option>
                                                     @endforeach
                                                 </select>
@@ -105,38 +141,6 @@
                             <div class="col-md-4"></div>
                             <div class="col-md-4">
                                 <input type="search" wire:model="search" class="form-control w-100" placeholder="Buscar..." />
-                            </div>
-                        </div>
-                        <div class="">
-                            <div>
-                                <table>
-                                    <tbody class="fs-2 fw-bold">
-                                        <tr>
-                                            <td style="width: 250px">
-                                                Monto Total a Pagar:
-                                            </td>
-                                            <td class="fs-2">
-                                                S/. {{ number_format($monto_total, 2, ',', ' ') }}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                Deuda Total:
-                                            </td>
-                                            <td class="fs-2 text-danger">
-                                                S/. {{ number_format($deuda, 2, ',', ' ') }}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                Monto Total Pagado:
-                                            </td>
-                                            <td class="fs-1">
-                                                S/. {{ number_format($monto_pagado, 2, ',', ' ') }}
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
                             </div>
                         </div>
                     </div>
@@ -220,170 +224,13 @@
             </div>
         </div>
     </div>
-    {{-- modal registro pago --}}
-    {{-- <div wire:ignore.self class="modal fade" tabindex="-1" id="modal_pago_plataforma">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title">
-                        {{ $titulo_modal_pago }}
-                    </h3>
-
-                    <div class="btn btn-icon btn-sm btn-active-light-danger ms-2" wire:click="limpiar_pago" data-bs-dismiss="modal" aria-label="Close">
-                        <span class="svg-icon svg-icon-2hx">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor"/>
-                                <rect x="7" y="15.3137" width="12" height="2" rx="1" transform="rotate(-45 7 15.3137)" fill="currentColor"/>
-                                <rect x="8.41422" y="7" width="12" height="2" rx="1" transform="rotate(45 8.41422 7)" fill="currentColor"/>
-                            </svg>
-                        </span>
-                    </div>
-                </div>
-                <div class="modal-body">
-                    <form autocomplete="off" class="row g-5">
-                        <div class="col-md-6">
-                            <label for="documento_identidad" class="required form-label">
-                                Documento de Identidad
-                            </label>
-                            <input type="number" wire:model="documento_identidad" class="form-control @error('documento_identidad') is-invalid @enderror" placeholder="12345678" id="documento_identidad" readonly/>
-                            @error('documento_identidad')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        <div class="col-md-6">
-                            <label for="numero_operacion" class="required form-label">
-                                Numero de Operación
-                            </label>
-                            <input type="number" wire:model="numero_operacion" class="form-control @error('numero_operacion') is-invalid @enderror" placeholder="6543" id="numero_operacion"/>
-                            <span class="form-text text-muted mt-2 fst-italic">
-                                Nota: Omitir los ceros a la izquierda. Ejemplo: 00001265, debe ser ingresado como 1265. <br>
-                            </span>
-                            @error('numero_operacion')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        <div class="col-md-6">
-                            <label for="monto_operacion" class="required form-label">
-                                Monto de Operación
-                            </label>
-                            <input type="number" wire:model="monto_operacion" class="form-control @error('monto_operacion') is-invalid @enderror" placeholder="00.00" id="monto_operacion"/>
-                            @error('monto_operacion')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        <div class="col-md-6">
-                            <label for="fecha_pago" class="required form-label">
-                                Fecha de Pago
-                            </label>
-                            <input type="date" wire:model="fecha_pago" class="form-control @error('fecha_pago') is-invalid @enderror" id="fecha_pago" max="{{ date('Y-m-d') }}" />
-                            @error('fecha_pago')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        <div class="col-md-12">
-                            <label for="canal_pago" class="required form-label">
-                                Canal de Pago
-                            </label>
-                            <select class="form-select @error('canal_pago') is-invalid @enderror" wire:model="canal_pago" id="canal_pago" data-control="select2" data-placeholder="Seleccione su canal de pago" data-allow-clear="true" data-dropdown-parent="#modal_pago_plataforma">
-                                <option></option>
-                                @foreach ($canales_pagos as $item)
-                                <option value="{{ $item->id_canal_pago }}">Pago realizado en {{ $item->canal_pago }}</option>
-                                @endforeach
-                            </select>
-                            @error('canal_pago')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        <div class="col-md-12">
-                            <label for="concepto_pago" class="required form-label">
-                                Concepto de Pago
-                            </label>
-                            <select class="form-select @error('concepto_pago') is-invalid @enderror" wire:model="concepto_pago" id="concepto_pago" data-control="select2" data-placeholder="Seleccione su concepto de pago" data-allow-clear="true" data-dropdown-parent="#modal_pago_plataforma">
-                                <option></option>
-                                @foreach ($conceptos_pagos as $item)
-                                <option value="{{ $item->id_concepto_pago }}" @if($item->id_concepto_pago == 1) disabled @endif @if($constancia_ingreso && $item->id_concepto_pago == 2) disabled @endif>
-                                    Concepto por {{ $item->concepto_pago }} - S/. {{ number_format($item->concepto_pago_monto, 2, ',', '.') }}
-                                </option>
-                                @endforeach
-                            </select>
-                            @error('concepto_pago')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        @if ($grupos)
-                            @if ( $concepto_pago == 3 || $concepto_pago == 4 || $concepto_pago == 5 || $concepto_pago == 6 )
-                                <div class="col-md-12">
-                                    <label for="grupo" class="required form-label">
-                                        Grupo
-                                    </label>
-                                    <select class="form-select @error('grupo') is-invalid @enderror" wire:model="grupo" id="grupo" data-control="select2" data-placeholder="Seleccione su grupo" data-allow-clear="true" data-dropdown-parent="#modal_pago_plataforma">
-                                        <option></option>
-                                        @foreach ($grupos as $item)
-                                        @php
-                                            $contador_matriculados_grupos = App\Models\Matricula::where('id_programa_proceso_grupo', $item->id_programa_proceso_grupo)->where('id_ciclo', 1)->count();
-                                        @endphp
-                                        <option value="{{ $item->id_programa_proceso_grupo }}" @if($item->grupo_cantidad <= $contador_matriculados_grupos) disabled @endif>
-                                            GRUPO {{ $item->grupo_detalle }} - CUPOS: {{ $item->grupo_cantidad - $contador_matriculados_grupos }}
-                                        </option>
-                                        @endforeach
-                                    </select>
-                                    @error('grupo')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            @endif
-                        @endif
-                        <div class="col-md-12">
-                            <label for="voucher" class="@if($modo == 'create') required @endif @if($activar_voucher == true) required @endif form-label">
-                                Voucher
-                            </label>
-                            <input type="file" wire:model="voucher" class="form-control @error('voucher') is-invalid @enderror" id="upload{{ $iteration }}" accept="image/jpeg, image/png, image/jpg" />
-                            <span class="form-text text-muted mt-2 fst-italic">
-                                Nota: El voucher debe ser imagen en formato JPG, JPEG, PNG y no debe superar los 2MB. <br>
-                            </span>
-                            @error('voucher')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        @if ($modo == 'create')
-                            <div class="col-md-12">
-                                <div class="form-check mt-2">
-                                    <input class="form-check-input @error('terminos_condiciones_pagos') is-invalid @enderror" type="checkbox" wire:model="terminos_condiciones_pagos" id="terminos_condiciones_pagos" />
-                                    <label class="form-check-label text-dark fw-bold" for="terminos_condiciones_pagos">
-                                        El registro de pago estará sujeto a revisión por el Área Contable, cualquier inconveniente será reportado. <br>
-                                        Sabiendo eso "ACEPTO LOS TERMINOS Y CONDICIONES".
-                                    </label>
-                                </div>
-                                @error('terminos_condiciones_pagos')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        @endif
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal" wire:click="limpiar_pago">
-                        Cerrar
-                    </button>
-                    <button type="button" wire:click="alerta_guardar_pago" class="btn btn-primary" style="width: 150px" @if ($voucher == null) wire:target="voucher" @endif wire:loading.attr="disabled" wire:target="alerta_guardar_pago">
-                        <div wire:loading.remove wire:target="alerta_guardar_pago">
-                            {{ $button_modal }}
-                        </div>
-                        <div wire:loading wire:target="alerta_guardar_pago">
-                            Procesando <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
-                        </div>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div> --}}
 </div>
 @push('scripts')
     <script>
-        // filtro_ciclo select2
+        // filtro_matricula select2
         $(document).ready(function () {
-            $('#filtro_ciclo').select2({
-                placeholder: 'Seleccione su ciclo académico',
+            $('#filtro_matricula').select2({
+                placeholder: 'Seleccione su matricula',
                 allowClear: true,
                 width: '100%',
                 selectOnClose: true,
@@ -396,12 +243,12 @@
                     }
                 }
             });
-            $('#filtro_ciclo').on('change', function(){
-                @this.set('filtro_ciclo', this.value);
+            $('#filtro_matricula').on('change', function(){
+                @this.set('filtro_matricula', this.value);
             });
             Livewire.hook('message.processed', (message, component) => {
-                $('#filtro_ciclo').select2({
-                    placeholder: 'Seleccione su ciclo académico',
+                $('#filtro_matricula').select2({
+                    placeholder: 'Seleccione su matricula',
                     allowClear: true,
                     width: '100%',
                     selectOnClose: true,
@@ -414,8 +261,8 @@
                         }
                     }
                 });
-                $('#filtro_ciclo').on('change', function(){
-                    @this.set('filtro_ciclo', this.value);
+                $('#filtro_matricula').on('change', function(){
+                    @this.set('filtro_matricula', this.value);
                 });
             });
         });
