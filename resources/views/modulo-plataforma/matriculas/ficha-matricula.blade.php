@@ -122,6 +122,7 @@
             </tr>
         </tbody>
     </table>
+
     <table style="padding-right: 6.5rem; padding-left: 6.5rem; padding-top: 0.9rem; font-weight: bold; font-size: 1rem;" width="100%">
         <tbody>
             <tr>
@@ -142,22 +143,23 @@
         <thead>
             <tr style="font-weight: bold;">
                 <th style="border: 1px solid; padding: 0.3rem; width: 15%"><em>Código de Alumno</em></th>
-                <th style="border: 1px solid; padding: 0.3rem; width: 60%"><em>Apellidos y Nombres</em></th>
-                <th style="border: 1px solid; padding: 0.3rem; width: 15%"><em>Ciclo</em></th>
+                <th style="border: 1px solid; padding: 0.3rem; width: 85%" colspan="3"><em>Apellidos y Nombres</em></th>
+                {{-- <th style="border: 1px solid; padding: 0.3rem; width: 15%"><em>Ciclo</em></th> --}}
             </tr>
             <tr style="font-weight: regular; font-size: 0.8rem;">
                 <th style="border: 1px solid; padding: 0.3rem; width: 15%; font-weight: regular;">{{ $codigo }}</th>
-                <th style="border: 1px solid; padding: 0.3rem; width: 60%; font-weight: regular;" align="left">{{ $nombre }}</th>
-                <th style="border: 1px solid; padding: 0.3rem; width: 15%; font-weight: regular;">{{ $ciclo }}</th>
+                <th style="border: 1px solid; padding: 0.3rem; width: 85%; font-weight: regular;" align="left" colspan="3">{{ $nombre }}</th>
+                {{-- <th style="border: 1px solid; padding: 0.3rem; width: 15%; font-weight: regular;">{{ $ciclo }}</th> --}}
             </tr>
             <tr style="font-weight: bold; font-size: 0.8rem;">
                 <th style="border: 1px solid; padding: 0.3rem; width: 15%; font-size: 0.9rem;"><em>Domicilio del Alumno</em></th>
-                <th style="border: 1px solid; padding: 0.3rem; width: 60%; font-weight: regular;" align="left">{{ $domicilio }}</th>
+                <th style="border: 1px solid; padding: 0.3rem; width: 70%; font-weight: regular;" align="left" colspan="2">{{ $domicilio }}</th>
                 <th style="border: 1px solid; padding: 0.3rem; width: 15%"><em>Teléfono: </em><span style="font-weight: regular;"><br>{{ $celular }}</span></th>
             </tr>
             <tr style="font-weight: bold;">
                 <th style="border: 1px solid; padding: 0.3rem; width: 15%"><em>Código de Asignatura</em></th>
-                <th style="border: 1px solid; padding: 0.3rem; width: 60%"><em>Nombre del Curso</em></th>
+                <th style="border: 1px solid; padding: 0.3rem; width: 55%"><em>Nombre del Curso</em></th>
+                <th style="border: 1px solid; padding: 0.3rem; width: 15%"><em>Ciclo</em></th>
                 <th style="border: 1px solid; padding: 0.3rem; width: 15%"><em>Créditos</em></th>
             </tr>
         </thead>
@@ -166,13 +168,14 @@
             <tr>
                 <td style="border: 1px solid; padding: 0.3rem; font-size: 0.8rem;" align="center">{{ $item->curso_codigo }}</td>
                 <td style="border: 1px solid; padding: 0.3rem; font-size: 0.8rem;">{{ $item->curso_nombre }}</td>
+                <td style="border: 1px solid; padding: 0.3rem; font-size: 0.8rem;" align="center">{{ $item->ciclo }}</td>
                 <td style="border: 1px solid; padding: 0.3rem; font-size: 0.8rem;" align="center">{{ $item->curso_credito }}</td>
             </tr>
             @endforeach
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="2" align="right" style="border: 1px solid; padding: 0.3rem; font-weight: bold"><em>TOTAL</em></td>
+                <td colspan="3" align="right" style="border: 1px solid; padding: 0.3rem; font-weight: bold; margin-right: 10px"><em>TOTAL</em></td>
                 <td style="border: 1px solid; padding: 0.3rem; font-size: 0.8rem;" align="center">{{ $cursos->sum('curso_credito') }}</td>
             </tr>
         </tfoot>
