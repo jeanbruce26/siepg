@@ -21,7 +21,8 @@ class Matricula extends Model
         'matricula_estado',
         'id_admitido',
         'id_programa_proceso_grupo',
-        'id_pago'
+        'id_pago',
+        'verificacion_costo_enseñanza',
     ];
 
     public $timestamps = false;
