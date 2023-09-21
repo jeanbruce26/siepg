@@ -14,25 +14,11 @@
                 </ul>
             </div>
             @if ($admitido)
-                {{-- verificamos si la admision existe y si es la activa a la que le pertenece al usuario admitido --}}
-                @if ($admision || $matricula_gestion)
-                    @if ($admision->admision_fecha_inicio_matricula <= date('Y-m-d') && $admision->admision_fecha_fin_matricula_extemporanea >= date('Y-m-d') || $matricula_gestion->matricula_gestion_fecha_inicio <= date('Y-m-d') && $matricula_gestion->matricula_gestion_fecha_extemporanea_fin >= date('Y-m-d'))
-                        <div class="d-flex align-items-center gap-2 gap-lg-3">
-                            <a href="#modal_pago_plataforma" wire:click="modo" class="btn fw-bold btn-primary" data-bs-toggle="modal" data-bs-target="#modal_pago_plataforma">
-                                Nuevo Pago
-                            </a>
-                        </div>
-                    @endif
-                @endif
-                {{-- @if ($matricula_gestion)
-                    @if ($matricula_gestion->matricula_gestion_fecha_inicio <= date('Y-m-d') && $matricula_gestion->matricula_gestion_fecha_extemporanea_fin >= date('Y-m-d'))
-                        <div class="d-flex align-items-center gap-2 gap-lg-3">
-                            <a href="#modal_pago_plataforma" wire:click="modo" class="btn fw-bold btn-primary" data-bs-toggle="modal" data-bs-target="#modal_pago_plataforma">
-                                Nuevo Pago
-                            </a>
-                        </div>
-                    @endif
-                @endif --}}
+                <div class="d-flex align-items-center gap-2 gap-lg-3">
+                    <a href="#modal_pago_plataforma" wire:click="modo" class="btn fw-bold btn-primary" data-bs-toggle="modal" data-bs-target="#modal_pago_plataforma">
+                        Nuevo Pago
+                    </a>
+                </div>
             @endif
         </div>
     </div>
@@ -116,78 +102,76 @@
                     </div>
                     {{-- tabla de pagos --}}
                     <div class="card shadow-sm mb-5">
-                        {{-- <div class="card-body mb-0"> --}}
-                            <div class="table-responsive">
-                                <table class="table table-hover align-middle table-rounded border mb-0 gy-5 gs-5">
-                                    <thead class="bg-light-warning">
-                                        <tr class="fw-bold fs-5 text-gray-900 border-bottom-2 border-gray-200">
-                                            <th>ID</th>
-                                            <th>Concepto Pago</th>
-                                            <th>Operacion</th>
-                                            <th>Monto</th>
-                                            <th>Fecha</th>
-                                            <th>Estado</th>
-                                            <th class="text-end">Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="fw-semibold text-gray-700">
-                                        @forelse ($pagos as $item)
-                                        <tr class="fs-6">
-                                            <td>
-                                                {{ $item->id_pago }}
-                                            </td>
-                                            <td>
-                                                Concepto por {{ $item->concepto_pago->concepto_pago }}
-                                            </td>
-                                            <td>
-                                                {{ $item->pago_operacion }}
-                                            </td>
-                                            <td>
-                                                S/. {{ number_format($item->pago_monto, 2, ',', '.') }}
-                                            </td>
-                                            <td>
-                                                {{ date('d/m/Y', strtotime($item->pago_fecha)) }}
-                                            </td>
-                                            <td>
-                                                @if ($item->pago_verificacion == 1)
-                                                    <span class="badge badge-warning fs-6 px-3 py-2">Pendiente</span>
-                                                @elseif ($item->pago_verificacion == 2)
-                                                    <span class="badge badge-success fs-6 px-3 py-2">Validado</span>
-                                                @elseif ($item->pago_verificacion == 0 && $item->pago_estado == 0)
-                                                        <span class="badge badge-danger fs-6 px-3 py-2">Rechazado</span>
-                                                @elseif ($item->pago_verificacion == 0)
-                                                    <span class="badge badge-danger fs-6 px-3 py-2">Observado</span>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle table-rounded border mb-0 gy-5 gs-5">
+                                <thead class="bg-light-warning">
+                                    <tr class="fw-bold fs-5 text-gray-900 border-bottom-2 border-gray-200">
+                                        <th>ID</th>
+                                        <th>Concepto Pago</th>
+                                        <th>Operacion</th>
+                                        <th>Monto</th>
+                                        <th>Fecha</th>
+                                        <th>Estado</th>
+                                        <th class="text-end">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="fw-semibold text-gray-700">
+                                    @forelse ($pagos as $item)
+                                    <tr class="fs-6">
+                                        <td>
+                                            {{ $item->id_pago }}
+                                        </td>
+                                        <td>
+                                            Concepto por {{ $item->concepto_pago->concepto_pago }}
+                                        </td>
+                                        <td>
+                                            {{ $item->pago_operacion }}
+                                        </td>
+                                        <td>
+                                            S/. {{ number_format($item->pago_monto, 2, ',', '.') }}
+                                        </td>
+                                        <td>
+                                            {{ date('d/m/Y', strtotime($item->pago_fecha)) }}
+                                        </td>
+                                        <td>
+                                            @if ($item->pago_verificacion == 1)
+                                                <span class="badge badge-warning fs-6 px-3 py-2">Pendiente</span>
+                                            @elseif ($item->pago_verificacion == 2)
+                                                <span class="badge badge-success fs-6 px-3 py-2">Validado</span>
+                                            @elseif ($item->pago_verificacion == 0 && $item->pago_estado == 0)
+                                                    <span class="badge badge-danger fs-6 px-3 py-2">Rechazado</span>
+                                            @elseif ($item->pago_verificacion == 0)
+                                                <span class="badge badge-danger fs-6 px-3 py-2">Observado</span>
+                                            @endif
+                                        </td>
+                                        <td class="text-end">
+                                            @if ($item->pago_verificacion != 2)
+                                                <a href="#modal_pago_plataforma" wire:click="cargar_pago({{ $item->id_pago }})" class="btn btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary hover-scale" data-bs-toggle="modal" data-bs-target="#modal_pago_plataforma">
+                                                    Editar
+                                                </a>
+                                            @else
+                                                <a href="#modal_pago_plataforma" wire:click="cargar_pago({{ $item->id_pago }})" class="btn btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary hover-scale disabled" data-bs-toggle="modal" data-bs-target="#modal_pago_plataforma">
+                                                    Editar
+                                                </a>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    @empty
+                                    <tr class="fs-6">
+                                        <td colspan="7" class="text-center">
+                                            <div class="text-muted py-5">
+                                                @if ($search == '')
+                                                    No se encontraron resultados
+                                                @elseif($search)
+                                                    No hay resultados de la busqueda "{{ $search }}"
                                                 @endif
-                                            </td>
-                                            <td class="text-end">
-                                                @if ($item->pago_verificacion != 2)
-                                                    <a href="#modal_pago_plataforma" wire:click="cargar_pago({{ $item->id_pago }})" class="btn btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary hover-scale" data-bs-toggle="modal" data-bs-target="#modal_pago_plataforma">
-                                                        Editar
-                                                    </a>
-                                                @else
-                                                    <a href="#modal_pago_plataforma" wire:click="cargar_pago({{ $item->id_pago }})" class="btn btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary hover-scale disabled" data-bs-toggle="modal" data-bs-target="#modal_pago_plataforma">
-                                                        Editar
-                                                    </a>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                        @empty
-                                        <tr class="fs-6">
-                                            <td colspan="7" class="text-center">
-                                                <div class="text-muted py-5">
-                                                    @if ($search == '')
-                                                        No se encontraron resultados
-                                                    @elseif($search)
-                                                        No hay resultados de la busqueda "{{ $search }}"
-                                                    @endif
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        @endforelse
-                                    </tbody>
-                                </table>
-                            </div>
-                        {{-- </div> --}}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                     {{-- paginacion de la tabla de pagos --}}
                     @if ($pagos->hasPages())
@@ -291,7 +275,13 @@
                             <select class="form-select @error('concepto_pago') is-invalid @enderror" wire:model="concepto_pago" id="concepto_pago" data-control="select2" data-placeholder="Seleccione su concepto de pago" data-allow-clear="true" data-dropdown-parent="#modal_pago_plataforma">
                                 <option></option>
                                 @foreach ($conceptos_pagos as $item)
-                                <option value="{{ $item->id_concepto_pago }}" @if($item->id_concepto_pago == 1) disabled @endif @if($constancia_ingreso && $item->id_concepto_pago == 2) disabled @endif>
+                                <option value="{{ $item->id_concepto_pago }}"
+                                    @if($item->id_concepto_pago == 1) disabled @endif
+                                    @if($constancia_ingreso && $item->id_concepto_pago == 2) disabled @endif
+                                    @if($activar_matricula == false)
+                                        @if($item->id_concepto_pago == 3 || $item->id_concepto_pago == 4 || $item->id_concepto_pago == 5 || $item->id_concepto_pago == 6) disabled @endif
+                                    @endif
+                                    @if($matricula_count == 0 && $item->id_concepto_pago == 7) disabled @endif>
                                     Concepto por {{ $item->concepto_pago }} @if($item->id_concepto_pago != 7) - S/. {{ number_format($item->concepto_pago_monto, 2, ',', '.') }} @endif
                                 </option>
                                 @endforeach
@@ -300,29 +290,6 @@
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
-                        {{-- @if ($grupos)
-                            @if ( $concepto_pago == 3 || $concepto_pago == 4 || $concepto_pago == 5 || $concepto_pago == 6 )
-                                <div class="col-md-12">
-                                    <label for="grupo" class="required form-label">
-                                        Grupo
-                                    </label>
-                                    <select class="form-select @error('grupo') is-invalid @enderror" wire:model="grupo" id="grupo" data-control="select2" data-placeholder="Seleccione su grupo" data-allow-clear="true" data-dropdown-parent="#modal_pago_plataforma">
-                                        <option></option>
-                                        @foreach ($grupos as $item)
-                                        @php
-                                            $contador_matriculados_grupos = App\Models\Matricula::where('id_programa_proceso_grupo', $item->id_programa_proceso_grupo)->where('id_ciclo', 1)->count();
-                                        @endphp
-                                        <option value="{{ $item->id_programa_proceso_grupo }}" @if($item->grupo_cantidad <= $contador_matriculados_grupos) disabled @endif>
-                                            GRUPO {{ $item->grupo_detalle }} - CUPOS: {{ $item->grupo_cantidad - $contador_matriculados_grupos }}
-                                        </option>
-                                        @endforeach
-                                    </select>
-                                    @error('grupo')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            @endif
-                        @endif --}}
                         <div class="col-md-12">
                             <label for="voucher" class="@if($modo == 'create') required @endif @if($activar_voucher == true) required @endif form-label">
                                 Voucher

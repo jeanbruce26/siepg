@@ -54,7 +54,8 @@ class Index extends Component
     public function mount()
     {
         $this->limpiar_pago();
-        $this->documento_identidad = auth('plataforma')->user()->usuario_estudiante;
+        $persona = Persona::where('id_persona', auth('plataforma')->user()->id_persona)->first(); // persona del usuario logueado
+        $this->documento_identidad = $persona->numero_documento;
     }
 
     public function updated($propertyName)
@@ -104,9 +105,9 @@ class Index extends Component
 
     public function modo()
     {
+        $this->limpiar_pago();
         $this->modo = 'create';
         $this->button_modal = 'Registrar Pago';
-        $this->limpiar_pago();
     }
 
     public function cargar_pago(Pago $pago)
@@ -133,7 +134,15 @@ class Index extends Component
 
     public function limpiar_pago()
     {
-        $this->reset(['numero_operacion', 'monto_operacion', 'fecha_pago', 'canal_pago', 'voucher', 'concepto_pago', 'terminos_condiciones_pagos']);
+        $this->reset([
+            'numero_operacion',
+            'monto_operacion',
+            'fecha_pago',
+            'canal_pago',
+            'voucher',
+            'concepto_pago',
+            'terminos_condiciones_pagos'
+        ]);
         $this->resetErrorBag();
         $this->resetValidation();
         $this->iteration++;
@@ -498,9 +507,6 @@ class Index extends Component
         $pago = Pago::find($id_pago);
         $admitido = $this->admitido;
 
-        // // generar codigo de matricula
-        // $codigo = 'M000000001';
-
         // si el pago es de concepto de constancia de ingreso
         if( $pago->id_concepto_pago == 2 || $pago->id_concepto_pago == 4  || $pago->id_concepto_pago == 6 )
         {
@@ -519,78 +525,12 @@ class Index extends Component
                 $pago->save();
             }
         }
-        // if ( $pago->id_concepto_pago == 3 || $pago->id_concepto_pago == 5 )
-        // {
-        //     $matricula = Matricula::orderBy('id_matricula', 'desc')->first();
-        //     if ( $matricula )
-        //     {
-        //         $codigo = 'M' . str_pad($matricula->id_matricula + 1, 9, "0", STR_PAD_LEFT);
-        //     }
-        //     else
-        //     {
-        //         $codigo = 'M000000001';
-        //     }
-        //     // registrar matricula
-        //     $matricula = new Matricula();
-        //     $matricula->matricula_codigo = $codigo;
-        //     $matricula->matricula_proceso = $admitido->programa_proceso->admision->admision;
-        //     $matricula->matricula_year = date('Y-m-d');
-        //     $matricula->matricula_fecha_creacion = date('Y-m-d');
-        //     $matricula->matricula_estado = 1;
-        //     $matricula->id_admitido = $admitido->id_admitido;
-        //     $matricula->id_programa_proceso_grupo = $this->grupo;
-        //     $matricula->id_ciclo = 1;
-        //     $matricula->id_pago = $pago->id_pago;
-        //     $matricula->save();
-
-        //     // cambiar de estado
-        //     $pago->pago_estado = 2;
-        //     $pago->save();
-        // }
-        // if ( $pago->id_concepto_pago == 4  || $pago->id_concepto_pago == 6 )
-        // {
-        //     // registrar constancia de ingreso
-        //     $constancia = new ConstanciaIngreso();
-        //     $constancia->constancia_ingreso_fecha = date('Y-m-d');
-        //     $constancia->id_pago = $pago->id_pago;
-        //     $constancia->id_admitido = $admitido->id_admitido;
-        //     $constancia->constancia_ingreso_estado = 1;
-        //     $constancia->save();
-
-        //     // creamos el codigo de matricula
-        //     $matricula = Matricula::orderBy('id_matricula', 'desc')->first();
-        //     if ( $matricula )
-        //     {
-        //         $codigo = 'M' . str_pad($matricula->id_matricula + 1, 9, "0", STR_PAD_LEFT);
-        //     }
-        //     else
-        //     {
-        //         $codigo = 'M000000001';
-        //     }
-        //     // registrar matricula
-        //     $matricula = new Matricula();
-        //     $matricula->matricula_codigo = $codigo;
-        //     $matricula->matricula_proceso = $admitido->programa_proceso->admision->admision;
-        //     $matricula->matricula_year = date('Y-m-d');
-        //     $matricula->matricula_fecha_creacion = date('Y-m-d');
-        //     $matricula->matricula_estado = 1;
-        //     $matricula->id_admitido = $admitido->id_admitido;
-        //     $matricula->id_programa_proceso_grupo = $this->grupo;
-        //     $matricula->id_ciclo = 1;
-        //     $matricula->id_pago = $pago->id_pago;
-        //     $matricula->save();
-
-        //     // cambiar de estado
-        //     $pago->pago_estado = 2;
-        //     $pago->save();
-        // }
 
         // si el pago es de concepto de mensualidad
         if ( $pago->id_concepto_pago == 7 )
         {
             // buscar la matricula del admitido
-            $ciclo = AdmitidoCiclo::where('id_admitido', $admitido->id_admitido)->where('admitido_ciclo_estado', 1)->orderBy('id_admitido_ciclo', 'desc')->first();
-            $matricula = Matricula::where('id_admitido', $admitido->id_admitido)->where('id_ciclo', $ciclo->id_ciclo)->where('matricula_estado', 1)->first();
+            $matricula = Matricula::where('id_admitido', $admitido->id_admitido)->where('matricula_estado', 1)->orderBy('id_matricula', 'desc')->first();
             // registrar mensualidad
             $mensualidad = new Mensualidad();
             $mensualidad->id_matricula = $matricula->id_matricula;
@@ -623,33 +563,35 @@ class Index extends Component
         $this->admitido = Admitido::where('id_persona', $persona->id_persona)->orderBy('id_admitido', 'desc')->first(); // obtenemos el admitido de la inscripcion de la persona del usuario autenticado en la plataforma
         $inscripcion_ultima = Inscripcion::where('id_persona', $persona->id_persona)->orderBy('id_inscripcion', 'desc')->first(); // inscripcion del usuario logueado
         $evaluacion = $this->admitido ? Evaluacion::where('id_evaluacion', $this->admitido->id_evaluacion)->first() : $inscripcion_ultima->evaluacion()->orderBy('id_evaluacion', 'desc')->first(); // evaluacion de la inscripcion del usuario logueado
-        $ciclo_actual =  $this->admitido ? AdmitidoCiclo::where('id_admitido', $this->admitido->id_admitido)->where('admitido_ciclo_estado', 1)->orderBy('id_admitido_ciclo', 'desc')->first() : null; // ciclo actual del admitido del usuario logueado
         $admision = $this->admitido ? $this->admitido->programa_proceso->admision : null; // admision del admitido del usuario logueado
+        $activar_matricula = false; // variable para activar la matricula
         if ( $admision )
         {
-            $admision_actual = Admision::where('admision_estado', 1)->first(); // admision actual
-            if ( $admision_actual )
-            {
-                if ( $admision->id_admision != $admision_actual->id_admision )
-                {
-                    $admision = null;
-                }
-            }
-
-            $grupos = ProgramaProcesoGrupo::where('id_programa_proceso', $this->admitido->id_programa_proceso)->get(); // grupos de la admision del usuario logueado
-
             $constancia_ingreso = ConstanciaIngreso::where('id_admitido', $this->admitido->id_admitido)->first(); // constancia de ingreso del usuario logueado
 
-            $matricula_gestion = MatriculaGestion::where('id_programa_proceso', $this->admitido ? $this->admitido->id_programa_proceso : '')
+            $matricula_count = Matricula::where('id_admitido', $this->admitido->id_admitido)->where('matricula_estado', 1)->count(); // matricula del usuario logueado
+
+            $matricula_gestion = MatriculaGestion::where('id_programa_proceso', $this->admitido->id_programa_proceso)
                     ->where('matricula_gestion_estado', 1)
                     ->orderBy('id_matricula_gestion', 'desc')
                     ->first(); // gestion de matricula actual
+
+            if ($matricula_gestion) {
+                if ($matricula_gestion->matricula_gestion_fecha_inicio <= date('Y-m-d') && $matricula_gestion->matricula_gestion_fecha_extemporanea_fin >= date('Y-m-d')) {
+                    $activar_matricula = true;
+                }
+            }
+
+            if ($admision->admision_fecha_inicio_matricula <= date('Y-m-d') && $admision->admision_fecha_fin_matricula_extemporanea >= date('Y-m-d')) {
+                $activar_matricula = true;
+            }
         }
         else
         {
-            $grupos = null;
             $constancia_ingreso = null;
+            $matricula_count = 0;
             $matricula_gestion = null;
+            $activar_matricula = false;
         }
         $canales_pagos = CanalPago::where('canal_pago_estado', 1)->get(); // canales de pago
         $conceptos_pagos = ConceptoPago::where('concepto_pago_estado', 1)->get(); // canales de pago
@@ -661,9 +603,9 @@ class Index extends Component
             'conceptos_pagos' => $conceptos_pagos,
             'admision' => $admision,
             'constancia_ingreso' => $constancia_ingreso,
-            'grupos' => $grupos,
+            'matricula_count' => $matricula_count,
             'matricula_gestion' => $matricula_gestion,
-            'ciclo_actual' => $ciclo_actual,
+            'activar_matricula' => $activar_matricula, // variable para activar la matricula
         ]);
     }
 }
