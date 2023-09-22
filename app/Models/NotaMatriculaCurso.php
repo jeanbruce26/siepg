@@ -21,7 +21,8 @@ class NotaMatriculaCurso extends Model
         'nota_observacion',
         'nota_matricula_curso_fecha_creacion',
         'nota_matricula_curso_estado',
-        'id_estado_cursos'
+        'id_estado_cursos',
+        'id_docente'
     ];
 
     public $timestamps = false;
@@ -36,5 +37,11 @@ class NotaMatriculaCurso extends Model
     public function estado_cursos()
     {
         return $this->belongsTo(EstadoCursos::class, 'id_estado_cursos');
+    }
+
+    // docente
+    public function docente()
+    {
+        return $this->belongsTo(Docente::class, 'id_docente');
     }
 }
