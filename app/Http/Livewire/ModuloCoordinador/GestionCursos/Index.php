@@ -6,9 +6,11 @@ use App\Models\Admision;
 use App\Models\Ciclo;
 use App\Models\Coordinador;
 use App\Models\Curso;
+use App\Models\CursoProgramaPlan;
 use App\Models\CursoProgramaProceso;
 use App\Models\Docente;
 use App\Models\DocenteCurso;
+use App\Models\NotaMatriculaCurso;
 use App\Models\Plan;
 use App\Models\Programa;
 use App\Models\ProgramaProcesoGrupo;
@@ -32,17 +34,16 @@ class Index extends Component
     public $title_modal = 'Asignar Docente al Curso Seleccionado'; // Variable para almacenar el título del modal
     public $curso; // Variable para almacenar el curso
     public $id_curso; // Variable para almacenar el id del curso
-    public $curso_programa_proceso; // Variable para almacenar el curso_programa_proceso
-    public $id_curso_programa_proceso; // Variable para almacenar el id del curso_programa_proceso
+    public $curso_programa_plan; // Variable para almacenar el curso_programa_plan
+    public $id_curso_programa_plan; // Variable para almacenar el id del curso_programa_plan
     public $docentes; // Variable para almacenar el docente
     public $docente; // Variable para almacenar el docente del formulario del modal
     public $id_docente_curso; // Variable para almacenar el id del docente_curso
     public $grupo; // Variable para almacenar el grupo
     public $grupos; // Variable para almacenar los grupos
+    public $proceso; // Variable para almacenar el proceso
 
     // variables para los filtros
-    public $filtro_proceso; // Variable para almacenar el proceso
-    public $proceso_data; // Variable para almacenar el proceso
     public $filtro_plan; // Variable para almacenar el plan de estudios
     public $plan_data; // Variable para almacenar el plan de estudios
     public $filtro_programa; // Variable para almacenar el programa
@@ -52,15 +53,12 @@ class Index extends Component
 
     protected $queryString = [ // Variables de búsqueda
         'search' => ['except' => ''],
-        'page' => ['except' => 1],
-        'filtro_proceso' => ['except' => ''],
-        'proceso_data' => ['except' => ''],
-        'filtro_plan' => ['except' => ''],
-        'plan_data' => ['except' => ''],
-        'filtro_programa' => ['except' => ''],
-        'programa_data' => ['except' => ''],
-        'filtro_ciclo' => ['except' => ''],
-        'ciclo_data' => ['except' => ''],
+        'filtro_plan' => ['except' => '', 'as' => 'fp'],
+        'plan_data' => ['except' => '', 'as' => 'plan'],
+        'filtro_programa' => ['except' => '', 'as' => 'fpr'],
+        'programa_data' => ['except' => '', 'as' => 'programa'],
+        'filtro_ciclo' => ['except' => '', 'as' => 'fc'],
+        'ciclo_data' => ['except' => '', 'as' => 'ciclo'],
     ];
 
     protected $listeners = [ // Eventos
@@ -74,6 +72,7 @@ class Index extends Component
         {
             $this->validateOnly($propertyName, [ // Validación de los campos
                 'docente' => 'required|integer',
+                'proceso' => 'required|integer',
                 'grupo' => 'required|integer'
             ]);
         }
@@ -86,9 +85,13 @@ class Index extends Component
         $this->coordinador = Coordinador::where('id_trabajador', $this->trabajador->id_trabajador)->first();
     }
 
+    public function updatedSearch() // Método que se ejecuta al modificar la variable de búsqueda
+    {
+        $this->resetPage(); // Reseteamos la paginación
+    }
+
     public function aplicar_filtro()
     {
-        $this->proceso_data = $this->filtro_proceso; // Se almacena el proceso
         $this->plan_data = $this->filtro_plan; // Se almacena el plan de estudios
         $this->programa_data = $this->filtro_programa; // Se almacena el programa
         $this->ciclo_data = $this->filtro_ciclo; // Se almacena el ciclo
@@ -97,8 +100,6 @@ class Index extends Component
     public function resetear_filtro()
     {
         $this->reset([
-            'filtro_proceso',
-            'proceso_data',
             'filtro_plan',
             'plan_data',
             'filtro_programa',
@@ -114,17 +115,10 @@ class Index extends Component
             'title_modal',
             'curso',
             'id_curso',
-            'curso_programa_proceso',
-            'id_curso_programa_proceso',
+            'curso_programa_plan',
+            'id_curso_programa_plan',
+            'proceso',
             'docentes',
-            'docente',
-            'grupo',
-        ]);
-    }
-
-    public function cancelar_modal()
-    {
-        $this->reset([
             'docente',
             'grupo',
         ]);
@@ -132,7 +126,18 @@ class Index extends Component
         $this->resetValidation();
     }
 
-    public function cargar_datos(CursoProgramaProceso $curso_programa_proceso, $modo)
+    public function cancelar_modal()
+    {
+        $this->reset([
+            'docente',
+            'proceso',
+            'grupo',
+        ]);
+        $this->resetErrorBag();
+        $this->resetValidation();
+    }
+
+    public function cargar_datos(CursoProgramaPlan $curso_programa_plan, $modo)
     {
         $this->modo = $modo; // Se almacena el modo
         if($this->modo == 'select')
@@ -143,24 +148,29 @@ class Index extends Component
         {
             $this->title_modal = 'Detalle del Cursos y Docentes Asignados'; // Se almacena el título del modal
         }
-        $this->curso_programa_proceso = $curso_programa_proceso; // Se almacena el curso_programa_proceso
-        $this->id_curso_programa_proceso = $curso_programa_proceso->id_curso_programa_proceso; // Se almacena el id del curso_programa_proceso
-        $this->curso = $curso_programa_proceso->curso; // Se almacena el curso
-        $this->id_curso = $curso_programa_proceso->curso->id_curso; // Se almacena el id del curso
-        $this->docentes = DocenteCurso::where('id_curso_programa_proceso', $this->id_curso_programa_proceso)->get(); // Se almacena el docente
-        $this->grupos = ProgramaProcesoGrupo::where('id_programa_proceso', $curso_programa_proceso->id_programa_proceso)->get(); // Se almacenan los grupos
+        $this->curso_programa_plan = $curso_programa_plan; // Se almacena el curso_programa_plan
+        $this->id_curso_programa_plan = $curso_programa_plan->id_curso_programa_plan; // Se almacena el id del curso_programa_plan
+        $this->curso = $curso_programa_plan->curso; // Se almacena el curso
+        $this->id_curso = $curso_programa_plan->curso->id_curso; // Se almacena el id del curso
+        $this->docentes = DocenteCurso::where('id_curso_programa_plan', $this->id_curso_programa_plan)->get(); // Se almacena el docente
     }
 
     public function asignar_docente()
     {
         $this->validate([ // Validación de los campos
             'docente' => 'required|integer',
+            'proceso' => 'required|integer',
+            'grupo' => 'required|integer'
         ]);
 
         // Se verifica si el docente ya está asignado al curso
-        $docente_curso = DocenteCurso::where('id_curso_programa_proceso', $this->id_curso_programa_proceso)->where('id_docente', $this->docente)->where('id_programa_proceso_grupo', $this->grupo)->first();
-        if($docente_curso)
-        {
+        $docente_curso = DocenteCurso::where('id_curso_programa_plan', $this->id_curso_programa_plan)
+            ->where('id_docente', $this->docente)
+            ->where('id_admision', $this->proceso)
+            ->where('id_programa_proceso_grupo', $this->grupo)
+            ->where('docente_curso_estado', 1)
+            ->first();
+        if ($docente_curso) {
             // emitir alerta para mostrar mensaje de error
             $this->dispatchBrowserEvent('alerta_curso', [
                 'title' => '¡Error!',
@@ -172,10 +182,29 @@ class Index extends Component
             return;
         }
 
+        // se verifica si ya existe docente asignado al curso en el mismo proceso y grupo
+        $docente_curso = DocenteCurso::where('id_curso_programa_plan', $this->id_curso_programa_plan)
+            ->where('id_admision', $this->proceso)
+            ->where('id_programa_proceso_grupo', $this->grupo)
+            ->where('docente_curso_estado', 1)
+            ->first();
+        if ($docente_curso) {
+            // emitir alerta para mostrar mensaje de error
+            $this->dispatchBrowserEvent('alerta_curso', [
+                'title' => '¡Error!',
+                'text' => 'Ya existe un docente asignado al curso en el mismo proceso y grupo seleccionado.',
+                'icon' => 'error',
+                'confirmButtonText' => 'Aceptar',
+                'color' => 'danger'
+            ]);
+            return;
+        }
+
         // registrar docente
         $docente_curso = new DocenteCurso();
         $docente_curso->id_docente = $this->docente;
-        $docente_curso->id_curso_programa_proceso = $this->id_curso_programa_proceso;
+        $docente_curso->id_curso_programa_plan = $this->id_curso_programa_plan;
+        $docente_curso->id_admision = $this->proceso;
         $docente_curso->id_programa_proceso_grupo = $this->grupo;
         $docente_curso->docente_curso_fecha_creacion = date('Y-m-d H:i:s');
         $docente_curso->docente_curso_estado = 1;
@@ -191,13 +220,10 @@ class Index extends Component
         ]);
 
         // limpiamos el combo docente
-        $this->reset([
-            'docente',
-            'grupo',
-        ]);
+        $this->cancelar_modal();
 
         // Se actualiza la lista de docentes
-        $this->docentes = DocenteCurso::where('id_curso_programa_proceso', $this->id_curso_programa_proceso)->get(); // Se almacena el docente
+        $this->docentes = DocenteCurso::where('id_curso_programa_plan', $this->id_curso_programa_plan)->get(); // Se almacena el docente
     }
 
     public function alerta_cambiar_estado(DocenteCurso $docente_curso)
@@ -237,6 +263,27 @@ class Index extends Component
         }
         else if ($docente_curso->docente_curso_estado == 0)
         {
+            // verificamos si no hay mas docentes activos en el curso
+            $docente_curso_activo = DocenteCurso::where('id_curso_programa_plan', $docente_curso->id_curso_programa_plan)
+                ->where('id_admision', $docente_curso->id_admision)
+                ->where('id_programa_proceso_grupo', $docente_curso->id_programa_proceso_grupo)
+                ->where('docente_curso_estado', 1)
+                ->first();
+
+            // si ya existen docentes activos en el curso no se puede activar al docente
+            if ($docente_curso_activo) {
+                // emitir alerta para mostrar mensaje de error
+                $this->dispatchBrowserEvent('alerta_curso', [
+                    'title' => '¡Error!',
+                    'text' => 'No se puede activar el docente, ya existe un docente activo en el curso.',
+                    'icon' => 'error',
+                    'confirmButtonText' => 'Aceptar',
+                    'color' => 'danger'
+                ]);
+                return;
+            }
+
+            // cambiamos el estado ha activo
             $docente_curso->docente_curso_estado = 1;
             $docente_curso->save();
 
@@ -251,11 +298,30 @@ class Index extends Component
         }
 
         // Se actualiza la lista de docentes
-        $this->docentes = DocenteCurso::where('id_curso_programa_proceso', $this->id_curso_programa_proceso)->get(); // Se almacena el docente
+        $this->docentes = DocenteCurso::where('id_curso_programa_plan', $this->id_curso_programa_plan)->get(); // Se almacena el docente
     }
 
     public function alerta_eliminar_docente_asignado(DocenteCurso $docente_curso)
     {
+        // buscamos si el docente tiene notas del curso registrado
+        $nota_matricula_curso = NotaMatriculaCurso::join('matricula_curso', 'nota_matricula_curso.id_matricula_curso', '=', 'matricula_curso.id_matricula_curso')
+            ->join('matricula', 'matricula_curso.id_matricula', '=', 'matricula.id_matricula')
+            ->where('matricula_curso.id_curso_programa_plan', $docente_curso->id_curso_programa_plan)
+            ->where('nota_matricula_curso.id_docente', $docente_curso->id_docente)
+            ->where('matricula.id_programa_proceso_grupo', $docente_curso->id_programa_proceso_grupo)
+            ->get();
+        // eqmitimos alerta para mostrar mensaje de error
+        if ($nota_matricula_curso->count() > 0 ) {
+            $this->dispatchBrowserEvent('alerta_curso', [
+                'title' => '¡Error!',
+                'text' => 'El docente tiene notas registradas en el curso, no se puede eliminar. En ese caso, desactive el docente.',
+                'icon' => 'error',
+                'confirmButtonText' => 'Aceptar',
+                'color' => 'danger'
+            ]);
+            return;
+        }
+
         $this->id_docente_curso = $docente_curso->id_docente_curso;
         // emitir alerta para poder modificar el estado del docente
         $this->dispatchBrowserEvent('alerta_cambiar_estado_docente_curso', [
@@ -287,16 +353,14 @@ class Index extends Component
         ]);
 
         // Se actualiza la lista de docentes
-        $this->docentes = DocenteCurso::where('id_curso_programa_proceso', $this->id_curso_programa_proceso)->get(); // Se almacena el docente
+        $this->docentes = DocenteCurso::where('id_curso_programa_plan', $this->id_curso_programa_plan)->get(); // Se almacena el docente
     }
 
     public function render()
     {
-        $cursos = CursoProgramaProceso::join('curso', 'curso_programa_proceso.id_curso', '=', 'curso.id_curso')
+        $cursos = CursoProgramaPlan::join('curso', 'curso_programa_plan.id_curso', '=', 'curso.id_curso')
                     ->join('ciclo', 'curso.id_ciclo', '=', 'ciclo.id_ciclo')
-                    ->join('programa_proceso', 'curso_programa_proceso.id_programa_proceso', '=', 'programa_proceso.id_programa_proceso')
-                    ->join('admision', 'programa_proceso.id_admision', '=', 'admision.id_admision')
-                    ->join('programa_plan', 'programa_proceso.id_programa_plan', '=', 'programa_plan.id_programa_plan')
+                    ->join('programa_plan', 'curso_programa_plan.id_programa_plan', '=', 'programa_plan.id_programa_plan')
                     ->join('plan', 'programa_plan.id_plan', '=', 'plan.id_plan')
                     ->join('programa', 'programa_plan.id_programa', '=', 'programa.id_programa')
                     ->where(function ($query) {
@@ -304,20 +368,37 @@ class Index extends Component
                             ->orWhere('curso.curso_nombre', 'like', '%' . $this->search . '%');
                     })
                     ->where('programa.id_facultad', $this->coordinador->id_facultad)
-                    ->where('programa_proceso.id_admision', $this->proceso_data == null ? '!=' : '=', $this->proceso_data)
                     ->where('programa_plan.id_plan', $this->plan_data == null ? '!=' : '=', $this->plan_data)
                     ->where('programa.id_programa', $this->programa_data == null ? '!=' : '=', $this->programa_data)
                     ->where('curso.id_ciclo', $this->ciclo_data == null ? '!=' : '=', $this->ciclo_data)
                     ->orderBy('ciclo.id_ciclo', 'asc')
+                    ->orderBy('curso.curso_codigo', 'asc')
                     ->paginate(10);
 
-        $planes = Plan::where('plan_estado', 1)->get();
-        $procesos = Admision::all();
+        $planes = Plan::where('plan_estado', 1)->orderBy('plan', 'desc')->get();
+        $procesos = Admision::orderBy('admision', 'desc')->get();
         $programas = Programa::where('id_facultad', $this->coordinador->id_facultad)->where('programa_estado', 1)->get();
-        $ciclos = Ciclo::where('ciclo_estado', 1)->get();
+        $programa_tipo_filtro = $this->filtro_programa ? Programa::find($this->filtro_programa)->programa_tipo : null;
+        $ciclos = Ciclo::where('ciclo_estado', 1)
+                    ->where(function ($query) use ($programa_tipo_filtro) {
+                        $query->where('ciclo_programa', 0)
+                            ->orWhere('ciclo_programa', $programa_tipo_filtro ? '=' : '!=' , $programa_tipo_filtro);
+                    })
+                    ->get();
         $docentes_model = Docente::join('trabajador', 'docente.id_trabajador', '=', 'trabajador.id_trabajador')
                                 ->where('docente.docente_estado', 1)
                                 ->get();
+
+        $this->grupos = $this->curso_programa_plan ?
+            ($this->proceso ?
+                ProgramaProcesoGrupo::join('programa_proceso', 'programa_proceso_grupo.id_programa_proceso', '=', 'programa_proceso.id_programa_proceso')
+                    ->join('programa_plan', 'programa_proceso.id_programa_plan', '=', 'programa_plan.id_programa_plan')
+                    ->join('programa', 'programa_plan.id_programa', '=', 'programa.id_programa')
+                    ->where('programa_plan.id_programa_plan', $this->curso_programa_plan->id_programa_plan)
+                    ->where('programa_proceso.id_admision', $this->proceso)
+                    ->get() :
+                collect()) :
+            collect();
 
         return view('livewire.modulo-coordinador.gestion-cursos.index', [
             'cursos' => $cursos,
