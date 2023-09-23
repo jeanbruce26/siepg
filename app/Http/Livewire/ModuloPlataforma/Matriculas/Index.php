@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\ModuloPlataforma\Matriculas;
 
+use App\Jobs\ProcessEnvioFichaMatricula;
 use App\Models\Admitido;
 use App\Models\CostoEnseñanza;
 use App\Models\CursoProgramaPlan;
@@ -528,8 +529,16 @@ class Index extends Component
         }
         Pdf::loadView('modulo-plataforma.matriculas.ficha-matricula', $data)->save(public_path($path . $nombre_pdf));
 
+        // registramos la url de la ficha de matricula
         $matricula->matricula_ficha_url = $path . $nombre_pdf;
         $matricula->save();
+
+        // datos para el correo
+        $nombre = ucwords(strtolower($admitido->persona->nombre_completo));
+        $correo = $admitido->persona->correo;
+
+        // enviar correo la ficha de matricula
+        ProcessEnvioFichaMatricula::dispatch($data, $path, $nombre_pdf, $nombre, $correo);
     }
 
     public function render()
