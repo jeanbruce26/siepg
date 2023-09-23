@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\ModuloPlataforma\ConstanciaIngreso;
 
+use App\Jobs\ProcessEnvioConstanciaIngreso;
 use App\Models\Admitido;
 use App\Models\ConstanciaIngreso;
 use App\Models\Evaluacion;
@@ -133,6 +134,14 @@ class Index extends Component
         }
         Pdf::loadView('modulo-plataforma.constancia-ingreso.ficha-constancia-ingreso', $data)->save(public_path($path . $nombre_pdf));
 
+        // datos para el correo
+        $nombre = ucwords(strtolower($nombre));
+        $correo = $this->admitido->persona->correo;
+
+        // enviar constancia de ingreso al correo
+        ProcessEnvioConstanciaIngreso::dispatch($data, $path, $nombre_pdf, $nombre, $correo);
+
+        // editamos la constancia de ingreso
         $constancia = ConstanciaIngreso::where('id_admitido', $this->admitido->id_admitido)->first();
         $constancia->constancia_ingreso_codigo = $codigo_constancia;
         $constancia->constancia_ingreso_url = $path . $nombre_pdf;
