@@ -15,6 +15,7 @@ class MatriculaCurso extends Model
         'id_matricula_curso',
         'id_matricula',
         'id_curso_programa_plan',
+        'id_admision',
         'matricula_curso_fecha_creacion',
         'matricula_curso_estado'
     ];
@@ -31,5 +32,11 @@ class MatriculaCurso extends Model
     public function curso_programa_plan()
     {
         return $this->belongsTo(CursoProgramaPlan::class, 'id_curso_programa_plan');
+    }
+
+    // admision
+    public function admision()
+    {
+        return $this->belongsTo(Admision::class, 'id_admision');
     }
 }

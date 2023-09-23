@@ -23,6 +23,7 @@ class Matricula extends Model
         'id_programa_proceso_grupo',
         'id_pago',
         'verificacion_costo_enseñanza',
+        'matricula_primer_ciclo'
     ];
 
     public $timestamps = false;
