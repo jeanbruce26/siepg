@@ -216,7 +216,7 @@
                                         <option></option>
                                         @foreach ($grupos as $item)
                                         @php
-                                            $contador_matriculados_grupos = App\Models\Matricula::where('id_programa_proceso_grupo', $item->id_programa_proceso_grupo)->where('id_ciclo', 1)->count();
+                                            $contador_matriculados_grupos = App\Models\Matricula::where('id_programa_proceso_grupo', $item->id_programa_proceso_grupo)->where('matricula_primer_ciclo', 1)->count();
                                         @endphp
                                         <option value="{{ $item->id_programa_proceso_grupo }}" @if($item->grupo_cantidad <= $contador_matriculados_grupos) disabled @endif>
                                             GRUPO {{ $item->grupo_detalle }} - CUPOS: {{ $item->grupo_cantidad - $contador_matriculados_grupos }}

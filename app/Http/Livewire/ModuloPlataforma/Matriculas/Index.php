@@ -399,6 +399,9 @@ class Index extends Component
             $matricula->id_programa_proceso_grupo = $grup_antiguo;
         }
         $matricula->id_pago = $pago->id_pago;
+        if ( $matriculas->count() == 0 ) {
+            $matricula->matricula_primer_ciclo = 1; // si es la primera matricula del admitido
+        }
         $matricula->save();
 
         // cambiar de estado
@@ -417,6 +420,7 @@ class Index extends Component
                 $matricula_curso = new MatriculaCurso();
                 $matricula_curso->id_matricula = $matricula->id_matricula;
                 $matricula_curso->id_curso_programa_plan = $item->id_curso_programa_plan;
+                $matricula_curso->id_admision = $admitido->programa_proceso->id_admision;
                 $matricula_curso->matricula_curso_fecha_creacion = date('Y-m-d H:i:s');
                 $matricula_curso->matricula_curso_estado = 1;
                 $matricula_curso->save();
