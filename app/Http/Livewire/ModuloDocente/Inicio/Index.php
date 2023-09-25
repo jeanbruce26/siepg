@@ -49,6 +49,23 @@ class Index extends Component
         $this->data_filtro_proceso = $this->filtro_proceso;
     }
 
+    public function ingresar(DocenteCurso $docente_curso)
+    {
+        if ($docente_curso->docente_curso_estado == 0) {
+            // emitimos alerta de acceso denegado por curso inhabilitado
+            $this->dispatchBrowserEvent('alerta-basica', [
+                'title' => '¡Error!',
+                'text' => 'El curso se encuentra inhabilitado.',
+                'icon' => 'error',
+                'confirmButtonText' => 'Aceptar',
+                'color' => 'danger'
+            ]);
+            return;
+        }
+
+        return redirect()->route('docente.matriculados', ['id_docente_curso' => $docente_curso->id_docente_curso]);
+    }
+
     public function render()
     {
         $usuario = auth('usuario')->user(); // obtenemos el usuario autenticado
@@ -92,6 +109,8 @@ class Index extends Component
                             ->orWhere('curso.curso_codigo', 'like', '%' . $this->search . '%');
                     })
                     ->where('docente_curso_estado', $this->data_filtro_estado == null ? '!=' : '=', $this->data_filtro_estado)
+                    ->orderBy('docente_curso.docente_curso_estado', 'asc')
+                    ->orderBy('curso.curso_codigo', 'asc')
                     ->get();
 
                 $colores = [

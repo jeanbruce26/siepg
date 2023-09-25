@@ -85,13 +85,13 @@
                                                     <div class="form-check mb-2 form-check-custom">
                                                         <input class="form-check-input" wire:model="filtro_estado" type="radio" value="1" id="activo"/>
                                                         <label class="form-check-label" for="activo">
-                                                            Activo
+                                                            Curso Activo
                                                         </label>
                                                     </div>
                                                     <div class="form-check mb-2 form-check-custom">
                                                         <input class="form-check-input" wire:model="filtro_estado" type="radio" value="0" id="inactivo"/>
                                                         <label class="form-check-label" for="inactivo">
-                                                            Inactivo
+                                                            Inhabilitado
                                                         </label>
                                                     </div>
                                                     <div class="form-check mb-2 form-check-custom">
@@ -150,16 +150,21 @@
                                                         <div class="card card-bordered shadow-sm h-100 hover-elevate-up parent-hover">
                                                             @if ($curso['docente_curso_estado'] == 1)
                                                                 <div class="ribbon ribbon-top">
-                                                                    <div class="ribbon-label bg-success fw-bold fs-5">Activo</div>
+                                                                    <div class="ribbon-label bg-success fw-bold fs-5">
+                                                                        Curso Activo
+                                                                    </div>
                                                                 </div>
                                                             @elseif ($curso['docente_curso_estado'] == 0)
                                                                 <div class="ribbon ribbon-top">
-                                                                    <div class="ribbon-label bg-danger fw-bold fs-5">Inactivo</div>
+                                                                    <div class="ribbon-label bg-danger fw-bold fs-5">
+                                                                        Inhabilitado
+                                                                    </div>
                                                                 </div>
                                                             @elseif ($curso['docente_curso_estado'] == 2)
                                                                 <div class="ribbon ribbon-top">
-                                                                    <div class="ribbon-label bg-secondary text-gray-700 fw-bold fs-5">Curso
-                                                                        Terminado</div>
+                                                                    <div class="ribbon-label bg-secondary text-gray-700 fw-bold fs-5">
+                                                                        Curso Terminado
+                                                                    </div>
                                                                 </div>
                                                             @endif
                                                             <div
@@ -179,9 +184,9 @@
                                                                     </span>
                                                                 </div>
                                                                 <div class="d-flex flex-column row-gap-5">
-                                                                    <a href="{{ route('docente.matriculados', ['id_docente_curso' => $curso['id_docente_curso']]) }}" class="btn btn-primary w-100">
+                                                                    <button wire:click="ingresar({{ $curso['id_docente_curso'] }})" class="btn btn-primary w-100">
                                                                         Ingresar
-                                                                    </a>
+                                                                    </button>
                                                                 </div>
                                                             </div>
                                                         </div>

@@ -5,10 +5,10 @@
 @endsection
 @section('scripts')
     <script>
-        window.addEventListener('modal_encuesta', event => {
-            $('#modal_encuesta').modal(event.detail.action);
-        })
-        window.addEventListener('alerta-encuesta', event => {
+        // window.addEventListener('modal_encuesta', event => {
+        //     $('#modal_encuesta').modal(event.detail.action);
+        // })
+        window.addEventListener('alerta-basica', event => {
             Swal.fire({
                 title: event.detail.title,
                 text: event.detail.text,
