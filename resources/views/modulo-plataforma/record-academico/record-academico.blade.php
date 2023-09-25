@@ -238,8 +238,8 @@
     </div>
     @foreach ($ciclos as $item)
         @php
-            $cursos = App\Models\CursoProgramaProceso::join('curso', 'curso.id_curso', '=', 'curso_programa_proceso.id_curso')
-                ->where('curso_programa_proceso.id_programa_proceso', $programa->id_programa_proceso)
+            $cursos = App\Models\CursoProgramaPlan::join('curso', 'curso.id_curso', '=', 'curso_programa_plan.id_curso')
+                ->where('curso_programa_plan.id_programa_plan', $programa->id_programa_plan)
                 ->where('curso.id_ciclo', $item->id_ciclo)
                 ->get();
         @endphp
@@ -259,7 +259,7 @@
                         $data = App\Models\NotaMatriculaCurso::join('matricula_curso', 'matricula_curso.id_matricula_curso', '=', 'nota_matricula_curso.id_matricula_curso')
                             ->join('matricula', 'matricula.id_matricula', '=', 'matricula_curso.id_matricula')
                             ->join('programa_proceso_grupo', 'programa_proceso_grupo.id_programa_proceso_grupo', '=', 'matricula.id_programa_proceso_grupo')
-                            ->where('matricula_curso.id_curso_programa_proceso', $curso->id_curso_programa_proceso)
+                            ->where('matricula_curso.id_curso_programa_plan', $curso->id_curso_programa_plan)
                             ->where('matricula.id_admitido', $admitido->id_admitido)
                             ->first();
                         $promedio += $data ? $data->nota_promedio_final : 0;
@@ -306,7 +306,7 @@
                         $data = App\Models\NotaMatriculaCurso::join('matricula_curso', 'matricula_curso.id_matricula_curso', '=', 'nota_matricula_curso.id_matricula_curso')
                             ->join('matricula', 'matricula.id_matricula', '=', 'matricula_curso.id_matricula')
                             ->join('programa_proceso_grupo', 'programa_proceso_grupo.id_programa_proceso_grupo', '=', 'matricula.id_programa_proceso_grupo')
-                            ->where('matricula_curso.id_curso_programa_proceso', $curso->id_curso_programa_proceso)
+                            ->where('matricula_curso.id_curso_programa_plan', $curso->id_curso_programa_plan)
                             ->where('matricula.id_admitido', $admitido->id_admitido)
                             ->first();
                     @endphp

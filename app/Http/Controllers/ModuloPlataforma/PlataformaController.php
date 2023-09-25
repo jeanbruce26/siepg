@@ -66,10 +66,9 @@ class PlataformaController extends Controller
 
     public function record_academico_ficha($id_admitido)
     {
-        $persona = Persona::where('numero_documento', auth('plataforma')->user()->usuario_estudiante)->first(); // persona del usuario logueado
+        $persona = Persona::where('id_persona', auth('plataforma')->user()->id_persona)->first(); // persona del usuario logueado
         $admitido_logueado = Admitido::where('id_persona', $persona->id_persona)->orderBy('id_admitido', 'desc')->first(); // admitido del usuario logueado
         $admitido = Admitido::where('id_admitido', $id_admitido)->first(); // usuario logueado
-        // dd($admitido);
         if ($admitido == null) {
             abort(403, 'No se encontro el registro del admitido');
         }

@@ -18,7 +18,7 @@
                 </ul>
             </div>
             <div class="d-flex align-items-center gap-2 gap-lg-3">
-                <a href="{{ route('plataforma.record-academico-ficha', ['id_admitido' => $admitido->id_admitido]) }}" class="btn fw-bold btn-primary">
+                <a href="{{ route('plataforma.record-academico-ficha', ['id_admitido' => $admitido->id_admitido]) }}" target="_blank" class="btn fw-bold btn-primary">
                     Descargar Record Académico
                 </a>
             </div>
@@ -28,19 +28,6 @@
         <div id="kt_app_content_container" class="app-container container-fluid">
             <div class="row mb-5 mb-xl-10">
                 <div class="col-md-12 mb-md-5 mb-xl-10">
-                    {{-- alerta  --}}
-                    {{-- <div class="alert bg-light-primary border border-3 border-primary d-flex align-items-center p-5 mb-5">
-                        <i class="ki-duotone ki-information-5 fs-2qx me-4 text-primary">
-                            <i class="path1"></i>
-                            <i class="path2"></i>
-                            <i class="path3"></i>
-                        </i>
-                        <div class="d-flex flex-column">
-                            <span class="fw-bold fs-5">
-                                Acontinuación se muestra la lista de sus pagos realizados en la plataforma, el cual podrá filtrar por concepto de pago.
-                            </span>
-                        </div>
-                    </div> --}}
                     <div class="card px-5 py-4 mb-5">
                         <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-sm-items-between gap-2">
                             <table>
