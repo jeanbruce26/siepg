@@ -2,21 +2,21 @@
 
 namespace App\Http\Livewire\ModuloDocente\Matriculados;
 
-use App\Models\CursoProgramaProceso;
+use App\Models\CursoProgramaPlan;
 use App\Models\Docente;
 use App\Models\DocenteCurso;
 use App\Models\MatriculaCurso;
 use App\Models\NotaMatriculaCurso;
 use Livewire\Component;
-use Livewire\WithPagination;
 
 class Index extends Component
 {
     public $id_docente_curso;
     public $docente_curso;
     public $id_programa_proceso_grupo;
-    public $curso_programa_proceso;
-    public $id_curso_programa_proceso;
+    public $curso_programa_plan;
+    public $id_curso_programa_plan;
+    public $id_admision;
     public $curso;
     public $grupo;
 
@@ -57,10 +57,11 @@ class Index extends Component
             abort(403);
         }
 
-        $this->curso_programa_proceso = CursoProgramaProceso::find($this->docente_curso->id_curso_programa_proceso);
-        $this->id_curso_programa_proceso = $this->curso_programa_proceso->id_curso_programa_proceso;
+        $this->curso_programa_plan = CursoProgramaPlan::find($this->docente_curso->id_curso_programa_plan);
+        $this->id_curso_programa_plan = $this->curso_programa_plan->id_curso_programa_plan;
         $this->id_programa_proceso_grupo = $this->docente_curso->id_programa_proceso_grupo;
-        $this->curso = $this->curso_programa_proceso->curso;
+        $this->id_admision = $this->docente_curso->id_admision;
+        $this->curso = $this->curso_programa_plan->curso;
         $this->grupo = $this->docente_curso->programa_proceso_grupo;
     }
 
@@ -75,14 +76,14 @@ class Index extends Component
         $matriculados_count = MatriculaCurso::join('matricula', 'matricula_curso.id_matricula', 'matricula.id_matricula')
                         ->join('admitido', 'matricula.id_admitido', 'admitido.id_admitido')
                         ->join('persona', 'admitido.id_persona', 'persona.id_persona')
-                        ->where('matricula_curso.id_curso_programa_proceso', $this->id_curso_programa_proceso)
+                        ->where('matricula_curso.id_curso_programa_plan', $this->id_curso_programa_plan)
                         ->where('matricula.id_programa_proceso_grupo', $this->id_programa_proceso_grupo)
                         ->count();
 
         $matriculados_finalizados_count = MatriculaCurso::join('matricula', 'matricula_curso.id_matricula', 'matricula.id_matricula')
                         ->join('admitido', 'matricula.id_admitido', 'admitido.id_admitido')
                         ->join('persona', 'admitido.id_persona', 'persona.id_persona')
-                        ->where('matricula_curso.id_curso_programa_proceso', $this->id_curso_programa_proceso)
+                        ->where('matricula_curso.id_curso_programa_plan', $this->id_curso_programa_plan)
                         ->where('matricula.id_programa_proceso_grupo', $this->id_programa_proceso_grupo)
                         ->where('matricula_curso.matricula_curso_estado', 2)
                         ->count();
@@ -123,11 +124,6 @@ class Index extends Component
         }
 
         return false;
-    }
-
-    public function updatingSearch()
-    {
-        $this->resetPage();
     }
 
     public function limpiar_modal()
@@ -259,6 +255,7 @@ class Index extends Component
             {
                 $nota_matricula_curso->id_estado_cursos = 3;
             }
+            $nota_matricula_curso->id_docente = $this->docente_curso->id_docente;
             $nota_matricula_curso->save();
 
             // cambiamos el estado de la matricula_curso a finalizado
@@ -287,14 +284,14 @@ class Index extends Component
         $matriculados_count = MatriculaCurso::join('matricula', 'matricula_curso.id_matricula', 'matricula.id_matricula')
                         ->join('admitido', 'matricula.id_admitido', 'admitido.id_admitido')
                         ->join('persona', 'admitido.id_persona', 'persona.id_persona')
-                        ->where('matricula_curso.id_curso_programa_proceso', $this->id_curso_programa_proceso)
+                        ->where('matricula_curso.id_curso_programa_plan', $this->id_curso_programa_plan)
                         ->where('matricula.id_programa_proceso_grupo', $this->id_programa_proceso_grupo)
                         ->count();
 
         $matriculados_finalizados_count = MatriculaCurso::join('matricula', 'matricula_curso.id_matricula', 'matricula.id_matricula')
                         ->join('admitido', 'matricula.id_admitido', 'admitido.id_admitido')
                         ->join('persona', 'admitido.id_persona', 'persona.id_persona')
-                        ->where('matricula_curso.id_curso_programa_proceso', $this->id_curso_programa_proceso)
+                        ->where('matricula_curso.id_curso_programa_plan', $this->id_curso_programa_plan)
                         ->where('matricula.id_programa_proceso_grupo', $this->id_programa_proceso_grupo)
                         ->where('matricula_curso.matricula_curso_estado', 2)
                         ->count();
@@ -316,8 +313,9 @@ class Index extends Component
         $this->matriculados = MatriculaCurso::join('matricula', 'matricula_curso.id_matricula', 'matricula.id_matricula')
                         ->join('admitido', 'matricula.id_admitido', 'admitido.id_admitido')
                         ->join('persona', 'admitido.id_persona', 'persona.id_persona')
-                        ->where('matricula_curso.id_curso_programa_proceso', $this->id_curso_programa_proceso)
+                        ->where('matricula_curso.id_curso_programa_plan', $this->id_curso_programa_plan)
                         ->where('matricula.id_programa_proceso_grupo', $this->id_programa_proceso_grupo)
+                        ->where('matricula_curso.id_admision', $this->id_admision)
                         ->where(function ($query) {
                             $query->where('persona.nombre_completo', 'like', '%'.$this->search.'%')
                                 ->orWhere('admitido.admitido_codigo', 'like', '%'.$this->search.'%');
@@ -329,14 +327,14 @@ class Index extends Component
         $matriculados_count = MatriculaCurso::join('matricula', 'matricula_curso.id_matricula', 'matricula.id_matricula')
                         ->join('admitido', 'matricula.id_admitido', 'admitido.id_admitido')
                         ->join('persona', 'admitido.id_persona', 'persona.id_persona')
-                        ->where('matricula_curso.id_curso_programa_proceso', $this->id_curso_programa_proceso)
+                        ->where('matricula_curso.id_curso_programa_plan', $this->id_curso_programa_plan)
                         ->where('matricula.id_programa_proceso_grupo', $this->id_programa_proceso_grupo)
                         ->count();
 
         $matriculados_finalizados_count = MatriculaCurso::join('matricula', 'matricula_curso.id_matricula', 'matricula.id_matricula')
                         ->join('admitido', 'matricula.id_admitido', 'admitido.id_admitido')
                         ->join('persona', 'admitido.id_persona', 'persona.id_persona')
-                        ->where('matricula_curso.id_curso_programa_proceso', $this->id_curso_programa_proceso)
+                        ->where('matricula_curso.id_curso_programa_plan', $this->id_curso_programa_plan)
                         ->where('matricula.id_programa_proceso_grupo', $this->id_programa_proceso_grupo)
                         ->where('matricula_curso.matricula_curso_estado', 2)
                         ->count();
