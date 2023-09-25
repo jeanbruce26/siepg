@@ -14,11 +14,13 @@
                 </ul>
             </div>
             @if ($admitido)
-                <div class="d-flex align-items-center gap-2 gap-lg-3">
-                    <a href="#modal_pago_plataforma" wire:click="modo" class="btn fw-bold btn-primary" data-bs-toggle="modal" data-bs-target="#modal_pago_plataforma">
-                        Nuevo Pago
-                    </a>
-                </div>
+                @if ($admitido->admitido_estado == 1)
+                    <div class="d-flex align-items-center gap-2 gap-lg-3">
+                        <a href="#modal_pago_plataforma" wire:click="modo" class="btn fw-bold btn-primary" data-bs-toggle="modal" data-bs-target="#modal_pago_plataforma">
+                            Nuevo Pago
+                        </a>
+                    </div>
+                @endif
             @endif
         </div>
     </div>

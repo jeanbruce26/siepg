@@ -15,11 +15,15 @@
                     <li class="breadcrumb-item text-muted">Gestión de Matricula</li>
                 </ul>
             </div>
-            <div class="d-flex align-items-center gap-2 gap-lg-3">
-                <button type="button" class="btn fw-bold btn-primary" wire:click="abrir_modal">
-                    Generar Matricula
-                </button>
-            </div>
+            @if ($admitido)
+                @if ($admitido->admitido_estado == 1)
+                    <div class="d-flex align-items-center gap-2 gap-lg-3">
+                        <button type="button" class="btn fw-bold btn-primary" wire:click="abrir_modal">
+                            Generar Matricula
+                        </button>
+                    </div>
+                @endif
+            @endif
         </div>
     </div>
     <div id="kt_app_content" class="app-content flex-column-fluid">
