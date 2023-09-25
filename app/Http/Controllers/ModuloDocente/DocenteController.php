@@ -4,7 +4,7 @@ namespace App\Http\Controllers\ModuloDocente;
 
 use App\Http\Controllers\Controller;
 use App\Models\Curso;
-use App\Models\CursoProgramaProceso;
+use App\Models\CursoProgramaPlan;
 use App\Models\Docente;
 use App\Models\DocenteCurso;
 use App\Models\MatriculaCurso;
@@ -41,20 +41,21 @@ class DocenteController extends Controller
         $matriculados = MatriculaCurso::join('matricula', 'matricula_curso.id_matricula', 'matricula.id_matricula')
                         ->join('admitido', 'matricula.id_admitido', 'admitido.id_admitido')
                         ->join('persona', 'admitido.id_persona', 'persona.id_persona')
-                        ->where('matricula_curso.id_curso_programa_proceso', $docente_curso->id_curso_programa_proceso)
+                        ->where('matricula_curso.id_curso_programa_plan', $docente_curso->id_curso_programa_plan)
                         ->where('matricula.id_programa_proceso_grupo', $docente_curso->id_programa_proceso_grupo)
                         ->orderBy('persona.nombre_completo', 'asc')
                         ->get();
+
         $fecha2 = date('YmdHis');
 
-        $curso_programa_proceso = CursoProgramaProceso::find($docente_curso->id_curso_programa_proceso);
-        $curso_model = Curso::find($curso_programa_proceso->id_curso);
+        $curso_programa_plan = CursoProgramaPlan::find($docente_curso->id_curso_programa_plan);
+        $curso_model = Curso::find($curso_programa_plan->id_curso);
         $programa_proceso_grupo = ProgramaProcesoGrupo::find($docente_curso->id_programa_proceso_grupo);
-        $programa_model = Programa::find($curso_programa_proceso->programa_proceso->programa_plan->id_programa);
+        $programa_model = Programa::find($curso_programa_plan->programa_plan->id_programa);
         $docente_model = Docente::find($docente_curso->id_docente);
         $trabajador = $docente_model->trabajador;
 
-        $admision_año = $curso_programa_proceso->programa_proceso->admision->admision_año;
+        $admision_año = $docente_curso->admision->admision_año;
 
         $programa = $programa_model->programa_tipo == 1 ? 'Maestría' : 'Doctorado';
         $subprograma = $programa_model->subprograma;
