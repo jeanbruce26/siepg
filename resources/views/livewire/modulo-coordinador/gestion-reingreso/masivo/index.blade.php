@@ -295,7 +295,7 @@
                             </label>
                         </div>
                         <div class="col-lg-6">
-                            <input type="radio" class="btn-check" wire:model="check_cambio_plan" value="2" id="reingreso_option_2"/>
+                            <input type="radio" class="btn-check" wire:model="check_cambio_plan" disabled value="2" id="reingreso_option_2"/>
                             <label class="btn btn-outline btn-active-light-success p-7 d-flex align-items-center" for="reingreso_option_2">
                                 <i class="ki-duotone ki-shield-tick fs-3x me-4"><span class="path1"></span><span class="path2"></span></i>
                                 <span class="d-block fw-semibold text-start">
