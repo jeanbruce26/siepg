@@ -253,8 +253,8 @@
             </div>
         </div>
     </div>
-    {{-- <div wire:ignore.self class="modal fade" tabindex="-1" id="modal_reingreso">
-        <div class="modal-dialog modal-lg">
+    <div wire:ignore.self class="modal fade" tabindex="-1" id="modal_reingreso">
+        <div class="modal-dialog @if($paso == 2) modal-lg @endif">
             <div class="modal-content">
                 <div class="modal-header">
                     <h2 class="modal-title">
@@ -279,161 +279,154 @@
 
                 <div class="modal-body">
                     <form autocomplete="off" class="row g-5">
-                        <div class="col-lg-6">
-                            <input type="radio" class="btn-check" wire:model="check_cambio_plan" value="1" id="reingreso_option_1"/>
-                            <label class="btn btn-outline btn-active-light-success p-7 d-flex align-items-center" for="reingreso_option_1">
-                                <i class="ki-duotone ki-shield-slash fs-3x me-4"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
-                                <span class="d-block fw-semibold text-start">
-                                    <span class="text-dark fw-bold d-block fs-3">
-                                        Reingreso sin cambio de Plan
-                                    </span>
-                                    <span class="text-muted fw-semibold fs-6">
-                                        Al seleccionar esta opción, los alumnos reingresaran al mismo plan académico en el que se encuentra actualmente.
-                                    </span>
-                                </span>
+                        @if ($paso == 1)
+                        <div class="col-md-12">
+                            <label for="estudiante" class="required form-label">
+                                Buscar Estudiante
                             </label>
+                            <select class="form-select @error('estudiante') is-invalid @enderror"
+                                wire:model="estudiante" id="estudiante" data-control="select2"
+                                data-placeholder="Seleccione el codigo o nombre del estudiante" data-allow-clear="true"
+                                data-dropdown-parent="#modal_retiro">
+                                <option></option>
+                                {{-- @foreach ($estudiantes as $item)
+                                    <option value="{{ $item->id_admitido }}">
+                                        {{ $item->admitido_codigo }} - {{ $item->nombre_completo }}
+                                    </option>
+                                @endforeach --}}
+                            </select>
+                            @error('estudiante')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
                         </div>
-                        <div class="col-lg-6">
-                            <input type="radio" class="btn-check" wire:model="check_cambio_plan" value="2" id="reingreso_option_2"/>
-                            <label class="btn btn-outline btn-active-light-success p-7 d-flex align-items-center" for="reingreso_option_2">
-                                <i class="ki-duotone ki-shield-tick fs-3x me-4"><span class="path1"></span><span class="path2"></span></i>
-                                <span class="d-block fw-semibold text-start">
-                                    <span class="text-dark fw-bold d-block fs-3">
-                                        Reingreso con cambio de Plan
-                                    </span>
-                                    <span class="text-muted fw-semibold fs-6">
-                                        Al seleccionar esta opción, los alumnos reingresaran a un nuevo plan académico.
-                                    </span>
-                                </span>
+                        <div class="col-md-12 mt-10">
+                            <span class="fs-3 fw-bold">
+                                Detalle
+                            </span>
+                        </div>
+                        <div class="col-md-12 mb-5">
+                            <table>
+                                <tbody class="fs-5">
+                                    <tr>
+                                        <td class="fw-bold">
+                                            Plan
+                                        </td>
+                                        <td style="width: 25px;" align="center">
+                                            :
+                                        </td>
+                                        <td>
+                                            {{-- {{ $data ? $data['plan'] : '-' }} --}}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">
+                                            Proceso
+                                        </td>
+                                        <td style="width: 25px;" align="center">
+                                            :
+                                        </td>
+                                        <td>
+                                            {{-- {{ $data ? $data['proceso'] : '-' }} --}}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">
+                                            Programa
+                                        </td>
+                                        <td style="width: 25px;" align="center">
+                                            :
+                                        </td>
+                                        <td>
+                                            {{-- {{ $data ? $data['programa'] : '-' }} --}}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">
+                                            Código Estudiante
+                                        </td>
+                                        <td style="width: 25px;" align="center">
+                                            :
+                                        </td>
+                                        <td>
+                                            {{-- {{ $data ? $data['codigo_estudiante'] : '-' }} --}}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">
+                                            Estudiante
+                                        </td>
+                                        <td style="width: 25px;" align="center">
+                                            :
+                                        </td>
+                                        <td>
+                                            {{-- {{ $data ? $data['estudiante'] : '-' }} --}}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-12">
+                            <label for="plan" class="required form-label">
+                                Plan Académico de Reingreso
                             </label>
+                            <select class="form-select @error('plan') is-invalid @enderror"
+                                wire:model="plan" id="plan" data-control="select2"
+                                data-placeholder="Seleccione el plan académico" data-allow-clear="true"
+                                data-dropdown-parent="#modal_retiro">
+                                <option></option>
+                                {{-- @foreach ($estudiantes as $item)
+                                    <option value="{{ $item->id_admitido }}">
+                                        {{ $item->admitido_codigo }} - {{ $item->nombre_completo }}
+                                    </option>
+                                @endforeach --}}
+                            </select>
+                            @error('plan')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
                         </div>
-                        @if ($check_cambio_plan == 1 || $check_cambio_plan == 2)
                         <div class="col-md-12">
                             <label for="proceso" class="required form-label">
-                                Proceso Académico
+                                Proceso Académico de Reingreso
                             </label>
                             <select class="form-select @error('proceso') is-invalid @enderror"
                                 wire:model="proceso" id="proceso" data-control="select2"
-                                data-placeholder="Seleccione su proceso académico" data-allow-clear="true"
-                                data-dropdown-parent="#modal_reingreso">
+                                data-placeholder="Seleccione el proceso académico" data-allow-clear="true"
+                                data-dropdown-parent="#modal_retiro">
                                 <option></option>
-                                @foreach ($procesos as $item)
-                                    <option value="{{ $item->id_admision }}">
-                                        PROCESO DE {{ $item->admision }}
+                                {{-- @foreach ($estudiantes as $item)
+                                    <option value="{{ $item->id_admitido }}">
+                                        {{ $item->admitido_codigo }} - {{ $item->nombre_completo }}
                                     </option>
-                                @endforeach
+                                @endforeach --}}
                             </select>
                             @error('proceso')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
-                        <div class="col-md-12">
-                            <label for="programa" class="required form-label">
-                                Porgrama Académico
-                            </label>
-                            <select class="form-select @error('programa') is-invalid @enderror"
-                                wire:model="programa" id="programa" data-control="select2"
-                                data-placeholder="Seleccione su programa académico" data-allow-clear="true"
-                                data-dropdown-parent="#modal_reingreso">
-                                <option></option>
-                                @foreach ($programas as $item)
-                                    <option value="{{ $item->id_programa_proceso }}">
-                                        @if ($item->mencion)
-                                            {{ $item->programa }} EN {{ $item->subprograma }} CON MENCION EN
-                                            {{ $item->mencion }}
-                                        @else
-                                            {{ $item->programa }} EN {{ $item->subprograma }}
-                                        @endif
-                                        {{ $item->id_modalidad == 1 ? ' - PRESENCIAL' : ' - DISTANCIA' }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('programa')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
                         @endif
-                        @if ($check_cambio_plan == 2)
+                        @if ($paso == 2)
                         <div class="col-md-12">
-                            <div class="separator separator-content my-3 text-gray-500">x</div>
-                        </div>
-                        <div class="col-md-12">
-                            <label for="plan_nuevo" class="required form-label">
-                                Plan Académico al que desea reingresar
-                            </label>
-                            <select class="form-select @error('plan_nuevo') is-invalid @enderror"
-                                wire:model="plan_nuevo" id="plan_nuevo" data-control="select2"
-                                data-placeholder="Seleccione su plan académico" data-allow-clear="true"
-                                data-dropdown-parent="#modal_reingreso">
-                                <option></option>
-                                @foreach ($planes as $item)
-                                    <option value="{{ $item->id_plan }}">
-                                        PLAN {{ $item->plan }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('plan_nuevo')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        <div class="col-md-12">
-                            <label for="programa_reingreso" class="required form-label">
-                                Porgrama Académico al que desea reingresar
-                            </label>
-                            <select class="form-select @error('programa_reingreso') is-invalid @enderror"
-                                wire:model="programa_reingreso" id="programa_reingreso" data-control="select2"
-                                data-placeholder="Seleccione su programa académico" data-allow-clear="true"
-                                data-dropdown-parent="#modal_reingreso">
-                                <option></option>
-                                @foreach ($programas_reingreso as $item)
-                                    <option value="{{ $item->id_programa_proceso }}">
-                                        @if ($item->mencion)
-                                            {{ $item->programa }} EN {{ $item->subprograma }} CON MENCION EN
-                                            {{ $item->mencion }}
-                                        @else
-                                            {{ $item->programa }} EN {{ $item->subprograma }}
-                                        @endif
-                                        {{ $item->id_modalidad == 1 ? ' - PRESENCIAL' : ' - DISTANCIA' }} - {{ ' PROCESO DE ' . $item->admision }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('programa_reingreso')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        @endif
-                        <div class="col-md-12">
-                            <label for="resolucion" class="required form-label">
-                                Nombre de Resolución
-                            </label>
-                            <input type="text" wire:model="resolucion"
-                                class="form-control @error('resolucion') is-invalid @enderror"
-                                placeholder="Ingrese el nombre de la resolucion" id="resolucion" />
-                            @error('resolucion')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        <div class="col-md-12">
-                            <label for="resolucion_file"
-                                class="form-label">
-                                Resolución
-                            </label>
-                            <input type="file" wire:model="resolucion_file"
-                                class="form-control @error('resolucion_file') is-invalid @enderror"
-                                id="resolucion_file" accept="application/pdf" />
-                            <span class="form-text text-muted mt-2 fst-italic">
-                                Nota: La resolución debe estar en formato PDF. El tamaño máximo es de 10MB. <br>
+                            <span class="fs-3 fw-bold">
+                                Ingrese las notas según las equivalencias de los cursos
                             </span>
-                            @error('resolucion_file')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
                         </div>
+                        <div class="col-md-12">
+                            
+                        </div>
+                        @endif
                     </form>
                 </div>
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-light" data-bs-dismiss="modal"
                         wire:click="limpiar_modal">Cerrar</button>
+                    @if ($paso == 2)
+                    <button type="button" class="btn btn-light" wire:click="atras_paso">Atrás</button>
+                    @endif
+                    @if ($paso == 1)
+                    <button type="button" class="btn btn-primary" wire:click="siguiente_paso" style="width: 150px;">Siguiente</button>
+                    @endif
+                    @if ($paso == 2)
                     <button type="button" wire:click="guardar_reingreso" class="btn btn-primary" style="width: 150px"
                         wire:loading.attr="disabled" wire:target="guardar_reingreso">
                         <div wire:loading.remove wire:target="guardar_reingreso">
@@ -443,207 +436,130 @@
                             Procesando <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
                         </div>
                     </button>
+                    @endif
                 </div>
             </div>
         </div>
-    </div> --}}
+    </div>
 </div>
-{{-- @push('scripts')
+@push('scripts')
     <script>
-        // // programa select2
-        // $(document).ready(function() {
-        //     $('#programa').select2({
-        //         placeholder: 'Seleccione su programa académico',
-        //         allowClear: true,
-        //         width: '100%',
-        //         selectOnClose: true,
-        //         language: {
-        //             noResults: function() {
-        //                 return "No se encontraron resultados";
-        //             },
-        //             searching: function() {
-        //                 return "Buscando..";
-        //             }
-        //         }
-        //     });
-        //     $('#programa').on('change', function() {
-        //         @this.set('programa', this.value);
-        //     });
-        //     Livewire.hook('message.processed', (message, component) => {
-        //         $('#programa').select2({
-        //             placeholder: 'Seleccione su programa académico',
-        //             allowClear: true,
-        //             width: '100%',
-        //             selectOnClose: true,
-        //             language: {
-        //                 noResults: function() {
-        //                     return "No se encontraron resultados";
-        //                 },
-        //                 searching: function() {
-        //                     return "Buscando..";
-        //                 }
-        //             }
-        //         });
-        //         $('#programa').on('change', function() {
-        //             @this.set('programa', this.value);
-        //         });
-        //     });
-        // });
-        // // proceso select2
-        // $(document).ready(function() {
-        //     $('#proceso').select2({
-        //         placeholder: 'Seleccione su proceso académico',
-        //         allowClear: true,
-        //         width: '100%',
-        //         selectOnClose: true,
-        //         language: {
-        //             noResults: function() {
-        //                 return "No se encontraron resultados";
-        //             },
-        //             searching: function() {
-        //                 return "Buscando..";
-        //             }
-        //         }
-        //     });
-        //     $('#proceso').on('change', function() {
-        //         @this.set('proceso', this.value);
-        //     });
-        //     Livewire.hook('message.processed', (message, component) => {
-        //         $('#proceso').select2({
-        //             placeholder: 'Seleccione su proceso académico',
-        //             allowClear: true,
-        //             width: '100%',
-        //             selectOnClose: true,
-        //             language: {
-        //                 noResults: function() {
-        //                     return "No se encontraron resultados";
-        //                 },
-        //                 searching: function() {
-        //                     return "Buscando..";
-        //                 }
-        //             }
-        //         });
-        //         $('#proceso').on('change', function() {
-        //             @this.set('proceso', this.value);
-        //         });
-        //     });
-        // });
-        // // plan_nuevo select2
-        // $(document).ready(function() {
-        //     $('#plan_nuevo').select2({
-        //         placeholder: 'Seleccione su plan',
-        //         allowClear: true,
-        //         width: '100%',
-        //         selectOnClose: true,
-        //         language: {
-        //             noResults: function() {
-        //                 return "No se encontraron resultados";
-        //             },
-        //             searching: function() {
-        //                 return "Buscando..";
-        //             }
-        //         }
-        //     });
-        //     $('#plan_nuevo').on('change', function() {
-        //         @this.set('plan_nuevo', this.value);
-        //     });
-        //     Livewire.hook('message.processed', (message, component) => {
-        //         $('#plan_nuevo').select2({
-        //             placeholder: 'Seleccione su plan',
-        //             allowClear: true,
-        //             width: '100%',
-        //             selectOnClose: true,
-        //             language: {
-        //                 noResults: function() {
-        //                     return "No se encontraron resultados";
-        //                 },
-        //                 searching: function() {
-        //                     return "Buscando..";
-        //                 }
-        //             }
-        //         });
-        //         $('#plan_nuevo').on('change', function() {
-        //             @this.set('plan_nuevo', this.value);
-        //         });
-        //     });
-        // });
-        // // proceso_nuevo select2
-        // $(document).ready(function() {
-        //     $('#proceso_nuevo').select2({
-        //         placeholder: 'Seleccione su proceso académico',
-        //         allowClear: true,
-        //         width: '100%',
-        //         selectOnClose: true,
-        //         language: {
-        //             noResults: function() {
-        //                 return "No se encontraron resultados";
-        //             },
-        //             searching: function() {
-        //                 return "Buscando..";
-        //             }
-        //         }
-        //     });
-        //     $('#proceso_nuevo').on('change', function() {
-        //         @this.set('proceso_nuevo', this.value);
-        //     });
-        //     Livewire.hook('message.processed', (message, component) => {
-        //         $('#proceso_nuevo').select2({
-        //             placeholder: 'Seleccione su proceso académico',
-        //             allowClear: true,
-        //             width: '100%',
-        //             selectOnClose: true,
-        //             language: {
-        //                 noResults: function() {
-        //                     return "No se encontraron resultados";
-        //                 },
-        //                 searching: function() {
-        //                     return "Buscando..";
-        //                 }
-        //             }
-        //         });
-        //         $('#proceso_nuevo').on('change', function() {
-        //             @this.set('proceso_nuevo', this.value);
-        //         });
-        //     });
-        // });
-        // // programa_reingreso select2
-        // $(document).ready(function() {
-        //     $('#programa_reingreso').select2({
-        //         placeholder: 'Seleccione su programa académico',
-        //         allowClear: true,
-        //         width: '100%',
-        //         selectOnClose: true,
-        //         language: {
-        //             noResults: function() {
-        //                 return "No se encontraron resultados";
-        //             },
-        //             searching: function() {
-        //                 return "Buscando..";
-        //             }
-        //         }
-        //     });
-        //     $('#programa_reingreso').on('change', function() {
-        //         @this.set('programa_reingreso', this.value);
-        //     });
-        //     Livewire.hook('message.processed', (message, component) => {
-        //         $('#programa_reingreso').select2({
-        //             placeholder: 'Seleccione su programa académico',
-        //             allowClear: true,
-        //             width: '100%',
-        //             selectOnClose: true,
-        //             language: {
-        //                 noResults: function() {
-        //                     return "No se encontraron resultados";
-        //                 },
-        //                 searching: function() {
-        //                     return "Buscando..";
-        //                 }
-        //             }
-        //         });
-        //         $('#programa_reingreso').on('change', function() {
-        //             @this.set('programa_reingreso', this.value);
-        //         });
-        //     });
-        // });
+        // estudiante select2
+        $(document).ready(function() {
+            $('#estudiante').select2({
+                placeholder: 'Seleccione el codigo o nombre del estudiante',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function() {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function() {
+                        return "Buscando..";
+                    }
+                }
+            });
+            $('#estudiante').on('change', function() {
+                @this.set('estudiante', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#estudiante').select2({
+                    placeholder: 'Seleccione el codigo o nombre del estudiante',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function() {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function() {
+                            return "Buscando..";
+                        }
+                    }
+                });
+                $('#estudiante').on('change', function() {
+                    @this.set('estudiante', this.value);
+                });
+            });
+        });
+        // plan select2
+        $(document).ready(function() {
+            $('#plan').select2({
+                placeholder: 'Seleccione el plan académico',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function() {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function() {
+                        return "Buscando..";
+                    }
+                }
+            });
+            $('#plan').on('change', function() {
+                @this.set('plan', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#plan').select2({
+                    placeholder: 'Seleccione el plan académico',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function() {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function() {
+                            return "Buscando..";
+                        }
+                    }
+                });
+                $('#plan').on('change', function() {
+                    @this.set('plan', this.value);
+                });
+            });
+        });
+        // proceso select2
+        $(document).ready(function() {
+            $('#proceso').select2({
+                placeholder: 'Seleccione el proceso académico',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function() {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function() {
+                        return "Buscando..";
+                    }
+                }
+            });
+            $('#proceso').on('change', function() {
+                @this.set('proceso', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#proceso').select2({
+                    placeholder: 'Seleccione el proceso académico',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function() {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function() {
+                            return "Buscando..";
+                        }
+                    }
+                });
+                $('#proceso').on('change', function() {
+                    @this.set('proceso', this.value);
+                });
+            });
+        });
     </script>
-@endpush --}}
+@endpush

@@ -7,6 +7,7 @@ use App\Models\Admitido;
 use App\Models\Plan;
 use App\Models\ProgramaProceso;
 use App\Models\Reingreso;
+use App\Models\Retiro;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -183,6 +184,11 @@ class Index extends Component
             // actualizar el estado del admitido
             $admitido->admitido_estado = 1; // 1 = admitido normal | 2 = retirado | 0 = desactivado
             $admitido->save();
+
+            // Desactivar el registro de retirado del alumno que esta reingresando
+            $retiro = Retiro::where('id_admitido', $admitido->id_admitido)->orderBy('id_retirado', 'desc')->first();
+            $retiro->retiro_estado = 0;
+            $retiro->save();
 
             // asignar las nuevas notas de los cursos a su nuevo programa
             if ($this->check_cambio_plan) {

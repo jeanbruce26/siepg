@@ -15,9 +15,44 @@ class Index extends Component
 
     public $search = ''; // variable para la busqueda
 
+    // variables del model
+    public $title_modal = 'Nuevo Reingreso Individual';
+    public $paso = 1;
+    public $total_paso = 2;
+
     protected $queryString = [ // para que la paginacion se mantenga con el buscador
         'search' => ['except' => '', 'as' => 's'],
     ];
+
+    public function modo()
+    {
+        $this->limpiar_modal();
+    }
+
+    public function limpiar_modal()
+    {
+        // $this->reset();
+    }
+
+    public function atras_paso()
+    {
+        if ($this->paso > 1) {
+            $this->paso--;
+        }
+
+        $this->resetErrorBag();
+        $this->resetValidation();
+    }
+
+    public function siguiente_paso()
+    {
+        if ($this->paso < $this->total_paso) {
+            $this->paso++;
+        }
+
+        $this->resetErrorBag();
+        $this->resetValidation();
+    }
 
     public function render()
     {
