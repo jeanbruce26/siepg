@@ -276,6 +276,19 @@ class Index extends Component
 
     public function eliminar_retiro_alerta($id_retiro)
     {
+        // comprobar si el alumno retirado ya se encuentra reingresado
+        $retiro = Retiro::find($id_retiro);
+        if ($retiro->retiro_estado == 0) {
+            $this->dispatchBrowserEvent('alerta_base', [
+                'title' => '¡Error!',
+                'text' => 'El retiro que desea eliminar ya se encuentra reingresado.',
+                'icon' => 'error',
+                'confirmButtonText' => 'Aceptar',
+                'color' => 'danger'
+            ]);
+            return;
+        }
+
         $this->dispatchBrowserEvent('alerta_avanzada', [
             'title' => '¡Alerta!',
             'text' => '¿Está seguro de eliminar este retiro?',
@@ -292,8 +305,7 @@ class Index extends Component
     public function eliminar_retiro($id_retiro)
     {
         $retiro = Retiro::find($id_retiro);
-        $retiro->retiro_estado = 0;
-        $retiro->save();
+        $retiro->delete();
 
         // actualizar estado de admitido
         $admitido = Admitido::find($retiro->id_admitido);
@@ -311,7 +323,7 @@ class Index extends Component
 
     public function render()
     {
-        $retiros = Retiro::where('retiro_estado', 1)->orderBy('id_retiro', 'desc')->paginate(10);
+        $retiros = Retiro::orderBy('id_retiro', 'desc')->paginate(10);
 
         $estudiantes = Admitido::join('programa_proceso', 'admitido.id_programa_proceso', 'programa_proceso.id_programa_proceso')
             ->join('programa_plan', 'programa_proceso.id_programa_plan', 'programa_plan.id_programa_plan')

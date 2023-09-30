@@ -169,7 +169,7 @@
                                             <th>Programa</th>
                                             <th>Proceso</th>
                                             <th>Plan</th>
-                                            {{-- <th>Estado</th> --}}
+                                            <th>Estado</th>
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -203,21 +203,17 @@
                                                         PLAN {{ $item->admitido->programa_proceso->programa_plan->plan->plan }}
                                                     </span>
                                                 </td>
-                                                {{-- <td class="fs-6">
-                                                    @if ($item->equivalencia_estado == 1)
-                                                        <span class="badge badge-primary fs-6 px-3 py-2"
-                                                            wire:click="alerta_cambiar_estado({{ $item->id_docente }})"
-                                                            style="cursor: pointer;">
-                                                            Activo
+                                                <td class="fs-6">
+                                                    @if ($item->retiro_estado == 1)
+                                                        <span class="badge badge-primary fs-6 px-3 py-2">
+                                                            Retirado
                                                         </span>
                                                     @else
-                                                        <span class="badge badge-danger fs-6 px-3 py-2"
-                                                            wire:click="alerta_cambiar_estado({{ $item->id_docente }})"
-                                                            style="cursor: pointer;">
-                                                            Inactivo
+                                                        <span class="badge badge-warning fs-6 px-3 py-2">
+                                                            Reingresado
                                                         </span>
                                                     @endif
-                                                </td> --}}
+                                                </td>
                                                 <td class="text-center">
                                                     <button type="button"
                                                         class="btn btn-flex btn-center fw-bold btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary hover-scale"
