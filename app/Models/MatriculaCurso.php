@@ -16,6 +16,7 @@ class MatriculaCurso extends Model
         'id_matricula',
         'id_curso_programa_plan',
         'id_admision',
+        'id_programa_proceso_grupo',
         'matricula_curso_fecha_creacion',
         'matricula_curso_estado'
     ];
@@ -38,5 +39,11 @@ class MatriculaCurso extends Model
     public function admision()
     {
         return $this->belongsTo(Admision::class, 'id_admision');
+    }
+
+    // programa proceso grupo
+    public function programa_proceso_grupo()
+    {
+        return $this->belongsTo(ProgramaProcesoGrupo::class, 'id_programa_proceso_grupo');
     }
 }
