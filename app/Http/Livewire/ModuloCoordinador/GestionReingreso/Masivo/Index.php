@@ -186,7 +186,7 @@ class Index extends Component
             $admitido->save();
 
             // Desactivar el registro de retirado del alumno que esta reingresando
-            $retiro = Retiro::where('id_admitido', $admitido->id_admitido)->orderBy('id_retirado', 'desc')->first();
+            $retiro = Retiro::where('id_admitido', $admitido->id_admitido)->orderBy('id_retiro', 'desc')->first();
             $retiro->retiro_estado = 0;
             $retiro->save();
 
