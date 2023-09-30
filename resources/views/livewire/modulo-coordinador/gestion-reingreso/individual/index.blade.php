@@ -128,7 +128,7 @@
                                             <th>Programa</th>
                                             <th>Proceso</th>
                                             <th>Fecha</th>
-                                            <th></th>
+                                            {{-- <th></th> --}}
                                         </tr>
                                     </thead>
                                     <tbody class="fw-semibold text-gray-700">
@@ -166,7 +166,7 @@
                                                 <td class="fs-6">
                                                     {{ date('d/m/Y h:i A', strtotime($item->reingreso_fecha_creacion)) }}
                                                 </td>
-                                                <td class="text-center">
+                                                {{-- <td class="text-center">
                                                     <button type="button"
                                                         class="btn btn-flex btn-center fw-bold btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary hover-scale"
                                                         data-bs-toggle="dropdown">
@@ -203,11 +203,11 @@
                                                                 wire:click="cargar_docente({{ $item->id_docente }}, 'edit')"
                                                                 class="menu-link px-3 fs-6" data-bs-toggle="modal"
                                                                 data-bs-target="#modal_docente">
-                                                                Editar Datos
+                                                                Editar Re
                                                             </a>
                                                         </div>
                                                     </div>
-                                                </td>
+                                                </td> --}}
                                             </tr>
                                         @empty
                                             @if ($search != '')
@@ -287,13 +287,13 @@
                             <select class="form-select @error('estudiante') is-invalid @enderror"
                                 wire:model="estudiante" id="estudiante" data-control="select2"
                                 data-placeholder="Seleccione el codigo o nombre del estudiante" data-allow-clear="true"
-                                data-dropdown-parent="#modal_retiro">
+                                data-dropdown-parent="#modal_reingreso">
                                 <option></option>
-                                {{-- @foreach ($estudiantes as $item)
+                                @foreach ($estudiantes as $item)
                                     <option value="{{ $item->id_admitido }}">
                                         {{ $item->admitido_codigo }} - {{ $item->nombre_completo }}
                                     </option>
-                                @endforeach --}}
+                                @endforeach
                             </select>
                             @error('estudiante')
                                 <span class="text-danger">{{ $message }}</span>
@@ -315,7 +315,7 @@
                                             :
                                         </td>
                                         <td>
-                                            {{-- {{ $data ? $data['plan'] : '-' }} --}}
+                                            {{ $detalle_estudiante ? 'PLAN ' . $detalle_estudiante->programa_proceso->programa_plan->plan->plan : '-' }}
                                         </td>
                                     </tr>
                                     <tr>
@@ -326,7 +326,7 @@
                                             :
                                         </td>
                                         <td>
-                                            {{-- {{ $data ? $data['proceso'] : '-' }} --}}
+                                            {{ $detalle_estudiante ? $detalle_estudiante->programa_proceso->admision->admision : '-' }}
                                         </td>
                                     </tr>
                                     <tr>
@@ -337,7 +337,12 @@
                                             :
                                         </td>
                                         <td>
-                                            {{-- {{ $data ? $data['programa'] : '-' }} --}}
+                                            {{ $detalle_estudiante ?
+                                                $detalle_estudiante->programa_proceso->programa_plan->programa->mencion == null ?
+                                                    $detalle_estudiante->programa_proceso->programa_plan->programa->programa . ' EN ' . $detalle_estudiante->programa_proceso->programa_plan->programa->subprograma :
+                                                    $detalle_estudiante->programa_proceso->programa_plan->programa->programa . ' EN ' . $detalle_estudiante->programa_proceso->programa_plan->programa->subprograma . ' CON MENCIÓN EN ' . $detalle_estudiante->programa_proceso->programa_plan->programa->mencion :
+                                                '-'
+                                            }}
                                         </td>
                                     </tr>
                                     <tr>
@@ -348,7 +353,7 @@
                                             :
                                         </td>
                                         <td>
-                                            {{-- {{ $data ? $data['codigo_estudiante'] : '-' }} --}}
+                                            {{ $detalle_estudiante ? $detalle_estudiante->admitido_codigo : '-' }}
                                         </td>
                                     </tr>
                                     <tr>
@@ -359,7 +364,7 @@
                                             :
                                         </td>
                                         <td>
-                                            {{-- {{ $data ? $data['estudiante'] : '-' }} --}}
+                                            {{ $detalle_estudiante ? $detalle_estudiante->persona->nombre_completo : '-' }}
                                         </td>
                                     </tr>
                                 </tbody>
@@ -372,13 +377,13 @@
                             <select class="form-select @error('plan') is-invalid @enderror"
                                 wire:model="plan" id="plan" data-control="select2"
                                 data-placeholder="Seleccione el plan académico" data-allow-clear="true"
-                                data-dropdown-parent="#modal_retiro">
+                                data-dropdown-parent="#modal_reingreso">
                                 <option></option>
-                                {{-- @foreach ($estudiantes as $item)
-                                    <option value="{{ $item->id_admitido }}">
-                                        {{ $item->admitido_codigo }} - {{ $item->nombre_completo }}
+                                @foreach ($planes as $item)
+                                    <option value="{{ $item->id_plan }}">
+                                        PLAN  {{ $item->plan }}
                                     </option>
-                                @endforeach --}}
+                                @endforeach
                             </select>
                             @error('plan')
                                 <span class="text-danger">{{ $message }}</span>
@@ -391,15 +396,34 @@
                             <select class="form-select @error('proceso') is-invalid @enderror"
                                 wire:model="proceso" id="proceso" data-control="select2"
                                 data-placeholder="Seleccione el proceso académico" data-allow-clear="true"
-                                data-dropdown-parent="#modal_retiro">
+                                data-dropdown-parent="#modal_reingreso">
                                 <option></option>
-                                {{-- @foreach ($estudiantes as $item)
-                                    <option value="{{ $item->id_admitido }}">
-                                        {{ $item->admitido_codigo }} - {{ $item->nombre_completo }}
+                                @foreach ($procesos as $item)
+                                    <option value="{{ $item->id_admision }}">
+                                        {{ $item->admision }}
                                     </option>
-                                @endforeach --}}
+                                @endforeach
                             </select>
                             @error('proceso')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="col-md-12">
+                            <label for="grupo" class="required form-label">
+                                Grupos del Proceso Académico de Reingreso
+                            </label>
+                            <select class="form-select @error('grupo') is-invalid @enderror"
+                                wire:model="grupo" id="grupo" data-control="select2"
+                                data-placeholder="Seleccione el grupo" data-allow-clear="true"
+                                data-dropdown-parent="#modal_reingreso">
+                                <option></option>
+                                @foreach ($grupos as $item)
+                                    <option value="{{ $item->id_programa_proceso_grupo }}">
+                                        GRUPO {{ $item->grupo_detalle }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('grupo')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
@@ -411,7 +435,84 @@
                             </span>
                         </div>
                         <div class="col-md-12">
-                            
+                            <div class="alert bg-light-primary border border-3 border-primary d-flex align-items-center p-5">
+                                <span class="svg-icon svg-icon-2hx svg-icon-primary me-4 d-flex align-items-center">
+                                    <i class="las la-exclamation-circle fs-1 text-primary"></i>
+                                </span>
+                                <div class="d-flex flex-column gap-2">
+                                    <span class="fw-bold fs-5">
+                                        A continuación podrá ingresar las notas de los cursos equivalente del estudiante.
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle table-rounded border mb-0 gy-5 gs-5">
+                                    <thead class="bg-light-warning">
+                                        <tr class="fw-bold fs-5 text-gray-900 border-bottom-2 border-gray-200">
+                                            <th>#</th>
+                                            <th>Código</th>
+                                            <th>Curso</th>
+                                            <th></th>
+                                            <th class="col-md-2">Nota</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="fw-semibold text-gray-700">
+                                        @forelse ($cursos as $item)
+                                            <tr wire:key="{{ $item->id_curso_programa_plan }}">
+                                                <td class="fw-bold fs-6">
+                                                    {{ $item->id_curso }}
+                                                </td>
+                                                <td class="fs-6">
+                                                    {{ $item->curso_codigo }}
+                                                </td>
+                                                <td class="fs-6">
+                                                    {{ $item->curso_nombre }}
+                                                </td>
+                                                <td class="fs-6">
+                                                    ->
+                                                </td>
+                                                <td class="fs-6">
+                                                    <input type="text" class="form-control @error('notas.'.$item->id_curso_programa_plan) is-invalid @enderror" wire:model="notas.{{ $item->id_curso_programa_plan }}"/>
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="5" class="text-center text-muted">
+                                                    No hay registros
+                                                </td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        @endif
+                        @if ($paso == 3)
+                        <div class="col-md-12">
+                            <label for="resolucion" class="required form-label">
+                                Nombre de Resolución
+                            </label>
+                            <input type="text" wire:model="resolucion"
+                                class="form-control @error('resolucion') is-invalid @enderror"
+                                placeholder="Ingrese el nombre de la resolucion" id="resolucion" />
+                            @error('resolucion')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="col-md-12">
+                            <label for="resolucion_file"
+                                class="form-label">
+                                Resolución
+                            </label>
+                            <input type="file" wire:model="resolucion_file"
+                                class="form-control @error('resolucion_file') is-invalid @enderror"
+                                id="resolucion_file" accept="application/pdf" />
+                            <span class="form-text text-muted mt-2 fst-italic">
+                                Nota: La resolución debe estar en formato PDF. El tamaño máximo es de 10MB. <br>
+                            </span>
+                            @error('resolucion_file')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
                         </div>
                         @endif
                     </form>
@@ -420,13 +521,13 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-light" data-bs-dismiss="modal"
                         wire:click="limpiar_modal">Cerrar</button>
-                    @if ($paso == 2)
+                    @if ($paso == 2 || $paso == 3)
                     <button type="button" class="btn btn-light" wire:click="atras_paso">Atrás</button>
                     @endif
-                    @if ($paso == 1)
+                    @if ($paso == 1 || $paso == 2)
                     <button type="button" class="btn btn-primary" wire:click="siguiente_paso" style="width: 150px;">Siguiente</button>
                     @endif
-                    @if ($paso == 2)
+                    @if ($paso == 3)
                     <button type="button" wire:click="guardar_reingreso" class="btn btn-primary" style="width: 150px"
                         wire:loading.attr="disabled" wire:target="guardar_reingreso">
                         <div wire:loading.remove wire:target="guardar_reingreso">
@@ -558,6 +659,45 @@
                 });
                 $('#proceso').on('change', function() {
                     @this.set('proceso', this.value);
+                });
+            });
+        });
+        // grupo select2
+        $(document).ready(function() {
+            $('#grupo').select2({
+                placeholder: 'Seleccione el grupo',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function() {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function() {
+                        return "Buscando..";
+                    }
+                }
+            });
+            $('#grupo').on('change', function() {
+                @this.set('grupo', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#grupo').select2({
+                    placeholder: 'Seleccione el grupo',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function() {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function() {
+                            return "Buscando..";
+                        }
+                    }
+                });
+                $('#grupo').on('change', function() {
+                    @this.set('grupo', this.value);
                 });
             });
         });
