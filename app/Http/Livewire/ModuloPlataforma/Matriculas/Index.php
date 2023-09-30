@@ -422,6 +422,7 @@ class Index extends Component
                 $matricula_curso->id_matricula = $matricula->id_matricula;
                 $matricula_curso->id_curso_programa_plan = $item->id_curso_programa_plan;
                 $matricula_curso->id_admision = $admitido->programa_proceso->id_admision;
+                $matricula_curso->id_programa_proceso_grupo = $grupo;
                 $matricula_curso->matricula_curso_fecha_creacion = date('Y-m-d H:i:s');
                 $matricula_curso->matricula_curso_estado = 1;
                 $matricula_curso->save();
