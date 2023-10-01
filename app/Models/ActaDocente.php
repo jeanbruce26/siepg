@@ -15,16 +15,16 @@ class ActaDocente extends Model
     protected $fillable = [
         'id_acta_docente',
         'acta_url',
-        'id_docente',
+        'id_docente_curso',
         'acta_docente_fecha_creacion',
         'acta_docente_estado',
     ];
 
     public $timestamps = false;
 
-    // docente
-    public function docente(): BelongsTo
+    // docente curso
+    public function docente_curso(): BelongsTo
     {
-        return $this->belongsTo(Docente::class, 'id_docente');
+        return $this->belongsTo(DocenteCurso::class, 'id_docente_curso');
     }
 }
