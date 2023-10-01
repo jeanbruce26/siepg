@@ -8,10 +8,13 @@ use App\Models\ProgramaProceso;
 use App\Models\Retiro;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Illuminate\Support\Str;
+use Livewire\WithFileUploads;
 
 class Index extends Component
 {
     use WithPagination; // trait de paginacion
+    use WithFileUploads; // trait de subida de archivos
     protected $paginationTheme = 'bootstrap'; // tema de paginacion
 
     // variable de búsqueda
@@ -24,7 +27,7 @@ class Index extends Component
     // variables de modal
     public $title_modal = 'Nuevo Retiro';
     public $subtitulo_modal = '';
-    public $retiro, $estudiante, $proceso, $programa;
+    public $retiro, $estudiante, $proceso, $programa, $solicitud;
 
     // variables de pasos de registro
     public $paso = 1;
@@ -52,6 +55,7 @@ class Index extends Component
             'estudiante' => 'required',
             'proceso' => 'required',
             'programa' => 'required',
+            'solicitud' => 'required|file|mimes:pdf|max:10240',
         ]);
     }
 
@@ -75,7 +79,8 @@ class Index extends Component
             'proceso',
             'programa',
             'data',
-            'paso'
+            'paso',
+            'solicitud'
         ]);
         $this->resetErrorBag();
         $this->resetValidation();
@@ -195,11 +200,13 @@ class Index extends Component
         if ($this->retiro == 1) {
             $this->validate([
                 'estudiante' => 'required',
+                'solicitud' => 'required|file|mimes:pdf|max:10240',
             ]);
         } else {
             $this->validate([
                 'proceso' => 'required',
-                'programa' => 'required'
+                'programa' => 'required',
+                'solicitud' => 'required|file|mimes:pdf|max:10240',
             ]);
         }
 
@@ -207,6 +214,15 @@ class Index extends Component
             // retiro individual
             $retiro = new Retiro();
             $retiro->id_admitido = $this->estudiante;
+            if ($this->solicitud) {
+                $slug_solicitud = 'solicitud-' . Str::random(8) . '-' . date('YmdHis');
+                $path = 'Posgrado/Retiro/Solicitud/';
+                $filename = $slug_solicitud . '.pdf';
+                $nombre_db = $path.$filename;
+                $data = $this->solicitud;
+                $data->storeAs($path, $filename, 'files_publico');
+                $retiro->retiro_solicitud_url = $nombre_db;
+            }
             $retiro->retiro_fecha_creacion = date('Y-m-d H:i:s');
             $retiro->retiro_estado = 1;
             $retiro->save();
@@ -243,9 +259,20 @@ class Index extends Component
 
             // obtener admitidos
             $admitidos = Admitido::where('id_programa_proceso', $this->programa)->get();
+            if ($this->solicitud) {
+                $slug_solicitud = 'solicitud-' . Str::random(8) . '-' . date('YmdHis');
+                $path = 'Posgrado/Retiro/Solicitud/';
+                $filename = $slug_solicitud . '.pdf';
+                $nombre_db = $path.$filename;
+                $data = $this->solicitud;
+                $data->storeAs($path, $filename, 'files_publico');
+            }
             foreach ($admitidos as $admitido) {
                 $retiro = new Retiro();
                 $retiro->id_admitido = $admitido->id_admitido;
+                if ($this->solicitud) {
+                    $retiro->retiro_solicitud_url = $nombre_db;
+                }
                 $retiro->retiro_fecha_creacion = date('Y-m-d H:i:s');
                 $retiro->retiro_estado = 1;
                 $retiro->save();

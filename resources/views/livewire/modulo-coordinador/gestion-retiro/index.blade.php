@@ -447,6 +447,21 @@
                             </div>
                             @endif
                             <div class="col-md-12 mb-5 mt-7">
+                                <label for="solicitud"
+                                    class="form-label">
+                                    Soliciud de Retiro
+                                </label>
+                                <input type="file" wire:model="solicitud"
+                                    class="form-control @error('solicitud') is-invalid @enderror"
+                                    id="solicitud" accept="application/pdf" />
+                                <span class="form-text text-muted mt-2 fst-italic">
+                                    Nota: La solicitud debe estar en formato PDF. El tamaño máximo es de 10MB. <br>
+                                </span>
+                                @error('solicitud')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="col-md-12 mb-5">
                                 <span class="fs-3 fw-bold">
                                     Detalle
                                 </span>
