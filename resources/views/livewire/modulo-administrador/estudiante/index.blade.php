@@ -84,11 +84,14 @@
                                     @forelse ($estudiantesModel as $item)
                                     <tr>
                                         <td align="center" class="fw-bold fs-5">{{ $item->id_persona }}</td>
-                                        <td> {{ $item->numero_documento }} - {{ $item->nombre_completo }} 
+                                        <td>
+                                            <div class="d-flex flex-column">
+                                                <a href="#modalPersona" wire:click="cargarPersona({{ $item->id_persona }}, 3)" data-bs-toggle="modal" data-bs-target="#modalPersona" class="text-gray-900 text-hover-primary mb-1">
+                                                    {{ $item->nombre_completo }}
+                                                </a>
+                                                <span class="text-gray-600">{{ $item->numero_documento }}</span>
+                                            </div>
                                         </td>
-                                        {{-- <td align="center">
-                                            {{ date('d/m/Y', strtotime($item->fecha_nacimiento)) }}
-                                        </td> --}}
                                         <td>
                                             <div>{{ $item->correo }}</div>
                                             @if($item->correo_opcional)

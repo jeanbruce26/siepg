@@ -6,11 +6,13 @@ use App\Models\Admision;
 use App\Models\Admitido;
 use App\Models\AdmitidoCiclo;
 use App\Models\CanalPago;
+use App\Models\Ciclo;
 use App\Models\ConceptoPago;
 use App\Models\ConstanciaIngreso;
 use App\Models\Inscripcion;
 use App\Models\Matricula;
 use App\Models\Mensualidad;
+use App\Models\Modalidad;
 use App\Models\Pago;
 use App\Models\PagoObservacion;
 use Illuminate\Support\Facades\File;
@@ -54,10 +56,28 @@ class Index extends Component
     public $valida_pago_estado;
 
     // Variables para filtrar los pagos
+    // - Proceso
     public $filtroProceso;
     public $filtro_proceso;
+	// 	- Modalidad 
+    public $filtroModalidad;
+    public $filtro_modalidad;
+	// 	- Programa 
+    public $filtroPrograma;
+    public $filtro_programa;
+    // - Ciclo 
+    public $filtroCiclo;
+    public $filtro_ciclo;
+    // - Concepto
     public $filtroConcepto;
     public $filtro_concepto;
+	// 	- Mes 
+    public $filtroMes;
+    public $filtro_mes;
+	// 	- Verificacion 
+    public $filtroVerificacion;
+    public $filtro_verificacion;
+
 
     public $canalPago;
     public $conceptoPago;
@@ -655,6 +675,8 @@ class Index extends Component
 
         return view('livewire.modulo-administrador.gestion-pagos.pago.index', [
             'pago_model' => $pago_model,
+            'modalidades' => Modalidad::all(),
+            'ciclos' => Ciclo::all(),
         ]);
     }
 

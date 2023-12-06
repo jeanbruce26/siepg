@@ -38,26 +38,64 @@
                                     </span>
                                     Filtro
                                 </a>
-                                <div class="menu menu-sub menu-sub-dropdown w-250px w-md-300px" data-kt-menu="true" id="menu_pago" wire:ignore.self>
+                                <div class="menu menu-sub menu-sub-dropdown w-250px w-md-500px" data-kt-menu="true" id="menu_pago" wire:ignore.self>
                                     <div class="px-7 py-5">
                                         <div class="fs-5 text-dark fw-bold">
                                             Opciones de filtrado
                                         </div> 
                                     </div>
                                     <div class="separator border-gray-200"></div>
-                                    <div class="px-7 py-5">
-                                        <div class="mb-5">
-                                            <label class="form-label fw-semibold">Año:</label>
+                                    <div class="px-7 py-5 row">
+                                        <div class="mb-5 col-md-6">
+                                            <label class="form-label fw-semibold">Año / Proceso:</label>
                                             <div>
-                                                <select class="form-select" wire:model="filtro_proceso" id="filtro_proceso"  data-control="select2" data-placeholder="Seleccione el año">
+                                                <select class="form-select" wire:model="filtro_proceso" id="filtro_proceso"  data-control="select2" data-placeholder="Seleccione el año / proceso">
                                                     <option></option>
                                                     @foreach ($aniosUnicos as $item)
-                                                        <option value="{{ $item }}">Año {{ $item }}</option>
+                                                        <option value="{{ $item }}">Año / Proceso {{ $item }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="mb-5">
+                                        <div class="mb-5 col-md-6">
+                                            <label class="form-label fw-semibold">Modalidad del Programa:</label>
+                                            <div>
+                                                <select class="form-select" wire:model="filtro_modalidad" id="filtro_modalidad" data-control="select2" data-placeholder="Seleccione la Modalidad">
+                                                    <option></option>
+                                                    @foreach ($modalidades as $item)
+                                                        <option value="{{ $item->id_modalidad }}">{{ $item->modalidad }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="mb-5 col-md-12">
+                                            <label class="form-label fw-semibold">Programa:</label>
+                                            <div>
+                                                <select class="form-select" wire:model="filtro_programa" id="filtro_programa" data-control="select2" data-placeholder="Seleccione el Programa">
+                                                    <option></option>
+                                                    @if($filtro_modalidad)
+                                                        @php
+                                                            $programas = App\Models\Programa::where('id_modalidad', $filtro_modalidad)->get();
+                                                        @endphp
+                                                        @foreach ($programas as $item)
+                                                            <option value="{{ $item->id_programa }}">{{ $item->programa }} EN {{ $item->subprograma }} @if($item->mencion != '') CON MENCION EN {{ $item->mencion }}@endif</option>
+                                                        @endforeach
+                                                    @endif
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="mb-5 col-md-6">
+                                            <label class="form-label fw-semibold">Ciclo Académico:</label>
+                                            <div>
+                                                <select class="form-select" wire:model="filtro_ciclo" id="filtro_ciclo" data-control="select2" data-placeholder="Seleccione el ciclo académico">
+                                                    <option></option>
+                                                    @foreach ($ciclos as $item)
+                                                        <option value="{{ $item->id_ciclo }}">{{ $item->ciclo }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="mb-5 col-md-6">
                                             <label class="form-label fw-semibold">Concepto de Pago:</label>
                                             <div>
                                                 <select class="form-select" wire:model="filtro_concepto" id="filtro_concepto"  data-control="select2" data-placeholder="Seleccione el concepto de pago">
@@ -68,6 +106,29 @@
                                                 </select>
                                             </div>
                                         </div>
+                                        <div class="mb-5 col-md-6">
+                                            <label class="form-label fw-semibold">Mes:</label>
+                                            <div>
+                                                <select class="form-select" wire:model="filtro_mes" id="filtro_mes" data-control="select2" data-placeholder="Seleccione el mes">
+                                                    <option></option>
+                                                    @foreach ($meses as $item)
+                                                        <option value="{{ $item }}">{{ $item }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="mb-5 col-md-6">
+                                            <label class="form-label fw-semibold">Verificación:</label>
+                                            <div>
+                                                <select class="form-select" wire:model="filtro_verificacion" id="filtro_verificacion" data-control="select2" data-placeholder="Seleccione la verificación">
+                                                    <option></option>
+                                                    @foreach ($pago_verificaciones as $item)
+                                                        <option value="{{ $item }}">{{ $item }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        
                                         <div class="d-flex justify-content-end">
                                             <button type="button" wire:click="resetear_filtro" class="btn btn-sm btn-light btn-active-light-primary me-2" data-kt-menu-dismiss="true">Resetear</button>
                                             <button type="button" class="btn btn-sm btn-primary" data-kt-menu-dismiss="true" wire:click="filtrar">Aplicar</button>

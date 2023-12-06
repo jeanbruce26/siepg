@@ -92,7 +92,6 @@
                                         <th scope="col">Documento</th>
                                         <th scope="col">Nombres</th>
                                         <th scope="col">Grado</th>
-                                        <th scope="col">Correo</th>
                                         <th scope="col">Tipo</th>
                                         <th scope="col" class="col-md-1">Estado</th>
                                         <th scope="col" class="col-md-2">Acciones</th>
@@ -118,13 +117,18 @@
                                                                 alt="perfil Avatar">
                                                         @endif
                                                     </div>
-                                                    <div class="ms-2">
-                                                        {{ $item['trabajador_nombre_completo'] }}
+                                                    <div class="ms-2 d-flex flex-column">
+                                                        <a href="#modalInfo"
+                                                        wire:click="cargarInfoTrabajador({{ $item['id_trabajador'] }})"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#modalInfo" class="text-gray-900 text-hover-primary mb-1">
+                                                            {{ $item['trabajador_nombre_completo'] }}
+                                                        </a>
+                                                        <span class="text-gray-600">{{ $item['trabajador_correo'] }}</span>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td align="center">{{ $item['grado_academico'] }}</td>
-                                            <td>{{ $item['trabajador_correo'] }}</td>
                                             <td align="center" class="">
                                                 <ul style="list-style: none; padding: 0; margin: 0;">
                                                     @forelse ($item['trabajador_tipo_trabajador'] as $item2)
