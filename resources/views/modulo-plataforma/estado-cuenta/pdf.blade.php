@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>
-        Record Académico
+        Estado de Cuenta
     </title>
     <style>
         body {
@@ -65,14 +65,14 @@
         </table>
         <div style="margin-top: 0.5rem; text-align: center;">
             <span style="text-align: center; font-weight: 700; font-size: 0.9rem">
-                RECORD ACADÉMICO
+                ESTADO DE CUENTA
             </span>
         </div>
     </header>
     <div id="footer">
         <div style="margin-top: 1.9rem; text-align: right;">
             <span style="text-align: center; font-weight: 400; font-size: 0.7rem">
-                Record Académico - {{ date('d/m/Y') }}
+                Estado de Cuenta - {{ date('d/m/Y') }}
             </span>
         </div>
     </div>
@@ -101,13 +101,13 @@
                     </tr>
                 </table>
             </td>
-            <td style="width: 50%;">
+            <td width="50%">
                 <table class="table"
                     style="width:100%; padding-right: 0rem; padding-left: 0rem; padding-bottom: 0rem; padding-top: 0rem;">
                     <tr>
                         <td align="right">
                             <div style="font-weight: 700; font-size: 0.7rem;">
-                                GRUPO
+                                FECHA
                             </div>
                         </td>
                         <td align="right" style="width: 20px;">
@@ -117,7 +117,7 @@
                         </td>
                         <td align="right" style="width: 80px;">
                             <div style="font-weight: 400; font-size: 0.7rem;">
-                                {{ $ultima_matricula->programa_proceso_grupo->grupo_detalle }}
+                                {{ date('d/m/Y') }}
                             </div>
                         </td>
                     </tr>
@@ -156,7 +156,7 @@
     @endif
     <table class="table" style="width:100%; padding-right: 0rem; padding-left: 0rem; padding-bottom: 0rem; padding-top: 0rem;">
         <tr>
-            <td widht="50%">
+            <td widht="100%">
                 <table class="table"
                     style="width:100%; padding-right: 0rem; padding-left: 0rem; padding-bottom: 0rem; padding-top: 0rem;">
                     <tr>
@@ -173,28 +173,6 @@
                         <td>
                             <div style="font-weight: 400; font-size: 0.7rem;">
                                 {{ $admitido->persona->nombre_completo }}
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-            <td width="50%">
-                <table class="table"
-                    style="width:100%; padding-right: 0rem; padding-left: 0rem; padding-bottom: 0rem; padding-top: 0rem;">
-                    <tr>
-                        <td align="right">
-                            <div style="font-weight: 700; font-size: 0.7rem;">
-                                FECHA
-                            </div>
-                        </td>
-                        <td align="right" style="width: 20px;">
-                            <div style="font-weight: 400; font-size: 0.7rem;">
-                                :
-                            </div>
-                        </td>
-                        <td align="right" style="width: 80px;">
-                            <div style="font-weight: 400; font-size: 0.7rem;">
-                                {{ date('d/m/Y') }}
                             </div>
                         </td>
                     </tr>
@@ -230,130 +208,165 @@
     </table>
     <div style="width:100%; padding-right: 0rem; padding-left: 0rem; margin-bottom: 0.5rem; margin-top: 0.5rem; border-style: solid; border-width: 0.25px; border-color: black; border-collapse: collapse;">
     </div>
-    <div style="width:100%; padding-right: 0rem; padding-left: 0rem; padding-bottom: 0rem; padding-top: 0.5rem; text-align: center;">
-        <span style="text-align: center; font-weight: 700; font-size: 0.7rem; font-style: italic;">
-            PLAN DE ESTUDIOS {{ $plan->plan }} / {{ $plan->plan_resolucion }}
-            {{ date('d/m/Y', strtotime($plan->plan_fecha_resolucion)) }}
-        </span>
-    </div>
-    @foreach ($ciclos as $item)
-        @php
-            $cursos = App\Models\CursoProgramaPlan::join('curso', 'curso.id_curso', '=', 'curso_programa_plan.id_curso')
-                ->where('curso_programa_plan.id_programa_plan', $programa->id_programa_plan)
-                ->where('curso.id_ciclo', $item->id_ciclo)
-                ->get();
-        @endphp
-        <table class="table" style="width:100%; padding-right: 0rem; padding-left: 0rem; padding-bottom: 0rem; padding-top: 0.5rem;">
+    <table class="table" style="width:100%; padding-right: 0rem; padding-left: 0rem; padding-bottom: 0rem; padding-top: 0rem;">
+        <tr>
+            <td widht="100%">
+                <table class="table"
+                    style="width:100%; padding-right: 0rem; padding-left: 0rem; padding-bottom: 0rem; padding-top: 0.5rem;">
+                    <tr>
+                        <td>
+                            <div style="font-weight: 700; font-size: 1rem; text-transform: uppercase;">
+                                Ultima matricula
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    <table class="table" style="width:100%; padding-right: 0rem; padding-left: 0rem; padding-bottom: 0rem; padding-top: 0rem;">
+        <tr>
+            <td widht="100%">
+                <table class="table"
+                    style="width:100%; padding-right: 0rem; padding-left: 0rem; padding-bottom: 0rem; padding-top: 0rem;">
+                    <tr>
+                        <td style="border: 1px solid; padding: 1rem; width: 30%;">
+                            <div style="font-weight: 700; font-size: 1.7rem;">
+                                S/. {{ number_format($monto_total, 2, ',', ' ') }}
+                            </div>
+                            <div style="margin-top: 0.3rem"></div>
+                            <div style="font-weight: 700; font-size: 0.7rem;">
+                                Monto Total a Pagar
+                            </div>
+                        </td>
+                        <td style="width: 5%;"></td>
+                        <td style="border: 1px solid; padding: 1rem; width: 30%;">
+                            <div style="font-weight: 700; font-size: 1.7rem; color: #a70000">
+                                S/. {{ number_format($deuda, 2, ',', ' ') }}
+                            </div>
+                            <div style="margin-top: 0.3rem"></div>
+                            <div style="font-weight: 700; font-size: 0.7rem;">
+                                Deuda
+                            </div>
+                        </td>
+                        <td style="width: 5%;"></td>
+                        <td style="border: 1px solid; padding: 1rem; width: 30%;">
+                            <div style="font-weight: 700; font-size: 1.7rem; color: #179a11">
+                                S/. {{ number_format($monto_total_pagado, 2, ',', ' ') }}
+                            </div>
+                            <div style="margin-top: 0.3rem"></div>
+                            <div style="font-weight: 700; font-size: 0.7rem;">
+                                Monto Total Pagado
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    <div style="padding: 0.3rem"></div>
+    @foreach ($matriculas as $item)
+        <table class="table" style="width:100%; padding-right: 0rem; padding-left: 0rem; padding-bottom: 0rem; padding-top: 0rem;">
             <tr>
-                <td widht="50%">
-                    <span style="font-weight: 700; font-size: 0.7rem;">
-                        CICLO - {{ $item->ciclo }}
-                    </span>
-                </td>
-                <td width="50%" align="right">
-                    @php
-                        $promedio = 0;
-                    @endphp
-                    @foreach ($cursos as $curso)
-                    @php
-                        $data = App\Models\NotaMatriculaCurso::join('matricula_curso', 'matricula_curso.id_matricula_curso', '=', 'nota_matricula_curso.id_matricula_curso')
-                            ->join('matricula', 'matricula.id_matricula', '=', 'matricula_curso.id_matricula')
-                            ->join('programa_proceso_grupo', 'programa_proceso_grupo.id_programa_proceso_grupo', '=', 'matricula.id_programa_proceso_grupo')
-                            ->where('matricula_curso.id_curso_programa_plan', $curso->id_curso_programa_plan)
-                            ->where('matricula.id_admitido', $admitido->id_admitido)
-                            ->first();
-                        $promedio += $data ? $data->nota_promedio_final : 0;
-                    @endphp
-                    @endforeach
-                    <span style="font-weight: 700; font-size: 0.5rem;">
-                        PPC: {{ $promedio > 0 ? round($promedio / count($cursos), 2) : 0 }}
-                    </span>
+                <td widht="100%">
+                    <table class="table"
+                        style="width:100%; padding-right: 0rem; padding-left: 0rem; padding-bottom: 0rem; padding-top: 0.5rem;">
+                        <tr>
+                            <td>
+                                <div style="font-weight: 700; font-size: 0.9rem; text-transform: uppercase;">
+                                    Matricula N° {{ $loop->iteration }}
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
                 </td>
             </tr>
         </table>
+        @php
+            $mensualidades = App\Models\Mensualidad::join('pago', 'pago.id_pago', '=', 'mensualidad.id_pago')
+                ->join('concepto_pago', 'concepto_pago.id_concepto_pago', '=', 'pago.id_concepto_pago')
+                ->join('canal_pago', 'canal_pago.id_canal_pago', '=', 'pago.id_canal_pago')
+                ->where('id_matricula', $item->id_matricula)
+                ->where('pago.pago_verificacion', 2)
+                ->get();
+            $pago_matricula = $item->pago;
+        @endphp
         <table class="table" style="width:100%; padding-right: 0rem; padding-left: 0rem; padding-bottom: 0rem; padding-top: 0rem; border-collapse: collapse;">
             <thead>
-                <tr style="border: 1px solid black; padding: 7px; font-size: 0.5rem; background: {{ $color }}">
-                    <th style="border: 1px solid black; padding: 7px;">
-                        CODIGO
+                <tr style="border: 1px solid black; padding: 10px; font-size: 0.6rem; background: {{ $color }}">
+                    <th style="border: 1px solid black; padding: 10px; width: 5%;">
+                        #
                     </th>
-                    <th style="border: 1px solid black; padding: 7px; width: 190px;">
-                        CURSO
+                    <th style="border: 1px solid black; padding: 10px; width: 35%;">
+                        CONCEPTO
                     </th>
-                    <th style="border: 1px solid black; padding: 7px;">
+                    <th style="border: 1px solid black; padding: 10px; width: 15%;">
+                        OPERACIÓN
+                    </th>
+                    <th style="border: 1px solid black; padding: 10px; width: 15%;">
+                        MONTO
+                    </th>
+                    <th style="border: 1px solid black; padding: 10px; width: 15%;">
                         FECHA
                     </th>
-                    <th style="border: 1px solid black; padding: 7px;">
-                        GRUPO
-                    </th>
-                    <th style="border: 1px solid black; padding: 7px;">
-                        CRED.
-                    </th>
-                    <th style="border: 1px solid black; padding: 7px;">
-                        PERIODO
-                    </th>
-                    <th style="border: 1px solid black; padding: 7px;">
-                        NOTA
-                    </th>
-                    <th style="border: 1px solid black; padding: 7px;">
-                        ESTADO
+                    <th style="border: 1px solid black; padding: 10px; width: 15%;">
+                        CANAL
                     </th>
                 </tr>
             </thead>
             <tbody style="border: 1px solid black;">
-                @foreach ($cursos as $curso)
-                    @php
-                        $data = App\Models\NotaMatriculaCurso::join('matricula_curso', 'matricula_curso.id_matricula_curso', '=', 'nota_matricula_curso.id_matricula_curso')
-                            ->join('matricula', 'matricula.id_matricula', '=', 'matricula_curso.id_matricula')
-                            ->join('programa_proceso_grupo', 'programa_proceso_grupo.id_programa_proceso_grupo', '=', 'matricula.id_programa_proceso_grupo')
-                            ->where('matricula_curso.id_curso_programa_plan', $curso->id_curso_programa_plan)
-                            ->where('matricula.id_admitido', $admitido->id_admitido)
-                            ->first();
-                    @endphp
-                    <tr style="padding: 4px; font-size: 0.5rem">
-                        <td style="border-right: 1px solid black; border-left: 1px solid black; padding: 4px;"
+                @foreach ($mensualidades as $mensualidad)
+                    <tr style="padding: 7px; font-size: 0.6rem">
+                        <td style="border-right: 1px solid black; border-left: 1px solid black; padding: 7px;"
                             align="center">
-                            {{ $curso->curso_codigo }}
+                            {{ $loop->iteration }}
                         </td>
-                        <td style="border-right: 1px solid black; border-left: 1px solid black; padding: 4px;">
-                            {{ $curso->curso_nombre }}
+                        <td style="border-right: 1px solid black; border-left: 1px solid black; padding: 7px;">
+                            Concepto de {{ $mensualidad->concepto_pago }} - {{ $loop->iteration }}
                         </td>
-                        <td style="border-right: 1px solid black; border-left: 1px solid black; padding: 4px;"
+                        <td style="border-right: 1px solid black; border-left: 1px solid black; padding: 7px;"
                             align="center">
-                            {{ $data ? date('d/m/Y', strtotime($data->nota_matricula_curso_fecha_creacion)) : '---' }}
+                            {{ $mensualidad->pago_operacion }}
                         </td>
-                        <td style="border-right: 1px solid black; border-left: 1px solid black; padding: 4px;"
+                        <td style="border-right: 1px solid black; border-left: 1px solid black; padding: 7px;"
                             align="center">
-                            {{ $data ? $data->grupo_detalle : '---' }}
+                            S/. {{ number_format($mensualidad->pago_monto, 2, ',', ' ') }}
                         </td>
-                        <td style="border-right: 1px solid black; border-left: 1px solid black; padding: 4px;"
+                        <td style="border-right: 1px solid black; border-left: 1px solid black; padding: 7px;"
                             align="center">
-                            {{ $curso->curso_credito }}
+                            {{ date('d/m/Y', strtotime($mensualidad->pago_fecha)) }}
                         </td>
-                        <td style="border-right: 1px solid black; border-left: 1px solid black; padding: 4px;"
+                        <td style="border-right: 1px solid black; border-left: 1px solid black; padding: 7px;"
                             align="center">
-                            {{ $data ? $data->matricula_proceso : '---' }}
-                        </td>
-                        <td style="border-right: 1px solid black; border-left: 1px solid black; padding: 4px; font-weight: 700;"
-                            align="center">
-                            {{ $data ? $data->nota_promedio_final : '---' }}
-                        </td>
-                        <td style="border-right: 1px solid black; border-left: 1px solid black; padding: 4px;"
-                            align="center">
-                            @if ($data)
-                                @if ($data->matricula_curso_estado == 1)
-                                    PENDIENTE
-                                @elseif ($data->matricula_curso_estado == 2)
-                                    APROBADO
-                                @else
-                                    DESAPROBADO
-                                @endif
-                            @else
-                                PENDIENTE
-                            @endif
+                            {{ $mensualidad->canal_pago }}
                         </td>
                     </tr>
                 @endforeach
+                <tr style="padding: 7px; font-size: 0.6rem">
+                    <td style="border-right: 1px solid black; border-left: 1px solid black; padding: 7px;"
+                        align="center">
+                        {{ $mensualidades->count() + 1 }}
+                    </td>
+                    <td style="border-right: 1px solid black; border-left: 1px solid black; padding: 7px;">
+                        Concepto de {{ $pago_matricula->concepto_pago->concepto_pago }}
+                    </td>
+                    <td style="border-right: 1px solid black; border-left: 1px solid black; padding: 7px;"
+                        align="center">
+                        {{ $pago_matricula->pago_operacion }}
+                    </td>
+                    <td style="border-right: 1px solid black; border-left: 1px solid black; padding: 7px;"
+                        align="center">
+                        S/. {{ number_format($pago_matricula->pago_monto, 2, ',', ' ') }}
+                    </td>
+                    <td style="border-right: 1px solid black; border-left: 1px solid black; padding: 7px;"
+                        align="center">
+                        {{ date('d/m/Y', strtotime($pago_matricula->pago_fecha)) }}
+                    </td>
+                    <td style="border-right: 1px solid black; border-left: 1px solid black; padding: 7px;"
+                        align="center">
+                        {{ $pago_matricula->canal_pago->canal_pago }}
+                    </td>
+                </tr>
             </tbody>
         </table>
     @endforeach

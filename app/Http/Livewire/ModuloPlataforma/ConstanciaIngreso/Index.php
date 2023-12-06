@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\ModuloPlataforma\ConstanciaIngreso;
 
+use App\Jobs\ProcessEnvioConstanciaIngreso;
 use App\Models\Admitido;
 use App\Models\ConstanciaIngreso;
 use App\Models\Evaluacion;
@@ -9,6 +10,8 @@ use App\Models\Pago;
 use App\Models\Persona;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Str;
@@ -126,9 +129,19 @@ class Index extends Component
 
         $nombre_pdf = 'constancia-ingreso-' . $codigo_constancia . '-' . Str::slug($this->persona->nombre_completo, '-') . '.pdf';
         $path = 'Posgrado/' . $admision . '/' . $this->persona->numero_documento . '/' . 'Expedientes' . '/';
-        // $pdf = Pdf::loadView('modulo_administrador.Evaluacion.Admitidos.constancia', $data)->save(public_path($datos->admision.'/'.$datos->id_inscripcion.'/'). $nombre_pdf);
-        $pdf = Pdf::loadView('modulo-plataforma.constancia-ingreso.ficha-constancia-ingreso', $data)->save(public_path($path . $nombre_pdf));
+        if (!File::isDirectory(public_path($path))) {
+            File::makeDirectory(public_path($path), 0755, true, true);
+        }
+        Pdf::loadView('modulo-plataforma.constancia-ingreso.ficha-constancia-ingreso', $data)->save(public_path($path . $nombre_pdf));
 
+        // datos para el correo
+        $nombre = ucwords(strtolower($nombre));
+        $correo = $this->admitido->persona->correo;
+
+        // enviar constancia de ingreso al correo
+        ProcessEnvioConstanciaIngreso::dispatch($data, $path, $nombre_pdf, $nombre, $correo);
+
+        // editamos la constancia de ingreso
         $constancia = ConstanciaIngreso::where('id_admitido', $this->admitido->id_admitido)->first();
         $constancia->constancia_ingreso_codigo = $codigo_constancia;
         $constancia->constancia_ingreso_url = $path . $nombre_pdf;

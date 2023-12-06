@@ -3,8 +3,9 @@
 namespace App\Http\Livewire\ModuloPlataforma\EstadoCuenta;
 
 use App\Models\Admitido;
-use App\Models\AdmitidoCiclo;
 use App\Models\CostoEnseñanza;
+use App\Models\Matricula;
+use App\Models\MatriculaCurso;
 use App\Models\Mensualidad;
 use App\Models\Persona;
 use Livewire\Component;
@@ -23,15 +24,15 @@ class Index extends Component
     public $search = '';
 
     // opciones de filtro
-    public $filtro_ciclo;
-    public $ciclo_data;
-    public $admitido_ciclo;
+    public $filtro_matricula;
+    public $data_matricula;
     public $costo_enseñanza;
+    public $creditos_totales = 0;
 
     protected $queryString = [
-        'filtro_ciclo' => ['except' => ''],
-        'ciclo_data' => ['except' => ''],
         'search' => ['except' => ''],
+        'filtro_matricula' => ['except' => '', 'as' => 'fm'],
+        'data_matricula' => ['except' => '', 'as' => 'dm'],
     ];
 
     public function mount()
@@ -43,41 +44,62 @@ class Index extends Component
         {
             abort(403);
         }
-        $this->admitido_ciclo = AdmitidoCiclo::where('id_admitido', $this->admitido->id_admitido)->orderBy('id_admitido_ciclo', 'desc')->first();
-        if ( $this->admitido_ciclo == null )
+        // buscar ultima matricula
+        $ultima_matricula = Matricula::where('id_admitido', $this->admitido->id_admitido)->where('matricula_estado', 1)->orderBy('id_matricula', 'desc')->first();
+
+        // asuganamos la ultima matricula al filtro
+        $this->filtro_matricula = $ultima_matricula ? $ultima_matricula->id_matricula : null;
+        $this->data_matricula = $this->filtro_matricula;
+
+        // buscar cursos de la ultima matricula
+        $cursos = $ultima_matricula ?
+            MatriculaCurso::join('curso_programa_plan', 'matricula_curso.id_curso_programa_plan', '=', 'curso_programa_plan.id_curso_programa_plan')
+                                ->join('curso', 'curso_programa_plan.id_curso', '=', 'curso.id_curso')
+                                ->where('matricula_curso.id_matricula', $ultima_matricula->id_matricula)
+                                ->get() :
+            collect([]);
+
+        // sumar creditos de los cursos
+        foreach($cursos as $curso)
         {
-            abort(403);
+            $this->creditos_totales += $curso->curso_credito;
         }
-        $this->filtro_ciclo = $this->admitido_ciclo->id_ciclo;
-        $this->ciclo_data = $this->admitido_ciclo->id_ciclo;
-        $this->costo_enseñanza = CostoEnseñanza::where('id_programa_plan', $this->admitido->programa_proceso->id_programa_plan)->where('id_ciclo', $this->admitido_ciclo->id_ciclo)->first();
+
+        // buscamos el plan del admitido
+        $plan_admitido = $this->admitido->programa_proceso->programa_plan->plan;
+
+        // buscamos el costo de enseñanza del plan del admitido
+        $this->costo_enseñanza = CostoEnseñanza::where('id_plan', $plan_admitido->id_plan)->where('programa_tipo', $this->admitido->programa_proceso->programa_plan->programa->programa_tipo)->first();
+        // dd($this->costo_enseñanza);
     }
 
     public function aplicar_filtro()
     {
-        $this->ciclo_data = $this->filtro_ciclo;
-        $this->costo_enseñanza = CostoEnseñanza::where('id_programa_plan', $this->admitido->programa_proceso->id_programa_plan)->where('id_ciclo', $this->ciclo_data)->first();
+        $this->data_matricula = $this->filtro_matricula;
     }
 
     public function resetear_filtro()
     {
         $this->reset([
-            'filtro_ciclo',
-            'ciclo_data'
+            'filtro_matricula',
+            'data_matricula'
         ]);
-        $this->admitido_ciclo = AdmitidoCiclo::where('id_admitido', $this->admitido->id_admitido)->orderBy('id_admitido_ciclo', 'desc')->first();
-        $this->filtro_ciclo = $this->admitido_ciclo->id_ciclo;
-        $this->ciclo_data = $this->admitido_ciclo->id_ciclo;
+        // buscar ultima matricula
+        $ultima_matricula = Matricula::where('id_admitido', $this->admitido->id_admitido)->where('matricula_estado', 1)->orderBy('id_matricula', 'desc')->first();
+
+        // asuganamos la ultima matricula al filtro
+        $this->filtro_matricula = $ultima_matricula ? $ultima_matricula->id_matricula : null;
+        $this->data_matricula = $this->filtro_matricula;
+
+        $this->render();
     }
 
     public function render()
     {
-        $this->admitido_ciclo = AdmitidoCiclo::where('id_admitido', $this->admitido->id_admitido)->orderBy('id_admitido_ciclo', 'desc')->first();
-
         $mensualidades  = Mensualidad::join('matricula', 'mensualidad.id_matricula', '=', 'matricula.id_matricula')
                                         ->join('pago', 'mensualidad.id_pago', '=', 'pago.id_pago')
                                         ->where('mensualidad.id_admitido', $this->admitido->id_admitido)
-                                        ->where('matricula.id_ciclo', $this->ciclo_data ? '=' : '!=', $this->ciclo_data)
+                                        ->where('matricula.id_matricula', $this->data_matricula ? '=' : '!=', $this->data_matricula)
                                         ->where(function ($query) {
                                             $query->where('pago.pago_operacion', 'like', "%{$this->search}%")
                                                 ->orWhere('mensualidad.id_mensualidad', 'like', "%{$this->search}%");
@@ -85,7 +107,7 @@ class Index extends Component
                                         ->orderBy('mensualidad.id_mensualidad', 'asc')
                                         ->paginate(5);
 
-        $monto_total = $this->costo_enseñanza->costo_ciclo;
+        $monto_total = $this->costo_enseñanza->costo_credito * $this->creditos_totales;
         $monto_pagado = 0;
 
         foreach($mensualidades as $mensualidad)
@@ -98,14 +120,15 @@ class Index extends Component
 
         $deuda = $monto_total - $monto_pagado;
 
-        $ciclos = AdmitidoCiclo::where('id_admitido', $this->admitido->id_admitido)->orderBy('id_admitido_ciclo', 'asc')->get();
+        // buscar matriculas del admitido
+        $matriculas = Matricula::where('id_admitido', $this->admitido->id_admitido)->orderBy('id_matricula', 'asc')->get();
 
         return view('livewire.modulo-plataforma.estado-cuenta.index', [
             'mensualidades' => $mensualidades,
             'monto_total' => $monto_total,
             'monto_pagado' => $monto_pagado,
             'deuda' => $deuda,
-            'ciclos' => $ciclos,
+            'matriculas' => $matriculas
         ]);
     }
 }

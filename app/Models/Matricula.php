@@ -21,8 +21,9 @@ class Matricula extends Model
         'matricula_estado',
         'id_admitido',
         'id_programa_proceso_grupo',
-        'id_ciclo',
-        'id_pago'
+        'id_pago',
+        'verificacion_costo_enseñanza',
+        'matricula_primer_ciclo'
     ];
 
     public $timestamps = false;
@@ -37,12 +38,6 @@ class Matricula extends Model
     public function programa_proceso_grupo()
     {
         return $this->belongsTo(ProgramaProcesoGrupo::class, 'id_programa_proceso_grupo');
-    }
-
-    // ciclo
-    public function ciclo()
-    {
-        return $this->belongsTo(Ciclo::class, 'id_ciclo');
     }
 
     // pago

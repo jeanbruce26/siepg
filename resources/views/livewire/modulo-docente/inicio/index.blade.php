@@ -20,7 +20,7 @@
         <div id="kt_app_content_container" class="app-container container-fluid">
             <div class="row mb-5 mb-xl-10">
                 <div class="col-md-12 mb-md-5 mb-xl-10">
-                    @if ($programas->count() > 0)
+                    @if ($cursos_docente->count() > 0)
                         {{-- alerta --}}
                         <div class="alert bg-light-primary border border-3 border-primary d-flex align-items-center p-5 mb-5">
                             <i class="ki-duotone ki-information-5 fs-2qx me-4 text-primary">
@@ -63,18 +63,35 @@
                                             </div>
                                             <div class="separator border-gray-200"></div>
                                             <div class="px-7 py-5" data-kt-user-table-filter="form">
+                                                <div class="mb-5">
+                                                    <label class="form-label fw-semibold">
+                                                        Procesos Académicos:
+                                                    </label>
+                                                    <div>
+                                                        <select class="form-select" wire:model="filtro_proceso"
+                                                            id="filtro_proceso" data-control="select2"
+                                                            data-placeholder="Seleccione su proceso académico">
+                                                            <option value=""></option>
+                                                            @foreach ($procesos as $item)
+                                                                <option value="{{ $item->id_admision }}">
+                                                                    Procesos {{ $item->admision_año }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                </div>
                                                 <div class="mb-10" data-select2-id="select2-data-137-o1oi">
                                                     <label class="form-label fs-5 fw-semibold">Estado:</label>
                                                     <div class="form-check mb-2 form-check-custom">
                                                         <input class="form-check-input" wire:model="filtro_estado" type="radio" value="1" id="activo"/>
                                                         <label class="form-check-label" for="activo">
-                                                            Activo
+                                                            Curso Activo
                                                         </label>
                                                     </div>
                                                     <div class="form-check mb-2 form-check-custom">
                                                         <input class="form-check-input" wire:model="filtro_estado" type="radio" value="0" id="inactivo"/>
                                                         <label class="form-check-label" for="inactivo">
-                                                            Inactivo
+                                                            Inhabilitado
                                                         </label>
                                                     </div>
                                                     <div class="form-check mb-2 form-check-custom">
@@ -101,111 +118,101 @@
                     @endif
                     {{-- card  --}}
                     <div class="row g-5 mb-5">
-                        @forelse ($programas as $item2)
-                            @php
-                                $cursos = App\Models\DocenteCurso::join('curso_programa_proceso', 'docente_curso.id_curso_programa_proceso', 'curso_programa_proceso.id_curso_programa_proceso')
-                                    ->join('programa_proceso', 'curso_programa_proceso.id_programa_proceso', 'programa_proceso.id_programa_proceso')
-                                    ->join('programa_plan', 'programa_proceso.id_programa_plan', 'programa_plan.id_programa_plan')
-                                    ->join('programa', 'programa_plan.id_programa', 'programa.id_programa')
-                                    ->join('curso', 'curso_programa_proceso.id_curso', 'curso.id_curso')
-                                    ->where('docente_curso.id_docente', $docente->id_docente)
-                                    ->where('programa.id_programa', $item2->id_programa)
-                                    ->where(function ($query) use ($search) {
-                                        $query->where('curso.curso_nombre', 'like', '%' . $search . '%')
-                                            ->orWhere('curso.curso_codigo', 'like', '%' . $search . '%');
-                                    })
-                                    ->where('docente_curso_estado', $data_filtro_estado == null ? '!=' : '=', $data_filtro_estado)
-                                    ->get(); // obtenemos los cursos del docente del trabajador del usuario autenticado
-                                $programa = App\Models\Programa::find($item2->id_programa);
-                                $numero_aleatorio = rand(1, 6);
-                                if ($numero_aleatorio == 1) {
-                                    $color = 'primary';
-                                    $colorlight = 'bg-light-primary';
-                                } elseif ($numero_aleatorio == 2) {
-                                    $color = 'dark';
-                                    $colorlight = 'bg-light-dark';
-                                } elseif ($numero_aleatorio == 3) {
-                                    $color = 'success';
-                                    $colorlight = 'bg-light-success';
-                                } elseif ($numero_aleatorio == 4) {
-                                    $color = 'danger';
-                                    $colorlight = 'bg-light-danger';
-                                } elseif ($numero_aleatorio == 5) {
-                                    $color = 'warning';
-                                    $colorlight = 'bg-light-warning';
-                                } elseif ($numero_aleatorio == 6) {
-                                    $color = 'info';
-                                    $colorlight = 'bg-light-info';
-                                }
-                            @endphp
-                            <div class="bg-body shadow-sm px-0 rounded rounded-3">
-                                <div class="card-header {{ $colorlight }} py-5 px-8 rounded rounded-3">
-                                    <span class="card-title fs-2 text-gray-800 text-uppercase" style="font-weight: 700;">
-                                        @if ($programa->mencion)
-                                            {{ $programa->programa }} EN {{ $programa->subprograma }} CON MENCIÓN
-                                            {{ $programa->mencion }} - MODALIDAD
-                                            {{ $programa->id_modalidad == 1 ? 'PRESENCIAL' : 'A DISTANCIA' }}
-                                        @else
-                                            {{ $programa->programa }} EN {{ $programa->subprograma }} - MODALIDAD
-                                            {{ $programa->id_modalidad == 1 ? 'PRESENCIAL' : 'A DISTANCIA' }}
-                                        @endif
-                                    </span>
-                                </div>
-                                <div class="py-8 px-8">
-                                    <div class="row g-5">
-                                        @forelse ($cursos as $item)
-                                            <div class="col-sm-6 col-md-6 col-lg-6 col-xl-4">
-                                                <div class="card card-bordered shadow-sm h-100 hover-elevate-up parent-hover">
-                                                    @if ($item->docente_curso_estado == 1)
-                                                        <div class="ribbon ribbon-top">
-                                                            <div class="ribbon-label bg-success fw-bold fs-5">Activo</div>
-                                                        </div>
-                                                    @elseif ($item->docente_curso_estado == 0)
-                                                        <div class="ribbon ribbon-top">
-                                                            <div class="ribbon-label bg-danger fw-bold fs-5">Inactivo</div>
-                                                        </div>
-                                                    @elseif ($item->docente_curso_estado == 2)
-                                                        <div class="ribbon ribbon-top">
-                                                            <div class="ribbon-label bg-secondary text-gray-700 fw-bold fs-5">Curso
-                                                                Terminado</div>
-                                                        </div>
-                                                    @endif
-                                                    <div
-                                                        class="card-body mb-0 d-flex flex-column justify-content-center px-10 py-10">
-                                                        <div class="mb-2 text-center">
-                                                            <span class="fs-2 text-gray-800 fw-bold text-uppercase parent-hover-primary">
-                                                                {{ $item->curso_programa_proceso->curso->curso_nombre }}
-                                                            </span>
-                                                        </div>
-                                                        <div class="mb-5 fs-6 text-gray-600 fw-bold text-center">
-                                                            <span>
-                                                                {{ $item->curso_programa_proceso->curso->curso_codigo }} -
-                                                                CICLO
-                                                                {{ $item->curso_programa_proceso->curso->ciclo->ciclo }} -
-                                                                GRUPO
-                                                                {{ $item->programa_proceso_grupo->grupo_detalle }}
-                                                            </span>
-                                                        </div>
-                                                        <div class="d-flex flex-column row-gap-5">
-                                                            <a href="{{ route('docente.matriculados', ['id_docente_curso' => $item->id_docente_curso]) }}" class="btn btn-primary w-100">
-                                                                Ingresar
-                                                            </a>
+                        @forelse ($cursos_docente as $item2)
+                            <div class="col-md-12">
+                                {{-- <div class="bg-body shadow-sm px-0 rounded rounded-3">
+                                    <div class="card-header py-5 px-8 rounded rounded-3 text-center"> --}}
+                                        <span class="fw-bold fs-1 text-gray-800">
+                                            Cursos asignados en el Proceso {{ $item2['proceso']->admision_año }}
+                                        </span>
+                                    {{-- </div>
+                                </div> --}}
+                            </div>
+                            @forelse ($item2['programa'] as $item)
+                                <div class="col-md-12">
+                                    <div class="bg-body shadow-sm px-0 rounded rounded-3">
+                                        <div class="card-header {{ $item['colorlight'] }} py-5 px-8 rounded rounded-3">
+                                            <span class="card-title fs-2 text-gray-800 text-uppercase" style="font-weight: 700;">
+                                                @if ($item['programa']->mencion)
+                                                    {{ $item['programa']->programa }} EN {{ $item['programa']->subprograma }} CON MENCIÓN
+                                                    {{ $item['programa']->mencion }} - MODALIDAD
+                                                    {{ $item['programa']->id_modalidad == 1 ? 'PRESENCIAL' : 'A DISTANCIA' }}
+                                                @else
+                                                    {{ $item['programa']->programa }} EN {{ $item['programa']->subprograma }} - MODALIDAD
+                                                    {{ $item['programa']->id_modalidad == 1 ? 'PRESENCIAL' : 'A DISTANCIA' }}
+                                                @endif
+                                            </span>
+                                        </div>
+                                        <div class="py-8 px-8">
+                                            <div class="row g-5">
+                                                @forelse ($item['cursos'] as $curso)
+                                                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-4">
+                                                        <div class="card card-bordered shadow-sm h-100 hover-elevate-up parent-hover">
+                                                            @if ($curso['docente_curso_estado'] == 1)
+                                                                <div class="ribbon ribbon-top">
+                                                                    <div class="ribbon-label bg-success fw-bold fs-5">
+                                                                        Curso Activo
+                                                                    </div>
+                                                                </div>
+                                                            @elseif ($curso['docente_curso_estado'] == 0)
+                                                                <div class="ribbon ribbon-top">
+                                                                    <div class="ribbon-label bg-danger fw-bold fs-5">
+                                                                        Inhabilitado
+                                                                    </div>
+                                                                </div>
+                                                            @elseif ($curso['docente_curso_estado'] == 2)
+                                                                <div class="ribbon ribbon-top">
+                                                                    <div class="ribbon-label bg-secondary text-gray-700 fw-bold fs-5">
+                                                                        Curso Terminado
+                                                                    </div>
+                                                                </div>
+                                                            @endif
+                                                            <div
+                                                                class="card-body mb-0 d-flex flex-column justify-content-center px-10 py-10">
+                                                                <div class="mb-2 text-center">
+                                                                    <span class="fs-2 text-gray-800 fw-bold text-uppercase parent-hover-primary">
+                                                                        {{ $curso['curso_programa_plan']->curso->curso_nombre }}
+                                                                    </span>
+                                                                </div>
+                                                                <div class="mb-5 fs-6 text-gray-600 fw-bold text-center">
+                                                                    <span>
+                                                                        {{ $curso['curso_programa_plan']->curso->curso_codigo }} -
+                                                                        CICLO
+                                                                        {{ $curso['curso_programa_plan']->curso->ciclo->ciclo }} -
+                                                                        GRUPO
+                                                                        {{ $curso['programa_proceso_grupo']->grupo_detalle }}
+                                                                    </span>
+                                                                </div>
+                                                                <div class="d-flex flex-column row-gap-5">
+                                                                    <button wire:click="ingresar({{ $curso['id_docente_curso'] }})" class="btn btn-primary w-100">
+                                                                        Ingresar
+                                                                    </button>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
+                                                @empty
+                                                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                                        <div class="mb-0 py-4 text-center">
+                                                            <span class="fs-2 text-gray-500 fw-bold text-uppercase">
+                                                                No se encontraron resultados
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                @endforelse
                                             </div>
-                                        @empty
-                                            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                                                <div class="mb-0 py-4 text-center">
-                                                    <span class="fs-2 text-gray-500 fw-bold text-uppercase">
-                                                        No se encontraron resultados
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        @endforelse
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            @empty
+                                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                    <div class="mb-0 py-20 text-center">
+                                        <span class="fs-2 text-gray-500 fw-bold text-uppercase">
+                                            No se encontraron cursos asignados
+                                        </span>
+                                    </div>
+                                </div>
+                            @endforelse
                         @empty
                             <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
                                 <div class="mb-0 py-20 text-center">

@@ -24,8 +24,7 @@
             <div class="row mb-5 mb-xl-10">
                 <div class="col-md-12 mb-md-5 mb-xl-10">
                     {{-- alerta --}}
-                    <div
-                        class="alert bg-light-primary border border-3 border-primary d-flex align-items-center p-5 mb-5">
+                    <div class="alert bg-light-primary border border-3 border-primary d-flex align-items-center p-5 mb-5">
                         <span class="svg-icon svg-icon-2hx svg-icon-primary me-4 d-flex align-items-center">
                             <i class="las la-exclamation-circle fs-1 text-primary"></i>
                         </span>
@@ -53,7 +52,7 @@
                                         </span>
                                         Filtrar
                                     </button>
-                                    <div class="menu menu-sub menu-sub-dropdown w-300px w-md-350px"
+                                    <div class="menu menu-sub menu-sub-dropdown w-300px w-md-350px w-lg-500px"
                                         data-kt-menu="true" id="filtros_docentes" wire:ignore.self>
                                         <div class="px-7 py-5">
                                             <div class="fs-4 text-dark fw-bold">
@@ -64,23 +63,6 @@
                                         <div class="separator border-gray-200"></div>
 
                                         <form class="px-7 py-5" wire:submit.prevent="aplicar_filtro">
-                                            <div class="mb-5">
-                                                <label class="form-label fw-semibold">
-                                                    Proceso Académico:
-                                                </label>
-                                                <div>
-                                                    <select class="form-select" wire:model="filtro_proceso"
-                                                        id="filtro_proceso" data-control="select2"
-                                                        data-placeholder="Seleccione su admisión">
-                                                        <option value=""></option>
-                                                        @foreach ($procesos as $item)
-                                                            <option value="{{ $item->id_admision }}">
-                                                                {{ $item->admision }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            </div>
                                             <div class="mb-5">
                                                 <label class="form-label fw-semibold">
                                                     Plan de Estudios:
@@ -110,9 +92,9 @@
                                                         @foreach ($programas as $item)
                                                             <option value="{{ $item->id_programa }}">
                                                                 @if ($item->mencion)
-                                                                    MENCIÓN EN {{ $item->mencion }} MODALIDAD {{ $item->modalidad->modalidad }}
+                                                                    MENCIÓN EN {{ $item->mencion }} - MODALIDAD {{ $item->modalidad->modalidad }}
                                                                 @else
-                                                                    {{ $item->programa }} EN {{ $item->subprograma }} MODALIDAD {{ $item->modalidad->modalidad }}
+                                                                    {{ $item->programa }} EN {{ $item->subprograma }} - MODALIDAD {{ $item->modalidad->modalidad }}
                                                                 @endif
                                                             </option>
                                                         @endforeach
@@ -155,13 +137,14 @@
                             @if ($programa_data)
                                 @php
                                     $programa_data_show = App\Models\Programa::find($programa_data);
+                                    $ciclo_data_show = $ciclo_data ? App\Models\Ciclo::find($ciclo_data) : null;
                                 @endphp
                                 <div class="mb-3">
                                     <span class="fs-4 text-gray-800">
                                         @if ($programa_data_show->mencion)
-                                            PROGRAMA SELECCIONADO: <strong>MENCIÓN EN {{ $programa_data_show->mencion }} - MODALIDAD {{ $programa_data_show->modalidad->modalidad }}</strong>
+                                            PROGRAMA SELECCIONADO: <strong>MENCIÓN EN {{ $programa_data_show->mencion }} - MODALIDAD {{ $programa_data_show->modalidad->modalidad }} {{ $ciclo_data_show ? "- CICLO " . $ciclo_data_show->ciclo : "" }}</strong>
                                         @else
-                                            PROGRAMA SELECCIONADO: <strong>{{ $programa_data_show->programa }} EN {{ $programa_data_show->subprograma }} - MODALIDAD {{ $programa_data_show->modalidad->modalidad }}</strong>
+                                            PROGRAMA SELECCIONADO: <strong>{{ $programa_data_show->programa }} EN {{ $programa_data_show->subprograma }} - MODALIDAD {{ $programa_data_show->modalidad->modalidad }} {{ $ciclo_data_show ? "- CICLO " . $ciclo_data_show->ciclo : "" }}</strong>
                                         @endif
                                     </span>
                                 </div>
@@ -175,9 +158,7 @@
                                             <th>Nombre del Curso</th>
                                             <th>Créditos</th>
                                             <th>Ciclo</th>
-                                            <th>Proceso</th>
                                             <th>Plan</th>
-                                            {{-- <th>Estado</th> --}}
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -185,7 +166,7 @@
                                         @forelse ($cursos as $item)
                                             <tr>
                                                 <td class="fw-bold fs-6">
-                                                    {{ $item->id_curso_programa_proceso }}
+                                                    {{ $item->id_curso_programa_plan }}
                                                 </td>
                                                 <td class="fw-bold fs-6">
                                                     {{ $item->curso_codigo }}
@@ -202,30 +183,10 @@
                                                     </span>
                                                 </td>
                                                 <td class="fs-6">
-                                                    <span class="badge badge-light-info fs-6 px-3 py-2">
-                                                        {{ $item->admision }}
-                                                    </span>
-                                                </td>
-                                                <td class="fs-6">
                                                     <span class="badge badge-light-success fs-6 px-3 py-2">
                                                         PLAN {{ $item->plan }}
                                                     </span>
                                                 </td>
-                                                {{-- <td class="fs-6">
-                                                    @if ($item->curso_programa_proceso_estado == 1)
-                                                        <span class="badge badge-primary fs-6 px-3 py-2"
-                                                            wire:click="alerta_cambiar_estado({{ $item->id_docente }})"
-                                                            style="cursor: pointer;">
-                                                            Activo
-                                                        </span>
-                                                    @else
-                                                        <span class="badge badge-danger fs-6 px-3 py-2"
-                                                            wire:click="alerta_cambiar_estado({{ $item->id_docente }})"
-                                                            style="cursor: pointer;">
-                                                            Inactivo
-                                                        </span>
-                                                    @endif
-                                                </td> --}}
                                                 <td class="text-center">
                                                     <button type="button"
                                                         class="btn btn-flex btn-center fw-bold btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary hover-scale"
@@ -252,7 +213,7 @@
                                                         data-kt-menu="true">
                                                         <div class="menu-item px-3">
                                                             <a href="#modal_curso_detalle"
-                                                                wire:click="cargar_datos({{ $item->id_curso_programa_proceso }}, 'show')"
+                                                                wire:click="cargar_datos({{ $item->id_curso_programa_plan }}, 'show')"
                                                                 class="menu-link px-3 fs-6" data-bs-toggle="modal"
                                                                 data-bs-target="#modal_curso_detalle">
                                                                 Detalle
@@ -260,7 +221,7 @@
                                                         </div>
                                                         <div class="menu-item px-3">
                                                             <a href="#modal_docente"
-                                                                wire:click="cargar_datos({{ $item->id_curso_programa_proceso }}, 'select')"
+                                                                wire:click="cargar_datos({{ $item->id_curso_programa_plan }}, 'select')"
                                                                 class="menu-link px-3 fs-6" data-bs-toggle="modal"
                                                                 data-bs-target="#modal_asignacion_docente">
                                                                 Asignar Docente
@@ -369,7 +330,7 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="col-md-8">
+                        <div class="col-md-6">
                             <label for="docente" class="required form-label fw-semibold text-gray-600 fs-5">
                                 Buscar Docente
                             </label>
@@ -388,8 +349,27 @@
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
-                        <div class="col-md-4">
-                            <label for="docente" class="required form-label fw-semibold text-gray-600 fs-5">
+                        <div class="col-md-3">
+                            <label for="proceso" class="required form-label fw-semibold text-gray-600 fs-5">
+                                Proceso Académico
+                            </label>
+                            <select class="form-select @error('proceso') is-invalid @enderror"
+                                wire:model="proceso" id="proceso" data-control="select2"
+                                data-placeholder="Buscar proceso academico" data-allow-clear="true"
+                                data-dropdown-parent="#modal_asignacion_docente">
+                                <option></option>
+                                @foreach ($procesos as $item)
+                                    <option value="{{ $item->id_admision }}">
+                                        {{ $item->admision }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('proceso')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="col-md-3">
+                            <label for="grupo" class="required form-label fw-semibold text-gray-600 fs-5">
                                 Seleccionar Grupo
                             </label>
                             <select class="form-select @error('grupo') is-invalid @enderror"
@@ -419,6 +399,9 @@
                                 </button>
                             </div>
                         </div>
+                        <div class="col-md-12">
+                            <div class="separator separator-dotted separator-content border-dark my-3">x</div>
+                        </div>
                         <span class="col-12 fw-bold text-gray-700 fs-3">
                             DOCENTES ASIGNADOS
                         </span>
@@ -439,10 +422,12 @@
                             <table class="table table-hover align-middle table-rounded border mb-0 gy-5 gs-5">
                                 <thead class="bg-light-warning">
                                     <tr class="fw-bold fs-5 text-gray-900 border-bottom-2 border-gray-200">
+                                        <th>#</th>
                                         <th>Documento</th>
                                         <th>Apellido y Nombres</th>
-                                        <th>Correo Electrónico</th>
                                         <th>Grado Académico</th>
+                                        <th>Proceso Académico</th>
+                                        <th>Grupo</th>
                                         <th>Estado</th>
                                         <th></th>
                                     </tr>
@@ -452,17 +437,27 @@
                                         @forelse ($docentes as $item)
                                             <tr>
                                                 <td class="fw-bold fs-6">
+                                                    {{ $loop->iteration }}
+                                                </td>
+                                                <td class="fw-bold fs-6">
                                                     {{ $item->docente->trabajador->trabajador_numero_documento }}
                                                 </td>
                                                 <td class="fs-6 text-uppercase">
                                                     {{ $item->docente->trabajador->trabajador_apellido }}, {{ $item->docente->trabajador->trabajador_nombre }}
                                                 </td>
                                                 <td class="fs-6">
-                                                    {{ $item->docente->trabajador->trabajador_correo }}
-                                                </td>
-                                                <td class="fs-6">
                                                     <span class="badge badge-light-info fs-6 px-3 py-2">
                                                         {{ $item->docente->trabajador->grado_academico->grado_academico }}
+                                                    </span>
+                                                </td>
+                                                <td class="fs-6">
+                                                    <span class="badge badge-light-secondary text-gray-700 fs-6 px-3 py-2">
+                                                        {{ $item->admision->admision }}
+                                                    </span>
+                                                </td>
+                                                <td class="fs-6">
+                                                    <span class="badge badge-light-success fs-6 px-3 py-2">
+                                                        GRUPO {{ $item->programa_proceso_grupo->grupo_detalle }}
                                                     </span>
                                                 </td>
                                                 <td class="fs-6">
@@ -472,11 +467,15 @@
                                                             style="cursor: pointer;">
                                                             Activo
                                                         </span>
-                                                    @else
+                                                    @elseif ($item->docente_curso_estado == 0)
                                                         <span class="badge badge-danger fs-6 px-3 py-2"
                                                             wire:click="alerta_cambiar_estado({{ $item->id_docente_curso }})"
                                                             style="cursor: pointer;">
                                                             Inactivo
+                                                        </span>
+                                                    @else
+                                                        <span class="badge badge-light-warning fs-6 px-3 py-2">
+                                                            Curso Finalizado
                                                         </span>
                                                     @endif
                                                 </td>
@@ -620,24 +619,13 @@
                             </div>
                             <div class="row mb-3">
                                 <span class="col-4 fw-semibold text-gray-600 fs-5">
-                                    Proceso Académico
-                                </span>
-                                <span class="col-1 fw-semibold text-gray-600 fs-5">
-                                    :
-                                </span>
-                                <span class="col-7 fw-bold text-gray-900 fs-5">
-                                    {{ $curso_programa_proceso ? $curso_programa_proceso->programa_proceso->admision->admision : '' }}
-                                </span>
-                            </div>
-                            <div class="row mb-3">
-                                <span class="col-4 fw-semibold text-gray-600 fs-5">
                                     Plan de Estudios
                                 </span>
                                 <span class="col-1 fw-semibold text-gray-600 fs-5">
                                     :
                                 </span>
                                 <span class="col-7 fw-bold text-gray-900 fs-5">
-                                    PLAN {{ $curso_programa_proceso ? $curso_programa_proceso->programa_proceso->programa_plan->plan->plan : '' }}
+                                    PLAN {{ $curso_programa_plan ? $curso_programa_plan->programa_plan->plan->plan : '' }}
                                 </span>
                             </div>
                             <div class="row mt-10">
@@ -650,8 +638,9 @@
                                             <tr class="fw-bold fs-5 text-gray-900 border-bottom-2 border-gray-200">
                                                 <th>Documento</th>
                                                 <th>Apellido y Nombres</th>
-                                                <th>Correo Electrónico</th>
                                                 <th>Grado Académico</th>
+                                                <th>Proceso Académico</th>
+                                                <th>Grupo</th>
                                                 <th>Estado</th>
                                             </tr>
                                         </thead>
@@ -666,25 +655,32 @@
                                                             {{ $item->docente->trabajador->trabajador_apellido }}, {{ $item->docente->trabajador->trabajador_nombre }}
                                                         </td>
                                                         <td class="fs-6">
-                                                            {{ $item->docente->trabajador->trabajador_correo }}
-                                                        </td>
-                                                        <td class="fs-6">
                                                             <span class="badge badge-light-info fs-6 px-3 py-2">
                                                                 {{ $item->docente->trabajador->grado_academico->grado_academico }}
                                                             </span>
                                                         </td>
                                                         <td class="fs-6">
+                                                            <span class="badge badge-light-secondary text-gray-700 fs-6 px-3 py-2">
+                                                                {{ $item->admision->admision }}
+                                                            </span>
+                                                        </td>
+                                                        <td class="fs-6">
+                                                            <span class="badge badge-light-success fs-6 px-3 py-2">
+                                                                GRUPO {{ $item->programa_proceso_grupo->grupo_detalle }}
+                                                            </span>
+                                                        </td>
+                                                        <td class="fs-6">
                                                             @if ($item->docente_curso_estado == 1)
-                                                                <span class="badge badge-primary fs-6 px-3 py-2"
-                                                                    wire:click="alerta_cambiar_estado({{ $item->id_docente_curso }})"
-                                                                    style="cursor: pointer;">
+                                                                <span class="badge badge-primary fs-6 px-3 py-2">
                                                                     Activo
                                                                 </span>
-                                                            @else
-                                                                <span class="badge badge-danger fs-6 px-3 py-2"
-                                                                    wire:click="alerta_cambiar_estado({{ $item->id_docente_curso }})"
-                                                                    style="cursor: pointer;">
+                                                            @elseif ($item->docente_curso_estado == 0)
+                                                                <span class="badge badge-danger fs-6 px-3 py-2">
                                                                     Inactivo
+                                                                </span>
+                                                            @else
+                                                                <span class="badge badge-light-warning fs-6 px-3 py-2">
+                                                                    Curso Finalizado
                                                                 </span>
                                                             @endif
                                                         </td>
@@ -788,10 +784,10 @@
                 });
             });
         });
-        // filtro_proceso select2
+        // proceso select2
         $(document).ready(function() {
-            $('#filtro_proceso').select2({
-                placeholder: 'Seleccione su admisión',
+            $('#proceso').select2({
+                placeholder: 'Seleccione su proceso academico',
                 allowClear: true,
                 width: '100%',
                 selectOnClose: true,
@@ -804,12 +800,12 @@
                     }
                 }
             });
-            $('#filtro_proceso').on('change', function() {
-                @this.set('filtro_proceso', this.value);
+            $('#proceso').on('change', function() {
+                @this.set('proceso', this.value);
             });
             Livewire.hook('message.processed', (message, component) => {
-                $('#filtro_proceso').select2({
-                    placeholder: 'Seleccione su admisión',
+                $('#proceso').select2({
+                    placeholder: 'Seleccione su proceso academico',
                     allowClear: true,
                     width: '100%',
                     selectOnClose: true,
@@ -822,8 +818,8 @@
                         }
                     }
                 });
-                $('#filtro_proceso').on('change', function() {
-                    @this.set('filtro_proceso', this.value);
+                $('#proceso').on('change', function() {
+                    @this.set('proceso', this.value);
                 });
             });
         });

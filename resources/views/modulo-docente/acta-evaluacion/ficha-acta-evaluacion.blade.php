@@ -264,13 +264,13 @@
                         {{ $item->nombre_completo }}
                     </td>
                     <td style="border: 1px solid black; padding: 4px;" align="center">
-                        {{ $notas->nota_evaluacion_permanente }}
+                        {{ $notas->nota_evaluacion_permanente ? $notas->nota_evaluacion_permanente : '-' }}
                     </td>
                     <td style="border: 1px solid black; padding: 4px;" align="center">
-                        {{ $notas->nota_evaluacion_medio_curso }}
+                        {{ $notas->nota_evaluacion_medio_curso ? $notas->nota_evaluacion_medio_curso : '-' }}
                     </td>
                     <td style="border: 1px solid black; padding: 4px;" align="center">
-                        {{ $notas->nota_evaluacion_final }}
+                        {{ $notas->nota_evaluacion_final ? $notas->nota_evaluacion_final : '-' }}
                     </td>
                     <td style="border: 1px solid black; padding: 4px;" align="center">
                         {{ $notas->nota_promedio_final }}

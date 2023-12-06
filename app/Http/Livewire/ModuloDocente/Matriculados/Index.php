@@ -2,21 +2,28 @@
 
 namespace App\Http\Livewire\ModuloDocente\Matriculados;
 
-use App\Models\CursoProgramaProceso;
+use App\Models\ActaDocente;
+use App\Models\Curso;
+use App\Models\CursoProgramaPlan;
 use App\Models\Docente;
 use App\Models\DocenteCurso;
 use App\Models\MatriculaCurso;
 use App\Models\NotaMatriculaCurso;
+use App\Models\Programa;
+use App\Models\ProgramaProcesoGrupo;
 use Livewire\Component;
-use Livewire\WithPagination;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 
 class Index extends Component
 {
     public $id_docente_curso;
     public $docente_curso;
     public $id_programa_proceso_grupo;
-    public $curso_programa_proceso;
-    public $id_curso_programa_proceso;
+    public $curso_programa_plan;
+    public $id_curso_programa_plan;
+    public $id_admision;
     public $curso;
     public $grupo;
 
@@ -57,10 +64,11 @@ class Index extends Component
             abort(403);
         }
 
-        $this->curso_programa_proceso = CursoProgramaProceso::find($this->docente_curso->id_curso_programa_proceso);
-        $this->id_curso_programa_proceso = $this->curso_programa_proceso->id_curso_programa_proceso;
+        $this->curso_programa_plan = CursoProgramaPlan::find($this->docente_curso->id_curso_programa_plan);
+        $this->id_curso_programa_plan = $this->curso_programa_plan->id_curso_programa_plan;
         $this->id_programa_proceso_grupo = $this->docente_curso->id_programa_proceso_grupo;
-        $this->curso = $this->curso_programa_proceso->curso;
+        $this->id_admision = $this->docente_curso->id_admision;
+        $this->curso = $this->curso_programa_plan->curso;
         $this->grupo = $this->docente_curso->programa_proceso_grupo;
     }
 
@@ -75,14 +83,14 @@ class Index extends Component
         $matriculados_count = MatriculaCurso::join('matricula', 'matricula_curso.id_matricula', 'matricula.id_matricula')
                         ->join('admitido', 'matricula.id_admitido', 'admitido.id_admitido')
                         ->join('persona', 'admitido.id_persona', 'persona.id_persona')
-                        ->where('matricula_curso.id_curso_programa_proceso', $this->id_curso_programa_proceso)
+                        ->where('matricula_curso.id_curso_programa_plan', $this->id_curso_programa_plan)
                         ->where('matricula.id_programa_proceso_grupo', $this->id_programa_proceso_grupo)
                         ->count();
 
         $matriculados_finalizados_count = MatriculaCurso::join('matricula', 'matricula_curso.id_matricula', 'matricula.id_matricula')
                         ->join('admitido', 'matricula.id_admitido', 'admitido.id_admitido')
                         ->join('persona', 'admitido.id_persona', 'persona.id_persona')
-                        ->where('matricula_curso.id_curso_programa_proceso', $this->id_curso_programa_proceso)
+                        ->where('matricula_curso.id_curso_programa_plan', $this->id_curso_programa_plan)
                         ->where('matricula.id_programa_proceso_grupo', $this->id_programa_proceso_grupo)
                         ->where('matricula_curso.matricula_curso_estado', 2)
                         ->count();
@@ -123,11 +131,6 @@ class Index extends Component
         }
 
         return false;
-    }
-
-    public function updatingSearch()
-    {
-        $this->resetPage();
     }
 
     public function limpiar_modal()
@@ -259,6 +262,7 @@ class Index extends Component
             {
                 $nota_matricula_curso->id_estado_cursos = 3;
             }
+            $nota_matricula_curso->id_docente = $this->docente_curso->id_docente;
             $nota_matricula_curso->save();
 
             // cambiamos el estado de la matricula_curso a finalizado
@@ -287,14 +291,14 @@ class Index extends Component
         $matriculados_count = MatriculaCurso::join('matricula', 'matricula_curso.id_matricula', 'matricula.id_matricula')
                         ->join('admitido', 'matricula.id_admitido', 'admitido.id_admitido')
                         ->join('persona', 'admitido.id_persona', 'persona.id_persona')
-                        ->where('matricula_curso.id_curso_programa_proceso', $this->id_curso_programa_proceso)
+                        ->where('matricula_curso.id_curso_programa_plan', $this->id_curso_programa_plan)
                         ->where('matricula.id_programa_proceso_grupo', $this->id_programa_proceso_grupo)
                         ->count();
 
         $matriculados_finalizados_count = MatriculaCurso::join('matricula', 'matricula_curso.id_matricula', 'matricula.id_matricula')
                         ->join('admitido', 'matricula.id_admitido', 'admitido.id_admitido')
                         ->join('persona', 'admitido.id_persona', 'persona.id_persona')
-                        ->where('matricula_curso.id_curso_programa_proceso', $this->id_curso_programa_proceso)
+                        ->where('matricula_curso.id_curso_programa_plan', $this->id_curso_programa_plan)
                         ->where('matricula.id_programa_proceso_grupo', $this->id_programa_proceso_grupo)
                         ->where('matricula_curso.matricula_curso_estado', 2)
                         ->count();
@@ -311,13 +315,80 @@ class Index extends Component
         $this->emit('render');
     }
 
+    public function generar_acta_notas($id_docente_curso)
+    {
+        $docente_curso = DocenteCurso::find($id_docente_curso);
+        $matriculados = MatriculaCurso::join('matricula', 'matricula_curso.id_matricula', 'matricula.id_matricula')
+                        ->join('admitido', 'matricula.id_admitido', 'admitido.id_admitido')
+                        ->join('persona', 'admitido.id_persona', 'persona.id_persona')
+                        ->where('matricula_curso.id_curso_programa_plan', $docente_curso->id_curso_programa_plan)
+                        ->where('matricula.id_programa_proceso_grupo', $docente_curso->id_programa_proceso_grupo)
+                        ->orderBy('persona.nombre_completo', 'asc')
+                        ->get();
+
+        $fecha2 = date('YmdHis');
+
+        $curso_programa_plan = CursoProgramaPlan::find($docente_curso->id_curso_programa_plan);
+        $curso_model = Curso::find($curso_programa_plan->id_curso);
+        $programa_proceso_grupo = ProgramaProcesoGrupo::find($docente_curso->id_programa_proceso_grupo);
+        $programa_model = Programa::find($curso_programa_plan->programa_plan->id_programa);
+        $docente_model = Docente::find($docente_curso->id_docente);
+        $trabajador = $docente_model->trabajador;
+
+        $admision_año = $docente_curso->admision->admision_año;
+
+        $programa = $programa_model->programa_tipo == 1 ? 'Maestría' : 'Doctorado';
+        $subprograma = $programa_model->subprograma;
+        $mencion = $programa_model->mencion ? $programa_model->mencion : '';
+        $curso = strtoupper($curso_model->curso_nombre);
+        $codigo_curso = $curso_model->curso_codigo;
+        $docente = ($trabajador->id_grado_academico == 4 ? 'Dr. ' : ($trabajador->id_grado_academico == 3 ? 'Mg. ' : 'Bach. ')) . strtoupper($trabajador->trabajador_nombre_completo);
+        $codigo_docente = $trabajador->trabajador_numero_documento;
+        $creditos = $curso_model->curso_credito;
+        $ciclo = $curso_model->ciclo->ciclo;
+        $grupo = $programa_proceso_grupo->grupo_detalle;
+
+        $data = [
+            'matriculados' => $matriculados,
+            'programa' => $programa,
+            'subprograma' => $subprograma,
+            'mencion' => $mencion,
+            'curso' => $curso,
+            'codigo_curso' => $codigo_curso,
+            'docente' => $docente,
+            'codigo_docente' => $codigo_docente,
+            'creditos' => $creditos,
+            'ciclo' => $ciclo,
+            'grupo' => $grupo,
+            'admision_año' => $admision_año
+        ];
+
+        $nombre_pdf = 'acta-notas-' . date('dmYHis') . '-' . Str::slug($docente, '-') . '.pdf';
+        $path = 'Posgrado/Docente/Actas/';
+        if (!File::isDirectory(public_path($path))) {
+            File::makeDirectory(public_path($path), 0755, true, true);
+        }
+        $pdf = Pdf::loadView('modulo-docente.acta-evaluacion.ficha-acta-evaluacion', $data)->save(public_path($path . $nombre_pdf));
+
+        // registrar en la db el acta de notas
+        $acta_docente = new ActaDocente();
+        $acta_docente->acta_url = $path . $nombre_pdf;
+        $acta_docente->id_docente_curso = $id_docente_curso;
+        $acta_docente->acta_docente_fecha_creacion = date('Y-m-d H:i:s');
+        $acta_docente->acta_docente_estado = 1;
+        $acta_docente->save();
+
+        // return $pdf->stream('acta-evaluacion-docente-'.$fecha2.'.pdf');
+    }
+
     public function render()
     {
         $this->matriculados = MatriculaCurso::join('matricula', 'matricula_curso.id_matricula', 'matricula.id_matricula')
                         ->join('admitido', 'matricula.id_admitido', 'admitido.id_admitido')
                         ->join('persona', 'admitido.id_persona', 'persona.id_persona')
-                        ->where('matricula_curso.id_curso_programa_proceso', $this->id_curso_programa_proceso)
+                        ->where('matricula_curso.id_curso_programa_plan', $this->id_curso_programa_plan)
                         ->where('matricula.id_programa_proceso_grupo', $this->id_programa_proceso_grupo)
+                        ->where('matricula_curso.id_admision', $this->id_admision)
                         ->where(function ($query) {
                             $query->where('persona.nombre_completo', 'like', '%'.$this->search.'%')
                                 ->orWhere('admitido.admitido_codigo', 'like', '%'.$this->search.'%');
@@ -329,14 +400,14 @@ class Index extends Component
         $matriculados_count = MatriculaCurso::join('matricula', 'matricula_curso.id_matricula', 'matricula.id_matricula')
                         ->join('admitido', 'matricula.id_admitido', 'admitido.id_admitido')
                         ->join('persona', 'admitido.id_persona', 'persona.id_persona')
-                        ->where('matricula_curso.id_curso_programa_proceso', $this->id_curso_programa_proceso)
+                        ->where('matricula_curso.id_curso_programa_plan', $this->id_curso_programa_plan)
                         ->where('matricula.id_programa_proceso_grupo', $this->id_programa_proceso_grupo)
                         ->count();
 
         $matriculados_finalizados_count = MatriculaCurso::join('matricula', 'matricula_curso.id_matricula', 'matricula.id_matricula')
                         ->join('admitido', 'matricula.id_admitido', 'admitido.id_admitido')
                         ->join('persona', 'admitido.id_persona', 'persona.id_persona')
-                        ->where('matricula_curso.id_curso_programa_proceso', $this->id_curso_programa_proceso)
+                        ->where('matricula_curso.id_curso_programa_plan', $this->id_curso_programa_plan)
                         ->where('matricula.id_programa_proceso_grupo', $this->id_programa_proceso_grupo)
                         ->where('matricula_curso.matricula_curso_estado', 2)
                         ->count();
@@ -347,10 +418,14 @@ class Index extends Component
             $this->modo = 'hide';
         }
 
+        // buscamos si el docente genero su acta de notas
+        $acta_docente = ActaDocente::where('id_docente_curso', $this->id_docente_curso)->first();
+
         return view('livewire.modulo-docente.matriculados.index', [
             // 'matriculados' => $matriculados,
             'matriculados_count' => $matriculados_count,
             'matriculados_finalizados_count' => $matriculados_finalizados_count,
+            'acta_docente' => $acta_docente
         ]);
     }
 }

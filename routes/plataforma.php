@@ -21,8 +21,11 @@ Route::get('/expedientes', [PlataformaController::class, 'expediente'])->middlew
 // ruta para ir a los pagos de los estudiantes
 Route::get('/pagos', [PlataformaController::class, 'pago'])->middleware(['auth.plataforma'])->name('plataforma.pago');
 
-// ruta para ir a los pagos de los estudiantes
+// ruta para ir a los pagos de los estudiantes el estado de cuenta
 Route::get('/estado-cuenta', [PlataformaController::class, 'estado_cuenta'])->middleware(['auth.plataforma'])->name('plataforma.estado-cuenta');
+
+// ruta para ir ver la ficha de estado de cuenta
+Route::get('/estado-cuenta-ficha/{id_admitido}', [PlataformaController::class, 'estado_cuenta_ficha'])->middleware(['auth.plataforma'])->name('plataforma.estado-cuenta-ficha');
 
 // ruta para ir ver la constancia de ingreso
 Route::get('/constancia-ingreso', [PlataformaController::class, 'constancia'])->middleware(['auth.plataforma'])->name('plataforma.constancia');
@@ -33,5 +36,5 @@ Route::get('/matriculas', [PlataformaController::class, 'matriculas'])->middlewa
 // ruta para ir ver el record academico
 Route::get('/record-academico', [PlataformaController::class, 'record_academico'])->middleware(['auth.plataforma'])->name('plataforma.record-academico');
 
-// ruta para ir ver el record academico
+// ruta para ir ver la ficha del record academico
 Route::get('/record-academico-ficha/{id_admitido}', [PlataformaController::class, 'record_academico_ficha'])->middleware(['auth.plataforma'])->name('plataforma.record-academico-ficha');

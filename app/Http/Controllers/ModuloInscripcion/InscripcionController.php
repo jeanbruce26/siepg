@@ -6,23 +6,15 @@ use App\Http\Controllers\Controller;
 use App\Jobs\ProcessEnvioCredenciales;
 use App\Jobs\ProcessRegistroFichaInscripcion;
 use App\Models\Admision;
-use App\Models\Expediente;
 use App\Models\ExpedienteAdmision;
 use App\Models\ExpedienteInscripcion;
 use App\Models\ExpedienteInscripcionSeguimiento;
 use App\Models\Inscripcion;
-use App\Models\InscripcionPago;
-use App\Models\Mencion;
 use App\Models\Pago;
 use App\Models\Persona;
 use App\Models\ProgramaProceso;
-use App\Models\UsuarioEstudiante;
-use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Response;
 
 class InscripcionController extends Controller
 {
@@ -67,7 +59,7 @@ class InscripcionController extends Controller
     {
         $id_persona = $id;
 
-        
+
         $persona = Persona::find($id_persona);
         // dd($persona);
         if (!$persona) {
@@ -152,7 +144,7 @@ class InscripcionController extends Controller
 
         // redireccionar a la pagina final
         return redirect()->route('posgrado.gracias', ['id' => $id]);
-        
+
     }
 
     public function logout()

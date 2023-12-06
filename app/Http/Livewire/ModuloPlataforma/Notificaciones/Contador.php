@@ -4,6 +4,7 @@ namespace App\Http\Livewire\ModuloPlataforma\Notificaciones;
 
 use App\Models\Pago;
 use App\Models\PagoObservacion;
+use App\Models\Persona;
 use Livewire\Component;
 
 class Contador extends Component
@@ -18,7 +19,8 @@ class Contador extends Component
     {
         $observaciones = collect([]);
         $observaciones2 = collect([]);
-        $pagos = Pago::where('pago_documento', auth('plataforma')->user()->usuario_estudiante)->orderBy('id_pago', 'desc')->get();
+        $persona = Persona::where('id_persona', auth('plataforma')->user()->id_persona)->first();
+        $pagos = Pago::where('pago_documento', $persona->numero_documento)->orderBy('id_pago', 'desc')->get();
         foreach ($pagos as $pago) {
             $observacion = PagoObservacion::where('id_pago', $pago->id_pago)
                 ->where('pago_observacion_estado', 1)

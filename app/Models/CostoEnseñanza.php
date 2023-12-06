@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class CostoEnseñanza extends Model
 {
@@ -13,26 +14,18 @@ class CostoEnseñanza extends Model
     protected $table = 'costo_enseñanza';
     protected $fillable = [
         'id_costo_enseñanza',
-        'id_ciclo',
-        'id_programa_plan',
+        'id_plan',
+        'programa_tipo',
         'costo_credito',
-        'numero_credito',
-        'costo_ciclo',
         'costo_enseñanza_fecha_creacion',
         'costo_enseñanza_estado',
     ];
 
     public $timestamps = false;
 
-    //Ciclo
-    public function ciclo(){
-        return $this->belongsTo(Ciclo::class,
-        'id_ciclo','id_ciclo');
-    }
-
-    //Programa Plan
-    public function programa_plan(){
-        return $this->belongsTo(ProgramaPlan::class,
-        'id_programa_plan','id_programa_plan');
+    // Plan
+    public function plan(): BelongsTo
+    {
+        return $this->belongsTo(Plan::class, 'id_plan');
     }
 }
