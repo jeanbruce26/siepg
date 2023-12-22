@@ -1,7 +1,14 @@
 <div class="">
     <div class="row g-5 gx-xl-10">
-        <div class="col-md-8">
+        <div class="col-md-12">
             <div class="row g-5 gx-xl-10">
+                <div class="col-md-12">
+                    <div class="d-flex justify-content-end mt-3 gap-5">
+                        <button type="button" class="btn btn-primary hover-elevate-up px-10">
+                            REALIZAR INSCRIPCIÓN
+                        </button>
+                    </div>
+                </div>
                 <div class="col-md-12">
                     <div class="card shadow-sm bg-light-success">
                         <div class="px-7 py-6">
@@ -11,12 +18,9 @@
                             <p>
                             <ul class="fs-6">
                                 <li class="mb-3">
-                                    Si usted realizó el pago por concepto de inscripción, deberá habilitar su
-                                    comprobante de pago o voucher,
-                                    <strong>dando click en el botón "REGISTRAR PAGO"</strong> ubicado en la parte
-                                    inferior.
-                                    Una vez que haya habilitado su voucher, podrá continuar con el proceso de
-                                    inscripción mediante esta plataforma.
+                                    Si usted realizó el pago por concepto de inscripción, deberá realizar el registro de su inscripción,
+                                    <strong>dando click en el botón "REGISTRAR INSCRIPCIÓN"</strong> que se encuentra en la parte superior de esta página.
+                                    Una vez que haya realizado el registro de su inscripción, deberá esperar a la validación de su inscripción.
                                 </li>
                                 <li class="mb-3">
                                     Una vez que finalice el proceso, se generará su ficha de inscripción
@@ -66,35 +70,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-12">
-                    <div class="d-flex mt-3 gap-5">
-                        <button type="button" class="btn btn-info hover-scale w-50" data-bs-toggle="modal" data-bs-target="#modal_formas_pago">
-                            FORMAS DE PAGO
-                        </button>
-                        @if ($fecha_inicio_inscripcion <= date('Y-m-d') && $fecha_final_inscripcion >= date('Y-m-d'))
-                            <a
-                                href="#modal_registro_pago"
-                                wire:click="cargar_registro_pago"
-                                class="btn btn-success hover-scale w-50"
-                                data-bs-toggle="modal"
-                                data-bs-target="#modal_registro_pago"
-                                >
-                                REGISTRAR PAGO
-                            </a>
-                        @else
-                            <button
-                                type="button"
-                                wire:click="alerta_registro_pago"
-                                class="btn btn-success hover-scale w-50"
-                                >
-                                REGISTRAR PAGO
-                            </button>
-                        @endif
-                    </div>
-                </div>
             </div>
         </div>
-        <div class="col-md-4 g-5">
+        {{-- <div class="col-md-4 g-5">
             <div class="row gap-5">
                 <div class="col-md-12">
                     <div class="card shadow-sm">
@@ -131,15 +109,6 @@
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
-                                    {{-- @if (session()->has('message'))
-                                        <div class="mt-5">
-                                            <div class="alert alert-danger d-flex align-items-center p-5">
-                                                <span class="fw-bold text-center">
-                                                    {{ session('message') }}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    @endif --}}
                                     <div class="mt-5">
                                         <button type="submit" class="btn btn-primary w-100"
                                             wire:loading.attr="disabled" wire:target="iniciar_inscripcion">
@@ -187,9 +156,9 @@
                     @endif
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
-    {{-- modal registro pago --}}
+    {{-- modal formas de pago --}}
     <div wire:ignore.self class="modal fade" tabindex="-1" id="modal_formas_pago">
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
             <div class="modal-content">

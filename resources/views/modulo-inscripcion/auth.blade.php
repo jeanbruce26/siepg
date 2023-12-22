@@ -2,11 +2,8 @@
 @section('content')
 <div class="">
     <div class="container-xxl py-10">
-        <div class="">
+        <div class="mt-5">
             <div class="d-flex justify-content-around align-items-center">
-                {{-- <div>
-                    <img src="{{ asset('assets/media/logos/logo-pg.png') }}" alt="Logo" height="70" />
-                </div> --}}
                 <div class="d-flex flex-column align-items-center">
                     <h1 class="text-center" style="font-size: 2.3rem; font-weight: 700;">
                         Universidad Nacional de Ucayali
@@ -18,33 +15,21 @@
                         Proceso de {{ $admision }}
                     </span>
                 </div>
-                {{-- <div>
-                    <img src="{{ asset('assets/media/logos/logo-unu.png') }}" alt="Logo" height="70" />
-                </div> --}}
             </div>
         </div>
     </div>
 </div>
-<!--begin::Wrapper container-->
 <div class="app-container d-flex flex-row flex-column-fluid">
     <div class="container-xxl">
-        <!--begin::Main-->
         <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
             <div class="d-flex flex-column flex-column-fluid">
-                <!--begin::Content-->
                 <div id="kt_app_content" class="app-content flex-column-fluid">
-                    <!--begin::Row-->
                     @livewire('modulo-inscripcion.auth', ['admision_year' => $admision_year])
-                    <!--end::Row-->
                 </div>
-                <!--end::Content-->
             </div>
-            <!--end::Content wrapper-->
         </div>
-        <!--end:::Main-->
     </div>
 </div>
-<!--end::Wrapper container-->
 @endsection
 @section('scripts')
 <script>
