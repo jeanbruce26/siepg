@@ -18,6 +18,7 @@ class ExpedienteInscripcion extends Model
         'expediente_inscripcion_url',
         'expediente_inscripcion_estado',
         'expediente_inscripcion_fecha',
+        'expediente_inscripcion_verificacion',
         'id_expediente_admision',
         'id_inscripcion'
     ];
