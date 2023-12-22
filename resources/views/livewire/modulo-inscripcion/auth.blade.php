@@ -4,7 +4,7 @@
             <div class="row g-5 gx-xl-10">
                 <div class="col-md-12">
                     <div class="d-flex justify-content-end mt-3 gap-5">
-                        <button type="button" class="btn btn-primary hover-elevate-up px-10">
+                        <button type="button" class="btn btn-primary hover-elevate-up px-10" wire:click="ingresar">
                             REALIZAR INSCRIPCIÓN
                         </button>
                     </div>
@@ -18,9 +18,12 @@
                             <p>
                             <ul class="fs-6">
                                 <li class="mb-3">
-                                    Si usted realizó el pago por concepto de inscripción, deberá realizar el registro de su inscripción,
-                                    <strong>dando click en el botón "REGISTRAR INSCRIPCIÓN"</strong> que se encuentra en la parte superior de esta página.
-                                    Una vez que haya realizado el registro de su inscripción, deberá esperar a la validación de su inscripción.
+                                    Si usted realizó el pago por concepto de inscripción, deberá realizar el registro de
+                                    su inscripción,
+                                    <strong>dando click en el botón "REGISTRAR INSCRIPCIÓN"</strong> que se encuentra en
+                                    la parte superior de esta página.
+                                    Una vez que haya realizado el registro de su inscripción, deberá esperar a la
+                                    validación de su inscripción.
                                 </li>
                                 <li class="mb-3">
                                     Una vez que finalice el proceso, se generará su ficha de inscripción
@@ -172,7 +175,8 @@
                     </div>
                 </div>
                 <div class="modal-body">
-                    <embed src="{{ asset('assets_pdf/manual-tipo-voucher.pdf') }}" class="rounded" type="application/pdf" width="100%" height="700"/>
+                    <embed src="{{ asset('assets_pdf/manual-tipo-voucher.pdf') }}" class="rounded"
+                        type="application/pdf" width="100%" height="700" />
                 </div>
             </div>
         </div>
@@ -210,8 +214,8 @@
                                 Numero de Operación
                             </label>
                             <input type="number" wire:model="numero_operacion"
-                                class="form-control @error('numero_operacion') is-invalid @enderror"
-                                placeholder="6543" id="numero_operacion" />
+                                class="form-control @error('numero_operacion') is-invalid @enderror" placeholder="6543"
+                                id="numero_operacion" />
                             <span class="form-text text-muted mt-2 fst-italic">
                                 Nota: Omitir los ceros a la izquierda. Ejemplo: 00001265, debe ser ingresado como 1265.
                                 <br>
@@ -225,8 +229,8 @@
                                 Monto de Operación
                             </label>
                             <input type="number" wire:model="monto_operacion"
-                                class="form-control @error('monto_operacion') is-invalid @enderror"
-                                placeholder="00.00" id="monto_operacion" />
+                                class="form-control @error('monto_operacion') is-invalid @enderror" placeholder="00.00"
+                                id="monto_operacion" />
                             @error('monto_operacion')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -249,8 +253,7 @@
                             <select class="form-select @error('canal_pago') is-invalid @enderror"
                                 wire:model="canal_pago" id="canal_pago" data-control="select2"
                                 data-placeholder="Seleccione su canal de pago" data-allow-clear="true"
-                                data-hide-search="true"
-                                data-dropdown-parent="#modal_registro_pago">
+                                data-hide-search="true" data-dropdown-parent="#modal_registro_pago">
                                 <option></option>
                                 @foreach ($canales_pagos as $item)
                                     <option value="{{ $item->id_canal_pago }}">Pago realizado en
@@ -344,5 +347,38 @@
                 });
             });
         });
+    </script>
+
+    <script>
+        toastr.options = {
+            "closeButton": true,
+            "debug": true,
+            "newestOnTop": false,
+            "progressBar": true,
+            "positionClass": "toastr-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+
+        window.addEventListener('toast-basico', event => {
+            if (event.detail.type == 'success')
+                toastr.success(event.detail.message, event.detail.title);
+            else if (event.detail.type == 'error')
+                toastr.error(event.detail.message, event.detail.title);
+            else if (event.detail.type == 'warning')
+                toastr.warning(event.detail.message, event.detail.title);
+            else if (event.detail.type == 'info')
+                toastr.info(event.detail.message, event.detail.title);
+            else
+                toastr.info(event.detail.message, event.detail.title);
+        })
     </script>
 @endpush
