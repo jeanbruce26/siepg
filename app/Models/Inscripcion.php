@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Inscripcion extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
     protected $primaryKey = 'id_inscripcion';
     protected $dates = ['inscripcion_fecha'];
@@ -23,8 +25,6 @@ class Inscripcion extends Model
         'id_programa_proceso',
         'inscripcion_tipo_programa',
     ];
-
-    public $timestamps = false;
 
     // Persona
     public function persona(){
@@ -49,5 +49,22 @@ class Inscripcion extends Model
     // Evaluacion
     public function evaluacion(){
         return $this->hasOne(Evaluacion::class, 'id_inscripcion','id_inscripcion');
+    }
+
+    protected static function boot() {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->created_by = auth()->id();
+        });
+
+        static::updating(function ($model) {
+            $model->updated_by = auth()->id();
+        });
+
+        static::deleting(function ($model) {
+            $model->deleted_by = auth()->id();
+            $model->save();
+        });
     }
 }

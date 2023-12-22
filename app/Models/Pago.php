@@ -4,11 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class Pago extends Authenticatable
 {
     use HasFactory;
+    use SoftDeletes;
 
     protected $primaryKey = "id_pago";
     protected $table = 'pago';
@@ -23,10 +25,9 @@ class Pago extends Authenticatable
         'pago_leido',
         'pago_voucher_url',
         'id_canal_pago',
-        'id_concepto_pago'
+        'id_concepto_pago',
+        'id_persona',
     ];
-
-    public $timestamps = false;
 
     public function canal_pago(){
         return $this->belongsTo(CanalPago::class,
@@ -46,5 +47,27 @@ class Pago extends Authenticatable
     public function pago_observacion(){
         return $this->hasMany(PagoObservacion::class,
         'id_pago','id_pago');
+    }
+
+    public function persona(){
+        return $this->belongsTo(Persona::class,
+        'id_persona','id_persona');
+    }
+
+    protected static function boot() {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->created_by = auth()->id();
+        });
+
+        static::updating(function ($model) {
+            $model->updated_by = auth()->id();
+        });
+
+        static::deleting(function ($model) {
+            $model->deleted_by = auth()->id();
+            $model->save();
+        });
     }
 }

@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Evaluacion extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
     protected $primaryKey = 'id_evaluacion';
     protected $table = 'evaluacion';
@@ -26,8 +28,6 @@ class Evaluacion extends Model
         'id_inscripcion',
         'id_tipo_evaluacion',
     ];
-
-    public $timestamps = false;
 
     // Inscripcion
     public function inscripcion(){
@@ -57,5 +57,22 @@ class Evaluacion extends Model
     // evaluacion entrevista
     public function evaluacion_entrevista(){
         return $this->hasMany(EvaluacionEntrevista::class, 'id_evaluacion', 'id_evaluacion');
+    }
+
+    protected static function boot() {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->created_by = auth()->id();
+        });
+
+        static::updating(function ($model) {
+            $model->updated_by = auth()->id();
+        });
+
+        static::deleting(function ($model) {
+            $model->deleted_by = auth()->id();
+            $model->save();
+        });
     }
 }

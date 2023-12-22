@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Matricula extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
     protected $primaryKey = 'id_matricula';
     protected $table = 'matricula';
@@ -26,8 +28,6 @@ class Matricula extends Model
         'matricula_primer_ciclo'
     ];
 
-    public $timestamps = false;
-
     // admitido
     public function admitido()
     {
@@ -44,5 +44,22 @@ class Matricula extends Model
     public function pago()
     {
         return $this->belongsTo(Pago::class, 'id_pago');
+    }
+
+    protected static function boot() {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->created_by = auth()->id();
+        });
+
+        static::updating(function ($model) {
+            $model->updated_by = auth()->id();
+        });
+
+        static::deleting(function ($model) {
+            $model->deleted_by = auth()->id();
+            $model->save();
+        });
     }
 }

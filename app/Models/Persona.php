@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Persona extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
     protected $primaryKey = "id_persona";
     protected $dates = ['fecha_nacimiento'];
@@ -39,8 +41,6 @@ class Persona extends Model
         'ubigeo_nacimiento',
         'pais_nacimiento',
     ];
-
-    public $timestamps = false;
 
     // TipoDocumento
     public function tipo_documento(){
@@ -100,5 +100,22 @@ class Persona extends Model
     public function admitido(){
         return $this->hasMany(Admitido::class,
         'id_persona','id_persona');
+    }
+
+    protected static function boot() {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->created_by = auth()->id();
+        });
+
+        static::updating(function ($model) {
+            $model->updated_by = auth()->id();
+        });
+
+        static::deleting(function ($model) {
+            $model->deleted_by = auth()->id();
+            $model->save();
+        });
     }
 }
