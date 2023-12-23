@@ -41,11 +41,6 @@ return [
             'provider' => 'users',
         ],
 
-        'inscripcion' => [
-            'driver' => 'session',
-            'provider' => 'inscripcion',
-        ],
-
         'plataforma' => [
             'driver' => 'session',
             'provider' => 'plataforma',
@@ -84,11 +79,6 @@ return [
         //     'driver' => 'database',
         //     'table' => 'users',
         // ],
-
-        'inscripcion' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Pago::class,
-        ],
 
         'plataforma' => [
             'driver' => 'eloquent',
