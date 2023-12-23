@@ -224,22 +224,6 @@
                                 </div>
                                 <!--end::Menu-->
                             </div>
-                            @auth('inscripcion')
-                                @if (request()->is('inscripcion/registro'))
-                                    <div class="app-navbar-item ms-1 ms-md-3" id="kt_header_user_menu_toggle">
-                                        <div class="app-navbar-item ms-3" id="kt_header_user_menu_toggle">
-                                            <a href="{{ route('inscripcion.logout') }}" class="btn btn-danger"
-                                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                                Cerrar sesión
-                                            </a>
-                                            <form id="logout-form" action="{{ route('inscripcion.logout') }}"
-                                                method="POST" class="d-none">
-                                                @csrf
-                                            </form>
-                                        </div>
-                                    </div>
-                                @endif
-                            @endauth
                         </div>
                     </div>
                 </div>
