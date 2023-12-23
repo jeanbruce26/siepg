@@ -31,12 +31,13 @@ class InscripcionController extends Controller
 
     public function registro()
     {
-        $id_pago = auth('inscripcion')->user()->id_pago;
-        $inscripcion = Inscripcion::where('id_pago', $id_pago)->first();
-        $id_inscripcion = $inscripcion->id_inscripcion;
-        return view('modulo-inscripcion.registro', [
-            'id_inscripcion' => $id_inscripcion
-        ]);
+        // $id_pago = auth('inscripcion')->user()->id_pago;
+        // $inscripcion = Inscripcion::where('id_pago', $id_pago)->first();
+        // $id_inscripcion = $inscripcion->id_inscripcion;
+        // return view('modulo-inscripcion.registro', [
+        //     'id_inscripcion' => $id_inscripcion
+        // ]);
+        return view('modulo-inscripcion.registro');
     }
 
     public function registro_alumnos()
