@@ -438,7 +438,6 @@ class Auth extends Component
     public function ingresar() {
         $admision = Admision::where('admision_estado', 1)->first();
         if ($admision->admision_fecha_inicio_inscripcion <= date('Y-m-d') && $admision->admision_fecha_fin_inscripcion >= date('Y-m-d')) {
-            dd('registrate');
             return redirect()->route('inscripcion.registro');
         } else {
             // emitir evento para mostrar mensaje de alerta
