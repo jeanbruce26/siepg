@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\ModuloPlataforma\Auth;
 
 use App\Models\UsuarioEstudiante;
+use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
 
 class Login extends Component
@@ -27,15 +28,17 @@ class Login extends Component
         ]);
 
         // aqui buscamos el usuario en la base de datos
-        $usuario = UsuarioEstudiante::where('usuario_estudiante', $this->usuario)->where('usuario_estudiante_password', $this->password)->first();
+        $usuario = UsuarioEstudiante::where('usuario_estudiante', $this->usuario)->first();
 
-        if(!$usuario) // verificamos si no existe el usuario o si sus credenciales son incorrectas
-        {
+        // verificamos si no existe el usuario o si sus credenciales son incorrectas
+        if (!$usuario) {
             session()->flash('message', 'Credenciales incorrectas');
             return redirect()->back();
-        }
-        else
-        {
+        } else {
+            if (!Hash::check($this->password, $usuario->usuario_estudiante_password)) {
+                session()->flash('message', 'Credenciales incorrectas');
+                return redirect()->back();
+            }
             auth('plataforma')->login($usuario); // autenticamos al usuario en la plataforma
             return redirect()->route('plataforma.inicio'); // redireccionamos al usuario a la pagina de inicio de la plataforma
         }
