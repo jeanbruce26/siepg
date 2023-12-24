@@ -5,6 +5,7 @@ namespace App\Http\Livewire\ModuloInscripcion;
 use App\Jobs\ProcessRegistroFichaInscripcion;
 use App\Mail\EmailFichaInscripcion;
 use App\Models\Admision;
+use App\Models\CanalPago;
 use App\Models\Discapacidad;
 use App\Models\EstadoCivil;
 use App\Models\ExpedienteAdmision;
@@ -18,6 +19,7 @@ use App\Models\Modalidad;
 use App\Models\Pago;
 use App\Models\Persona;
 use App\Models\ProgramaProceso;
+use App\Models\TipoDocumento;
 use App\Models\TipoSeguimiento;
 use App\Models\Ubigeo;
 use App\Models\Universidad;
@@ -35,6 +37,7 @@ class Registro extends Component
 
     public $admision; // variable para el nombre de la admision
 
+    public $tipo_documento, $documento_identidad, $numero_operacion, $monto_operacion, $fecha_pago, $canal_pago, $voucher; // variables para el formulario del modal de registro
     public $id_inscripcion; // variable para el id de la inscripcion
     public $id_persona, $documento, $paterno, $materno, $nombres, $fecha_nacimiento, $genero, $estado_civil, $grado_academico, $especialidad_carrera, $discapacidad, $direccion, $celular, $celular_opcional, $año_egreso, $email, $email_opcional, $universidad, $centro_trabajo; // variables para el formulario de registro de información personal
     public $programa_array, $programa; // variables para el formulario de registro de información de programa
@@ -42,7 +45,7 @@ class Registro extends Component
     public $ubigeo_direccion_array, $ubigeo_direccion, $pais_direccion; // variables para el formulario de registro de información de dirección
     public $ubigeo_nacimiento_array, $ubigeo_nacimiento, $pais_nacimiento; // variables para el formulario de registro de información de nacimiento
 
-    public $expediente, $expediente_array, $expediente_nombre, $id_expediente; // variable para el formulario de registro de expediente
+    public $expediente, $expediente_array, $expedientes_count, $expedientes = []; // variable para el formulario de registro de expediente
     public $mostrar_tipo_expediente; // sirve para mostrar los expedientes segun el programa que elija el usuario
     public $iteration; // sirve para actualizar el componente de expediente
     public $modo = 'create'; // sirve para cargar informacion del registro en los formularios
@@ -52,18 +55,19 @@ class Registro extends Component
     public $declaracion_jurada = false; // sirve para aceptar la declaracion jurada al finalizar el registro de inscripcion y es obligatorio
                                         // true = acepta la declaracion jurada, false = no acepta la declaracion jurada
 
-    public function mount()
-    {
+    public $check_formas_pago = false; // sirve para aceptar las formas de pago
+
+    public function mount() {
         $this->paso = 1;
-        $this->documento = auth('inscripcion')->user()->pago_documento;
-        $persona = Persona::where('numero_documento', $this->documento)->first();
+        // $this->documento = auth('inscripcion')->user()->pago_documento;
+        // $persona = Persona::where('numero_documento', $this->documento)->first();
+        $persona = null;
         $this->modalidad_array = Modalidad::where('modalidad_estado', 1)->get();
         $this->programa_array = Collect();
         $this->admision = Admision::where('admision_estado', 1)->first();
         $this->ubigeo_direccion_array = Ubigeo::all();
         $this->ubigeo_nacimiento_array = Ubigeo::all();
-        if($persona)
-        {
+        if($persona) { // si existe la persona
             $this->id_persona = $persona->id_persona;
             $this->paterno = $persona->apellido_paterno;
             $this->materno = $persona->apellido_materno;
@@ -90,17 +94,23 @@ class Registro extends Component
         }
     }
 
-    public function updated($propertyName)
-    {
-        if($this->paso == 1)
-        {
+    public function updated($propertyName) {
+        if ($this->paso == 1) {
+            $this->validateOnly($propertyName, [
+                'tipo_documento' => 'required|numeric',
+                'documento_identidad' => 'required|digits_between:8,9',
+                'numero_operacion' => 'required|max:50',
+                'monto_operacion' => 'required|numeric',
+                'fecha_pago' => 'required|date',
+                'canal_pago' => 'required|numeric',
+                'voucher' => 'required|image|mimes:jpg,jpeg,png|max:2048'
+            ]);
+        } elseif($this->paso == 2) {
             $this->validateOnly($propertyName, [
                 'modalidad' => 'required|numeric',
                 'programa' => 'required|numeric',
             ]);
-        }
-        elseif($this->paso == 2)
-        {
+        } elseif($this->paso == 3) {
             $this->validateOnly($propertyName, [
                 'paterno' => 'required|max:50',
                 'materno' => 'required|max:50',
@@ -127,147 +137,178 @@ class Registro extends Component
         }
     }
 
-    public function paso_1()
-    {
+    public function paso_1() {
         $this->paso = 1;
     }
 
-    public function paso_2()
-    {
+    public function paso_2() {
         $this->validacion();
         $this->paso = 2;
     }
 
-    public function paso_3()
-    {
+    public function paso_3() {
         $this->validacion();
         $this->paso = 3;
     }
 
-    public function validacion()
-    {
-        if($this->paso === 1)
-        {
-            $this->resetErrorBag();
-            $this->resetValidation();
-            $this->validate([
-                'modalidad' => 'required|numeric',
-                'programa' => 'required|numeric',
-            ]);
-        }
-        elseif($this->paso === 2)
-        {
-            $this->resetErrorBag();
-            $this->resetValidation();
-            if($this->ubigeo_direccion == 1893)
-            {
-                $this->validate([
-                    'paterno' => 'required|max:50',
-                    'materno' => 'required|max:50',
-                    'nombres' => 'required|max:50',
-                    'fecha_nacimiento' => 'required|date',
-                    'genero' => 'required|numeric',
-                    'estado_civil' => 'required|numeric',
-                    'grado_academico' => 'required|numeric',
-                    'especialidad_carrera' => 'required|max:50',
-                    'discapacidad' => 'required|numeric',
-                    'direccion' => 'required|max:100',
-                    'celular' => 'required|max:9',
-                    'celular_opcional' => 'nullable|max:9',
-                    'año_egreso' => 'required|numeric',
-                    'email' => 'required|email|max:50',
-                    'email_opcional' => 'nullable|email|max:50',
-                    'universidad' => 'required|numeric',
-                    'centro_trabajo' => 'required|max:50',
-                    'pais_direccion' => 'required|max:50',
-                    'ubigeo_direccion' => 'required|numeric',
-                    'pais_nacimiento' => 'nullable|max:50',
-                    'ubigeo_nacimiento' => 'required|numeric',
-                ]);
-            }
-            else if($this->ubigeo_nacimiento == 1893)
-            {
-                $this->validate([
-                    'paterno' => 'required|max:50',
-                    'materno' => 'required|max:50',
-                    'nombres' => 'required|max:50',
-                    'fecha_nacimiento' => 'required|date',
-                    'genero' => 'required|numeric',
-                    'estado_civil' => 'required|numeric',
-                    'grado_academico' => 'required|numeric',
-                    'especialidad_carrera' => 'required|max:50',
-                    'discapacidad' => 'required|numeric',
-                    'direccion' => 'required|max:100',
-                    'celular' => 'required|max:9',
-                    'celular_opcional' => 'nullable|max:9',
-                    'año_egreso' => 'required|numeric',
-                    'email' => 'required|email|max:50',
-                    'email_opcional' => 'nullable|email|max:50',
-                    'universidad' => 'required|numeric',
-                    'centro_trabajo' => 'required|max:50',
-                    'pais_direccion' => 'nullable|max:50',
-                    'ubigeo_direccion' => 'required|numeric',
-                    'pais_nacimiento' => 'required|max:50',
-                    'ubigeo_nacimiento' => 'required|numeric',
-                ]);
-            }
-            else if($this->ubigeo_nacimiento == 1893 && $this->ubigeo_direccion == 1893)
-            {
-                $this->validate([
-                    'paterno' => 'required|max:50',
-                    'materno' => 'required|max:50',
-                    'nombres' => 'required|max:50',
-                    'fecha_nacimiento' => 'required|date',
-                    'genero' => 'required|numeric',
-                    'estado_civil' => 'required|numeric',
-                    'grado_academico' => 'required|numeric',
-                    'especialidad_carrera' => 'required|max:50',
-                    'discapacidad' => 'required|numeric',
-                    'direccion' => 'required|max:100',
-                    'celular' => 'required|max:9',
-                    'celular_opcional' => 'nullable|max:9',
-                    'año_egreso' => 'required|numeric',
-                    'email' => 'required|email|max:50',
-                    'email_opcional' => 'nullable|email|max:50',
-                    'universidad' => 'required|numeric',
-                    'centro_trabajo' => 'required|max:50',
-                    'pais_direccion' => 'required|max:50',
-                    'ubigeo_direccion' => 'required|numeric',
-                    'pais_nacimiento' => 'required|max:50',
-                    'ubigeo_nacimiento' => 'required|numeric',
-                ]);
-            }
-            else
-            {
-                $this->validate([
-                    'paterno' => 'required|max:50',
-                    'materno' => 'required|max:50',
-                    'nombres' => 'required|max:50',
-                    'fecha_nacimiento' => 'required|date',
-                    'genero' => 'required|numeric',
-                    'estado_civil' => 'required|numeric',
-                    'grado_academico' => 'required|numeric',
-                    'especialidad_carrera' => 'required|max:50',
-                    'discapacidad' => 'required|numeric',
-                    'direccion' => 'required|max:100',
-                    'celular' => 'required|max:9',
-                    'celular_opcional' => 'nullable|max:9',
-                    'año_egreso' => 'required|numeric',
-                    'email' => 'required|email|max:50',
-                    'email_opcional' => 'nullable|email|max:50',
-                    'universidad' => 'required|numeric',
-                    'centro_trabajo' => 'required|max:50',
-                    'pais_direccion' => 'nullable|max:50',
-                    'ubigeo_direccion' => 'required|numeric',
-                    'pais_nacimiento' => 'nullable|max:50',
-                    'ubigeo_nacimiento' => 'required|numeric',
-                ]);
-            }
-        }
+    public function paso_4() {
+        $this->validacion();
+        $this->paso = 4;
     }
 
-    public function updatedModalidad($modalidad)
-    {
+    public function paso_5() {
+        $this->validacion();
+        if (count($this->expedientes) < $this->expedientes_count) {
+            // emitir evento para mostrar mensaje de alerta de expedientes incompletos
+            $this->dispatchBrowserEvent('registro_inscripcion', [
+                'title' => '',
+                'text' => 'No se han subido todos los expedientes requeridos',
+                'icon' => 'error',
+                'confirmButtonText' => 'Aceptar',
+                'color' => 'danger'
+            ]);
+            return; // redireccionar a la misma pagina
+        }
+        $this->paso = 5;
+    }
+
+    public function validacion() {
+        // if ($this->paso === 1) {
+        //     $this->resetErrorBag();
+        //     $this->resetValidation();
+        //     $this->validate([
+        //         'tipo_documento' => 'required|numeric',
+        //         'documento_identidad' => 'required|digits_between:8,9',
+        //         'numero_operacion' => 'required|max:50',
+        //         'monto_operacion' => 'required|numeric',
+        //         'fecha_pago' => 'required|date',
+        //         'canal_pago' => 'required|numeric',
+        //         'voucher' => 'required|image|mimes:jpg,jpeg,png|max:2048'
+        //     ]);
+        // } elseif($this->paso === 2) {
+        //     $this->resetErrorBag();
+        //     $this->resetValidation();
+        //     $this->validate([
+        //         'modalidad' => 'required|numeric',
+        //         'programa' => 'required|numeric',
+        //     ]);
+        // } elseif($this->paso === 3) {
+        //     $this->resetErrorBag();
+        //     $this->resetValidation();
+        //     if($this->ubigeo_direccion == 1893)
+        //     {
+        //         $this->validate([
+        //             'paterno' => 'required|max:50',
+        //             'materno' => 'required|max:50',
+        //             'nombres' => 'required|max:50',
+        //             'fecha_nacimiento' => 'required|date',
+        //             'genero' => 'required|numeric',
+        //             'estado_civil' => 'required|numeric',
+        //             'grado_academico' => 'required|numeric',
+        //             'especialidad_carrera' => 'required|max:50',
+        //             'discapacidad' => 'required|numeric',
+        //             'direccion' => 'required|max:100',
+        //             'celular' => 'required|max:9',
+        //             'celular_opcional' => 'nullable|max:9',
+        //             'año_egreso' => 'required|numeric',
+        //             'email' => 'required|email|max:50',
+        //             'email_opcional' => 'nullable|email|max:50',
+        //             'universidad' => 'required|numeric',
+        //             'centro_trabajo' => 'required|max:50',
+        //             'pais_direccion' => 'required|max:50',
+        //             'ubigeo_direccion' => 'required|numeric',
+        //             'pais_nacimiento' => 'nullable|max:50',
+        //             'ubigeo_nacimiento' => 'required|numeric',
+        //         ]);
+        //     }
+        //     else if($this->ubigeo_nacimiento == 1893)
+        //     {
+        //         $this->validate([
+        //             'paterno' => 'required|max:50',
+        //             'materno' => 'required|max:50',
+        //             'nombres' => 'required|max:50',
+        //             'fecha_nacimiento' => 'required|date',
+        //             'genero' => 'required|numeric',
+        //             'estado_civil' => 'required|numeric',
+        //             'grado_academico' => 'required|numeric',
+        //             'especialidad_carrera' => 'required|max:50',
+        //             'discapacidad' => 'required|numeric',
+        //             'direccion' => 'required|max:100',
+        //             'celular' => 'required|max:9',
+        //             'celular_opcional' => 'nullable|max:9',
+        //             'año_egreso' => 'required|numeric',
+        //             'email' => 'required|email|max:50',
+        //             'email_opcional' => 'nullable|email|max:50',
+        //             'universidad' => 'required|numeric',
+        //             'centro_trabajo' => 'required|max:50',
+        //             'pais_direccion' => 'nullable|max:50',
+        //             'ubigeo_direccion' => 'required|numeric',
+        //             'pais_nacimiento' => 'required|max:50',
+        //             'ubigeo_nacimiento' => 'required|numeric',
+        //         ]);
+        //     }
+        //     else if($this->ubigeo_nacimiento == 1893 && $this->ubigeo_direccion == 1893)
+        //     {
+        //         $this->validate([
+        //             'paterno' => 'required|max:50',
+        //             'materno' => 'required|max:50',
+        //             'nombres' => 'required|max:50',
+        //             'fecha_nacimiento' => 'required|date',
+        //             'genero' => 'required|numeric',
+        //             'estado_civil' => 'required|numeric',
+        //             'grado_academico' => 'required|numeric',
+        //             'especialidad_carrera' => 'required|max:50',
+        //             'discapacidad' => 'required|numeric',
+        //             'direccion' => 'required|max:100',
+        //             'celular' => 'required|max:9',
+        //             'celular_opcional' => 'nullable|max:9',
+        //             'año_egreso' => 'required|numeric',
+        //             'email' => 'required|email|max:50',
+        //             'email_opcional' => 'nullable|email|max:50',
+        //             'universidad' => 'required|numeric',
+        //             'centro_trabajo' => 'required|max:50',
+        //             'pais_direccion' => 'required|max:50',
+        //             'ubigeo_direccion' => 'required|numeric',
+        //             'pais_nacimiento' => 'required|max:50',
+        //             'ubigeo_nacimiento' => 'required|numeric',
+        //         ]);
+        //     }
+        //     else
+        //     {
+        //         $this->validate([
+        //             'paterno' => 'required|max:50',
+        //             'materno' => 'required|max:50',
+        //             'nombres' => 'required|max:50',
+        //             'fecha_nacimiento' => 'required|date',
+        //             'genero' => 'required|numeric',
+        //             'estado_civil' => 'required|numeric',
+        //             'grado_academico' => 'required|numeric',
+        //             'especialidad_carrera' => 'required|max:50',
+        //             'discapacidad' => 'required|numeric',
+        //             'direccion' => 'required|max:100',
+        //             'celular' => 'required|max:9',
+        //             'celular_opcional' => 'nullable|max:9',
+        //             'año_egreso' => 'required|numeric',
+        //             'email' => 'required|email|max:50',
+        //             'email_opcional' => 'nullable|email|max:50',
+        //             'universidad' => 'required|numeric',
+        //             'centro_trabajo' => 'required|max:50',
+        //             'pais_direccion' => 'nullable|max:50',
+        //             'ubigeo_direccion' => 'required|numeric',
+        //             'pais_nacimiento' => 'nullable|max:50',
+        //             'ubigeo_nacimiento' => 'required|numeric',
+        //         ]);
+        //     }
+        // } elseif($this->paso === 4) {
+        //     $this->resetErrorBag();
+        //     $this->resetValidation();
+        //     $this->validate([
+        //         'expedientes' => 'required|array|min:1',
+        //     ]);
+        // }
+    }
+
+    public function updatedModalidad($modalidad) {
         $this->programa_array = ProgramaProceso::join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
                                         ->join('programa', 'programa.id_programa', '=', 'programa_plan.id_programa')
                                         ->join('sede', 'sede.id_sede', '=', 'programa.id_sede')
@@ -278,8 +319,7 @@ class Registro extends Component
                                         ->get();
     }
 
-    public function updatedPrograma($programa_proceso)
-    {
+    public function updatedPrograma($programa_proceso) {
         $programa = ProgramaProceso::join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
                                     ->join('programa', 'programa.id_programa', '=', 'programa_plan.id_programa')
                                     ->join('sede', 'sede.id_sede', '=', 'programa.id_sede')
@@ -295,133 +335,110 @@ class Registro extends Component
                 $this->mostrar_tipo_expediente = 2;
             }
             $this->expediente_array = ExpedienteAdmision::join('expediente', 'expediente.id_expediente', '=', 'expediente_admision.id_expediente')
-                            ->where('expediente_admision.expediente_admision_estado', 1)
-                            ->where('expediente.expediente_estado', 1)
-                            ->where(function($query){
-                                $query->where('expediente.expediente_tipo', 0)
-                                    ->orWhere('expediente.expediente_tipo', $this->mostrar_tipo_expediente);
-                            })
-                            ->get();
+                ->where('expediente_admision.expediente_admision_estado', 1)
+                ->where('expediente.expediente_estado', 1)
+                ->where(function($query){
+                    $query->where('expediente.expediente_tipo', 0)
+                        ->orWhere('expediente.expediente_tipo', $this->mostrar_tipo_expediente);
+                })
+                ->get();
+            $this->expedientes_count = $this->expediente_array->count();
         }else{
             $this->expediente_array = null;
         }
     }
 
-    public function limpiar_modal_expediente()
-    {
-        $this->reset([
-            'expediente',
-        ]);
-        $this->iteration++;
-    }
+    // public function registrar_expediente() {
+    //     $expediente_model = ExpedienteAdmision::where('expediente_admision_estado', 1)->where('id_expediente_admision', $this->id_expediente)->first();
 
-    public function cargar_modal_expediente(ExpedienteAdmision $expediente)
-    {
-        $this->limpiar_modal_expediente();
-        $this->expediente_nombre = $expediente->expediente->expediente;
-        $this->id_expediente = $expediente->id_expediente_admision;
-        $expediente_inscripcion = ExpedienteInscripcion::where('id_inscripcion', $this->id_inscripcion)->where('id_expediente_admision', $expediente->id_expediente_admision)->first();
-        // dd($expediente_inscripcion, $this->id_inscripcion, $expediente->expediente->id_expediente, $this->id_expediente, $this->expediente_nombre);
-        if($expediente_inscripcion){
-            $this->modo_expediente = 'edit';
-        }else{
-            $this->modo_expediente = 'create';
-        }
-    }
+    //     // Validar si el expediente es requerido
+    //     if($expediente_model->expediente->expediente_requerido == 1 && $this->modo_expediente == 'create')
+    //     {
+    //         $this->validate([
+    //             'expediente' => 'required|file|max:10240|mimetypes:application/octet-stream,application/pdf,application/x-pdf,application/x-download,application/force-download',
+    //         ]);
+    //     }
+    //     else if($expediente_model->expediente->expediente_requerido == 1 && $this->modo_expediente == 'edit')
+    //     {
+    //         $this->validate([
+    //             'expediente' => 'nullable|file|max:10240|mimetypes:application/octet-stream,application/pdf,application/x-pdf,application/x-download,application/force-download',
+    //         ]);
+    //     }
+    //     else if($expediente_model->expediente->expediente_requerido != 1 && $this->modo_expediente == 'edit')
+    //     {
+    //         $this->validate([
+    //             'expediente' => 'nullable|file|max:10240|mimetypes:application/octet-stream,application/pdf,application/x-pdf,application/x-download,application/force-download',
+    //         ]);
+    //     }
 
-    public function registrar_expediente()
-    {
-        $expediente_model = ExpedienteAdmision::where('expediente_admision_estado', 1)->where('id_expediente_admision', $this->id_expediente)->first();
+    //     // numero de documento
+    //     $numero_documento = auth('inscripcion')->user()->pago_documento;
 
-        // Validar si el expediente es requerido
-        if($expediente_model->expediente->expediente_requerido == 1 && $this->modo_expediente == 'create')
-        {
-            $this->validate([
-                'expediente' => 'required|file|max:10240|mimetypes:application/octet-stream,application/pdf,application/x-pdf,application/x-download,application/force-download',
-            ]);
-        }
-        else if($expediente_model->expediente->expediente_requerido == 1 && $this->modo_expediente == 'edit')
-        {
-            $this->validate([
-                'expediente' => 'nullable|file|max:10240|mimetypes:application/octet-stream,application/pdf,application/x-pdf,application/x-download,application/force-download',
-            ]);
-        }
-        else if($expediente_model->expediente->expediente_requerido != 1 && $this->modo_expediente == 'edit')
-        {
-            $this->validate([
-                'expediente' => 'nullable|file|max:10240|mimetypes:application/octet-stream,application/pdf,application/x-pdf,application/x-download,application/force-download',
-            ]);
-        }
+    //     // obtenemos el año de admision
+    //     $admision = Admision::where('admision_estado',1)->first()->admision;
 
-        // numero de documento
-        $numero_documento = auth('inscripcion')->user()->pago_documento;
+    //     if($this->expediente != null)
+    //     {
+    //         $path = 'Posgrado/' . $admision. '/' . $numero_documento . '/' . 'Expedientes' . '/';
+    //         $filename = $expediente_model->expediente->expediente_nombre_file . ".pdf";
+    //         $nombreDB = $path.$filename;
+    //         $this->expediente->storeAs($path, $filename, 'files_publico');
 
-        // obtenemos el año de admision
-        $admision = Admision::where('admision_estado',1)->first()->admision;
+    //         if($this->modo_expediente == 'create')
+    //         {
+    //             $expediente_inscripcion = new ExpedienteInscripcion();
+    //             $expediente_inscripcion->expediente_inscripcion_url = $nombreDB;
+    //             $expediente_inscripcion->expediente_inscripcion_estado = 1;
+    //             $expediente_inscripcion->expediente_inscripcion_fecha = now();
+    //             $expediente_inscripcion->id_expediente_admision = $this->id_expediente;
+    //             $expediente_inscripcion->id_inscripcion = $this->id_inscripcion;
+    //             $expediente_inscripcion->save();
+    //         }
+    //         else if($this->modo_expediente == 'edit')
+    //         {
+    //             $expediente_inscripcion = ExpedienteInscripcion::where('id_inscripcion', $this->id_inscripcion)->where('id_expediente_admision', $this->id_expediente)->first();
+    //             $expediente_inscripcion->expediente_inscripcion_url = $nombreDB;
+    //             $expediente_inscripcion->expediente_inscripcion_estado = 1;
+    //             $expediente_inscripcion->expediente_inscripcion_fecha = now();
+    //             $expediente_inscripcion->save();
+    //         }
 
-        if($this->expediente != null)
-        {
-            $path = 'Posgrado/' . $admision. '/' . $numero_documento . '/' . 'Expedientes' . '/';
-            $filename = $expediente_model->expediente->expediente_nombre_file . ".pdf";
-            $nombreDB = $path.$filename;
-            $this->expediente->storeAs($path, $filename, 'files_publico');
+    //         // emitir evento para mostrar mensaje de alerta de registro exitoso de expediente
+    //         $this->dispatchBrowserEvent('registro_inscripcion', [
+    //             'title' => '',
+    //             'text' => 'Se ha registrado el expediente correctamente',
+    //             'icon' => 'success',
+    //             'confirmButtonText' => 'Aceptar',
+    //             'color' => 'success'
+    //         ]);
+    //     }else{
+    //         // emitir evento para mostrar mensaje de alerta de registro erroneo de expediente
+    //         $this->dispatchBrowserEvent('registro_inscripcion', [
+    //             'title' => '',
+    //             'text' => 'No se ha registrado el expediente',
+    //             'icon' => 'error',
+    //             'confirmButtonText' => 'Aceptar',
+    //             'color' => 'danger'
+    //         ]);
+    //     }
 
-            if($this->modo_expediente == 'create')
-            {
-                $expediente_inscripcion = new ExpedienteInscripcion();
-                $expediente_inscripcion->expediente_inscripcion_url = $nombreDB;
-                $expediente_inscripcion->expediente_inscripcion_estado = 1;
-                $expediente_inscripcion->expediente_inscripcion_fecha = now();
-                $expediente_inscripcion->id_expediente_admision = $this->id_expediente;
-                $expediente_inscripcion->id_inscripcion = $this->id_inscripcion;
-                $expediente_inscripcion->save();
-            }
-            else if($this->modo_expediente == 'edit')
-            {
-                $expediente_inscripcion = ExpedienteInscripcion::where('id_inscripcion', $this->id_inscripcion)->where('id_expediente_admision', $this->id_expediente)->first();
-                $expediente_inscripcion->expediente_inscripcion_url = $nombreDB;
-                $expediente_inscripcion->expediente_inscripcion_estado = 1;
-                $expediente_inscripcion->expediente_inscripcion_fecha = now();
-                $expediente_inscripcion->save();
-            }
+    //     // emitir evento para ocultar modal de registro de expediente
+    //     $this->dispatchBrowserEvent('modal_registro_expediente', [
+    //         'action' => 'hide'
+    //     ]);
 
-            // emitir evento para mostrar mensaje de alerta de registro exitoso de expediente
-            $this->dispatchBrowserEvent('registro_inscripcion', [
-                'title' => '',
-                'text' => 'Se ha registrado el expediente correctamente',
-                'icon' => 'success',
-                'confirmButtonText' => 'Aceptar',
-                'color' => 'success'
-            ]);
-        }else{
-            // emitir evento para mostrar mensaje de alerta de registro erroneo de expediente
-            $this->dispatchBrowserEvent('registro_inscripcion', [
-                'title' => '',
-                'text' => 'No se ha registrado el expediente',
-                'icon' => 'error',
-                'confirmButtonText' => 'Aceptar',
-                'color' => 'danger'
-            ]);
-        }
+    //     // limpiar modal de registro de expediente
+    //     $this->limpiar_modal_expediente();
+    // }
 
-        // emitir evento para ocultar modal de registro de expediente
-        $this->dispatchBrowserEvent('modal_registro_expediente', [
-            'action' => 'hide'
-        ]);
-
-        // limpiar modal de registro de expediente
-        $this->limpiar_modal_expediente();
-    }
-
-    public function updatedDeclaracionJurada($declaracion_jurada)
-    {
+    public function updatedDeclaracionJurada($declaracion_jurada) {
         $this->validate([
             'declaracion_jurada' => 'accepted',
         ]);
     }
 
-    public function registrar_inscripcion()
-    {
+    public function registrar_inscripcion() {
+        dd($this->all());
         // obtenemos el id de admision
         $admision = Admision::where('admision_estado', 1)->first();
         // validamos si se subieron los expedientes completos
@@ -709,8 +726,9 @@ class Registro extends Component
         return redirect()->route('inscripcion.pdf-email', ['id' => $this->id_inscripcion]);
     }
 
-    public function render()
-    {
+    public function render() {
+        $tipo_documentos = TipoDocumento::where('tipo_documento_estado', 1)->get();
+        $canales_pagos = CanalPago::where('canal_pago_estado', 1)->get();
         $estado_civil_array = EstadoCivil::where('estado_civil_estado', 1)->get();
         $tipo_discapacidad_array = Discapacidad::where('discapacidad_estado', 1)->get();
         $universidad_array = Universidad::where('universidad_estado', 1)->get();
@@ -718,6 +736,8 @@ class Registro extends Component
         $genero_array = Genero::where('genero_estado', 1)->get();
         $tipo_seguimiento_constancia_sunedu = TipoSeguimiento::where('id_tipo_seguimiento', 1)->first();
         return view('livewire.modulo-inscripcion.registro', [
+            'tipo_documentos' => $tipo_documentos,
+            'canales_pagos' => $canales_pagos,
             'estado_civil_array' => $estado_civil_array,
             'tipo_discapacidad_array' => $tipo_discapacidad_array,
             'universidad_array' => $universidad_array,
