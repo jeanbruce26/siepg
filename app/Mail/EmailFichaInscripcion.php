@@ -53,8 +53,8 @@ class EmailFichaInscripcion extends Mailable
     {
         return [
             Attachment::fromPath($this->detalle['pdf_email'])
-                        ->as($this->detalle['nombre_pdf'])
-                        ->withMime('application/pdf'),
+                ->as($this->detalle['nombre_pdf'])
+                ->withMime('application/pdf'),
         ];
     }
 }

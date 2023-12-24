@@ -15,6 +15,3 @@ Route::get('/{id}/ficha-inscripcion', [InscripcionController::class, 'ficha_insc
 // ruta para ir a la vista de gracias
 Route::get('/{id}/gracias', [InscripcionController::class, 'gracias'])
     ->name('inscripcion.gracias');
-// ruta para cerrar sesion
-// Route::post('/logout', [InscripcionController::class, 'logout'])
-//     ->name('inscripcion.logout');
