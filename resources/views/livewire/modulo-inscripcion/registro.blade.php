@@ -100,12 +100,24 @@
                             <label for="documento_identidad" class="required form-label">
                                 Documento de Identidad
                             </label>
-                            <input type="number" wire:model="documento_identidad"
-                                class="form-control @error('documento_identidad') is-invalid @enderror"
-                                placeholder="12345678" id="documento_identidad" />
-                            @error('documento_identidad')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
+                            <span class="ms-1" data-bs-toggle="tooltip" aria-label="Si ya postuló en inscripciones anteriores, ingrese su DNI y presione el botón Buscar."
+                                data-bs-original-title="Si ya postuló en inscripciones anteriores, ingrese su DNI y presione el botón Buscar.">
+                                <i class="ki-outline ki-information-5 text-gray-600 fs-4"></i>
+                            </span>
+                            <div class="d-flex">
+                                <div class="flex-grow-1 me-3">
+                                    <input type="number" wire:model="documento_identidad"
+                                        class="form-control @error('documento_identidad') is-invalid @enderror"
+                                        placeholder="12345678" id="documento_identidad" />
+                                    @error('documento_identidad')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                <button type="button" wire:click="buscar_persona"
+                                    class="btn btn-secondary fw-bold flex-shrink-0">
+                                    Buscar
+                                </button>
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <label for="numero_operacion" class="required form-label">
@@ -787,7 +799,8 @@
                             </div>
                         </div>
                         <div class="text-center mb-5">
-                            <img src="{{ asset('assets/media/illustrations/sketchy-1/2.png') }}" alt="img" class="mw-100 mh-250px rounded bg-white p-5" />
+                            <img src="{{ asset('assets/media/illustrations/sketchy-1/2.png') }}" alt="img"
+                                class="mw-100 mh-250px rounded bg-white p-5" />
                         </div>
                         <div class="col-12">
                             <div class="input-group input-group-lg">
@@ -799,7 +812,7 @@
                                     </i>
                                 </span>
                                 <input type="number" class="form-control" placeholder="Numero de documento"
-                                    wire:model="documento_identidad" readonly/>
+                                    wire:model="documento_identidad" readonly />
                             </div>
                         </div>
                         <div class="col-12">
@@ -812,7 +825,7 @@
                                     </i>
                                 </span>
                                 <input type="email" class="form-control" placeholder="Correo Electrónico"
-                                    wire:model="email" readonly/>
+                                    wire:model="email" readonly />
                             </div>
                         </div>
                     </div>
@@ -844,7 +857,8 @@
         @endif
     </form>
     {{-- modal formas de pago --}}
-    {{-- <div wire:ignore.self class="modal fade" tabindex="-1" id="modal_formas_pago" data-bs-backdrop="static" data-bs-keyboard="false">
+    {{-- <div wire:ignore.self class="modal fade" tabindex="-1" id="modal_formas_pago" data-bs-backdrop="static"
+        data-bs-keyboard="false">
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
@@ -860,7 +874,8 @@
                         type="application/pdf" width="100%" height="700" />
                     <div class="mt-5">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" wire:model="check_formas_pago" id="check_formas_pago" />
+                            <input class="form-check-input" type="checkbox" wire:model="check_formas_pago"
+                                id="check_formas_pago" />
                             <label class="form-check-label text-gray-800" for="check_formas_pago">
                                 He leído y acepto las formas de pago.
                             </label>
@@ -868,7 +883,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @if ($check_formas_pago == false) disabled @endif>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                        @if ($check_formas_pago == false) disabled @endif>
                         Cerrar
                     </button>
                 </div>

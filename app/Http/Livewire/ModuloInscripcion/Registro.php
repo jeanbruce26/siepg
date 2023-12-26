@@ -61,13 +61,27 @@ class Registro extends Component
     public function mount()
     {
         $this->paso = 1;
-        // $persona = Persona::where('numero_documento', $this->documento)->first();
-        $persona = null;
         $this->modalidad_array = Modalidad::where('modalidad_estado', 1)->get();
         $this->programa_array = Collect();
         $this->admision = Admision::where('admision_estado', 1)->first();
         $this->ubigeo_direccion_array = Ubigeo::all();
         $this->ubigeo_nacimiento_array = Ubigeo::all();
+    }
+
+    public function buscar_persona()
+    {
+        if ($this->documento_identidad == null) {
+            // mostramos alerta de persona no encontrada
+            $this->dispatchBrowserEvent('registro_inscripcion', [
+                'title' => '',
+                'text' => 'Debe ingresar un número de documento',
+                'icon' => 'error',
+                'confirmButtonText' => 'Aceptar',
+                'color' => 'danger'
+            ]);
+            return;
+        }
+        $persona = Persona::where('numero_documento', $this->documento_identidad)->first();
         if ($persona) { // si existe la persona
             $this->id_persona = $persona->id_persona;
             $this->paterno = $persona->apellido_paterno;
@@ -92,6 +106,23 @@ class Registro extends Component
             $this->ubigeo_direccion = $persona->ubigeo_direccion;
             $this->ubigeo_nacimiento = $persona->ubigeo_nacimiento;
             $this->modo = 'update';
+            // mostramos alerta de persona no encontrada
+            $this->dispatchBrowserEvent('registro_inscripcion', [
+                'title' => '',
+                'text' => 'Se encontró a la persona con el número de documento ' . $this->documento_identidad . ', continue con el registro de inscripción',
+                'icon' => 'success',
+                'confirmButtonText' => 'Aceptar',
+                'color' => 'success'
+            ]);
+        } else {
+            // mostramos alerta de persona no encontrada
+            $this->dispatchBrowserEvent('registro_inscripcion', [
+                'title' => '',
+                'text' => 'No se encontró a la persona con el número de documento ingresado para rellenar los campos del formulario, continue con el registro de inscripción',
+                'icon' => 'error',
+                'confirmButtonText' => 'Aceptar',
+                'color' => 'danger'
+            ]);
         }
     }
 
@@ -191,7 +222,7 @@ class Registro extends Component
                 'monto_operacion' => 'required|numeric',
                 'fecha_pago' => 'required|date',
                 'canal_pago' => 'required|numeric',
-                'voucher' => 'required|image|mimes:jpg,jpeg,png|max:2048'
+                'voucher' => 'required|image|mimes:jpg,jpeg,png|max:4096'
             ]);
         } elseif ($this->paso === 2) {
             $this->resetErrorBag();
@@ -547,10 +578,10 @@ class Registro extends Component
         // registramos los expedientes en la tabla expediente_inscripcion
         foreach ($this->expedientes as $key => $expediente) {
             $expediente_model = ExpedienteAdmision::where('expediente_admision_estado', 1)->where('id_expediente_admision', $key)->first();
-            $admision = Admision::where('admision_estado',1)->first()->admision;
-            $path = 'Posgrado/' . $admision. '/' . $this->documento_identidad . '/' . 'Expedientes' . '/';
+            $admision = Admision::where('admision_estado', 1)->first()->admision;
+            $path = 'Posgrado/' . $admision . '/' . $this->documento_identidad . '/' . 'Expedientes' . '/';
             $filename = $expediente_model->expediente->expediente_nombre_file . ".pdf";
-            $nombreDB = $path.$filename;
+            $nombreDB = $path . $filename;
             $expediente->storeAs($path, $filename, 'files_publico');
             $expediente_inscripcion = new ExpedienteInscripcion();
             $expediente_inscripcion->expediente_inscripcion_url = $nombreDB;
