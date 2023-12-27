@@ -6,6 +6,7 @@ use App\Jobs\ProcessRegistroFichaInscripcion;
 use App\Mail\EmailFichaInscripcion;
 use App\Models\Admision;
 use App\Models\CanalPago;
+use App\Models\ConceptoPago;
 use App\Models\Discapacidad;
 use App\Models\EstadoCivil;
 use App\Models\ExpedienteAdmision;
@@ -178,6 +179,54 @@ class Registro extends Component
     public function paso_2()
     {
         $this->validacion();
+        // validar si el numero de operacion ya existe
+        $pago = Pago::where('pago_operacion', $this->numero_operacion)->first();
+        if ($pago) {
+            if ($pago->pago_documento == $this->documento_identidad && $pago->pago_fecha == $this->fecha_pago) {
+                // emitir evento para mostrar mensaje de alerta
+                $this->dispatchBrowserEvent('registro_inscripcion', [
+                    'title' => '¡Error!',
+                    'text' => 'El Número de Operación y el Documento de Identidad ya se encuentran registrados en el sistema en la fecha seleccionada',
+                    'icon' => 'error',
+                    'confirmButtonText' => 'Cerrar',
+                    'color' => 'danger'
+                ]);
+                return;
+            } else if ($pago->pago_fecha == $this->fecha_pago) {
+                // emitir evento para mostrar mensaje de alerta
+                $this->dispatchBrowserEvent('registro_inscripcion', [
+                    'title' => '¡Error!',
+                    'text' => 'El número de operación ya ha sido ingresado en la fecha seleccionada',
+                    'icon' => 'error',
+                    'confirmButtonText' => 'Cerrar',
+                    'color' => 'danger'
+                ]);
+                return;
+            } else if ($pago->pago_documento == $this->documento_identidad) {
+                // emitir evento para mostrar mensaje de alerta
+                $this->dispatchBrowserEvent('registro_inscripcion', [
+                    'title' => '¡Error!',
+                    'text' => 'El Número de Operación y el Documento de Identidad ya se encuentran registrados en el sistema',
+                    'icon' => 'error',
+                    'confirmButtonText' => 'Cerrar',
+                    'color' => 'danger'
+                ]);
+                return;
+            }
+        }
+        // validar si el monto ingresado es igual al monto por concepto de inscripción
+        $concepto_pago_monto = ConceptoPago::where('id_concepto_pago', 1)->first()->concepto_pago_monto;
+        if ($this->monto_operacion != $concepto_pago_monto) {
+            // emitir evento para mostrar mensaje de alerta
+            $this->dispatchBrowserEvent('registro_inscripcion', [
+                'title' => '¡Error!',
+                'text' => 'El monto ingresado no es igual al monto por concepto de inscripción',
+                'icon' => 'error',
+                'confirmButtonText' => 'Cerrar',
+                'color' => 'danger'
+            ]);
+            return;
+        }
         $this->paso = 2;
     }
 

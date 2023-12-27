@@ -100,7 +100,8 @@
                             <label for="documento_identidad" class="required form-label">
                                 Documento de Identidad
                             </label>
-                            <span class="ms-1" data-bs-toggle="tooltip" aria-label="Si ya postuló en inscripciones anteriores, ingrese su DNI y presione el botón Buscar."
+                            <span class="ms-1" data-bs-toggle="tooltip"
+                                aria-label="Si ya postuló en inscripciones anteriores, ingrese su DNI y presione el botón Buscar."
                                 data-bs-original-title="Si ya postuló en inscripciones anteriores, ingrese su DNI y presione el botón Buscar.">
                                 <i class="ki-outline ki-information-5 text-gray-600 fs-4"></i>
                             </span>
@@ -791,7 +792,7 @@
                                     <i class="path3"></i>
                                 </i>
                                 <div class="d-flex flex-column">
-                                    <span class="fw-medium fs-5">
+                                    <span class="fw-medium fs-3">
                                         Verifique que todos los datos ingresados sean correctos, ya que no podrá
                                         modificarlos
                                     </span>
@@ -800,32 +801,83 @@
                         </div>
                         <div class="text-center mb-5">
                             <img src="{{ asset('assets/media/illustrations/sketchy-1/2.png') }}" alt="img"
-                                class="mw-100 mh-250px rounded bg-white p-5" />
+                                class="mw-100 mh-200px rounded bg-white p-5" />
                         </div>
-                        <div class="col-12">
-                            <div class="input-group input-group-lg">
-                                <span class="input-group-text" id="basic-addon1">
-                                    <i class="ki-duotone ki-profile-circle fs-1">
-                                        <span class="path1"></span>
-                                        <span class="path2"></span>
-                                        <span class="path3"></span>
-                                    </i>
-                                </span>
-                                <input type="number" class="form-control" placeholder="Numero de documento"
-                                    wire:model="documento_identidad" readonly />
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="input-group input-group-lg">
-                                <span class="input-group-text">
-                                    <i class="ki-duotone ki-sms fs-1">
-                                        <span class="path1"></span>
-                                        <span class="path2"></span>
-                                        <span class="path3"></span>
-                                    </i>
-                                </span>
-                                <input type="email" class="form-control" placeholder="Correo Electrónico"
-                                    wire:model="email" readonly />
+                        {{-- informacion --}}
+                        <div class="col-12 my-5">
+                            <div class="card shadow-sm">
+                                <div class="card-body">
+                                    <table class="table mb-0">
+                                        <tbody class="fs-3">
+                                            <tr>
+                                                <td class="col-md-3">
+                                                    Postulante
+                                                </td>
+                                                <td>
+                                                    :
+                                                </td>
+                                                <td class="col-md-9">
+                                                    {{ $paterno }} {{ $materno }},
+                                                    {{ $nombres }}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="col-md-3">
+                                                    Documento de Identidad
+                                                </td>
+                                                <td>
+                                                    :
+                                                </td>
+                                                <td class="col-md-9">
+                                                    {{ $documento_identidad }}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="col-md-3">
+                                                    Correo Electrónico
+                                                </td>
+                                                <td>
+                                                    :
+                                                </td>
+                                                <td class="col-md-9">
+                                                    {{ $email }}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="col-md-3">
+                                                    Programa
+                                                </td>
+                                                <td>
+                                                    :
+                                                </td>
+                                                <td class="col-md-9">
+                                                    @php
+                                                        $buscar_programa = App\Models\ProgramaProceso::find($programa);
+                                                    @endphp
+                                                    @if ($buscar_programa->programa_plan->programa->mencion == null)
+                                                        {{ $buscar_programa->programa_plan->programa->programa }}
+                                                        EN {{ $buscar_programa->programa_plan->programa->subprograma }}
+                                                    @else
+                                                        {{ $buscar_programa->programa_plan->programa->programa }}
+                                                        EN {{ $buscar_programa->programa_plan->programa->subprograma }}
+                                                        CON MENCION EN {{ $buscar_programa->programa_plan->programa->mencion }}
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="col-md-3">
+                                                    Modalidad
+                                                </td>
+                                                <td>
+                                                    :
+                                                </td>
+                                                <td class="col-md-9">
+                                                    {{ $buscar_programa->programa_plan->programa->modalidad->modalidad }}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
