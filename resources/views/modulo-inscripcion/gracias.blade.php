@@ -10,22 +10,3 @@
     </div>
 </div>
 @endsection
-@section('scripts')
-{{-- <script>
-    window.addEventListener('modal_registro_expediente', event => {
-        $('#modal_registro_expediente').modal(event.detail.action);
-    })
-    window.addEventListener('registro_inscripcion', event => {
-        Swal.fire({
-            title: event.detail.title,
-            text: event.detail.text,
-            icon: event.detail.icon,
-            buttonsStyling: false,
-            confirmButtonText: event.detail.confirmButtonText,
-            customClass: {
-                confirmButton: "btn btn-"+event.detail.color,
-            }
-        });
-    })
-</script> --}}
-@endsection

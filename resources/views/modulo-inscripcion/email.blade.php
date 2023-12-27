@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Plantilla Correo</title>
 </head>
-<body style="background-color: #e7f2ff; padding-top: 0.5rem; padding-bottom: 0.5rem; padding-left: 1.5rem; padding-right: 1.5rem; border-radius: 20px;">
+<body style="padding-top: 0.5rem; padding-bottom: 0.5rem;">
     <main>
         <h1 style="color: #212121; margin-bottom: 0.5rem; font-weight: 700; text-align: center;">
             Escuela de Posgrado
@@ -18,7 +18,7 @@
             ¡Gracias por inscribirte!
         </p>
         <p style="text-align: justify; text-justify: inter-word; margin-bottom: 1rem;">
-            Nos complace informarte que hemos recibido tu registro de inscripción para el proceso de {{ $admision }}. Agradecemos tu interés en nuestro programa y estamos entusiasmados por brindarte una experiencia educativa valiosa.
+            Nos complace informarte que hemos recibido tu registro de inscripción para el proceso de {{ $admision }}. Agradecemos tu interés en nuestro programa y estamos entusiasmados por brindarte una experiencia educativa valiosa. Se le hace recordar que su inscripción esta sujeta a la verificación de los expedientes presentados y el pago de la inscripción. Cualquier observación será comunicada a su correo electrónico.
         </p>
         <p style="text-align: justify; text-justify: inter-word; margin-bottom: 1rem;">
             A continuación, te indicamos el link de acceso al grupo de WhatsApp {{ $programa }}:

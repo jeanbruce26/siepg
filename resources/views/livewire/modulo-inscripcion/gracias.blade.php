@@ -16,8 +16,21 @@
             <i class="path3"></i>
         </i>
         <div class="d-flex flex-column">
-            <h4 class="mb-0">
+            <h4 class="mb-0 fs-3">
                 Su ficha de inscripción ha sido enviado a su correo electrónico y se encuentra disponible para descargarlo a continuación.
+            </h4>
+        </div>
+    </div>
+    {{-- alerta --}}
+    <div class="alert bg-light-warning border border-3 border-warning d-flex align-items-center gap-2 mt-5 p-5">
+        <i class="ki-duotone ki-information-5 fs-2qx me-4 text-warning">
+            <i class="path1"></i>
+            <i class="path2"></i>
+            <i class="path3"></i>
+        </i>
+        <div class="d-flex flex-column">
+            <h4 class="mb-0 fs-3">
+                Se le hace recordar que su inscripción esta sujeta a la verificación de los expedientes presentados y el pago de la inscripción. Cualquier observación será comunicada a su correo electrónico.
             </h4>
         </div>
     </div>
