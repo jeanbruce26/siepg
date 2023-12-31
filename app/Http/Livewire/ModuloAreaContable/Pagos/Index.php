@@ -26,6 +26,12 @@ class Index extends Component
     public $voucher = ''; // variable para almacenar el voucher
     public $observacion; // variable para almacenar la observacion
     public $id_pago; // variable para almacenar el id del pago
+    public $documento;
+    public $nombres;
+    public $operacion;
+    public $monto;
+    public $fecha_pago;
+    public $canal_pago;
 
     public function mount()
     {
@@ -52,6 +58,12 @@ class Index extends Component
         } else {
             $this->observacion = '';
         }
+        $this->documento = $pago->pago_documento;
+        $this->nombres = $pago->persona->nombre_completo;
+        $this->operacion = $pago->pago_operacion;
+        $this->monto = $pago->pago_monto;
+        $this->fecha_pago = $pago->pago_fecha;
+        $this->canal_pago = $pago->canal_pago->canal_pago;
     }
 
     public function limpiar()
