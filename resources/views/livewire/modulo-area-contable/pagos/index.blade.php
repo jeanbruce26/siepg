@@ -241,7 +241,7 @@
                         Cerrar
                     </button>
                     <div class="">
-                        <button type="button" wire:click="rechazar_pago" class="btn btn-danger"
+                        {{-- <button type="button" wire:click="rechazar_pago" class="btn btn-danger"
                             wire:loading.attr="disabled">
                             <div wire:loading.remove wire:target="rechazar_pago">
                                 Rechazar
@@ -249,8 +249,8 @@
                             <div wire:loading wire:target="rechazar_pago">
                                 Procesando...
                             </div>
-                        </button>
-                        <button type="button" wire:click="observar_pago" class="btn btn-warning"
+                        </button> --}}
+                        <button type="button" wire:click="observar_pago" class="btn btn-danger"
                             wire:loading.attr="disabled">
                             <div wire:loading.remove wire:target="observar_pago">
                                 Observar
