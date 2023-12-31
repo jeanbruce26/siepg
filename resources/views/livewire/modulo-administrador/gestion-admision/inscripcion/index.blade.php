@@ -378,15 +378,15 @@
                                             </td>
                                             <td align="center">
                                                 @if ($item->expediente_inscripcion_verificacion == 1)
-                                                    <span class="badge badge-success fs-6 px-3 py-2">
+                                                    <span class="badge badge-light-success fs-6 px-3 py-2">
                                                         Verificado
                                                     </span>
                                                 @elseif($item->expediente_inscripcion_verificacion == 2)
-                                                    <span class="badge badge-danger fs-6 px-3 py-2">
+                                                    <span class="badge badge-light-danger fs-6 px-3 py-2">
                                                         Rechazado
                                                     </span>
                                                 @else
-                                                    <span class="badge badge-warning fs-6 px-3 py-2">
+                                                    <span class="badge badge-light-warning fs-6 px-3 py-2">
                                                         Pendiente
                                                     </span>
                                                 @endif
