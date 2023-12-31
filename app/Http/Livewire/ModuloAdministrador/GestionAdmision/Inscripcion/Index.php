@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\ModuloAdministrador\GestionAdmision\Inscripcion;
 
 use App\Models\Admision;
+use App\Models\ExpedienteInscripcion;
 use App\Models\ExpedienteInscripcionSeguimiento;
 use App\Models\Inscripcion;
 use App\Models\Modalidad;
@@ -11,10 +12,6 @@ use App\Models\ProgramaProceso;
 use App\Models\TipoSeguimiento;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Barryvdh\DomPDF\Facade\Pdf;
-use DateTime;
-use Illuminate\Support\Facades\File;
-use Maatwebsite\Excel\Facades\Excel;
 
 class Index extends Component
 {
@@ -47,6 +44,9 @@ class Index extends Component
     public $modalidad;
     public $programa;
     public $programasModal; //Para mostrar los programas en el modal
+
+    // expeidentes de la inscripcion
+    public $expedientes = [];
 
     //Para mapear el mes al filtrar
     public $meses = [
@@ -160,28 +160,29 @@ class Index extends Component
     //Cargamos los datos de la inscripción para mostrarlos en el modal
     public function cargarInscripcion(Inscripcion $inscripcion)
     {
+        $admision = Admision::find($inscripcion->programa_proceso->id_admision);
         $this->id_inscripcion = $inscripcion->id_inscripcion;
         $this->modalidad = $inscripcion->programa_proceso->programa_plan->programa->modalidad->id_modalidad;
         $this->programa = $inscripcion->programa_proceso->programa_plan->programa->id_programa;
         $this->programasModal = ProgramaProceso::join('programa_plan', 'programa_plan.id_programa_plan', 'programa_proceso.id_programa_plan')
-                                        ->join('programa', 'programa.id_programa', 'programa_plan.id_programa')
-                                        ->where('programa.id_modalidad', $this->modalidad)
-                                        ->where('programa_proceso.id_admision',$this->admision->id_admision)
-                                        ->where('programa_proceso.programa_proceso_estado',1)
-                                        ->where('programa_plan.programa_plan_estado', 1)
-                                        ->get();
+            ->join('programa', 'programa.id_programa', 'programa_plan.id_programa')
+            ->where('programa.id_modalidad', $this->modalidad)
+            ->where('programa_plan.programa_plan_estado', 1)
+            ->where('programa_proceso.id_admision', $admision->id_admision)
+            ->where('programa_proceso.programa_proceso_estado', 1)
+            ->where('programa_plan.programa_plan_estado', 1)
+            ->get();
     }
 
     //Actualizar el programa de la inscripción
     public function actualizarInscripcion()
     {
-
         //Validar que los campos no esten vacios
         $this->validate([
             'id_inscripcion' => 'required',
             'modalidad' => 'required',
             'programa' => 'required',
-            
+
         ]);
 
         $inscripcion = Inscripcion::find($this->id_inscripcion);
@@ -207,6 +208,46 @@ class Index extends Component
         $this->dispatchBrowserEvent('modal', [
             'titleModal' => '#ModalInscripcionEditar',
         ]);
+    }
+
+    public function cargar_expedientes($id_inscripcion)
+    {
+        $inscripcion = Inscripcion::find($id_inscripcion);
+        $this->expedientes = ExpedienteInscripcion::where('id_inscripcion', $id_inscripcion)->get();
+    }
+
+    public function verificar_expediente($id_expediente_inscripcion)
+    {
+        $expediente = ExpedienteInscripcion::find($id_expediente_inscripcion);
+        $expediente->expediente_inscripcion_verificacion = 1; //verificado
+        $expediente->save();
+        // mostrar alerta
+        $this->alertaInscripcion(
+            '¡Exito!',
+            'El expediente de ' . $expediente->inscripcion->persona->nombre_completo . ' ha sido verificado satisfactoriamente',
+            'success',
+            'Aceptar',
+            'success'
+        );
+        // cargar expedientes
+        $this->cargar_expedientes($expediente->id_inscripcion);
+    }
+
+    public function rechazar_expediente($id_expediente_inscripcion)
+    {
+        $expediente = ExpedienteInscripcion::find($id_expediente_inscripcion);
+        $expediente->expediente_inscripcion_verificacion = 2; //rechazado
+        $expediente->save();
+        // mostrar alerta
+        $this->alertaInscripcion(
+            '¡Exito!',
+            'El expediente de ' . $expediente->inscripcion->persona->nombre_completo . ' ha sido rechazado satisfactoriamente',
+            'success',
+            'Aceptar',
+            'success'
+        );
+        // cargar expedientes
+        $this->cargar_expedientes($expediente->id_inscripcion);
     }
 
     public function render()
@@ -278,7 +319,7 @@ class Index extends Component
             ->join('programa', 'programa.id_programa', 'programa_plan.id_programa')
             ->where('programa.id_modalidad', $this->modalidad)
             ->where('programa_plan.programa_plan_estado', 1)
-            ->where('programa_proceso.programa_proceso_estado',1)
+            ->where('programa_proceso.programa_proceso_estado', 1)
             ->get();
 
         return view('livewire.modulo-administrador.gestion-admision.inscripcion.index', [

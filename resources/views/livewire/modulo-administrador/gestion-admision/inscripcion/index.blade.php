@@ -180,22 +180,33 @@
                                 <thead class="bg-light-primary">
                                     <tr align="center"
                                         class="fw-bold fs-5 text-gray-800 border-bottom-2 border-gray-200">
-                                        <th scope="col" class="col-md-1">ID</th>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Código</th>
                                         <th scope="col">Postulante</th>
                                         <th scope="col">Programa</th>
                                         <th scope="col" class="col-md-1">Modalidad</th>
                                         <th scope="col" class="col-md-1">Fecha</th>
                                         <th scope="col" class="col-md-1">Verificación</th>
-                                        <th scope="col" class="col-md-2">Acciones</th>
+                                        <th scope="col">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @forelse ($inscripcionModel as $item)
                                         <tr>
-                                            <td align="center" class="fw-bold fs-5">{{ $item->id_inscripcion }}</td>
-                                            <td>{{ $item->numero_documento }} - {{ $item->apellido_paterno }}
-                                                {{ $item->apellido_materno }} {{ $item->nombre }}</td>
-                                            <td> {{ $item->programa }} EN {{ $item->subprograma }} @if ($item->mencion != '')
+                                            <td align="center" class="fw-bold">
+                                                {{ $item->id_inscripcion }}
+                                            </td>
+                                            <td>
+                                                {{ $item->inscripcion_codigo }}
+                                            </td>
+                                            <td>
+                                                {{ $item->numero_documento }} - {{ $item->apellido_paterno }}
+                                                {{ $item->apellido_materno }} {{ $item->nombre }}
+                                            </td>
+                                            <td>
+                                                {{ $item->programa }}
+                                                EN {{ $item->subprograma }}
+                                                @if ($item->mencion != '')
                                                     CON MENCION EN {{ $item->mencion }}
                                                 @endif
                                             </td>
@@ -245,11 +256,11 @@
                                                 <div class="dropdown-menu dropdown-menu-end menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4 w-175px"
                                                     data-kt-menu="true">
                                                     <div class="menu-item px-3">
-                                                        <a href="#ModalInscripcion"
-                                                            wire:click="cargarInscripcion({{ $item->id_inscripcion }}, 3)"
+                                                        <a href="#modal-expediente"
+                                                            wire:click="cargar_expedientes({{ $item->id_inscripcion }}, 3)"
                                                             class="menu-link px-3" data-bs-toggle="modal"
-                                                            data-bs-target="#ModalInscripcion">
-                                                            Detalle
+                                                            data-bs-target="#modal-expediente">
+                                                            Ver expedientes
                                                         </a>
                                                     </div>
                                                     <div class="menu-item px-3">
@@ -257,7 +268,7 @@
                                                             wire:click="cargarInscripcion({{ $item->id_inscripcion }}, 2)"
                                                             class="menu-link px-3" data-bs-toggle="modal"
                                                             data-bs-target="#ModalInscripcionEditar">
-                                                            Editar
+                                                            Editar Programa
                                                         </a>
                                                     </div>
                                                 </div>
@@ -309,220 +320,13 @@
         </div>
     </div>
 
-    {{-- Modal Programa --}}
-    {{-- <div wire:ignore.self class="modal fade" tabindex="-1" id="ModalInscripcion">
-        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    {{-- Modal Expedientes --}}
+    <div wire:ignore.self class="modal fade" tabindex="-1" id="modal-expediente">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
                     <h3 class="modal-title">
-                        {{ $titulo }}
-                    </h3>
-                    <div class="btn btn-icon btn-sm btn-active-light-danger ms-2" data-bs-dismiss="modal"
-                        aria-label="Close">
-                        <span class="svg-icon svg-icon-2hx">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <rect opacity="0.3" x="2" y="2" width="20" height="20"
-                                    rx="5" fill="currentColor" />
-                                <rect x="7" y="15.3137" width="12" height="2" rx="1"
-                                    transform="rotate(-45 7 15.3137)" fill="currentColor" />
-                                <rect x="8.41422" y="7" width="12" height="2" rx="1"
-                                    transform="rotate(45 8.41422 7)" fill="currentColor" />
-                            </svg>
-                        </span>
-                    </div>
-                </div>
-                <div class="modal-body">
-                    <form autocomplete="off" class="row g-5 {{ $modo == 3 ? 'mb-3' : '' }}">
-                        <div class="col-md-6">
-                            <label for="programa_codigo" class="{{ $modo != 3 ? 'required' : ''}} form-label">
-                                Programa
-                            </label>
-                            @if ($modo == 3)
-                                <input type="text" wire:model="programa"
-                                    class="form-control" id="programa" readonly />
-                            @else
-                                <select class="form-select @error('programa_tipo') is-invalid @enderror"
-                                    wire:model="programa_tipo" id="programa_tipo" data-control="select2"
-                                    data-placeholder="Seleccione el Plan" data-allow-clear="true"
-                                    data-dropdown-parent="#ModalInscripcion">
-                                    <option></option>
-                                    <option value="1">MAESTRIA</option>
-                                    <option value="2">DOCTORADO</option>
-                                </select>
-                                @error('programa_tipo')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            @endif
-                        </div>
-                        <div class="col-md-6">
-                            <label for="programa_iniciales" class="{{ $modo != 3 ? 'required' : ''}} form-label">
-                                Iniciales
-                                @switch($programa_tipo)
-                                    @case(1)
-                                        Maestría
-                                        @break
-                                    @case(2)
-                                        Doctorado
-                                        @break
-                                    @default
-                                        ***
-                                        @break
-                                @endswitch
-                            </label>
-                            <input type="text" wire:model="programa_iniciales"
-                                class="form-control @error('programa_iniciales') is-invalid @enderror"
-                                placeholder="Ingrese las iniciales del programa" id="programa_iniciales" @if ($modo == 3) readonly @endif />
-                        </div>
-                        <div class="col-md-12">
-                            <label for="subprograma" class="{{ $modo != 3 ? 'required' : ''}} form-label">
-                                @switch($programa_tipo)
-                                    @case(1)
-                                        Maestría
-                                        @break
-                                    @case(2)
-                                        Doctorado
-                                        @break
-                                    @default
-                                        ***
-                                        @break
-                                @endswitch
-                            </label>
-                            <input type="text" wire:model="subprograma"
-                                class="form-control @error('subprograma') is-invalid @enderror"
-                                placeholder="Ingrese {{ $programa_tipo == 1 ? 'la maestría' : '' }}{{ $programa_tipo == 2 ? 'el doctorado' : '' }}" id="subprograma" @if ($modo == 3) readonly @endif />
-                        </div>
-                        <div class="col-md-6">
-                            <label for="mencion" class="form-label">
-                                Mención
-                            </label>
-                            <input type="text" wire:model="mencion"
-                                class="form-control @error('mencion') is-invalid @enderror"
-                                placeholder="{{ $modo == 3 ? 'Sin mención' : 'Ingrese la mención' }}" id="mencion" @if ($modo == 3) readonly @endif />
-                        </div>
-                        <div class="col-md-6">
-                            <label for="facultad" class="{{ $modo != 3 ? 'required' : ''}} form-label">
-                                Facultad
-                            </label>
-                            @if ($modo == 3)
-                                <input type="text" wire:model="facultadDetalle"
-                                    class="form-control" id="facultadDetalle" readonly />
-                            @else
-                                <select class="form-select @error('facultad') is-invalid @enderror"
-                                    wire:model="facultad" id="facultad" data-control="select2"
-                                    data-placeholder="Seleccione la Facultad" data-allow-clear="true"
-                                    data-dropdown-parent="#ModalInscripcion">
-                                    <option></option>
-                                    @foreach ($facultad_model as $item)
-                                        @if ($item->facultad_estado == 1)
-                                            <option value="{{ $item->id_facultad }}">{{ $item->facultad }}</option>
-                                        @endif
-                                    @endforeach
-                                </select>
-                                @error('facultad')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            @endif
-                        </div>
-                        <div class="col-md-6">
-                            <label for="id_sunedu" class="{{ $modo != 3 ? 'required' : ''}} form-label">
-                                ID SUNEDU
-                            </label>
-                            <input type="text" wire:model="id_sunedu"
-                                class="form-control @error('id_sunedu') is-invalid @enderror"
-                                placeholder="Ingrese el ID de SUNEDU" id="mencion" @if ($modo == 3) readonly @endif />
-                                @error('id_sunedu')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                        </div>
-                        <div class="col-md-6">
-                            <label for="codigo_sunedu" class="form-label">
-                                Código SUNEDU
-                            </label>
-                            <input type="text" wire:model="codigo_sunedu"
-                                class="form-control @error('codigo_sunedu') is-invalid @enderror"
-                                placeholder="Ingrese el código de SUNEDU" id="mencion" @if ($modo == 3) readonly @endif />
-                                @error('codigo_sunedu')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                        </div>
-                        <div class="col-md-6">
-                            <label for="modalidad" class="{{ $modo != 3 ? 'required' : ''}} form-label">
-                                Modalidad
-                            </label>
-                            @if ($modo == 3)
-                                <input type="text" wire:model="modalidadDetalle"
-                                    class="form-control" id="modalidadDetalle" readonly />
-                            @else
-                                <select class="form-select @error('modalidad') is-invalid @enderror"
-                                    wire:model="modalidad" id="modalidad" data-control="select2"
-                                    data-placeholder="Seleccione la Modalidad" data-allow-clear="true"
-                                    data-dropdown-parent="#ModalInscripcion">
-                                    <option></option>
-                                    @foreach ($modalidad_model as $item)
-                                        @if ($item->modalidad_estado == 1)
-                                            <option value="{{ $item->id_modalidad }}">{{ $item->modalidad }}</option>
-                                        @endif
-                                    @endforeach
-                                </select>
-                                @error('modalidad')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            @endif
-                        </div>
-                        <div class="col-md-6">
-                            <label for="sede" class="{{ $modo != 3 ? 'required' : ''}} form-label">
-                                Sede
-                            </label>
-                            @if ($modo == 3)
-                                <input type="text" wire:model="sedeDetalle"
-                                    class="form-control" id="sedeDetalle" readonly />
-                            @else
-                                <select class="form-select @error('sede') is-invalid @enderror"
-                                    wire:model="sede" id="sede" data-control="select2"
-                                    data-placeholder="Seleccione la Sede" data-allow-clear="true"
-                                    data-dropdown-parent="#ModalInscripcion">
-                                    <option></option>
-                                    @foreach ($sede_model as $item)
-                                        @if ($item->sede_estado == 1)
-                                            <option value="{{ $item->id_sede }}">{{ $item->sede }}</option>
-                                        @endif
-                                    @endforeach
-                                </select>
-                                @error('sede')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            @endif
-                        </div>
-
-                    </form>
-                </div>
-                @if ($modo != 3)
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-light" data-bs-dismiss="modal" wire:click="limpiar()">
-                            Cerrar
-                        </button>
-                        <button type="button" wire:click="guardarPrograma" class="btn btn-primary" style="width: 150px" wire:loading.attr="disabled" wire:target="guardarPrograma">
-                            <div wire:loading.remove wire:target="guardarPrograma, voucher">
-                                Guardar
-                            </div>
-                            <div wire:loading wire:target="guardarPrograma">
-                                Procesando <span class="spinner-border spinner-border-sm align-middle ms-2">
-                            </div>
-                        </button>
-                    </div>
-                @endif
-            </div>
-        </div>
-    </div> --}}
-
-    {{-- Modal Editar Inscripcion --}}
-    <div wire:ignore.self class="modal fade" tabindex="-1" id="ModalInscripcionEditar">
-        <div class="modal-dialog modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title">
-                        Actualizar Programa
+                        Expedientes de Inscripción
                     </h3>
                     <div class="btn btn-icon btn-sm btn-active-light-danger ms-2" data-bs-dismiss="modal"
                         aria-label="Close">
@@ -539,69 +343,159 @@
                         </span>
                     </div>
                 </div>
-                <div class="modal-body">
-                    <form autocomplete="off" class="row g-5">
-                        <div class="col-md-12">
-                            <label for="modalidad" class="form-label">
-                                Modalidad
-                            </label>
-                            <select class="form-select @error('modalidad') is-invalid @enderror"
-                                wire:model="modalidad" id="modalidad" data-control="select2"
-                                data-placeholder="Seleccione la Modalidad">
-                                <option></option>
-                                @foreach ($modalidadesModal as $item)
-                                    @php
-                                        $modalidadAsignadas = App\Models\Modalidad::where('id_modalidad', $item)->first();
-                                    @endphp
-                                    <option value="{{ $item }}">{{ $modalidadAsignadas->modalidad }}</option>
-                                @endforeach
-                            </select>
-                            @error('modalidad')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        <div class="col-md-12">
-                            <label for="programa" class="form-label">
-                                Programa
-                            </label>
-                            <select class="form-select @error('programa') is-invalid @enderror" wire:model="programa"
-                                id="programa" data-control="select2" data-placeholder="Seleccione el Programa">
-                                <option></option>
-                                @if ($modalidad)
-                                    @foreach ($programasModal as $item)
-                                        @if ($item->programa_proceso_estado == 1)
-                                            <option value="{{ $item->id_programa }}">{{ $item->programa }} EN
-                                                {{ $item->subprograma }} @if ($item->mencion != '')
-                                                    CON MENCION EN {{ $item->mencion }}
+                <div class="modal-body row g-5">
+                    <div class="col-12">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-rounded border gy-4 gs-4 mb-0 align-middle">
+                                <thead class="bg-light-primary">
+                                    <tr align="center"
+                                        class="fw-bold fs-5 text-gray-800 border-bottom-2 border-gray-200">
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Expediente</th>
+                                        <th scope="col" class="col-md-1"></th>
+                                        <th scope="col">Fecha</th>
+                                        <th scope="col" class="col-md-1">Verificación</th>
+                                        <th scope="col">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($expedientes as $item)
+                                        <tr>
+                                            <td align="center" class="fw-bold">
+                                                {{ $loop->iteration }}
+                                            </td>
+                                            <td>
+                                                {{ $item->expediente_admision->expediente->expediente }}
+                                            </td>
+                                            <td>
+                                                <a href="{{ asset($item->expediente_inscripcion_url) }}"
+                                                    target="_blank" class="btn btn-sm btn-dark">
+                                                    Ver
+                                                </a>
+                                            </td>
+                                            <td align="center">
+                                                {{ convertirFechaHora($item->expediente_inscripcion_fecha) }}
+                                            </td>
+                                            <td align="center">
+                                                @if ($item->expediente_inscripcion_verificacion == 1)
+                                                    <span class="badge badge-success fs-6 px-3 py-2">
+                                                        Verificado
+                                                    </span>
+                                                @elseif($item->expediente_inscripcion_verificacion == 2)
+                                                    <span class="badge badge-danger fs-6 px-3 py-2">
+                                                        Rechazado
+                                                    </span>
+                                                @else
+                                                    <span class="badge badge-warning fs-6 px-3 py-2">
+                                                        Pendiente
+                                                    </span>
                                                 @endif
-                                            </option>
-                                        @endif
+                                            </td>
+                                            <td align="center">
+                                                <button class="btn btn-sm btn-success" wire:click="verificar_expediente({{ $item->id_expediente_inscripcion }})">
+                                                    Verificar
+                                                </button>
+                                                <button class="btn btn-sm btn-danger" wire:click="rechazar_expediente({{ $item->id_expediente_inscripcion }})">
+                                                    Rechazar
+                                                </button>
+                                            </td>
+                                        </tr>
                                     @endforeach
-                                @endif
-                            </select>
-                            @error('programa')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
+                                </tbody>
+                            </table>
                         </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal" wire:click="limpiar()">
-                        Cerrar
-                    </button>
-                    <button type="button" wire:click="actualizarInscripcion" class="btn btn-primary"
-                        style="width: 150px" wire:loading.attr="disabled" wire:target="actualizarInscripcion">
-                        <div wire:loading.remove wire:target="actualizarInscripcion">
-                            Guardar
-                        </div>
-                        <div wire:loading wire:target="actualizarInscripcion">
-                            Procesando <span class="spinner-border spinner-border-sm align-middle ms-2">
-                        </div>
-                    </button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
+{{-- Modal Editar Inscripcion --}}
+<div wire:ignore.self class="modal fade" tabindex="-1" id="ModalInscripcionEditar">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    Actualizar Programa
+                </h3>
+                <div class="btn btn-icon btn-sm btn-active-light-danger ms-2" data-bs-dismiss="modal"
+                    aria-label="Close">
+                    <span class="svg-icon svg-icon-2hx">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5"
+                                fill="currentColor" />
+                            <rect x="7" y="15.3137" width="12" height="2" rx="1"
+                                transform="rotate(-45 7 15.3137)" fill="currentColor" />
+                            <rect x="8.41422" y="7" width="12" height="2" rx="1"
+                                transform="rotate(45 8.41422 7)" fill="currentColor" />
+                        </svg>
+                    </span>
+                </div>
+            </div>
+            <div class="modal-body">
+                <form autocomplete="off" class="row g-5">
+                    <div class="col-md-12">
+                        <label for="modalidad" class="form-label">
+                            Modalidad
+                        </label>
+                        <select class="form-select @error('modalidad') is-invalid @enderror" wire:model="modalidad"
+                            id="modalidad" data-control="select2" data-placeholder="Seleccione la Modalidad">
+                            <option></option>
+                            @foreach ($modalidadesModal as $item)
+                                @php
+                                    $modalidadAsignadas = App\Models\Modalidad::where('id_modalidad', $item)->first();
+                                @endphp
+                                <option value="{{ $item }}">{{ $modalidadAsignadas->modalidad }}</option>
+                            @endforeach
+                        </select>
+                        @error('modalidad')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="col-md-12">
+                        <label for="programa" class="form-label">
+                            Programa
+                        </label>
+                        <select class="form-select @error('programa') is-invalid @enderror" wire:model="programa"
+                            id="programa" data-control="select2" data-placeholder="Seleccione el Programa">
+                            <option></option>
+                            @if ($modalidad)
+                                @foreach ($programasModal as $item)
+                                    @if ($item->programa_proceso_estado == 1)
+                                        <option value="{{ $item->id_programa }}">{{ $item->programa }} EN
+                                            {{ $item->subprograma }} @if ($item->mencion != '')
+                                                CON MENCION EN {{ $item->mencion }}
+                                            @endif
+                                        </option>
+                                    @endif
+                                @endforeach
+                            @endif
+                        </select>
+                        @error('programa')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal" wire:click="limpiar()">
+                    Cerrar
+                </button>
+                <button type="button" wire:click="actualizarInscripcion" class="btn btn-primary"
+                    style="width: 150px" wire:loading.attr="disabled" wire:target="actualizarInscripcion">
+                    <div wire:loading.remove wire:target="actualizarInscripcion">
+                        Guardar
+                    </div>
+                    <div wire:loading wire:target="actualizarInscripcion">
+                        Procesando <span class="spinner-border spinner-border-sm align-middle ms-2">
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
 </div>
 @push('scripts')
