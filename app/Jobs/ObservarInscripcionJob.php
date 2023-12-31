@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\ExpedienteInscripcion;
 use App\Models\Inscripcion;
+use App\Models\PagoObservacion;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -37,19 +38,40 @@ class ObservarInscripcionJob implements ShouldQueue
         $persona = $inscripcion->persona;
         $correo = $persona->correo;
         $nombre = $persona->nombre_completo;
-        $expedientes = ExpedienteInscripcion::where('id_inscripcion', $this->id_inscripcion)->get();
-
-        // datos del correo
-        $detalle = [
-            'correo' => $correo,
-            'nombre' => $nombre,
-            'expedientes' => $expedientes,
-        ];
 
         if ($this->tipo == 'observar-expediente') {
-            Mail::send('components.email.rechazar-expedientes', $detalle, function ($message) use ($detalle) {
+            $expedientes = ExpedienteInscripcion::where('id_inscripcion', $this->id_inscripcion)->get();
+
+            // datos del correo
+            $detalle = [
+                'correo' => $correo,
+                'nombre' => $nombre,
+                'expedientes' => $expedientes,
+            ];
+
+            Mail::send('components.email.observar-expedientes', $detalle, function ($message) use ($detalle) {
                 $message->to($detalle['correo'])
-                        ->subject('Expedientes Observados - Escuela de Posgrado');
+                    ->subject('Expedientes Observados - Escuela de Posgrado');
+            });
+        } else if ($this->tipo == 'observar-pago') {
+            $pago = $inscripcion->pago;
+            // verificar si tiene observacion
+            $observacion = PagoObservacion::where('id_pago', $pago->id_pago)
+                ->where('pago_observacion_estado', 1)
+                ->orderBy('id_pago_observacion', 'desc')
+                ->first();
+
+            // datos del correo
+            $detalle = [
+                'correo' => $correo,
+                'nombre' => $nombre,
+                'pago' => $pago,
+                'observacion' => $observacion,
+            ];
+
+            Mail::send('components.email.observar-pago', $detalle, function ($message) use ($detalle) {
+                $message->to($detalle['correo'])
+                    ->subject('Pago Observado - Escuela de Posgrado');
             });
         }
     }

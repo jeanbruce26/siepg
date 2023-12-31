@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\ModuloAreaContable\Pagos;
 
+use App\Jobs\ObservarInscripcionJob;
 use App\Models\CanalPago;
 use App\Models\ConceptoPago;
 use App\Models\ConstanciaIngreso;
@@ -39,7 +40,7 @@ class Index extends Component
 
     public function updatedFiltroConceptoPago($value)
     {
-        if($value == 'all' || $value == ''){
+        if ($value == 'all' || $value == '') {
             $this->filtro_concepto_pago = 'all';
         }
     }
@@ -89,7 +90,7 @@ class Index extends Component
         if ($observacion) {
             $observacion->pago_observacion_estado = 0;
             $observacion->save();
-        }else{
+        } else {
             if ($this->observacion != '' || $this->observacion != null) {
                 $observacion = new PagoObservacion();
                 $observacion->pago_observacion = $this->observacion;
@@ -134,7 +135,7 @@ class Index extends Component
             $observacion->pago_observacion = $this->observacion;
             $observacion->pago_observacion_estado = 1;
             $observacion->save();
-        }else{
+        } else {
             if ($this->observacion != '' || $this->observacion != null) {
                 $observacion = new PagoObservacion();
                 $observacion->pago_observacion = $this->observacion;
@@ -159,6 +160,9 @@ class Index extends Component
             'action' => 'hide'
         ]);
 
+        // ejecutamos el job para enviar el correo de rechazo de pago
+        ObservarInscripcionJob::dispatch($pago->inscripcion->id_inscrpcion, 'observar-pago');
+
         // limpiar los campos
         $this->limpiar();
     }
@@ -175,8 +179,7 @@ class Index extends Component
         $pago->pago_estado = 0;
         $pago->pago_verificacion = 0;
         $pago->pago_leido = 1;
-        if($pago->pago_voucher_url)
-        {
+        if ($pago->pago_voucher_url) {
             File::delete($pago->pago_voucher_url);
         }
         $pago->pago_voucher_url = null;
@@ -184,11 +187,9 @@ class Index extends Component
 
         // eliminar la constancia de ingreso
         $constancia = ConstanciaIngreso::where('id_pago', $this->id_pago)->orderBy('id_constancia_ingreso')->first();
-        if($constancia)
-        {
+        if ($constancia) {
             $constancia->constancia_ingreso_codigo = null;
-            if($constancia->constancia_ingreso_url)
-            {
+            if ($constancia->constancia_ingreso_url) {
                 File::delete($constancia->constancia_ingreso_url);
             }
             $constancia->constancia_ingreso_url = null;
@@ -201,7 +202,7 @@ class Index extends Component
             $observacion->pago_observacion = $this->observacion;
             $observacion->pago_observacion_estado = 2;
             $observacion->save();
-        }else{
+        } else {
             if ($this->observacion != '' || $this->observacion != null) {
                 $observacion = new PagoObservacion();
                 $observacion->pago_observacion = $this->observacion;
@@ -234,12 +235,12 @@ class Index extends Component
     {
         $concepto_pagos = ConceptoPago::where('concepto_pago_estado', 1)->get();
         $pagos = Pago::where('id_concepto_pago', $this->filtro_concepto_pago == "all" ? '!=' : '=', $this->filtro_concepto_pago)
-                        ->where(function ($query) {
-                            $query->where('pago_documento', 'like', '%' . $this->search . '%')
-                                ->orWhere('pago_operacion', 'like', '%' . $this->search . '%');
-                        })
-                        ->orderBy('id_pago','desc')
-                        ->paginate(100);
+            ->where(function ($query) {
+                $query->where('pago_documento', 'like', '%' . $this->search . '%')
+                    ->orWhere('pago_operacion', 'like', '%' . $this->search . '%');
+            })
+            ->orderBy('id_pago', 'desc')
+            ->paginate(100);
         // dd($pagos, $this->filtro_concepto_pago);
         return view('livewire.modulo-area-contable.pagos.index', [
             'pagos' => $pagos,

@@ -39,7 +39,7 @@ class Pago extends Model
     }
 
     public function inscripcion(){
-        return $this->hasMany(Inscripcion::class,
+        return $this->hasOne(Inscripcion::class,
         'id_pago','id_pago');
     }
 
