@@ -616,7 +616,7 @@ class Registro extends Component
         $inscripcion->inscripcion_codigo = $codigo_inscripcion;
         $inscripcion->inscripcion_fecha = now();
         $inscripcion->id_persona = $this->id_persona;
-        $inscripcion->inscripcion_estado = 1;
+        $inscripcion->inscripcion_estado = 0; // 0: pendiente, 1: inscrito
         $inscripcion->id_pago = $pago->id_pago;
         $inscripcion->id_programa_proceso = $this->programa;
         $inscripcion->inscripcion_tipo_programa = $this->mostrar_tipo_expediente;
