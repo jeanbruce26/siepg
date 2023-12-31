@@ -33,7 +33,6 @@ class Index extends Component
         }
         $this->coordinador = $this->trabajador->coordinador; // asignamos el coordinador del usuario logueado a la variable coordinador
         $this->docente = $this->trabajador->docente; // asignamos el docente del usuario logueado a la variable docente
-
     }
 
     public function cerrar_sesion()

@@ -28,34 +28,66 @@ class Trabajador extends Model
     public $timestamps = false;
 
     // Grado Académico
-    public function grado_academico(){
-        return $this->belongsTo(GradoAcademico::class,
-        'id_grado_academico','id_grado_academico');
+    public function grado_academico()
+    {
+        return $this->belongsTo(
+            GradoAcademico::class,
+            'id_grado_academico',
+            'id_grado_academico'
+        );
     }
 
     // Trabajador Tipo Trabajador
-    public function trabajador_tipo_trabajador(){
-        return $this->hasOne(TrabajadorTipoTrabajador::class,
-        'id_trabajador','id_trabajador');
+    public function trabajador_tipo_trabajador()
+    {
+        return $this->hasOne(
+            TrabajadorTipoTrabajador::class,
+            'id_trabajador',
+            'id_trabajador'
+        );
     }
 
     // Administrativo
-    public function administrativo(){
-        return $this->hasOne(Administrativo::class,
-        'id_trabajador','id_trabajador');
+    public function administrativo()
+    {
+        return $this->hasOne(
+            Administrativo::class,
+            'id_trabajador',
+            'id_trabajador'
+        );
     }
 
     // Docente
     public function docente()
     {
-        return $this->hasOne(Docente::class, 
-        'id_trabajador', 'id_trabajador');
+        return $this->hasOne(
+            Docente::class,
+            'id_trabajador',
+            'id_trabajador'
+        );
     }
 
     // Coordinador
-    public function coordinador(){
-        return $this->hasOne(Coordinador::class,
-        'id_trabajador','id_trabajador');
+    public function coordinador()
+    {
+        return $this->hasOne(
+            Coordinador::class,
+            'id_trabajador',
+            'id_trabajador'
+        );
+    }
 
+    // obtener el primer nombre y primer apellido del trabajador
+    public function getPrimerosNombresAttribute()
+    {
+        $nombre = explode(' ', $this->trabajador_nombre)[0];
+        $apellido = explode(' ', $this->trabajador_apellido)[0];
+        return $nombre . ' ' . $apellido;
+    }
+
+    // obtener el avatar del trabajador
+    public function getAvatarAttribute()
+    {
+        return 'https://ui-avatars.com/api/?name=' . $this->primeros_nombres . '&color=7F9CF5&background=EBF4FF&bold=true';
     }
 }
