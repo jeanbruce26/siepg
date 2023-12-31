@@ -88,6 +88,6 @@ class Trabajador extends Model
     // obtener el avatar del trabajador
     public function getAvatarAttribute()
     {
-        return 'https://ui-avatars.com/api/?name=' . $this->primeros_nombres . '&color=7F9CF5&background=EBF4FF&bold=true';
+        return 'https://ui-avatars.com/api/?name=' . $this->primeros_nombres . '&color=fff&background=6366f1&bold=true';
     }
 }
