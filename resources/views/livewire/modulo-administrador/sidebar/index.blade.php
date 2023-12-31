@@ -47,6 +47,7 @@
                             </span>
                         </button>
                     </div>
+                    <hr>
                 </div>
 
                 {{-- Dashboard --}}
