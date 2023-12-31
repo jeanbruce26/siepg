@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\ModuloAdministrador\GestionAdmision\Inscripcion;
 
+use App\Jobs\ObservarInscripcionJob;
 use App\Models\Admision;
 use App\Models\ExpedienteInscripcion;
 use App\Models\ExpedienteInscripcionSeguimiento;
@@ -246,6 +247,8 @@ class Index extends Component
             'Aceptar',
             'success'
         );
+        // ejecutamos el job para enviar el correo de rechazo de expediente
+        ObservarInscripcionJob::dispatch($expediente->id_inscripcion, 'observar-expediente');
         // cargar expedientes
         $this->cargar_expedientes($expediente->id_inscripcion);
     }
