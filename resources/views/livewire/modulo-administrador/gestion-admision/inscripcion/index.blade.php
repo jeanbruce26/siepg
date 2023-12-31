@@ -225,7 +225,7 @@
                                                     </span>
                                                 @elseif($item->inscripcion_estado == 2)
                                                     <span class="badge badge-danger fs-6 px-3 py-2">
-                                                        Rechazado
+                                                        Anulado
                                                     </span>
                                                 @else
                                                     <span class="badge badge-warning fs-6 px-3 py-2">
@@ -260,7 +260,7 @@
                                                             wire:click="cargar_expedientes({{ $item->id_inscripcion }}, 3)"
                                                             class="menu-link px-3" data-bs-toggle="modal"
                                                             data-bs-target="#modal-expediente">
-                                                            Ver expedientes
+                                                            Ver Expedientes
                                                         </a>
                                                     </div>
                                                     <div class="menu-item px-3">
@@ -269,6 +269,14 @@
                                                             class="menu-link px-3" data-bs-toggle="modal"
                                                             data-bs-target="#ModalInscripcionEditar">
                                                             Editar Programa
+                                                        </a>
+                                                    </div>
+                                                    <div class="menu-item px-3">
+                                                        <a href="#modal-estado-inscripcion"
+                                                            wire:click="cargar_inscripcion({{ $item->id_inscripcion }})"
+                                                            class="menu-link px-3" data-bs-toggle="modal"
+                                                            data-bs-target="#modal-estado-inscripcion">
+                                                            Editar Estado de Inscripción
                                                         </a>
                                                     </div>
                                                 </div>
@@ -392,10 +400,12 @@
                                                 @endif
                                             </td>
                                             <td align="center">
-                                                <button class="btn btn-sm btn-success" wire:click="verificar_expediente({{ $item->id_expediente_inscripcion }})">
+                                                <button class="btn btn-sm btn-success"
+                                                    wire:click="verificar_expediente({{ $item->id_expediente_inscripcion }})">
                                                     Verificar
                                                 </button>
-                                                <button class="btn btn-sm btn-danger" wire:click="rechazar_expediente({{ $item->id_expediente_inscripcion }})">
+                                                <button class="btn btn-sm btn-danger"
+                                                    wire:click="rechazar_expediente({{ $item->id_expediente_inscripcion }})">
                                                     Rechazar
                                                 </button>
                                             </td>
@@ -409,94 +419,159 @@
             </div>
         </div>
     </div>
-</div>
 
-{{-- Modal Editar Inscripcion --}}
-<div wire:ignore.self class="modal fade" tabindex="-1" id="ModalInscripcionEditar">
-    <div class="modal-dialog modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">
-                    Actualizar Programa
-                </h3>
-                <div class="btn btn-icon btn-sm btn-active-light-danger ms-2" data-bs-dismiss="modal"
-                    aria-label="Close">
-                    <span class="svg-icon svg-icon-2hx">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5"
-                                fill="currentColor" />
-                            <rect x="7" y="15.3137" width="12" height="2" rx="1"
-                                transform="rotate(-45 7 15.3137)" fill="currentColor" />
-                            <rect x="8.41422" y="7" width="12" height="2" rx="1"
-                                transform="rotate(45 8.41422 7)" fill="currentColor" />
-                        </svg>
-                    </span>
+    {{-- Modal Editar Inscripcion --}}
+    <div wire:ignore.self class="modal fade" tabindex="-1" id="ModalInscripcionEditar">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">
+                        Actualizar Programa
+                    </h3>
+                    <div class="btn btn-icon btn-sm btn-active-light-danger ms-2" data-bs-dismiss="modal"
+                        aria-label="Close">
+                        <span class="svg-icon svg-icon-2hx">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5"
+                                    fill="currentColor" />
+                                <rect x="7" y="15.3137" width="12" height="2" rx="1"
+                                    transform="rotate(-45 7 15.3137)" fill="currentColor" />
+                                <rect x="8.41422" y="7" width="12" height="2" rx="1"
+                                    transform="rotate(45 8.41422 7)" fill="currentColor" />
+                            </svg>
+                        </span>
+                    </div>
                 </div>
-            </div>
-            <div class="modal-body">
-                <form autocomplete="off" class="row g-5">
-                    <div class="col-md-12">
-                        <label for="modalidad" class="form-label">
-                            Modalidad
-                        </label>
-                        <select class="form-select @error('modalidad') is-invalid @enderror" wire:model="modalidad"
-                            id="modalidad" data-control="select2" data-placeholder="Seleccione la Modalidad">
-                            <option></option>
-                            @foreach ($modalidadesModal as $item)
-                                @php
-                                    $modalidadAsignadas = App\Models\Modalidad::where('id_modalidad', $item)->first();
-                                @endphp
-                                <option value="{{ $item }}">{{ $modalidadAsignadas->modalidad }}</option>
-                            @endforeach
-                        </select>
-                        @error('modalidad')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="col-md-12">
-                        <label for="programa" class="form-label">
-                            Programa
-                        </label>
-                        <select class="form-select @error('programa') is-invalid @enderror" wire:model="programa"
-                            id="programa" data-control="select2" data-placeholder="Seleccione el Programa">
-                            <option></option>
-                            @if ($modalidad)
-                                @foreach ($programasModal as $item)
-                                    @if ($item->programa_proceso_estado == 1)
-                                        <option value="{{ $item->id_programa }}">{{ $item->programa }} EN
-                                            {{ $item->subprograma }} @if ($item->mencion != '')
-                                                CON MENCION EN {{ $item->mencion }}
-                                            @endif
-                                        </option>
-                                    @endif
+                <div class="modal-body">
+                    <form autocomplete="off" class="row g-5">
+                        <div class="col-md-12">
+                            <label for="modalidad" class="form-label">
+                                Modalidad
+                            </label>
+                            <select class="form-select @error('modalidad') is-invalid @enderror"
+                                wire:model="modalidad" id="modalidad" data-control="select2"
+                                data-placeholder="Seleccione la Modalidad">
+                                <option></option>
+                                @foreach ($modalidadesModal as $item)
+                                    @php
+                                        $modalidadAsignadas = App\Models\Modalidad::where('id_modalidad', $item)->first();
+                                    @endphp
+                                    <option value="{{ $item }}">{{ $modalidadAsignadas->modalidad }}</option>
                                 @endforeach
-                            @endif
-                        </select>
-                        @error('programa')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-bs-dismiss="modal" wire:click="limpiar()">
-                    Cerrar
-                </button>
-                <button type="button" wire:click="actualizarInscripcion" class="btn btn-primary"
-                    style="width: 150px" wire:loading.attr="disabled" wire:target="actualizarInscripcion">
-                    <div wire:loading.remove wire:target="actualizarInscripcion">
-                        Guardar
-                    </div>
-                    <div wire:loading wire:target="actualizarInscripcion">
-                        Procesando <span class="spinner-border spinner-border-sm align-middle ms-2">
-                    </div>
-                </button>
+                            </select>
+                            @error('modalidad')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="col-md-12">
+                            <label for="programa" class="form-label">
+                                Programa
+                            </label>
+                            <select class="form-select @error('programa') is-invalid @enderror" wire:model="programa"
+                                id="programa" data-control="select2" data-placeholder="Seleccione el Programa">
+                                <option></option>
+                                @if ($modalidad)
+                                    @foreach ($programasModal as $item)
+                                        @if ($item->programa_proceso_estado == 1)
+                                            <option value="{{ $item->id_programa }}">{{ $item->programa }} EN
+                                                {{ $item->subprograma }} @if ($item->mencion != '')
+                                                    CON MENCION EN {{ $item->mencion }}
+                                                @endif
+                                            </option>
+                                        @endif
+                                    @endforeach
+                                @endif
+                            </select>
+                            @error('programa')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal" wire:click="limpiar()">
+                        Cerrar
+                    </button>
+                    <button type="button" wire:click="actualizarInscripcion" class="btn btn-primary"
+                        style="width: 150px" wire:loading.attr="disabled" wire:target="actualizarInscripcion">
+                        <div wire:loading.remove wire:target="actualizarInscripcion">
+                            Guardar
+                        </div>
+                        <div wire:loading wire:target="actualizarInscripcion">
+                            Procesando <span class="spinner-border spinner-border-sm align-middle ms-2">
+                        </div>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
+    {{-- Modal Editar Estado de Inscripcion --}}
+    <div wire:ignore.self class="modal fade" tabindex="-1" id="modal-estado-inscripcion">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">
+                        Actualizar Estado de Inscripción
+                    </h3>
+                    <div class="btn btn-icon btn-sm btn-active-light-danger ms-2" wire:click="limpiar()"
+                        data-bs-dismiss="modal" aria-label="Close">
+                        <span class="svg-icon svg-icon-2hx">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5"
+                                    fill="currentColor" />
+                                <rect x="7" y="15.3137" width="12" height="2" rx="1"
+                                    transform="rotate(-45 7 15.3137)" fill="currentColor" />
+                                <rect x="8.41422" y="7" width="12" height="2" rx="1"
+                                    transform="rotate(45 8.41422 7)" fill="currentColor" />
+                            </svg>
+                        </span>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <form autocomplete="off" class="row g-5">
+                        <div class="col-md-12">
+                            <label for="estado" class="form-label">
+                                Estado
+                            </label>
+                            <select class="form-select @error('estado') is-invalid @enderror" wire:model="estado"
+                                id="estado">
+                                <option value="">Seleccione un estado...</option>
+                                <option value="0">
+                                    PENDIENTE
+                                </option>
+                                <option value="1">
+                                    VERIFICAR
+                                </option>
+                                <option value="2">
+                                    RECHAZAR
+                                </option>
+                            </select>
+                            @error('estado')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal" wire:click="limpiar()">
+                        Cerrar
+                    </button>
+                    <button type="button" wire:click="editar_estado" class="btn btn-primary" style="width: 150px"
+                        wire:loading.attr="disabled" wire:target="editar_estado">
+                        <div wire:loading.remove wire:target="editar_estado">
+                            Guardar
+                        </div>
+                        <div wire:loading wire:target="editar_estado">
+                            Procesando <span class="spinner-border spinner-border-sm align-middle ms-2">
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @push('scripts')
     <script>
@@ -540,7 +615,6 @@
                 });
             });
         });
-
         //Filtro de modalidad_filtro select2
         $(document).ready(function() {
             $('#modalidad_filtro').select2({
@@ -580,7 +654,6 @@
                 });
             });
         });
-
         //Filtro de programa_filtro select2
         $(document).ready(function() {
             $('#programa_filtro').select2({
@@ -620,7 +693,6 @@
                 });
             });
         });
-
         //Filtro de seguimiento_filtro de select2
         $(document).ready(function() {
             $('#seguimiento_filtro').select2({
@@ -660,7 +732,6 @@
                 });
             });
         });
-
         //Filtro de mes_filtro de select2
         $(document).ready(function() {
             $('#mes_filtro').select2({
@@ -700,8 +771,6 @@
                 });
             });
         });
-
-
         //Select2 de Modal Inscripcion
         //Filtro de modalidad de select2
         $(document).ready(function() {
@@ -742,7 +811,6 @@
                 });
             });
         });
-
         //Filtro de programa de select2
         $(document).ready(function() {
             $('#programa').select2({

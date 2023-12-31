@@ -49,6 +49,9 @@ class Index extends Component
     // expeidentes de la inscripcion
     public $expedientes = [];
 
+    // estado de la inscripcion
+    public $estado;
+
     //Para mapear el mes al filtrar
     public $meses = [
         1 => 'Enero',
@@ -80,7 +83,10 @@ class Index extends Component
 
     public function limpiar()
     {
-        $this->reset('id_inscripcion');
+        $this->reset(
+            'id_inscripcion',
+            'estado',
+        );
     }
 
     //Limpiamos los filtros
@@ -183,7 +189,6 @@ class Index extends Component
             'id_inscripcion' => 'required',
             'modalidad' => 'required',
             'programa' => 'required',
-
         ]);
 
         $inscripcion = Inscripcion::find($this->id_inscripcion);
@@ -251,6 +256,31 @@ class Index extends Component
         ObservarInscripcionJob::dispatch($expediente->id_inscripcion, 'observar-expediente');
         // cargar expedientes
         $this->cargar_expedientes($expediente->id_inscripcion);
+    }
+
+    public function cargar_inscripcion($id_inscripcion)
+    {
+        $this->id_inscripcion = $id_inscripcion;
+        $this->estado = Inscripcion::find($id_inscripcion)->inscripcion_estado;
+    }
+
+    public function editar_estado()
+    {
+        $inscripcion = Inscripcion::find($this->id_inscripcion);
+        $inscripcion->inscripcion_estado = $this->estado;
+        $inscripcion->save();
+        // mostrar alerta
+        $this->alertaInscripcion(
+            '¡Exito!',
+            'El estado de la inscripción de ' . $inscripcion->persona->nombre_completo . ' ha sido actualizado satisfactoriamente',
+            'success',
+            'Aceptar',
+            'success'
+        );
+        // cerrar modal
+        $this->dispatchBrowserEvent('modal', [
+            'titleModal' => '#modal-estado-inscripcion',
+        ]);
     }
 
     public function render()
