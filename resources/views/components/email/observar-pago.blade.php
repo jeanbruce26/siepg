@@ -25,8 +25,8 @@
         <p>
             <strong>Observación:</strong>
             "<span style="color: #8e0000;">
-                {{ $observacion->observacion }}
-            </span>""
+                {{ $observacion }}
+            </span>"
         </p>
         <p style="text-align: justify; text-justify: inter-word; margin-bottom: 1rem;">
             Por favor ingresar a su plataforma del postulante con las credenciales de acceso que se encuentra en su

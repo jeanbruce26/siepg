@@ -59,7 +59,7 @@ class ObservarInscripcionJob implements ShouldQueue
             $observacion = PagoObservacion::where('id_pago', $pago->id_pago)
                 ->where('pago_observacion_estado', 1)
                 ->orderBy('id_pago_observacion', 'desc')
-                ->first();
+                ->first()->pago_observacion;
 
             // datos del correo
             $detalle = [

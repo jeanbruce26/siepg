@@ -161,7 +161,7 @@ class Index extends Component
         ]);
 
         // ejecutamos el job para enviar el correo de rechazo de pago
-        ObservarInscripcionJob::dispatch($pago->inscripcion->id_inscrpcion, 'observar-pago');
+        ObservarInscripcionJob::dispatch($pago->inscripcion->id_inscripcion, 'observar-pago');
 
         // limpiar los campos
         $this->limpiar();
