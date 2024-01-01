@@ -64,12 +64,7 @@
                     <a class="menu-link {{ request()->routeIs('plataforma.inicio') ? 'active' : '' }}"
                         href="{{ route('plataforma.inicio') }}">
                         <span class="menu-icon">
-                            <i class="ki-duotone ki-category fs-1">
-                                <i class="path1"></i>
-                                <i class="path2"></i>
-                                <i class="path3"></i>
-                                <i class="path4"></i>
-                            </i>
+                            <i class="ki-outline ki-category fs-1"></i>
                         </span>
                         <span class="menu-title fw-semibold fs-4">Inicio</span>
                     </a>
@@ -78,10 +73,7 @@
                     class="menu-item menu-accordion {{ request()->routeIs('plataforma.admision') || request()->routeIs('plataforma.expediente') ? 'show active' : '' }}">
                     <span class="menu-link">
                         <span class="menu-icon">
-                            <i class="ki-duotone ki-abstract-26 fs-1">
-                                <i class="path1"></i>
-                                <i class="path2"></i>
-                            </i>
+                            <i class="ki-outline ki-abstract-26 fs-1"></i>
                         </span>
                         <span class="menu-title fw-semibold fs-4">Proceso de Admisión</span>
                         <span class="menu-arrow"></span>
@@ -117,10 +109,7 @@
                         <a class="menu-link {{ request()->routeIs('plataforma.constancia') ? 'active' : '' }}"
                             href="{{ route('plataforma.constancia') }}">
                             <span class="menu-icon">
-                                <i class="ki-duotone ki-bookmark fs-1   ">
-                                    <i class="path1"></i>
-                                    <i class="path2"></i>
-                                </i>
+                                <i class="ki-outline ki-bookmark fs-1"></i>
                             </span>
                             <span class="menu-title fw-semibold fs-4">Constancia de Ingreso</span>
                         </a>
@@ -131,10 +120,7 @@
                         <a class="menu-link {{ request()->routeIs('plataforma.matriculas') ? 'active' : '' }}"
                             href="{{ route('plataforma.matriculas') }}">
                             <span class="menu-icon">
-                                <i class="ki-duotone ki-teacher fs-1   ">
-                                    <i class="path1"></i>
-                                    <i class="path2"></i>
-                                </i>
+                                <i class="ki-outline ki-teacher fs-1"></i>
                             </span>
                             <span class="menu-title fw-semibold fs-4">Gestión de Matricula</span>
                         </a>
@@ -144,12 +130,7 @@
                     class="menu-item menu-accordion {{ request()->is('plataforma/estado-cuenta') || request()->routeIs('plataforma.pago') ? 'show active' : '' }}">
                     <span class="menu-link">
                         <span class="menu-icon">
-                            <i class="ki-duotone ki-office-bag fs-1">
-                                <i class="path1"></i>
-                                <i class="path2"></i>
-                                <i class="path3"></i>
-                                <i class="path4"></i>
-                            </i>
+                            <i class="ki-outline ki-office-bag fs-1"></i>
                         </span>
                         <span class="menu-title fw-semibold fs-4">Gestión de Pagos</span>
                         <span class="menu-arrow"></span>
@@ -182,12 +163,7 @@
                         <a class="menu-link {{ request()->routeIs('plataforma.record-academico') ? 'active' : '' }}"
                             href="{{ route('plataforma.record-academico') }}">
                             <span class="menu-icon">
-                                <i class="ki-duotone ki-book-open fs-1">
-                                    <i class="path1"></i>
-                                    <i class="path2"></i>
-                                    <i class="path3"></i>
-                                    <i class="path4"></i>
-                                </i>
+                                <i class="ki-outline ki-book-open fs-1"></i>
                             </span>
                             <span class="menu-title fw-semibold fs-4">Record Académico</span>
                         </a>
