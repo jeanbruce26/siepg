@@ -4,10 +4,7 @@
         @if ($admitido)
             {{-- alerta de admitido --}}
             <div class="alert bg-light-success border border-3 border-success d-flex align-items-center p-5 mb-5">
-                <i class="ki-duotone ki-like fs-2qx me-4 text-success">
-                    <i class="path1"></i>
-                    <i class="path2"></i>
-                </i>
+                <i class="ki-outline ki-like fs-2qx me-4 text-success"></i>
                 <div class="d-flex flex-column">
                     <span class="fw-bold fs-4">
                         Fue admitido en el Proceso de
@@ -32,11 +29,7 @@
                     {{-- alerta de fecha de resultados de admitidos --}}
                     <div
                         class="alert bg-light-primary border border-3 border-primary d-flex align-items-center p-5 mb-5">
-                        <i class="ki-duotone ki-information-5 fs-2qx me-4 text-primary">
-                            <i class="path1"></i>
-                            <i class="path2"></i>
-                            <i class="path3"></i>
-                        </i>
+                        <i class="ki-outline ki-information-5 fs-2qx me-4 text-primary"></i>
                         <div class="d-flex flex-column">
                             <span class="fw-bold fs-4">
                                 Los resultados de admitidos se presentará el {{ $admision_fecha_admitidos }}.
@@ -46,10 +39,7 @@
                 @else
                     {{-- alerta de no admitido --}}
                     <div class="alert bg-light-danger border border-3 border-danger d-flex align-items-center p-5 mb-5">
-                        <i class="ki-duotone ki-dislike fs-2qx me-4 text-danger">
-                            <i class="path1"></i>
-                            <i class="path2"></i>
-                        </i>
+                        <i class="ki-outline ki-dislike fs-2qx me-4 text-danger"></i>
                         <div class="d-flex flex-column">
                             <span class="fw-bold fs-4">
                                 No fuiste admitido en el Proceso de
@@ -72,11 +62,7 @@
             @else
                 {{-- alerta de fecha de resultados de admitidos --}}
                 <div class="alert bg-light-primary border border-3 border-primary d-flex align-items-center p-5 mb-5">
-                    <i class="ki-duotone ki-information-5 fs-2qx me-4 text-primary">
-                        <i class="path1"></i>
-                        <i class="path2"></i>
-                        <i class="path3"></i>
-                    </i>
+                    <i class="ki-outline ki-information-5 fs-2qx me-4 text-primary"></i>
                     <div class="d-flex flex-column">
                         <span class="fw-bold fs-4">
                             Los resultados de admitidos se presentará el {{ $admision_fecha_admitidos }}.
@@ -88,11 +74,7 @@
     @else
         {{-- alerta de fecha de resultados de admitidos --}}
         <div class="alert bg-light-primary border border-3 border-primary d-flex align-items-center p-5 mb-5">
-            <i class="ki-duotone ki-information-5 fs-2qx me-4 text-primary">
-                <i class="path1"></i>
-                <i class="path2"></i>
-                <i class="path3"></i>
-            </i>
+            <i class="ki-outline ki-information-5 fs-2qx me-4 text-primary"></i>
             <div class="d-flex flex-column">
                 <span class="fw-bold fs-4">
                     Los resultados de admitidos se presentará el {{ $admision_fecha_admitidos }}.
@@ -175,11 +157,8 @@
     <div class="row g-5 mb-5">
         <div class="col-sm-12 col-md-6 col-lg-6 col-xl-4">
             <div class="card card-body shadow-sm">
-                <div class="bg-light-info px-10 py-5 rounded-4 mx-auto mb-5">
-                    <i class="ki-duotone ki-document fs-5x text-info">
-                        <i class="path1"></i>
-                        <i class="path2"></i>
-                    </i>
+                <div class="bg-light-info px-15 py-10 rounded-4 mx-auto mb-5">
+                    <i class="ki-outline ki-document fs-5tx text-info"></i>
                 </div>
                 <h2 class="card-title mb-5 text-center">
                     Ficha de Inscripción
@@ -191,11 +170,8 @@
         </div>
         <div class="col-sm-12 col-md-6 col-lg-6 col-xl-4">
             <div class="card card-body shadow-sm">
-                <div class="bg-light-info px-10 py-5 rounded-4 mx-auto mb-5">
-                    <i class="ki-duotone ki-document fs-5x text-info">
-                        <i class="path1"></i>
-                        <i class="path2"></i>
-                    </i>
+                <div class="bg-light-info px-15 py-10 rounded-4 mx-auto mb-5">
+                    <i class="ki-outline ki-document fs-5tx text-info"></i>
                 </div>
                 <h2 class="card-title mb-5 text-center">
                     Prospecto de Admisión
@@ -208,11 +184,8 @@
         </div>
         <div class="col-sm-12 col-md-6 col-lg-6 col-xl-4">
             <div class="card card-body shadow-sm">
-                <div class="bg-light-info px-10 py-5 rounded-4 mx-auto mb-5">
-                    <i class="ki-duotone ki-folder fs-5x text-info">
-                        <i class="path1"></i>
-                        <i class="path2"></i>
-                    </i>
+                <div class="bg-light-info px-15 py-10 rounded-4 mx-auto mb-5">
+                    <i class="ki-outline ki-folder fs-5tx text-info"></i>
                 </div>
                 <h2 class="card-title mb-5 text-center">
                     Expedientes
