@@ -19,7 +19,7 @@
                 <div class="d-flex flex-wrap flex-sm-nowrap mb-5">
                     <div class="me-10 mb-5">
                         <div class="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative">
-                            <img src="{{ $trabajador->trabajador_perfil_path ? asset($trabajador->trabajador_perfil_path) : $trabajador->avatar }}"
+                            <img src="{{ $trabajador->trabajador_perfil_url ? asset($trabajador->trabajador_perfil_url) : $trabajador->avatar }}"
                                 alt="perfil">
                             <div
                                 class="position-absolute translate-middle bottom-0 start-100 mb-6 bg-success rounded-circle border border-4 border-body h-20px w-20px">

@@ -30,7 +30,7 @@
                 <div class="menu-item">
                     <div class="mb-5 d-flex flex-column gap-4">
                         <div class="symbol symbol-100px text-center">
-                            <img src="{{ $trabajador->trabajador_perfil_path ? asset($trabajador->trabajador_perfil_path) : $trabajador->avatar }}"
+                            <img src="{{ $trabajador->trabajador_perfil_url ? asset($trabajador->trabajador_perfil_url) : $trabajador->avatar }}"
                                 alt="avatar" />
                         </div>
                         <span class="fs-2 fw-bold text-center">
