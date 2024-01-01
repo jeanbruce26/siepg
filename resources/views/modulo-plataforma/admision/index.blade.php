@@ -1,21 +1,22 @@
 @extends('layouts.modulo-plataforma')
 @section('title', 'Proceso de Admision - Plataforma Escuela de Posgrado')
 @section('content')
-<div id="kt_app_toolbar" class="app-toolbar py-3 py-lg-6">
-    <div id="kt_app_toolbar_container" class="app-container container-fluid d-flex flex-stack">
-        <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
-            <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">Proceso de Admisión</h1>
-            <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
-                <li class="breadcrumb-item text-muted">
-                    <a href="{{ route('plataforma.inicio') }}" class="text-muted text-hover-primary">Home</a>
-                </li>
-                <li class="breadcrumb-item">
-                    <span class="bullet bg-gray-400 w-5px h-2px"></span>
-                </li>
-                <li class="breadcrumb-item text-muted">Proceso de Admisión</li>
-            </ul>
-        </div>
-        {{-- <div class="d-flex align-items-center gap-2 gap-lg-3">
+    <div id="kt_app_toolbar" class="app-toolbar py-3 py-lg-6">
+        <div id="kt_app_toolbar_container" class="app-container container-fluid d-flex flex-stack">
+            <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
+                <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">Proceso de
+                    Admisión</h1>
+                <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
+                    <li class="breadcrumb-item text-muted">
+                        <a href="{{ route('plataforma.inicio') }}" class="text-muted text-hover-primary">Home</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <span class="bullet bg-gray-400 w-5px h-2px"></span>
+                    </li>
+                    <li class="breadcrumb-item text-muted">Proceso de Admisión</li>
+                </ul>
+            </div>
+            {{-- <div class="d-flex align-items-center gap-2 gap-lg-3">
             <div class="m-0">
                 <a href="#" class="btn btn-sm btn-flex bg-body btn-color-gray-700 btn-active-color-primary fw-bold" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
                 <span class="svg-icon svg-icon-6 svg-icon-muted me-1">
@@ -71,32 +72,13 @@
             </div>
             <a href="#" class="btn btn-sm fw-bold btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_create_app">Create</a>
         </div> --}}
-    </div>
-</div>
-<div id="kt_app_content" class="app-content flex-column-fluid">
-    <div id="kt_app_content_container" class="app-container container-fluid">
-        <div class="row mb-5 mb-xl-10">
-            @livewire('modulo-plataforma.admision.index')
         </div>
     </div>
-</div>
-@endsection
-@section('scripts')
-<script>
-    window.addEventListener('modal_encuesta', event => {
-        $('#modal_encuesta').modal(event.detail.action);
-    })
-    window.addEventListener('alerta-encuesta', event => {
-        Swal.fire({
-            title: event.detail.title,
-            text: event.detail.text,
-            icon: event.detail.icon,
-            buttonsStyling: false,
-            confirmButtonText: event.detail.confirmButtonText,
-            customClass: {
-                confirmButton: "btn btn-"+event.detail.color,
-            }
-        });
-    })
-</script>
+    <div id="kt_app_content" class="app-content flex-column-fluid">
+        <div id="kt_app_content_container" class="app-container container-fluid">
+            <div class="row mb-5 mb-xl-10">
+                @livewire('modulo-plataforma.admision.index')
+            </div>
+        </div>
+    </div>
 @endsection
