@@ -10,7 +10,7 @@
             <img alt="Logo" src="{{ asset('assets/media/logos/logo-pg.png') }}" height="30"
                 class="app-sidebar-logo-minimize">
         </a>
-        <div id="kt_app_sidebar_toggle"
+        {{-- <div id="kt_app_sidebar_toggle"
             class="app-sidebar-toggle btn btn-icon btn-shadow btn-sm btn-color-muted btn-active-color-primary body-bg h-30px w-30px position-absolute top-50 start-100 translate-middle rotate"
             data-kt-toggle="true" data-kt-toggle-state="active" data-kt-toggle-target="body"
             data-kt-toggle-name="app-sidebar-minimize">
@@ -25,16 +25,40 @@
                         fill="currentColor" />
                 </svg>
             </span>
-        </div>
+        </div> --}}
     </div>
     <div class="app-sidebar-menu overflow-hidden flex-column-fluid">
         <div id="kt_app_sidebar_menu_wrapper" class="app-sidebar-wrapper hover-scroll-overlay-y my-5"
             data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-height="auto"
             data-kt-scroll-dependencies="#kt_app_sidebar_logo, #kt_app_sidebar_footer"
-            data-kt-scroll-wrappers="#kt_app_sidebar_menu" data-kt-scroll-offset="5px"
-            data-kt-scroll-save-state="true">
+            data-kt-scroll-wrappers="#kt_app_sidebar_menu" data-kt-scroll-offset="5px" data-kt-scroll-save-state="true">
             <div class="menu menu-column menu-rounded menu-sub-indention px-3" id="#kt_app_sidebar_menu"
                 data-kt-menu="true" data-kt-menu-expand="false">
+                <div class="menu-item">
+                    <div class="mb-5 d-flex flex-column gap-4">
+                        <div class="symbol symbol-100px text-center">
+                            <img src="{{ $usuario->usuario_estudiante_perfil_url ? asset($usuario->usuario_estudiante_perfil_url) : $usuario->avatar }}"
+                                alt="avatar" />
+                        </div>
+                        <span class="fs-2 fw-bold text-center">
+                            {{ $usuario->persona->primeros_nombres }}
+                        </span>
+                        <span class="badge badge-light-danger py-3 d-flex justify-content-center fs-7">
+                            @if ($admitido)
+                                ESTUDIANTE
+                            @else
+                                POSTULANTE
+                            @endif
+                        </span>
+                        <button type="button" wire:click="cerrar_sesion"
+                            class="btn btn-flex flex-center btn-dark btn-custom text-nowrap px-0 h-40px w-100">
+                            <span class="btn-label">
+                                Cerrar sesión
+                            </span>
+                        </button>
+                    </div>
+                    <hr>
+                </div>
                 <div class="menu-item">
                     {{-- {{ request()->is('administrador') ? 'active' : '' }} -> sirve para poner activo el modulo --}}
                     <a class="menu-link {{ request()->routeIs('plataforma.inicio') ? 'active' : '' }}"
@@ -102,7 +126,7 @@
                         </a>
                     </div>
                 @endif
-                @if ( $constancia )
+                @if ($constancia)
                     <div class="menu-item">
                         <a class="menu-link {{ request()->routeIs('plataforma.matriculas') ? 'active' : '' }}"
                             href="{{ route('plataforma.matriculas') }}">
@@ -154,20 +178,20 @@
                     </div>
                 </div>
                 @if ($ultima_matricula)
-                <div class="menu-item">
-                    <a class="menu-link {{ request()->routeIs('plataforma.record-academico') ? 'active' : '' }}"
-                        href="{{ route('plataforma.record-academico') }}">
-                        <span class="menu-icon">
-                            <i class="ki-duotone ki-book-open fs-1">
-                                <i class="path1"></i>
-                                <i class="path2"></i>
-                                <i class="path3"></i>
-                                <i class="path4"></i>
-                            </i>
-                        </span>
-                        <span class="menu-title fw-semibold fs-4">Record Académico</span>
-                    </a>
-                </div>
+                    <div class="menu-item">
+                        <a class="menu-link {{ request()->routeIs('plataforma.record-academico') ? 'active' : '' }}"
+                            href="{{ route('plataforma.record-academico') }}">
+                            <span class="menu-icon">
+                                <i class="ki-duotone ki-book-open fs-1">
+                                    <i class="path1"></i>
+                                    <i class="path2"></i>
+                                    <i class="path3"></i>
+                                    <i class="path4"></i>
+                                </i>
+                            </span>
+                            <span class="menu-title fw-semibold fs-4">Record Académico</span>
+                        </a>
+                    </div>
                 @endif
             </div>
         </div>

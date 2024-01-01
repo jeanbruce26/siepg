@@ -102,6 +102,13 @@ class Persona extends Model
         'id_persona','id_persona');
     }
 
+    public function getPrimerosNombresAttribute()
+    {
+        $nombres = explode(" ", $this->nombre);
+        $apellido = explode(" ", $this->apellido_paterno);
+        return $nombres[0] . " " . $apellido[0];
+    }
+
     // protected static function boot() {
     //     parent::boot();
 

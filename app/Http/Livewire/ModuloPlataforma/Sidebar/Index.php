@@ -17,6 +17,12 @@ class Index extends Component
         'actualizar_sidebar' => 'render',
     ];
 
+    public function cerrar_sesion()
+    {
+        auth('plataforma')->logout();
+        return redirect()->route('plataforma.login');
+    }
+
     public function render()
     {
         $usuario = auth('plataforma')->user(); // obtenemos el usuario autenticado en la plataforma

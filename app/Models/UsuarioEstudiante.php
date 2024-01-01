@@ -30,6 +30,12 @@ class UsuarioEstudiante extends Authenticatable
         return $this->belongsTo(Persona::class, 'id_persona');
     }
 
+    // obtener el avatar del usuario
+    public function getAvatarAttribute()
+    {
+        return 'https://ui-avatars.com/api/?name=' . $this->persona->primeros_nombres . '&color=fff&background=f97316&bold=true';
+    }
+
     // protected static function boot() {
     //     parent::boot();
 

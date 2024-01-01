@@ -45,7 +45,7 @@
                                 <img src="{{ asset('assets/media/auth/bg-login-posgrado.jpg') }}" class="object-fit-cover rounded-4 h-200px h-md-275px h-lg-350px" width="100%" alt="portada unu">
                                 <div class="object-fit-cover rounded-4 bg-success opacity-20 h-200px h-md-275px h-lg-350px position-absolute top-0 start-0" style="width: 100%;"></div>
                                 <div class="position-absolute" style="top: 50%; left: 50%; transform: translate(-50%, 0%);">
-                                    <img src="@if ($usuario->usuario_estudiante_perfil_url) {{ asset($usuario->usuario_estudiante_perfil_url) }} @else {{ asset('assets/media/avatars/blank.png') }} @endif" class="object-fit-cover rounded-circle shadow w-150px w-md-250px h-150px h-md-250px" alt="vista previa perfil">
+                                    <img src="{{ $usuario->usuario_estudiante_perfil_url ? asset($usuario->usuario_estudiante_perfil_url) : $usuario->avatar }}" class="object-fit-cover rounded-circle shadow w-150px w-md-250px h-150px h-md-250px" alt="vista previa perfil">
                                 </div>
                             </div>
                             <br><br>
