@@ -48,42 +48,33 @@ class Index extends Component
         $this->filtro_proceso = $this->admision->id_admision; // asignamos el valor de la admision activa a la variable filtro_proceso
         // $this->admisiones = Admision::orderBy('cod_admi', 'desc')->get(); // obtenemos todas las admisiones
         $persona = Persona::where('id_persona', auth('plataforma')->user()->id_persona)->first(); // obtenemos la persona
-        $this->inscripcion = $persona->inscripcion()->orderBy('id_inscripcion', 'desc')->first(); // obtenemos la
+        $this->inscripcion = $persona->inscripcion()->orderBy('id_inscripcion', 'desc')->first();
         $this->admisiones = Inscripcion::where('id_persona', $persona->id_persona)->groupBy('id_programa_proceso')->orderBy('id_inscripcion', 'desc')->get(); // obtenemos todas las inscripciones de la persona
         $this->id_inscripcion = $this->inscripcion ? $this->inscripcion->id_inscripcion : null; // asignamos el valor de la inscripcion a la variable id_inscripcion
         $this->expedientes = $this->inscripcion ? $this->inscripcion->expediente_inscripcion : collect(); // obtenemos los expedientes de la inscripcion
         $this->admitido = $persona->admitido()->orderBy('id_admitido', 'desc')->first(); // obtenemos el admitido
         $this->expedientes_model = ExpedienteAdmision::join('expediente', 'expediente.id_expediente', '=', 'expediente_admision.id_expediente')
-                                                                ->where('expediente_admision.id_admision', $this->admitido ? $this->admitido->programa_proceso->id_admision : $this->inscripcion->programa_proceso->id_admision)
-                                                                ->where(function($query) {
-                                                                    $query->where('expediente.expediente_tipo', 0)
-                                                                        ->orWhere('expediente.expediente_tipo', $this->admitido ? $this->admitido->programa_proceso->programa_plan->programa->programa_tipo : $this->inscripcion->inscripcion_tipo_programa);
-                                                                })->get(); // obtenemos los expedientes segun tipo de programa
-                                                                // dd($this->expedientes_model);
+            ->where('expediente_admision.id_admision', $this->admitido ? $this->admitido->programa_proceso->id_admision : $this->inscripcion->programa_proceso->id_admision)
+            ->where(function ($query) {
+                $query->where('expediente.expediente_tipo', 0)
+                    ->orWhere('expediente.expediente_tipo', $this->admitido ? $this->admitido->programa_proceso->programa_plan->programa->programa_tipo : $this->inscripcion->inscripcion_tipo_programa);
+            })->get(); // obtenemos los expedientes segun tipo de programa
         $this->filtro_proceso = $this->admitido ? $this->admitido->id_programa_proceso : $this->inscripcion->id_programa_proceso; // asignamos el valor de la inscripcion a la variable filtro_proceso
-        if($this->admitido)
-        {
+        if ($this->admitido) {
             $evaluacion_admitido = $this->admitido->evaluacion; // obtenemos la evaluacion del admitido
             $evaluacion_inscripcion = Evaluacion::where('id_inscripcion', $this->id_inscripcion)->orderBy('id_evaluacion', 'desc')->first(); // obtenemos la evaluacion de la inscripcion
-            if($evaluacion_admitido && $evaluacion_inscripcion)
-            {
-                if($evaluacion_admitido->id_evaluacion != $evaluacion_inscripcion->id_evaluacion)
-                {
+            if ($evaluacion_admitido && $evaluacion_inscripcion) {
+                if ($evaluacion_admitido->id_evaluacion != $evaluacion_inscripcion->id_evaluacion) {
                     $this->admitido = null; // asignamos null a la variable admitido
-                }
-                else
-                {
+                } else {
                     $inscripcion = Inscripcion::where('id_inscripcion', $evaluacion_admitido->id_inscripcion)->first(); // obtenemos la inscripcion
                     $programa_proceso = $inscripcion->programa_proceso; // obtenemos el programa proceso
                     $admision = $programa_proceso->admision; // obtenemos la admision
                     $fecha_fin_inscripcion = $admision->admision_fecha_fin_inscripcion; // obtenemos la fecha fin de inscripcion
                     $fecha_fin_inscripcion = date('Y-m-d', strtotime($fecha_fin_inscripcion . '+1 month')); // sumamos un mes a la fecha fin de inscripcion
-                    if($fecha_fin_inscripcion <= date('Y-m-d'))
-                    {
+                    if ($fecha_fin_inscripcion <= date('Y-m-d')) {
                         $this->mostrar_acciones_expediente = true; // asignamos null a la variable admitido
-                    }
-                    else
-                    {
+                    } else {
                         $this->mostrar_acciones_expediente = false; // asignamos null a la variable admitido
                     }
                 }
@@ -93,8 +84,7 @@ class Index extends Component
 
     public function aplicar_filtro()
     {
-        if ($this->filtro_proceso == null)
-        { // si el filtro de proceso esta vacio
+        if ($this->filtro_proceso == null) { // si el filtro de proceso esta vacio
             // alerta de error
             $this->dispatchBrowserEvent('alerta-expedientes', [
                 'title' => '¡Error!',
@@ -107,13 +97,13 @@ class Index extends Component
         }
         $persona = Persona::where('id_persona', auth('plataforma')->user()->id_persona)->first(); // obtenemos la persona
         $this->inscripcion = Inscripcion::where('id_persona', $persona->id_persona)
-                                    ->where('id_programa_proceso', $this->filtro_proceso)->first(); // obtenemos la inscripcion
+            ->where('id_programa_proceso', $this->filtro_proceso)->first(); // obtenemos la inscripcion
         $this->expedientes_model = ExpedienteAdmision::join('expediente', 'expediente.id_expediente', '=', 'expediente_admision.id_expediente')
-                                    ->where('expediente_admision.id_admision', $this->inscripcion->programa_proceso->id_admision)
-                                    ->where(function($query) {
-                                        $query->where('expediente.expediente_tipo', 0)
-                                            ->orWhere('expediente.expediente_tipo', $this->inscripcion->inscripcion_tipo_programa);
-                                    })->get(); // obtenemos los expedientes segun tipo de programa
+            ->where('expediente_admision.id_admision', $this->inscripcion->programa_proceso->id_admision)
+            ->where(function ($query) {
+                $query->where('expediente.expediente_tipo', 0)
+                    ->orWhere('expediente.expediente_tipo', $this->inscripcion->inscripcion_tipo_programa);
+            })->get(); // obtenemos los expedientes segun tipo de programa
         $this->expedientes = ExpedienteInscripcion::where('id_inscripcion', $this->inscripcion->id_inscripcion)->get(); // obtenemos los expedientes de la inscripcion
     }
 
@@ -160,10 +150,8 @@ class Index extends Component
 
         $expediente_nombre = ExpedienteAdmision::find($this->expediente_id)->expediente->expediente_nombre_file; // obtenemos el nombre del expediente
 
-        if($this->modo == 'crear')
-        {
-            if($this->expediente != null)
-            {
+        if ($this->modo == 'crear') {
+            if ($this->expediente != null) {
                 $path = 'Posgrado/' . $this->inscripcion->programa_proceso->admision->admision . '/' . $this->inscripcion->persona->numero_documento . '/' . 'Expedientes/'; // asignamos el valor del path a la variable path
                 $nombre = $expediente_nombre . '.pdf'; // asignamos el valor del nombre del expediente a la variable nombre
                 $nombreDB = $path . $nombre; // asignamos el valor del nombre del expediente para la base de datos a la variable nombreDB
@@ -185,9 +173,7 @@ class Index extends Component
                     'confirmButtonText' => 'Aceptar',
                     'color' => 'success'
                 ]);
-            }
-            else
-            {
+            } else {
                 // alerta de error
                 $this->dispatchBrowserEvent('alerta-expedientes', [
                     'title' => '¡Error!',
@@ -197,11 +183,8 @@ class Index extends Component
                     'color' => 'danger'
                 ]);
             }
-        }
-        else if($this->modo == 'editar')
-        {
-            if($this->expediente != null)
-            {
+        } else if ($this->modo == 'editar') {
+            if ($this->expediente != null) {
                 $path = 'Posgrado/' . $this->inscripcion->programa_proceso->admision->admision . '/' . $this->inscripcion->persona->numero_documento . '/' . 'Expedientes/'; // asignamos el valor del path a la variable path
                 $nombre = $expediente_nombre . '.pdf'; // asignamos el valor del nombre del expediente a la variable nombre
                 $nombreDB = $path . $nombre; // asignamos el valor del nombre del expediente para la base de datos a la variable nombreDB
@@ -221,9 +204,7 @@ class Index extends Component
                     'confirmButtonText' => 'Aceptar',
                     'color' => 'success'
                 ]);
-            }
-            else
-            {
+            } else {
                 // alerta de error
                 $this->dispatchBrowserEvent('alerta-expedientes', [
                     'title' => '¡Error!',
@@ -239,7 +220,7 @@ class Index extends Component
         $this->emit('expediente_registrado'); // emitimos el evento expedienteRegistrado
         $this->dispatchBrowserEvent('modal_expediente', ['action' => 'hide']); // ocultamos el modal
 
-        if($this->mostrar_acciones_expediente == false){
+        if ($this->mostrar_acciones_expediente == false) {
             ProcessUpdateFichaInscripcion::dispatch($this->inscripcion); // despachamos el proceso de actualizacion de la ficha de inscripcion
         }
     }
