@@ -44,7 +44,6 @@
                                         <th scope="col">Pago</th>
                                         <th scope="col">F. Pago</th>
                                         <th scope="col" class="col-md-1">Verificacion</th>
-                                        <th scope="col">Canal de Pago</th>
                                         <th scope="col"></th>
                                     </tr>
                                 </thead>
@@ -76,9 +75,6 @@
                                                 @else
                                                     <span class="badge badge-danger fs-6">Anulado</span>
                                                 @endif
-                                            </td>
-                                            <td align="center">
-                                                {{ $item->pago->concepto_pago->concepto_pago }}
                                             </td>
                                             <td align="center">
                                                 <a href="{{ asset($item->pago->pago_voucher_url) }}"
