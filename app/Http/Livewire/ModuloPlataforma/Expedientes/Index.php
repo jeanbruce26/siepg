@@ -160,6 +160,7 @@ class Index extends Component
                 $expediente_inscripcion = new ExpedienteInscripcion(); // creamos una nueva instancia de expediente_inscripcion
                 $expediente_inscripcion->expediente_inscripcion_url = $nombreDB; // asignamos el valor del nombre del expediente para la base de datos a la variable nom_exped
                 $expediente_inscripcion->expediente_inscripcion_estado = 1; // asignamos el valor del estado del expediente a la variable estado
+                $expediente_inscripcion->expediente_inscripcion_verificacion = 0; // asignamos el valor de la verificacion del expediente a la variable verificacion
                 $expediente_inscripcion->expediente_inscripcion_fecha = now(); // asignamos el valor de la fecha del expediente a la variable fecha
                 $expediente_inscripcion->id_expediente_admision = $this->expediente_id; // asignamos el valor del id del expediente a la variable expediente_cod_exp
                 $expediente_inscripcion->id_inscripcion = $this->id_inscripcion; // asignamos el valor del id de la inscripcion a la variable id_inscripcion
@@ -193,6 +194,7 @@ class Index extends Component
                 $expediente_inscripcion = ExpedienteInscripcion::where('id_inscripcion', $this->id_inscripcion)->where('id_expediente_admision', $this->expediente_id)->first(); // obtenemos el expediente de la inscripcion
                 $expediente_inscripcion->expediente_inscripcion_url = $nombreDB; // asignamos el valor del nombre del expediente para la base de datos a la variable nom_exped
                 $expediente_inscripcion->expediente_inscripcion_estado = 1; // asignamos el valor del estado del expediente a la variable estado
+                $expediente_inscripcion->expediente_inscripcion_verificacion = 0; // asignamos el valor de la verificacion del expediente a la variable verificacion 
                 $expediente_inscripcion->expediente_inscripcion_fecha = now(); // asignamos el valor de la fecha de entrega del expediente a la variable fecha_entre
                 $expediente_inscripcion->save(); // guardamos el expediente de la inscripcion
 
