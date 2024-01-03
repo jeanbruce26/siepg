@@ -43,7 +43,7 @@ class ProcessUpdateFichaInscripcion implements ShouldQueue
     public function handle(): void
     {
         $id = $this->inscripcion->id_inscripcion;
-        $inscripcion = Inscripcion::where('id_inscripcion', $id)->first(); // Datos de la inscripcion
+        $inscripcion = Inscripcion::find($id); // Datos de la inscripcion
 
         $pago = Pago::where('id_pago', $inscripcion->id_pago)->first();
         $pago_monto = $pago->pago_monto; // Monto del pago
@@ -92,18 +92,18 @@ class ProcessUpdateFichaInscripcion implements ShouldQueue
             'seguimiento_count' => $seguimiento_count
         ];
 
-        // verificamos si hay una ficha de inscripcion y lo eliminamos
-        $inscripcion = Inscripcion::find($id);
-        if ($inscripcion->inscripcion_ficha_url != null) {
-            $path = public_path($inscripcion->inscripcion_ficha_url);
-            unlink($path);
-        }
+        // // verificamos si hay una ficha de inscripcion y lo eliminamos
+        // $inscripcion = Inscripcion::find($id);
+        // if ($inscripcion->inscripcion_ficha_url != null) {
+        //     $path = public_path($inscripcion->inscripcion_ficha_url);
+        //     unlink($path);
+        // }
 
         $nombre_pdf = 'ficha-inscripcion-' . Str::slug($persona->nombre_completo, '-') . '.pdf';
-        $path = 'Posgrado/' . $inscripcion->programa_proceso->first()->admision->admision . '/' . $persona->numero_documento . '/' . 'Expedientes' . '/';
+        $path = 'Posgrado/' . $admision . '/' . $persona->numero_documento . '/' . 'Expedientes' . '/';
         $pdf = PDF::loadView('modulo-inscripcion.ficha-inscripcion', $data)->save(public_path($path . $nombre_pdf));
 
-        $inscripcion = Inscripcion::find($id);
+        // registramos la ficha de inscripcion
         $inscripcion->inscripcion_ficha_url = $path . $nombre_pdf;
         $inscripcion->save();
     }
