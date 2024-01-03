@@ -61,8 +61,10 @@ class ProcessUpdateFichaInscripcion implements ShouldQueue
         $persona = Persona::where('id_persona', $inscripcion->id_persona)->first();
         $expediente_inscripcion = ExpedienteInscripcion::where('id_inscripcion', $id)->get();
         $expediente = ExpedienteAdmision::join('expediente', 'expediente.id_expediente', '=', 'expediente_admision.id_expediente')
+            ->join('admision', 'admision.id_admision', '=', 'expediente_admision.id_admision')
             ->where('expediente_admision.expediente_admision_estado', 1)
             ->where('expediente.expediente_estado', 1)
+            ->where('admision.admision_estado', 1)
             ->where(function ($query) use ($inscripcion) {
                 $query->where('expediente.expediente_tipo', 0)
                     ->orWhere('expediente.expediente_tipo', $inscripcion->inscripcion_tipo_programa);
