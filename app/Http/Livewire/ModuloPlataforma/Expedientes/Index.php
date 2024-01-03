@@ -194,7 +194,7 @@ class Index extends Component
                 $expediente_inscripcion = ExpedienteInscripcion::where('id_inscripcion', $this->id_inscripcion)->where('id_expediente_admision', $this->expediente_id)->first(); // obtenemos el expediente de la inscripcion
                 $expediente_inscripcion->expediente_inscripcion_url = $nombreDB; // asignamos el valor del nombre del expediente para la base de datos a la variable nom_exped
                 $expediente_inscripcion->expediente_inscripcion_estado = 1; // asignamos el valor del estado del expediente a la variable estado
-                $expediente_inscripcion->expediente_inscripcion_verificacion = 0; // asignamos el valor de la verificacion del expediente a la variable verificacion 
+                $expediente_inscripcion->expediente_inscripcion_verificacion = 0; // asignamos el valor de la verificacion del expediente a la variable verificacion
                 $expediente_inscripcion->expediente_inscripcion_fecha = now(); // asignamos el valor de la fecha de entrega del expediente a la variable fecha_entre
                 $expediente_inscripcion->save(); // guardamos el expediente de la inscripcion
 
@@ -222,7 +222,7 @@ class Index extends Component
         $this->emit('expediente_registrado'); // emitimos el evento expedienteRegistrado
         $this->dispatchBrowserEvent('modal_expediente', ['action' => 'hide']); // ocultamos el modal
 
-        if ($this->mostrar_acciones_expediente == false) {
+        if ($this->mostrar_acciones_expediente == false) { 
             ProcessUpdateFichaInscripcion::dispatch($this->inscripcion); // despachamos el proceso de actualizacion de la ficha de inscripcion
         }
     }
