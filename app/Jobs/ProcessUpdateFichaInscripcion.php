@@ -92,6 +92,13 @@ class ProcessUpdateFichaInscripcion implements ShouldQueue
             'seguimiento_count' => $seguimiento_count
         ];
 
+        // verificamos si hay una ficha de inscripcion y lo eliminamos
+        $inscripcion = Inscripcion::find($id);
+        if ($inscripcion->inscripcion_ficha_url != null) {
+            $path = public_path($inscripcion->inscripcion_ficha_url);
+            unlink($path);
+        }
+
         $nombre_pdf = 'ficha-inscripcion-' . Str::slug($persona->nombre_completo, '-') . '.pdf';
         $path = 'Posgrado/' . $inscripcion->programa_proceso->first()->admision->admision . '/' . $persona->numero_documento . '/' . 'Expedientes' . '/';
         $pdf = PDF::loadView('modulo-inscripcion.ficha-inscripcion', $data)->save(public_path($path . $nombre_pdf));
