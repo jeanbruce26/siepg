@@ -59,10 +59,7 @@
                     <a class="menu-link {{ request()->routeIs('coordinador.inicio') || request()->routeIs('coordinador.programas') || request()->routeIs('coordinador.evaluaciones') || request()->routeIs('coordinador.inscripciones') || request()->routeIs('coordinador.evaluacion-expediente') || request()->routeIs('coordinador.evaluacion-investigacion') || request()->routeIs('coordinador.evaluacion-entrevista') ? 'active' : '' }}"
                         href="{{ route('coordinador.inicio') }}">
                         <span class="menu-icon">
-                            <i class="ki-duotone ki-bookmark-2 fs-1">
-                                <i class="path1"></i>
-                                <i class="path2"></i>
-                            </i>
+                            <i class="ki-outline ki-bookmark-2 fs-1"></i>
                         </span>
                         <span class="menu-title fw-semibold fs-4">Evaluaciones</span>
                     </a>
@@ -76,13 +73,7 @@
                     <a class="menu-link {{ request()->routeIs('coordinador.docentes') ? 'active' : '' }}"
                         href="{{ route('coordinador.docentes') }}">
                         <span class="menu-icon">
-                            <i class="ki-duotone ki-people fs-1">
-                                <i class="path1"></i>
-                                <i class="path2"></i>
-                                <i class="path3"></i>
-                                <i class="path4"></i>
-                                <i class="path5"></i>
-                            </i>
+                            <i class="ki-outline ki-people fs-1"></i>
                         </span>
                         <span class="menu-title fw-semibold fs-4">
                             Gestión de Docentes
@@ -93,12 +84,7 @@
                     class="menu-item menu-accordion {{ request()->routeIs('coordinador.cursos') || request()->routeIs('coordinador.equivalencias') ? 'show active' : '' }}">
                     <span class="menu-link">
                         <span class="menu-icon">
-                            <i class="ki-duotone ki-book fs-1">
-                                <i class="path1"></i>
-                                <i class="path2"></i>
-                                <i class="path3"></i>
-                                <i class="path4"></i>
-                            </i>
+                            <i class="ki-outline ki-book fs-1"> </i>
                         </span>
                         <span class="menu-title fw-semibold fs-4">Gestión de Cursos</span>
                         <span class="menu-arrow"></span>
@@ -132,10 +118,7 @@
                     <a class="menu-link {{ request()->routeIs('coordinador.matriculas') ? 'active' : '' }}"
                         href="{{ route('coordinador.matriculas') }}">
                         <span class="menu-icon">
-                            <i class="ki-duotone ki-teacher fs-1">
-                                <i class="path1"></i>
-                                <i class="path2"></i>
-                            </i>
+                            <i class="ki-outline ki-teacher fs-1"></i>
                         </span>
                         <span class="menu-title fw-semibold fs-4">
                             Gestión de Matriculas
@@ -146,10 +129,7 @@
                     class="menu-item menu-accordion {{ request()->routeIs('coordinador.reingreso.masivo') || request()->routeIs('coordinador.reingreso.individual') ? 'show active' : '' }}">
                     <span class="menu-link">
                         <span class="menu-icon">
-                            <i class="ki-duotone ki-abstract-37 fs-1">
-                                <i class="path1"></i>
-                                <i class="path2"></i>
-                            </i>
+                            <i class="ki-outline ki-abstract-37 fs-1"> </i>
                         </span>
                         <span class="menu-title fw-semibold fs-4">Gestión de Reingreso</span>
                         <span class="menu-arrow"></span>
@@ -179,10 +159,7 @@
                     <a class="menu-link {{ request()->routeIs('coordinador.retiro') ? 'active' : '' }}"
                         href="{{ route('coordinador.retiro') }}">
                         <span class="menu-icon">
-                            <i class="ki-duotone ki-abstract-42 fs-1">
-                                <i class="path1"></i>
-                                <i class="path2"></i>
-                            </i>
+                            <i class="ki-outline ki-abstract-42 fs-1"></i>
                         </span>
                         <span class="menu-title fw-semibold fs-4">
                             Gestión de Retiro
@@ -193,12 +170,7 @@
                     <a class="menu-link {{ request()->routeIs('coordinador.reporte-pagos') || request()->routeIs('coordinador.reporte-programas') ? 'active' : '' }}"
                         href="{{ route('coordinador.reporte-pagos') }}">
                         <span class="menu-icon">
-                            <i class="ki-duotone ki-financial-schedule fs-1">
-                                <i class="path1"></i>
-                                <i class="path2"></i>
-                                <i class="path3"></i>
-                                <i class="path4"></i>
-                            </i>
+                            <i class="ki-outline ki-financial-schedule fs-1"></i>
                         </span>
                         <span class="menu-title fw-semibold fs-4">
                             Reporte de Pagos
