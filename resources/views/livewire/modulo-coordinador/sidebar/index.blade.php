@@ -142,7 +142,7 @@
                         </span>
                     </a>
                 </div>
-                <div data-kt-menu-trigger="click"
+                {{-- <div data-kt-menu-trigger="click"
                     class="menu-item menu-accordion {{ request()->routeIs('coordinador.reingreso.masivo') || request()->routeIs('coordinador.reingreso.individual') ? 'show active' : '' }}">
                     <span class="menu-link">
                         <span class="menu-icon">
@@ -174,8 +174,8 @@
                             </a>
                         </div>
                     </div>
-                </div>
-                <div class="menu-item">
+                </div> --}}
+                {{-- <div class="menu-item">
                     <a class="menu-link {{ request()->routeIs('coordinador.retiro') ? 'active' : '' }}"
                         href="{{ route('coordinador.retiro') }}">
                         <span class="menu-icon">
@@ -188,7 +188,7 @@
                             Gestión de Retiro
                         </span>
                     </a>
-                </div>
+                </div> --}}
                 <div class="menu-item">
                     <a class="menu-link {{ request()->routeIs('coordinador.reporte-pagos') || request()->routeIs('coordinador.reporte-programas') ? 'active' : '' }}"
                         href="{{ route('coordinador.reporte-pagos') }}">
