@@ -36,9 +36,7 @@
                     {{-- alerta --}}
                     <div
                         class="alert bg-light-primary border border-3 border-primary d-flex align-items-center p-5 mb-5">
-                        <span class="svg-icon svg-icon-2hx svg-icon-primary me-4 d-flex align-items-center">
-                            <i class="las la-exclamation-circle fs-1 text-primary"></i>
-                        </span>
+                        <i class="ki-outline ki-information-2 fs-2qx me-4 text-primary"></i>
                         <div class="d-flex flex-column gap-2">
                             <span class="fw-bold fs-5">
                                 A continuación se muestra la lista de grupos que pertencen al programa seleccionado.

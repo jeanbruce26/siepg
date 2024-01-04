@@ -21,11 +21,7 @@
                 <div class="col-md-12 mb-md-5 mb-xl-10">
                     {{-- alerta --}}
                     <div class="alert bg-light-primary border border-3 border-primary d-flex align-items-center p-5 mb-5">
-                        <i class="ki-duotone ki-information-5 fs-2qx me-4 text-primary">
-                            <i class="path1"></i>
-                            <i class="path2"></i>
-                            <i class="path3"></i>
-                        </i>
+                        <i class="ki-outline ki-information-5 fs-2qx me-4 text-primary"></i>
                         <div class="d-flex flex-column">
                             <span class="fw-bold fs-5">
                                 Los datos mostrados en esta sección son referentes a las modalidades de admisión.

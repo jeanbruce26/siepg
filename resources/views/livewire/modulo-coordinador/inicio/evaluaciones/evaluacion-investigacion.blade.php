@@ -53,23 +53,12 @@
                     <div class="card shadow-sm mb-5">
                         <div class="px-8 py-5 mb-0 d-flex justify-content-between align-items-center">
                             <div class="d-flex align-items-center gap-3">
-                                <i class="ki-duotone ki-user-tick fs-2x">
-                                    <i class="path1"></i>
-                                    <i class="path2"></i>
-                                    <i class="path3"></i>
-                                </i>
+                                <i class="ki-outline ki-user-tick fs-2x"></i>
                                 <span class="fs-5">Postulante:</span>
                                 <span class="fw-bold fs-5">{{ ucwords(strtolower($persona->nombre_completo)) }}</span>
                             </div>
                             <div class="d-flex align-items-center gap-3">
-                                <i class="ki-duotone ki-calendar-tick fs-2x">
-                                    <i class="path1"></i>
-                                    <i class="path2"></i>
-                                    <i class="path3"></i>
-                                    <i class="path4"></i>
-                                    <i class="path5"></i>
-                                    <i class="path6"></i>
-                                </i>
+                                <i class="ki-outline ki-calendar-tick fs-2x"></i>
                                 <span class="fs-5">Fecha de Evaluación:</span>
                                 <span class="fw-bold fs-5">{{ $evaluacion->fecha_expediente ? date('d/m/Y', strtotime($evaluacion->fecha_expediente)) : date('d/m/Y', strtotime(today())) }}</span>
                             </div>

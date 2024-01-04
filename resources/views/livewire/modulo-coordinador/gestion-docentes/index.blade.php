@@ -35,9 +35,7 @@
                     {{-- alerta --}}
                     <div
                         class="alert bg-light-primary border border-3 border-primary d-flex align-items-center p-5 mb-5">
-                        <span class="svg-icon svg-icon-2hx svg-icon-primary me-4 d-flex align-items-center">
-                            <i class="las la-exclamation-circle fs-1 text-primary"></i>
-                        </span>
+                        <i class="ki-outline ki-information-2 fs-2qx me-4 text-primary"></i>
                         <div class="d-flex flex-column gap-2">
                             <span class="fw-bold fs-5">
                                 A continuación se muestra la lista de docentes registrados en el sistema.
@@ -50,7 +48,8 @@
                             {{-- header de la tabla --}}
                             <div class="d-flex flex-column flex-md-row align-items-center mb-5 w-100">
                                 <div class="col-md-4 pe-md-3 mb-2 mb-md-0">
-                                    <button type="button" class="btn btn btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary btn-center fw-bold w-100px w-md-125px"
+                                    <button type="button"
+                                        class="btn btn btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary btn-center fw-bold w-100px w-md-125px"
                                         data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start">
                                         <span class="svg-icon svg-icon-3 me-1">
                                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -62,8 +61,8 @@
                                         </span>
                                         Filtrar
                                     </button>
-                                    <div class="menu menu-sub menu-sub-dropdown w-300px w-md-325px"
-                                        data-kt-menu="true" id="filtros_docentes" wire:ignore.self>
+                                    <div class="menu menu-sub menu-sub-dropdown w-300px w-md-325px" data-kt-menu="true"
+                                        id="filtros_docentes" wire:ignore.self>
                                         <div class="px-7 py-5">
                                             <div class="fs-4 text-dark fw-bold">
                                                 Opciones de Filtro
@@ -233,8 +232,7 @@
                                                 <td class="text-center">
                                                     <button type="button"
                                                         class="btn btn-flex btn-center fw-bold btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary hover-scale"
-                                                        {{-- data-kt-menu-trigger="click" --}}
-                                                        {{-- data-kt-menu-placement="bottom-end" --}}
+                                                        {{-- data-kt-menu-trigger="click" --}} {{-- data-kt-menu-placement="bottom-end" --}}
                                                         data-bs-toggle="dropdown">
                                                         Acciones
                                                         <span class="svg-icon fs-5 rotate-180 ms-2 me-0 m-0">
@@ -332,8 +330,8 @@
                         <span class="svg-icon svg-icon-2hx">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
-                                <rect opacity="0.3" x="2" y="2" width="20" height="20"
-                                    rx="5" fill="currentColor" />
+                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5"
+                                    fill="currentColor" />
                                 <rect x="7" y="15.3137" width="12" height="2" rx="1"
                                     transform="rotate(-45 7 15.3137)" fill="currentColor" />
                                 <rect x="8.41422" y="7" width="12" height="2" rx="1"
@@ -468,8 +466,8 @@
                                 Foto de Perfil
                             </label>
                             <input type="file" wire:model="foto_perfil"
-                                class="form-control @error('foto_perfil') is-invalid @enderror"
-                                id="foto_perfil" accept="image/jpeg, image/png, image/jpg" />
+                                class="form-control @error('foto_perfil') is-invalid @enderror" id="foto_perfil"
+                                accept="image/jpeg, image/png, image/jpg" />
                             <span class="form-text text-muted mt-2 fst-italic">
                                 Nota: La foto de perfil debe ser imagen en formato JPG, JPEG, PNG y no debe superar los
                                 2MB. <br>
@@ -510,8 +508,8 @@
                         <span class="svg-icon svg-icon-2hx">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
-                                <rect opacity="0.3" x="2" y="2" width="20" height="20"
-                                    rx="5" fill="currentColor" />
+                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5"
+                                    fill="currentColor" />
                                 <rect x="7" y="15.3137" width="12" height="2" rx="1"
                                     transform="rotate(-45 7 15.3137)" fill="currentColor" />
                                 <rect x="8.41422" y="7" width="12" height="2" rx="1"
