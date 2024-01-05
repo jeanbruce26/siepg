@@ -37,7 +37,8 @@
                         <i class="ki-outline ki-information-5 fs-2qx me-4 text-warning"></i>
                         <div class="d-flex flex-column">
                             <span class="fw-bold fs-5">
-                                Recuerde que toda observacion de su inscripcion, pago y expedientes subidos serán notificados a su correo electronico.
+                                Recuerde que toda observacion de su inscripcion, pago y expedientes subidos serán
+                                notificados a su correo electronico.
                             </span>
                         </div>
                     </div>
@@ -113,9 +114,9 @@
                             <div class="mt-5 mb-5 mx-5 px-5">
                                 @foreach ($encuestas as $item)
                                     <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox"
-                                            value="{{ $item->id_encuesta }}" id="{{ $item->id_encuesta }}"
-                                            wire:model="encuesta" wire:key="{{ $item->id_encuesta }}">
+                                        <input class="form-check-input" type="checkbox" value="{{ $item->id_encuesta }}"
+                                            id="{{ $item->id_encuesta }}" wire:model="encuesta"
+                                            wire:key="{{ $item->id_encuesta }}">
                                         <label class="fs-5" for="{{ $item->id_encuesta }}"
                                             wire:key="{{ $item->id_encuesta }}">
                                             {{ $item->encuesta }}
@@ -141,7 +142,5 @@
     </div>
 </div>
 @push('scripts')
-<script>
-
-</script>
+    <script></script>
 @endpush
