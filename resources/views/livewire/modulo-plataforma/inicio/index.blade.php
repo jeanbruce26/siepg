@@ -21,7 +21,56 @@
         <div id="kt_app_content_container" class="app-container container-fluid">
             <div class="row g-0">
                 <div class="col-md-12">
-                    {{-- alerta  --}}
+                    @if ($inscripcion->inscripcion_estado == 0)
+                        <div
+                            class="alert alert-dismissible bg-light-warning border border-3 border-warning d-flex flex-center flex-column py-10 px-10 px-lg-20">
+                            <i class="ki-outline ki-information fs-5tx text-warning mb-5"></i>
+
+                            <div class="text-center">
+                                <h1 class="fw-bold mb-5">
+                                    ¡Bienvenido a la Plataforma del Estudiante de la Escuela de Posgrado!
+                                </h1>
+
+                                <div class="separator separator-dashed border-warning opacity-25 mb-5"></div>
+
+                                <div class="text-gray-900 fs-5">
+                                    <strong>
+                                        Estimado(a) postulante, se le informa que la inscripción realizada está en
+                                        proceso
+                                        de verificación, por favor espere la verificación, caso contrario, se le
+                                        notificará
+                                        por correo electrónico.
+                                    </strong>
+                                </div>
+                            </div>
+                        </div>
+                    @else
+                        <div
+                            class="alert alert-dismissible bg-light-success border border-3 border-success d-flex flex-center flex-column py-10 px-10 px-lg-20">
+                            <i class="ki-outline ki-like fs-5tx text-success mb-5"></i>
+
+                            <div class="text-center">
+                                <h1 class="fw-bold mb-5">
+                                    ¡Bienvenido a la Plataforma del Estudiante de la Escuela de Posgrado!
+                                </h1>
+
+                                <div class="separator separator-dashed border-success opacity-25 mb-5"></div>
+
+                                <div class="text-gray-900 fs-5">
+                                    <strong>
+                                        Estimado(a) postulante, se le informa que su inscripción ha sido verificada, por
+                                        favor espere las evaluaciones correspondientes a este proceso de admisión, se le
+                                        estará notificando por correo electrónico y en el modulo de
+                                        <a href="{{ route('plataforma.admision') }}">
+                                            "Proceso de Admisión" -> "Admisión"
+                                        </a>.
+                                    </strong>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                </div>
+                {{-- <div class="col-md-12">
                     <div class="alert bg-light-primary border border-3 border-primary d-flex align-items-center p-5">
                         <i class="ki-outline ki-information-5 fs-2qx me-4 text-primary"></i>
                         <div class="d-flex flex-column">
@@ -30,11 +79,11 @@
                             </span>
                         </div>
                     </div>
-                </div>
+                </div> --}}
                 <div class="col-md-12 mb-1">
                     {{-- alerta  --}}
-                    <div class="alert bg-light-warning border border-3 border-warning d-flex align-items-center p-5">
-                        <i class="ki-outline ki-information-5 fs-2qx me-4 text-warning"></i>
+                    <div class="alert bg-light-primary border border-3 border-primary d-flex align-items-center p-5">
+                        <i class="ki-outline ki-information-5 fs-2qx me-4 text-primary"></i>
                         <div class="d-flex flex-column">
                             <span class="fw-bold fs-5">
                                 Recuerde que toda observacion de su inscripcion, pago y expedientes subidos serán
@@ -114,9 +163,9 @@
                             <div class="mt-5 mb-5 mx-5 px-5">
                                 @foreach ($encuestas as $item)
                                     <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" value="{{ $item->id_encuesta }}"
-                                            id="{{ $item->id_encuesta }}" wire:model="encuesta"
-                                            wire:key="{{ $item->id_encuesta }}">
+                                        <input class="form-check-input" type="checkbox"
+                                            value="{{ $item->id_encuesta }}" id="{{ $item->id_encuesta }}"
+                                            wire:model="encuesta" wire:key="{{ $item->id_encuesta }}">
                                         <label class="fs-5" for="{{ $item->id_encuesta }}"
                                             wire:key="{{ $item->id_encuesta }}">
                                             {{ $item->encuesta }}

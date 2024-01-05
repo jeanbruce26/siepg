@@ -111,8 +111,12 @@ class Index extends Component
     public function render()
     {
         $encuestas = Encuesta::where('encuesta_estado', 1)->get(); // obtenemos las encuestas activas
+        $usuario = auth('plataforma')->user();
+        $persona = $usuario->persona;
+        $inscripcion = $persona->inscripcion()->orderBy('id_inscripcion', 'desc')->first();
         return view('livewire.modulo-plataforma.inicio.index', [
-            'encuestas' => $encuestas
+            'encuestas' => $encuestas,
+            'inscripcion' => $inscripcion
         ]);
     }
 }
