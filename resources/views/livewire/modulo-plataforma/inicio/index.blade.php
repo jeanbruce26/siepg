@@ -19,7 +19,7 @@
     </div>
     <div id="kt_app_content" class="app-content flex-column-fluid">
         <div id="kt_app_content_container" class="app-container container-fluid">
-            <div class="row g-2">
+            <div class="row g-0">
                 <div class="col-md-12">
                     {{-- alerta  --}}
                     <div class="alert bg-light-primary border border-3 border-primary d-flex align-items-center p-5">
@@ -31,7 +31,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-12">
+                <div class="col-md-12 mb-1">
                     {{-- alerta  --}}
                     <div class="alert bg-light-warning border border-3 border-warning d-flex align-items-center p-5">
                         <i class="ki-outline ki-information-5 fs-2qx me-4 text-warning"></i>
