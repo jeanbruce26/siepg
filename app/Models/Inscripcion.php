@@ -21,6 +21,7 @@ class Inscripcion extends Model
         'inscripcion_fecha',
         'id_persona',
         'inscripcion_estado',
+        'inscripcion_observacion',
         'id_pago',
         'id_programa_proceso',
         'inscripcion_tipo_programa',
