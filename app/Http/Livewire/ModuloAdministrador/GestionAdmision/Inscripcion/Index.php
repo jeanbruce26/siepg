@@ -282,6 +282,11 @@ class Index extends Component
             'titleModal' => '#modal-estado-inscripcion',
         ]);
         // ejecutamos el job para enviar el correo de observacion o verificacion de expediente
+        if ($inscripcion->inscripcion_estado == 2) {
+            ObservarInscripcionJob::dispatch($inscripcion->id_inscripcion, 'observar-inscripcion');
+        } else if ($inscripcion->inscripcion_estado == 1) {
+            ObservarInscripcionJob::dispatch($inscripcion->id_inscripcion, 'verificar-inscripcion');
+        }
     }
 
     public function render()
