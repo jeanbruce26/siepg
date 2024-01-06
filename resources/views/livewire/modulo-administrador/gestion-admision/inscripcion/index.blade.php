@@ -553,6 +553,16 @@
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
+                        <div class="col-md-12">
+                            <label for="observacion_inscripcion" class="form-label">
+                                Observación
+                            </label>
+                            <textarea class="form-control @error('observacion_inscripcion') is-invalid @enderror" wire:model="observacion_inscripcion"
+                                id="observacion_inscripcion" cols="5" />
+                            @error('observacion_inscripcion')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">

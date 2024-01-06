@@ -51,6 +51,7 @@ class Index extends Component
 
     // estado de la inscripcion
     public $estado;
+    public $observacion_inscripcion;
 
     //Para mapear el mes al filtrar
     public $meses = [
@@ -268,6 +269,11 @@ class Index extends Component
     {
         $inscripcion = Inscripcion::find($this->id_inscripcion);
         $inscripcion->inscripcion_estado = $this->estado;
+        if ($inscripcion->inscripcion_estado == 2) {
+            $inscripcion->inscripcion_observacion = $this->observacion_inscripcion;
+        } else {
+            $inscripcion->inscripcion_observacion = null;
+        }
         $inscripcion->save();
         // mostrar alerta
         $this->alertaInscripcion(
