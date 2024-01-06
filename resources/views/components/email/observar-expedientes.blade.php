@@ -73,7 +73,7 @@
         </div>
         <p style="text-align: justify; text-justify: inter-word; margin-bottom: 1rem;">
             Por favor ingresar a su plataforma del postulante con las credenciales de acceso que se encuentra en su
-            ficha de inscripción, para que pueda actualizar su expediente.Si tienes alguna pregunta o necesitas más
+            ficha de inscripción, para que pueda actualizar su expediente. Si tienes alguna pregunta o necesitas más
             información, por favor no dudes en contactarnos. Estamos aquí para ayudarte.
         </p>
         <p style="margin-bottom: 1rem;">

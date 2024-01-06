@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>
-        Pago Observado
+        Inscripción Verificada
     </title>
 </head>
 
@@ -19,20 +19,12 @@
             Estimado/a {{ $nombre }},
         </p>
         <p style="text-align: justify; text-justify: inter-word; margin-bottom: 1rem;">
-            Nos complace informarle que su pago realizado por el concepto de inscripción al proceso de admisión ha sido
-            observado.
-        </p>
-        <p>
-            <strong>Observación:</strong>
-            "<span style="color: #8e0000;">
-                {{ $observacion }}
-            </span>"
+            Nos complace informarle que su inscripción realizada en la Escuela de Posgrado de la Universidad Nacional de
+            Ucayali ha sido verificada. Ahora puedes continuar con el proceso de admisión y esperar los resultados de las evaluaciones.
         </p>
         <p style="text-align: justify; text-justify: inter-word; margin-bottom: 1rem;">
-            Por favor ingresar a su plataforma del postulante con las credenciales de acceso que se encuentra en su
-            ficha de inscripción, para que pueda actualizar su información de su pago. Si tienes alguna pregunta o
-            necesitas más
-            información, por favor no dudes en contactarnos. Estamos aquí para ayudarte.
+            Si tienes alguna pregunta o necesitas más información, por favor no dudes en contactarnos. Estamos aquí para
+            ayudarte.
         </p>
         <p style="margin-bottom: 1rem;">
             Atentamente,
