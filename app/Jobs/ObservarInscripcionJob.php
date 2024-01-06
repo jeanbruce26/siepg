@@ -73,6 +73,20 @@ class ObservarInscripcionJob implements ShouldQueue
                 $message->to($detalle['correo'])
                     ->subject('Pago Observado - Escuela de Posgrado');
             });
+        } else if ($this->tipo == 'obsservar-inscripcion') {
+            // verificar si tiene observacion
+            $observacion = $inscripcion->inscripcion_observacion;
+            // datos del correo
+            $detalle = [
+                'correo' => $correo,
+                'nombre' => $nombre,
+                'observacion' => $observacion,
+            ];
+
+            Mail::send('components.email.observar-inscripcion', $detalle, function ($message) use ($detalle) {
+                $message->to($detalle['correo'])
+                    ->subject('Inscripción Observada - Escuela de Posgrado');
+            });
         }
     }
 }

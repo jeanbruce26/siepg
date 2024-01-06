@@ -281,6 +281,7 @@ class Index extends Component
         $this->dispatchBrowserEvent('modal', [
             'titleModal' => '#modal-estado-inscripcion',
         ]);
+        // ejecutamos el job para enviar el correo de observacion o verificacion de expediente
     }
 
     public function render()
