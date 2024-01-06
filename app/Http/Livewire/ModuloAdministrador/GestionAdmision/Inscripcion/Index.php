@@ -267,6 +267,13 @@ class Index extends Component
 
     public function editar_estado()
     {
+        // validar que el estado sea observado y tenga observacion
+        if ($this->estado == 2 && $this->observacion_inscripcion == null) {
+            $this->validate([
+                'observacion_inscripcion' => 'required',
+            ]);
+        }
+        // actualizar estado
         $inscripcion = Inscripcion::find($this->id_inscripcion);
         $inscripcion->inscripcion_estado = $this->estado;
         if ($inscripcion->inscripcion_estado == 2) {
@@ -293,6 +300,8 @@ class Index extends Component
         } else if ($inscripcion->inscripcion_estado == 1) {
             ObservarInscripcionJob::dispatch($inscripcion->id_inscripcion, 'verificar-inscripcion');
         }
+        // limpiamos variables
+        $this->reset('id_inscripcion', 'estado', 'observacion_inscripcion');
     }
 
     public function render()

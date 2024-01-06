@@ -558,7 +558,8 @@
                                 Observación
                             </label>
                             <textarea class="form-control @error('observacion_inscripcion') is-invalid @enderror" wire:model="observacion_inscripcion"
-                                id="observacion_inscripcion" cols="5" />
+                                id="observacion_inscripcion" rows="3">
+                            </textarea>
                             @error('observacion_inscripcion')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
