@@ -588,7 +588,7 @@ class Registro extends Component
             $pago->pago_voucher_url = $nombre_db;
         }
         $pago->id_canal_pago = $this->canal_pago;
-        $pago->id_concepto_pago = 1;
+        $pago->id_concepto_pago = $this->concepto_pago;
         $pago->id_persona = $this->id_persona;
         $pago->save();
 
