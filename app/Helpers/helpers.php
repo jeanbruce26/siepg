@@ -8,7 +8,7 @@ function convertirFechaHora($fechaHora)
 
 function getIdTrasladoExterno()
 {
-    return 1; // id de traslado externo
+    return 8; // id de traslado externo
 }
 
 function getIdConceptoPagoInscripcion()
