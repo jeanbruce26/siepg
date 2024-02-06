@@ -621,6 +621,7 @@ class Registro extends Component
         $inscripcion->id_pago = $pago->id_pago;
         $inscripcion->id_programa_proceso = $this->programa;
         $inscripcion->inscripcion_tipo_programa = $this->mostrar_tipo_expediente;
+        $inscripcion->es_traslado_externo = $this->concepto_pago == getIdTrasladoExterno() ? 1 : 0;
         $inscripcion->save();
         // asignar id de inscripcion
         $this->id_inscripcion = $inscripcion->id_inscripcion;
