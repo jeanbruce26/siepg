@@ -25,6 +25,7 @@ class Inscripcion extends Model
         'id_pago',
         'id_programa_proceso',
         'inscripcion_tipo_programa',
+        'es_traslado_externo',
     ];
 
     // Persona

@@ -6,4 +6,17 @@ function convertirFechaHora($fechaHora)
     return date('d/m/Y h:i a', strtotime($fechaHora));
 }
 
+function getIdTrasladoExterno()
+{
+    return 1; // id de traslado externo
+}
+
+function getIdConceptoPagoInscripcion()
+{
+    return [
+        '1' => 'Inscripción Normal',
+        '8' => 'Inscripción Traslado Externo',
+    ]; // id de concepto de pago de inscripcion
+}
+
 //
