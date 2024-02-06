@@ -14,9 +14,9 @@ function getIdTrasladoExterno()
 function getIdConceptoPagoInscripcion()
 {
     return [
-        '1' => 'Inscripción Normal',
-        '8' => 'Inscripción Traslado Externo',
-    ]; // id de concepto de pago de inscripcion
+        1, // id de concepto de pago de inscripcion
+        8 // id de concepto de pago de inscripcion para traslado externo
+    ];
 }
 
 //

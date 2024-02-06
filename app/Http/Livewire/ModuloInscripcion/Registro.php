@@ -2,8 +2,6 @@
 
 namespace App\Http\Livewire\ModuloInscripcion;
 
-use App\Jobs\ProcessRegistroFichaInscripcion;
-use App\Mail\EmailFichaInscripcion;
 use App\Models\Admision;
 use App\Models\CanalPago;
 use App\Models\ConceptoPago;
@@ -39,7 +37,7 @@ class Registro extends Component
 
     public $admision; // variable para el nombre de la admision
 
-    public $tipo_documento, $documento_identidad, $numero_operacion, $monto_operacion, $fecha_pago, $canal_pago, $voucher; // variables para el formulario del modal de registro
+    public $tipo_documento, $documento_identidad, $numero_operacion, $monto_operacion, $fecha_pago, $canal_pago, $concepto_pago, $voucher; // variables para el formulario del modal de registro
     public $id_inscripcion; // variable para el id de la inscripcion
     public $id_persona, $documento, $paterno, $materno, $nombres, $fecha_nacimiento, $genero, $estado_civil, $grado_academico, $especialidad_carrera, $discapacidad, $direccion, $celular, $celular_opcional, $año_egreso, $email, $email_opcional, $universidad, $centro_trabajo; // variables para el formulario de registro de información personal
     public $programa_array, $programa; // variables para el formulario de registro de información de programa
@@ -215,8 +213,8 @@ class Registro extends Component
             }
         }
         // validar si el monto ingresado es igual al monto por concepto de inscripción
-        $concepto_pago_monto = ConceptoPago::where('id_concepto_pago', 1)->first()->concepto_pago_monto;
-        if ($this->monto_operacion != $concepto_pago_monto) {
+        $concepto_pago_monto = ConceptoPago::where('id_concepto_pago', $this->concepto_pago)->first()->concepto_pago_monto;
+        if ($this->monto_operacion < $concepto_pago_monto) {
             // emitir evento para mostrar mensaje de alerta
             $this->dispatchBrowserEvent('registro_inscripcion', [
                 'title' => '¡Error!',
@@ -271,6 +269,7 @@ class Registro extends Component
                 'monto_operacion' => 'required|numeric',
                 'fecha_pago' => 'required|date',
                 'canal_pago' => 'required|numeric',
+                'concepto_pago' => 'required|numeric',
                 'voucher' => 'required|image|mimes:jpg,jpeg,png|max:4096'
             ]);
         } elseif ($this->paso === 2) {
@@ -722,17 +721,29 @@ class Registro extends Component
 
     public function render()
     {
-        $tipo_documentos = TipoDocumento::where('tipo_documento_estado', 1)->get();
-        $canales_pagos = CanalPago::where('canal_pago_estado', 1)->get();
-        $estado_civil_array = EstadoCivil::where('estado_civil_estado', 1)->get();
-        $tipo_discapacidad_array = Discapacidad::where('discapacidad_estado', 1)->get();
-        $universidad_array = Universidad::where('universidad_estado', 1)->get();
-        $grado_academico_array = GradoAcademico::where('grado_academico_estado', 1)->get();
-        $genero_array = Genero::where('genero_estado', 1)->get();
-        $tipo_seguimiento_constancia_sunedu = TipoSeguimiento::where('id_tipo_seguimiento', 1)->first();
+        $tipo_documentos = TipoDocumento::where('tipo_documento_estado', 1)
+            ->get();
+        $canales_pagos = CanalPago::where('canal_pago_estado', 1)
+            ->get();
+        $conceptos_pagos = ConceptoPago::where('concepto_pago_estado', 1)
+            ->whereIn('id_concepto_pago', getIdConceptoPagoInscripcion())
+            ->get();
+        $estado_civil_array = EstadoCivil::where('estado_civil_estado', 1)
+            ->get();
+        $tipo_discapacidad_array = Discapacidad::where('discapacidad_estado', 1)
+            ->get();
+        $universidad_array = Universidad::where('universidad_estado', 1)
+            ->get();
+        $grado_academico_array = GradoAcademico::where('grado_academico_estado', 1)
+            ->get();
+        $genero_array = Genero::where('genero_estado', 1)
+            ->get();
+        $tipo_seguimiento_constancia_sunedu = TipoSeguimiento::where('id_tipo_seguimiento', 1)
+            ->first();
         return view('livewire.modulo-inscripcion.registro', [
             'tipo_documentos' => $tipo_documentos,
             'canales_pagos' => $canales_pagos,
+            'conceptos_pagos' => $conceptos_pagos,
             'estado_civil_array' => $estado_civil_array,
             'tipo_discapacidad_array' => $tipo_discapacidad_array,
             'universidad_array' => $universidad_array,
