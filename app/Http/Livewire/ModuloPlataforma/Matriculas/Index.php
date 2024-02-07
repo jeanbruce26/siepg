@@ -6,18 +6,12 @@ use App\Jobs\ProcessEnvioFichaMatricula;
 use App\Models\Admitido;
 use App\Models\CostoEnseñanza;
 use App\Models\CursoProgramaPlan;
-use App\Models\CursoProgramaProceso;
 use App\Models\Evaluacion;
 use App\Models\Inscripcion;
 use App\Models\Matricula;
 use App\Models\MatriculaCurso;
-use App\Models\MatriculaGestion;
-use App\Models\Mensualidad;
 use App\Models\Pago;
 use App\Models\Persona;
-use App\Models\Prematricula;
-use App\Models\PrematriculaCurso;
-use App\Models\ProgramaProceso;
 use App\Models\ProgramaProcesoGrupo;
 use Livewire\Component;
 use Illuminate\Support\Str;
@@ -294,7 +288,7 @@ class Index extends Component
         // validamos el formulario
         // buscamos las matriculas del admitido
         $matriculas = Matricula::where('id_admitido', $this->admitido->id_admitido)->where('matricula_estado', 1)->get();
-        if ( $matriculas->count() == 0 ) {
+        if ($matriculas->count() == 0) {
             $this->validate([
                 'grupo' => 'required|numeric',
                 'check_pago' => 'required|array|min:1|max:1',
@@ -305,8 +299,7 @@ class Index extends Component
                 'check_pago' => 'required|array|min:1|max:1',
                 'check_cursos' => 'required|array|min:1',
             ]);
-            if ( count($this->check_cursos) == 0 )
-            {
+            if (count($this->check_cursos) == 0) {
                 $this->dispatchBrowserEvent('alerta_generar_matricula', [
                     'title' => '¡Error!',
                     'text' => 'Debe seleccionar un curso para generar la matrícula',
@@ -319,7 +312,7 @@ class Index extends Component
         }
 
         // validar que el checkbox tenga al menos un pago seleccionado y como maximo sea un pago el seleccionado
-        if ( count($this->check_pago) == 0 ) {
+        if (count($this->check_pago) == 0) {
             $this->dispatchBrowserEvent('alerta_generar_matricula', [
                 'title' => '¡Error!',
                 'text' => 'Debe seleccionar un pago para generar la matrícula',
@@ -328,7 +321,7 @@ class Index extends Component
                 'color' => 'danger'
             ]);
             return;
-        } else if ( count($this->check_pago) > 1 ) {
+        } else if (count($this->check_pago) > 1) {
             $this->dispatchBrowserEvent('alerta_generar_matricula', [
                 'title' => '¡Error!',
                 'text' => 'Solo puede seleccionar un pago para generar la matrícula',
@@ -365,7 +358,7 @@ class Index extends Component
         // obtener el ultimo registro de matricula
         $matricula = Matricula::orderBy('id_matricula', 'desc')->first();
 
-        if ( $matricula ) {
+        if ($matricula) {
             $codigo = $matricula->matricula_codigo;
             $codigo = substr($codigo, 5);
             $codigo = (int)$codigo + 1;
@@ -394,13 +387,13 @@ class Index extends Component
         $matricula->matricula_fecha_creacion = date('Y-m-d H:i:s');
         $matricula->matricula_estado = 1;
         $matricula->id_admitido = $admitido->id_admitido;
-        if ( $matriculas->count() == 0 ) {
+        if ($matriculas->count() == 0) {
             $matricula->id_programa_proceso_grupo = $grupo;
         } else {
             $matricula->id_programa_proceso_grupo = $grup_antiguo;
         }
         $matricula->id_pago = $pago->id_pago;
-        if ( $matriculas->count() == 0 ) {
+        if ($matriculas->count() == 0) {
             $matricula->matricula_primer_ciclo = 1; // si es la primera matricula del admitido
         }
         $matricula->save();
@@ -411,13 +404,12 @@ class Index extends Component
 
         // registramos los cursos de la matricula
         // obetenmos los cursos del ciclo del admitido
-        if ( $matriculas->count() == 0 ) {
+        if ($matriculas->count() == 0) {
             $curso_programa_plan = CursoProgramaPlan::join('curso', 'curso.id_curso', 'curso_programa_plan.id_curso')
-                                                            ->where('curso_programa_plan.id_programa_plan', $admitido->programa_proceso->programa_plan->id_programa_plan)
-                                                            ->where('curso.id_ciclo', 1)
-                                                            ->get();
-            foreach ( $curso_programa_plan as $item )
-            {
+                ->where('curso_programa_plan.id_programa_plan', $admitido->programa_proceso->programa_plan->id_programa_plan)
+                ->where('curso.id_ciclo', 1)
+                ->get();
+            foreach ($curso_programa_plan as $item) {
                 $matricula_curso = new MatriculaCurso();
                 $matricula_curso->id_matricula = $matricula->id_matricula;
                 $matricula_curso->id_curso_programa_plan = $item->id_curso_programa_plan;
@@ -428,8 +420,7 @@ class Index extends Component
                 $matricula_curso->save();
             }
         } else {
-            foreach ( $this->check_cursos as $item )
-            {
+            foreach ($this->check_cursos as $item) {
                 $matricula_curso = new MatriculaCurso();
                 $matricula_curso->id_matricula = $matricula->id_matricula;
                 $matricula_curso->id_curso_programa_plan = $item;
@@ -477,19 +468,19 @@ class Index extends Component
 
         // buscamos los cursos de la matricula
         $cursos = MatriculaCurso::join('curso_programa_plan', 'curso_programa_plan.id_curso_programa_plan', 'matricula_curso.id_curso_programa_plan')
-                                ->join('curso', 'curso.id_curso', 'curso_programa_plan.id_curso')
-                                ->join('ciclo', 'ciclo.id_ciclo', 'curso.id_ciclo')
-                                ->where('matricula_curso.id_matricula', $matricula->id_matricula)
-                                ->get();
+            ->join('curso', 'curso.id_curso', 'curso_programa_plan.id_curso')
+            ->join('ciclo', 'ciclo.id_ciclo', 'curso.id_ciclo')
+            ->where('matricula_curso.id_matricula', $matricula->id_matricula)
+            ->get();
 
         $programa = null;
         $subprograma = null;
         $mencion = null;
-        if($admitido->programa_proceso->programa_plan->programa->mencion == null){
+        if ($admitido->programa_proceso->programa_plan->programa->mencion == null) {
             $programa = $admitido->programa_proceso->programa_plan->programa->programa;
             $subprograma = $admitido->programa_proceso->programa_plan->programa->subprograma;
             $mencion = null;
-        }else{
+        } else {
             $programa = $admitido->programa_proceso->programa_plan->programa->programa;
             $subprograma = $admitido->programa_proceso->programa_plan->programa->subprograma;
             $mencion = $admitido->programa_proceso->programa_plan->programa->mencion;
@@ -523,16 +514,30 @@ class Index extends Component
             'modalidad' => $modalidad
         ];
 
+        // Crear directorios para guardar los archivos
+        $base_path = 'Posgrado/';
+        $folders = [
+            $admision,
+            $admitido->persona->numero_documento,
+            'Expedientes'
+        ];
+
+        // Asegurar que se creen los directorios con los permisos correctos
+        $path = asignarPermisoFolders($base_path, $folders);
+
+        // Nombre del archivo
         $nombre_pdf = Str::slug($nombre) . '-ficha-matricula-' . $matricula_codigo . '.pdf';
-        $path = 'Posgrado/' . $admision . '/' . $admitido->persona->numero_documento . '/' . 'Expedientes' . '/';
-        if (!File::isDirectory(public_path($path))) {
-            File::makeDirectory(public_path($path), 0755, true, true);
-        }
+        $nombre_db = $path . $nombre_pdf;
+
+        // Generar el PDF
         Pdf::loadView('modulo-plataforma.matriculas.ficha-matricula', $data)->save(public_path($path . $nombre_pdf));
 
         // registramos la url de la ficha de matricula
-        $matricula->matricula_ficha_url = $path . $nombre_pdf;
+        $matricula->matricula_ficha_url = $nombre_db;
         $matricula->save();
+
+        // Asignar todos los permisos al archivo
+        chmod($nombre_db, 0777);
 
         // datos para el correo
         $nombre = ucwords(strtolower($admitido->persona->nombre_completo));
@@ -556,20 +561,20 @@ class Index extends Component
         $matriculas = $this->admitido ? Matricula::where('id_admitido', $this->admitido->id_admitido)->get() : collect(); // matriculas del usuario logueado
 
         $pagos = Pago::where(function ($query) {
-                        $query->where('pago_operacion', 'like', '%' . $this->search . '%')
-                            ->orWhere('id_pago', 'like', '%' . $this->search . '%');
-                    })
-                    ->where('pago_documento', $persona->numero_documento)
-                    ->where('pago_estado', 1)
-                    ->where('pago_verificacion', 2)
-                    ->where(function ($query) {
-                        $query->where('id_concepto_pago', 3)
-                            ->orWhere('id_concepto_pago', 4)
-                            ->orWhere('id_concepto_pago', 5)
-                            ->orWhere('id_concepto_pago', 6);
-                    })
-                    ->orderBy('id_pago', 'desc')
-                    ->get(); // pagos del usuario logueado
+            $query->where('pago_operacion', 'like', '%' . $this->search . '%')
+                ->orWhere('id_pago', 'like', '%' . $this->search . '%');
+        })
+            ->where('pago_documento', $persona->numero_documento)
+            ->where('pago_estado', 1)
+            ->where('pago_verificacion', 2)
+            ->where(function ($query) {
+                $query->where('id_concepto_pago', 3)
+                    ->orWhere('id_concepto_pago', 4)
+                    ->orWhere('id_concepto_pago', 5)
+                    ->orWhere('id_concepto_pago', 6);
+            })
+            ->orderBy('id_pago', 'desc')
+            ->get(); // pagos del usuario logueado
 
         return view('livewire.modulo-plataforma.matriculas.index', [
             'pagos' => $pagos,
