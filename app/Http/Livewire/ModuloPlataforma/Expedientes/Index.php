@@ -148,23 +148,21 @@ class Index extends Component
             'expediente' => 'required|file|max:10240|mimetypes:application/octet-stream,application/pdf,application/x-pdf,application/x-download,application/force-download', // validamos el expediente
         ]); // validamos los campos
 
-        $expediente_nombre = ExpedienteAdmision::find($this->expediente_id)->expediente->expediente_nombre_file; // obtenemos el nombre del expediente
-
         if ($this->modo == 'crear') {
             if ($this->expediente != null) {
-                $path = 'Posgrado/' . $this->inscripcion->programa_proceso->admision->admision . '/' . $this->inscripcion->persona->numero_documento . '/' . 'Expedientes/'; // asignamos el valor del path a la variable path
-                $nombre = $expediente_nombre . '.pdf'; // asignamos el valor del nombre del expediente a la variable nombre
-                $nombreDB = $path . $nombre; // asignamos el valor del nombre del expediente para la base de datos a la variable nombreDB
-                $this->expediente->storeAs($path, $nombre, 'files_publico'); // almacenamos el expediente en el servidor
+                // obtenemos la admision
+                $admision = $this->inscripcion->programa_proceso->admision->admision;
+                // obtenemos el numero de documento
+                $numero_documento = $this->inscripcion->persona->numero_documento;
+                // obtenemos el nombre del expediente
+                $expediente = $this->expediente;
+                // obtenemos el id del expediente
+                $id_expediente_admision = $this->expediente_id;
+                // obtenemos la inscripcion
+                $inscripcion = $this->inscripcion;
 
-                $expediente_inscripcion = new ExpedienteInscripcion(); // creamos una nueva instancia de expediente_inscripcion
-                $expediente_inscripcion->expediente_inscripcion_url = $nombreDB; // asignamos el valor del nombre del expediente para la base de datos a la variable nom_exped
-                $expediente_inscripcion->expediente_inscripcion_estado = 1; // asignamos el valor del estado del expediente a la variable estado
-                $expediente_inscripcion->expediente_inscripcion_verificacion = 0; // asignamos el valor de la verificacion del expediente a la variable verificacion
-                $expediente_inscripcion->expediente_inscripcion_fecha = now(); // asignamos el valor de la fecha del expediente a la variable fecha
-                $expediente_inscripcion->id_expediente_admision = $this->expediente_id; // asignamos el valor del id del expediente a la variable expediente_cod_exp
-                $expediente_inscripcion->id_inscripcion = $this->id_inscripcion; // asignamos el valor del id de la inscripcion a la variable id_inscripcion
-                $expediente_inscripcion->save(); // guardamos el expediente de la inscripcion
+                // llamamos a la funcion registrarExpedientes
+                registrarExpedientes($admision, $numero_documento, $expediente, $id_expediente_admision, $inscripcion, $this->modo);
 
                 // alerta de exito
                 $this->dispatchBrowserEvent('alerta-expedientes', [
@@ -186,17 +184,19 @@ class Index extends Component
             }
         } else if ($this->modo == 'editar') {
             if ($this->expediente != null) {
-                $path = 'Posgrado/' . $this->inscripcion->programa_proceso->admision->admision . '/' . $this->inscripcion->persona->numero_documento . '/' . 'Expedientes/'; // asignamos el valor del path a la variable path
-                $nombre = $expediente_nombre . '.pdf'; // asignamos el valor del nombre del expediente a la variable nombre
-                $nombreDB = $path . $nombre; // asignamos el valor del nombre del expediente para la base de datos a la variable nombreDB
-                $this->expediente->storeAs($path, $nombre, 'files_publico'); // almacenamos el expediente en el servidor
+                // obtenemos la admision
+                $admision = $this->inscripcion->programa_proceso->admision->admision;
+                // obtenemos el numero de documento
+                $numero_documento = $this->inscripcion->persona->numero_documento;
+                // obtenemos el nombre del expediente
+                $expediente = $this->expediente;
+                // obtenemos el id del expediente
+                $id_expediente_admision = $this->expediente_id;
+                // obtenemos la inscripcion
+                $inscripcion = $this->inscripcion;
 
-                $expediente_inscripcion = ExpedienteInscripcion::where('id_inscripcion', $this->id_inscripcion)->where('id_expediente_admision', $this->expediente_id)->first(); // obtenemos el expediente de la inscripcion
-                $expediente_inscripcion->expediente_inscripcion_url = $nombreDB; // asignamos el valor del nombre del expediente para la base de datos a la variable nom_exped
-                $expediente_inscripcion->expediente_inscripcion_estado = 1; // asignamos el valor del estado del expediente a la variable estado
-                $expediente_inscripcion->expediente_inscripcion_verificacion = 0; // asignamos el valor de la verificacion del expediente a la variable verificacion
-                $expediente_inscripcion->expediente_inscripcion_fecha = now(); // asignamos el valor de la fecha de entrega del expediente a la variable fecha_entre
-                $expediente_inscripcion->save(); // guardamos el expediente de la inscripcion
+                // llamamos a la funcion registrarExpedientes
+                registrarExpedientes($admision, $numero_documento, $expediente, $id_expediente_admision, $inscripcion, $this->modo);
 
                 // alerta de exito
                 $this->dispatchBrowserEvent('alerta-expedientes', [
@@ -222,7 +222,7 @@ class Index extends Component
         $this->emit('expediente_registrado'); // emitimos el evento expedienteRegistrado
         $this->dispatchBrowserEvent('modal_expediente', ['action' => 'hide']); // ocultamos el modal
 
-        if ($this->mostrar_acciones_expediente == false) { 
+        if ($this->mostrar_acciones_expediente == false) {
             ProcessUpdateFichaInscripcion::dispatch($this->inscripcion); // despachamos el proceso de actualizacion de la ficha de inscripcion
         }
     }

@@ -647,7 +647,7 @@ class Registro extends Component
             // obtener el admision
             $admision = Admision::where('admision_estado', 1)->first()->admision;
             // registrar expedientes
-            registrarExpedientes($admision, $this->documento_identidad, $expediente, $key, $inscripcion);
+            registrarExpedientes($admision, $this->documento_identidad, $expediente, $key, $inscripcion, 'crear');
         }
 
         // Sirve para asignar el seguimiento del expediente

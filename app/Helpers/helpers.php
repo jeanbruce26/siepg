@@ -41,7 +41,7 @@ function asignarPermisoFolders($base_path, $folders)
     return $path;
 }
 
-function registrarExpedientes($admision, $numero_documento, $expediente, $key, $inscripcion)
+function registrarExpedientes($admision, $numero_documento, $expediente, $key, $inscripcion, $modo)
 {
     $expediente_model = ExpedienteAdmision::where('expediente_admision_estado', 1)->where('id_expediente_admision', $key)->first();
 
@@ -66,15 +66,25 @@ function registrarExpedientes($admision, $numero_documento, $expediente, $key, $
     // Asignar todos los permisos al archivo
     chmod($nombre_db, 0777);
 
-    // Registrar datos del expediente de inscripcion
-    $expediente_inscripcion = new ExpedienteInscripcion();
-    $expediente_inscripcion->expediente_inscripcion_url = $nombre_db;
-    $expediente_inscripcion->expediente_inscripcion_estado = 1;
-    $expediente_inscripcion->expediente_inscripcion_verificacion = 0;
-    $expediente_inscripcion->expediente_inscripcion_fecha = now();
-    $expediente_inscripcion->id_expediente_admision = $key;
-    $expediente_inscripcion->id_inscripcion = $inscripcion->id_inscripcion;
-    $expediente_inscripcion->save();
+    if ($modo == 'crear') {
+        // Registrar datos del expediente de inscripcion
+        $expediente_inscripcion = new ExpedienteInscripcion();
+        $expediente_inscripcion->expediente_inscripcion_url = $nombre_db;
+        $expediente_inscripcion->expediente_inscripcion_estado = 1;
+        $expediente_inscripcion->expediente_inscripcion_verificacion = 0;
+        $expediente_inscripcion->expediente_inscripcion_fecha = now();
+        $expediente_inscripcion->id_expediente_admision = $key;
+        $expediente_inscripcion->id_inscripcion = $inscripcion->id_inscripcion;
+        $expediente_inscripcion->save();
+    } else if ($modo == 'editar') {
+        // Actualizar datos del expediente de inscripcion
+        $expediente_inscripcion = ExpedienteInscripcion::where('id_expediente_admision', $key)->where('id_inscripcion', $inscripcion->id_inscripcion)->first();
+        $expediente_inscripcion->expediente_inscripcion_url = $nombre_db;
+        $expediente_inscripcion->expediente_inscripcion_estado = 1;
+        $expediente_inscripcion->expediente_inscripcion_verificacion = 0;
+        $expediente_inscripcion->expediente_inscripcion_fecha = now();
+        $expediente_inscripcion->save();
+    }
 }
 
 //
