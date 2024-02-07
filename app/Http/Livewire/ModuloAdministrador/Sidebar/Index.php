@@ -11,9 +11,9 @@ class Index extends Component
     public $route;
 
     protected $listeners = [
-        'actualizar_notificacion_pagos' => 'render'
+        'actualizar_notificacion_pagos' => 'render',
+        'actualizar_perfil' => 'render',
     ];
-
     public $usuario; // variable que almacena el usuario logueado
     public $trabajador_tipo_trabajador; // variable que almacena el trabajador_tipo_trabajador del usuario logueado
     public $tipo_trabajador; // variable que almacena el tipo_trabajador del usuario logueado
