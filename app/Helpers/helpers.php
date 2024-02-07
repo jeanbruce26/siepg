@@ -19,4 +19,23 @@ function getIdConceptoPagoInscripcion()
     ];
 }
 
+function asignarPermisoFolders($base_path, $folders)
+{
+    $path = $base_path;
+    foreach ($folders as $folder) {
+        $path .= $folder . '/';
+        // Asegurar que se creen los directorios con los permisos correctos
+        $parent_directory = dirname($path);
+        if (!file_exists($parent_directory)) {
+            mkdir($parent_directory, 0777, true); // Establecer permisos en el directorio padre
+        }
+        if (!file_exists($path)) {
+            mkdir($path, 0777, true); // 0777 establece todos los permisos para el directorio
+            // Cambiar el modo de permisos después de crear los directorios
+            chmod($path, 0777);
+        }
+    }
+    return $path;
+}
+
 //

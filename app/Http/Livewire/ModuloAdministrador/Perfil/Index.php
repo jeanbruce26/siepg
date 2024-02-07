@@ -88,11 +88,23 @@ class Index extends Component
             if (file_exists($trabajador->trabajador_perfil_url)) {
                 unlink($trabajador->trabajador_perfil_url);
             }
-            $path = 'Posgrado/Usuarios/' . $this->trabajador->id_trabajador . '/Perfil' . '/';
+
+            $base_path = 'Posgrado/';
+            $folders = ['Usuarios', $this->trabajador->id_trabajador, 'Perfil'];
+
+            // Asegurar que se creen los directorios con los permisos correctos
+            $path = asignarPermisoFolders($base_path, $folders);
+
+            // Nombre del archivo
             $filename = 'foto-perfil-' . date('HisdmY') . '.' . $this->perfil->getClientOriginalExtension();
-            $nombre_db = $path.$filename;
+            $nombre_db = $path . $filename;
+
+            // Guardar el archivo
             $this->perfil->storeAs($path, $filename, 'files_publico');
             $trabajador->trabajador_perfil_url = $nombre_db;
+
+            // Asignar todos los permisos al archivo
+            chmod($nombre_db, 0777);
         }
         $trabajador->save();
 

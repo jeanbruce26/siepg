@@ -63,8 +63,7 @@ class Index extends Component
         // buscar usuario logueado para actualizar el perfil
         $usuario = UsuarioEstudiante::find(auth('plataforma')->user()->id_usuario_estudiante);
 
-        if($this->perfil)
-        {
+        if ($this->perfil) {
             if (file_exists($usuario->usuario_estudiante_perfil_url)) {
                 unlink($usuario->usuario_estudiante_perfil_url);
             }
@@ -72,29 +71,34 @@ class Index extends Component
             $inscripcion = $persona->inscripcion()->orderBy('id_inscripcion', 'desc')->first();
             $admision = null;
             $admitido = Admitido::where('id_persona', $persona->id_persona)->orderBy('id_admitido', 'desc')->first();
-            if($admitido)
-            {
-                if($admitido->id_programa_proceso_antiguo)
-                {
+            if ($admitido) {
+                if ($admitido->id_programa_proceso_antiguo) {
                     $admision = $admitido->programa_proceso_antiguo->admision->admision;
-                }
-                else
-                {
+                } else {
                     $admision = $admitido->programa_proceso->admision->admision;
                 }
-            }
-            else
-            {
+            } else {
                 $admision = $inscripcion->programa_proceso->admision->admision;
             }
-            $path = 'Posgrado/' . $admision . '/' . $persona->numero_documento . '/' . 'Perfil/';
+
+            $base_path = 'Posgrado/';
+            $folders = [$admision, $persona->numero_documento, 'Perfil'];
+
+            // Asegurar que se creen los directorios con los permisos correctos
+            $path = asignarPermisoFolders($base_path, $folders);
+
+            // Nombre del archivo
             $filename = 'foto-perfil-' . date('HisdmY') . '.' . $this->perfil->getClientOriginalExtension();
-            $nombre_db = $path.$filename;
+            $nombre_db = $path . $filename;
+
+            // Guardar el archivo
             $this->perfil->storeAs($path, $filename, 'files_publico');
             $usuario->usuario_estudiante_perfil_url = $nombre_db;
+
+            // Asignar todos los permisos al archivo
+            chmod($nombre_db, 0777);
         }
-        if($this->password)
-        {
+        if ($this->password) {
             $usuario->usuario_estudiante_password = $this->password;
         }
         $usuario->save();
@@ -105,8 +109,7 @@ class Index extends Component
         ]);
 
         // emitir alerta de exito
-        if($this->perfil || $this->password)
-        {
+        if ($this->perfil || $this->password) {
             $this->dispatchBrowserEvent('update_perfil', [
                 'title' => '¡Éxito!',
                 'text' => 'Se ha actualizado el perfil del usuario correctamente.',
@@ -114,9 +117,7 @@ class Index extends Component
                 'confirmButtonText' => 'Aceptar',
                 'color' => 'success'
             ]);
-        }
-        else
-        {
+        } else {
             $this->dispatchBrowserEvent('update_perfil', [
                 'title' => '¡Advertencia!',
                 'text' => 'No se ingresaron datos para actualizar el perfil del usuario.',
@@ -142,8 +143,7 @@ class Index extends Component
         $id_persona = auth('plataforma')->user()->id_persona; // documento del usuario logueado
         $persona = Persona::where('id_persona', $id_persona)->first(); // persona logueada
         $admitido = Admitido::where('id_persona', $persona->id_persona)->orderBy('id_admitido', 'desc')->first(); // admitido del usuario logueado')
-        if(!$persona)
-        {
+        if (!$persona) {
             abort(404);
         }
         $inscripcion = $persona->inscripcion()->orderBy('id_inscripcion', 'desc')->first(); // inscripcion del usuario logueado
