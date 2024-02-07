@@ -394,12 +394,28 @@ class Index extends Component
                 $persona = Persona::where('numero_documento', $this->documento_identidad)->first();
                 $inscripcion = Inscripcion::where('id_persona', $persona->id_persona)->orderBy('id_inscripcion', 'desc')->first();
                 $admision = $inscripcion->programa_proceso->admision->admision;
-                $path = 'Posgrado/' . $admision . '/' . $this->documento_identidad . '/' . 'Voucher/';
+                
+                $base_path = 'Posgrado/';
+                $folders = [
+                    $admision,
+                    $this->documento_identidad,
+                    'Voucher'
+                ];
+
+                // Asegurar que se creen los directorios con los permisos correctos
+                $path = asignarPermisoFolders($base_path, $folders);
+
+                // Nombre del archivo
                 $filename = 'voucher-pago.' . $this->voucher->getClientOriginalExtension();
                 $nombre_db = $path . $filename;
+
+                // Guardar el archivo
                 $data = $this->voucher;
                 $data->storeAs($path, $filename, 'files_publico');
                 $pago->pago_voucher_url = $nombre_db;
+
+                // Asignar todos los permisos al archivo
+                chmod($nombre_db, 0777);
             }
             $pago->id_canal_pago = $this->canal_pago;
             $pago->id_concepto_pago = $this->concepto_pago;
@@ -420,12 +436,28 @@ class Index extends Component
                 $persona = Persona::where('numero_documento', $this->documento_identidad)->first();
                 $inscripcion = Inscripcion::where('id_persona', $persona->id_persona)->orderBy('id_inscripcion', 'desc')->first();
                 $admision = $inscripcion->programa_proceso->admision->admision;
-                $path = 'Posgrado/' . $admision . '/' . $this->documento_identidad . '/' . 'Voucher/';
+
+                $base_path = 'Posgrado/';
+                $folders = [
+                    $admision,
+                    $this->documento_identidad,
+                    'Voucher'
+                ];
+
+                // Asegurar que se creen los directorios con los permisos correctos
+                $path = asignarPermisoFolders($base_path, $folders);
+
+                // Nombre del archivo
                 $filename = 'voucher-pago.' . $this->voucher->getClientOriginalExtension();
                 $nombre_db = $path . $filename;
+
+                // Guardar el archivo
                 $data = $this->voucher;
                 $data->storeAs($path, $filename, 'files_publico');
                 $pago->pago_voucher_url = $nombre_db;
+
+                // Asignar todos los permisos al archivo
+                chmod($nombre_db, 0777);
             }
             $pago->id_canal_pago = $this->canal_pago;
             $pago->id_concepto_pago = $this->concepto_pago;
