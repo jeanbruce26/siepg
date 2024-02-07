@@ -580,12 +580,28 @@ class Registro extends Component
         $pago->pago_verificacion = 1;
         if ($this->voucher) {
             $admision = Admision::where('admision_estado', 1)->first()->admision;
-            $path = 'Posgrado/' . $admision . '/' . $this->documento_identidad . '/' . 'Voucher/';
+
+            $base_path = 'Posgrado/';
+            $folders = [
+                $admision,
+                $this->documento_identidad,
+                'Voucher'
+            ];
+
+            // Asegurar que se creen los directorios con los permisos correctos
+            $path = asignarPermisoFolders($base_path, $folders);
+
+            // Nombre del archivo
             $filename = 'voucher-pago.' . $this->voucher->getClientOriginalExtension();
             $nombre_db = $path . $filename;
+
+            // Guardar el archivo
             $data = $this->voucher;
             $data->storeAs($path, $filename, 'files_publico');
             $pago->pago_voucher_url = $nombre_db;
+
+            // Asignar todos los permisos al archivo
+            chmod($nombre_db, 0777);
         }
         $pago->id_canal_pago = $this->canal_pago;
         $pago->id_concepto_pago = $this->concepto_pago;
@@ -628,20 +644,10 @@ class Registro extends Component
 
         // registramos los expedientes en la tabla expediente_inscripcion
         foreach ($this->expedientes as $key => $expediente) {
-            $expediente_model = ExpedienteAdmision::where('expediente_admision_estado', 1)->where('id_expediente_admision', $key)->first();
+            // obtener el admision
             $admision = Admision::where('admision_estado', 1)->first()->admision;
-            $path = 'Posgrado/' . $admision . '/' . $this->documento_identidad . '/' . 'Expedientes' . '/';
-            $filename = $expediente_model->expediente->expediente_nombre_file . ".pdf";
-            $nombreDB = $path . $filename;
-            $expediente->storeAs($path, $filename, 'files_publico');
-            $expediente_inscripcion = new ExpedienteInscripcion();
-            $expediente_inscripcion->expediente_inscripcion_url = $nombreDB;
-            $expediente_inscripcion->expediente_inscripcion_estado = 1;
-            $expediente_inscripcion->expediente_inscripcion_verificacion = 0;
-            $expediente_inscripcion->expediente_inscripcion_fecha = now();
-            $expediente_inscripcion->id_expediente_admision = $key;
-            $expediente_inscripcion->id_inscripcion = $inscripcion->id_inscripcion;
-            $expediente_inscripcion->save();
+            // registrar expedientes
+            registrarExpedientes($admision, $this->documento_identidad, $expediente, $key, $inscripcion);
         }
 
         // Sirve para asignar el seguimiento del expediente

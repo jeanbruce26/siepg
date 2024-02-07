@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\ExpedienteAdmision;
+use App\Models\ExpedienteInscripcion;
+
 function convertirFechaHora($fechaHora)
 {
     // formato de fecha y hora: 12:00 pm - 12/12/2012
@@ -36,6 +39,42 @@ function asignarPermisoFolders($base_path, $folders)
         }
     }
     return $path;
+}
+
+function registrarExpedientes($admision, $numero_documento, $expediente, $key, $inscripcion)
+{
+    $expediente_model = ExpedienteAdmision::where('expediente_admision_estado', 1)->where('id_expediente_admision', $key)->first();
+
+    // Crear directorios para guardar los archivos
+    $base_path = 'Posgrado/';
+    $folders = [
+        $admision,
+        $numero_documento,
+        'Expedientes'
+    ];
+
+    // Asegurar que se creen los directorios con los permisos correctos
+    $path = asignarPermisoFolders($base_path, $folders);
+
+    // Nombre del archivo
+    $filename = $expediente_model->expediente->expediente_nombre_file . ".pdf";
+    $nombre_db = $path . $filename;
+
+    // Guardar el archivo
+    $expediente->storeAs($path, $filename, 'files_publico');
+
+    // Asignar todos los permisos al archivo
+    chmod($nombre_db, 0777);
+
+    // Registrar datos del expediente de inscripcion
+    $expediente_inscripcion = new ExpedienteInscripcion();
+    $expediente_inscripcion->expediente_inscripcion_url = $nombre_db;
+    $expediente_inscripcion->expediente_inscripcion_estado = 1;
+    $expediente_inscripcion->expediente_inscripcion_verificacion = 0;
+    $expediente_inscripcion->expediente_inscripcion_fecha = now();
+    $expediente_inscripcion->id_expediente_admision = $key;
+    $expediente_inscripcion->id_inscripcion = $inscripcion->id_inscripcion;
+    $expediente_inscripcion->save();
 }
 
 //
