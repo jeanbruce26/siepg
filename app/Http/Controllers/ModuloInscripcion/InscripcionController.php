@@ -122,14 +122,32 @@ class InscripcionController extends Controller
             'seguimiento_count' => $seguimiento_count
         ];
 
+        // Crear directorios para guardar los archivos
+        $base_path = 'Posgrado/';
+        $folders = [
+            $admision,
+            $persona->numero_documento,
+            'Expedientes'
+        ];
+
+        // Asegurar que se creen los directorios con los permisos correctos
+        $path = asignarPermisoFolders($base_path, $folders);
+
+        // Nombre del archivo
         $nombre_pdf = 'ficha-inscripcion-' . Str::slug($persona->nombre_completo, '-') . '.pdf';
-        $path = 'Posgrado/' . $admision . '/' . $persona->numero_documento . '/' . 'Expedientes' . '/';
+        $nombre_db = $path . $nombre_pdf;
+
+
+        // Generar el pdf de inscripcion
         PDF::loadView('modulo-inscripcion.ficha-inscripcion', $data)->save(public_path($path . $nombre_pdf));
 
         $inscripcion = Inscripcion::find($id);
-        $inscripcion->inscripcion_ficha_url = $path . $nombre_pdf;
+        $inscripcion->inscripcion_ficha_url = $nombre_db;
         $inscripcion->save();
 
+        // Asignar todos los permisos al archivo
+        chmod($nombre_db, 0777);
+        
         // Proceso para generar el pdf de inscripcion y enviarlo al correo
         $inscripcion = Inscripcion::find($id); // Datos de la inscripcion
         ProcessRegistroFichaInscripcion::dispatch($inscripcion); // Proceso para generar el pdf de inscripcion y enviarlo al correo
