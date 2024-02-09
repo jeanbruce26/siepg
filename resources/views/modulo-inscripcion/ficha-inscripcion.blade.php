@@ -806,7 +806,7 @@
                 </tr>
                 <tr>
                     <th class="tabla4" style="background-color: rgb(200, 229, 255)"><div class="titulo3" style="font-size: small;">Link</div></th>
-                    <th class="tabla4" style="text-align: initial; font-size: small;">http://posgrado.unu.edu.pe/usuarios/login</th>
+                    <th class="tabla4" style="text-align: initial; font-size: small;">http://posgrado.unu.edu.pe/plataforma/login</th>
                 </tr>
             </thead>
         </table>
