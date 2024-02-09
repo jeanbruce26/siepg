@@ -95,32 +95,19 @@
                 <div class="col-md-6">
                     <div id="slider" class="carousel carousel-custom slide" data-bs-ride="carousel"
                         data-bs-interval="5000">
-                        <div class="carousel-inner">
+                        <div class="carousel-inner pt-8">
                             <div class="carousel-item active">
-                                <img src="https://plus.unsplash.com/premium_photo-1668383208760-928282c112a5?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                    alt="carousel" class="w-100 rounded" />
-                            </div>
-                            <div class="carousel-item">
-                                <img src="https://images.unsplash.com/photo-1698434156107-17486c312c50?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                    alt="carousel" class="w-100 rounded" />
-                            </div>
-                            <div class="carousel-item">
-                                <img src="https://plus.unsplash.com/premium_photo-1698527167498-3d5ec4cc9424?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                    alt="carousel" class="w-100 rounded" />
-                            </div>
-                            <div class="carousel-item">
-                                <img src="https://plus.unsplash.com/premium_photo-1677529498544-8d4ba36f73cf?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                    alt="carousel" class="w-100 rounded" />
+                                <img src="{{ asset('media/banner_posgrado.jpeg') }}" alt="carousel"
+                                    class="w-100 rounded" />
                             </div>
                         </div>
                         <div class="d-flex align-items-center justify-content-center flex-wrap">
                             <ol
                                 class="p-0 m-0 carousel-indicators carousel-indicators-bullet carousel-indicators-active-primary">
-                                <li data-bs-target="#slider" data-bs-slide-to="0" class="ms-1 active">
-                                </li>
-                                <li data-bs-target="#slider" data-bs-slide-to="1" class="ms-1"></li>
+                                <li data-bs-target="#slider" data-bs-slide-to="0" class="ms-1 active"></li>
+                                {{-- <li data-bs-target="#slider" data-bs-slide-to="1" class="ms-1"></li>
                                 <li data-bs-target="#slider" data-bs-slide-to="2" class="ms-1"></li>
-                                <li data-bs-target="#slider" data-bs-slide-to="3" class="ms-1"></li>
+                                <li data-bs-target="#slider" data-bs-slide-to="3" class="ms-1"></li> --}}
                             </ol>
                         </div>
                     </div>
@@ -163,9 +150,9 @@
                             <div class="mt-5 mb-5 mx-5 px-5">
                                 @foreach ($encuestas as $item)
                                     <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox"
-                                            value="{{ $item->id_encuesta }}" id="{{ $item->id_encuesta }}"
-                                            wire:model="encuesta" wire:key="{{ $item->id_encuesta }}">
+                                        <input class="form-check-input" type="checkbox" value="{{ $item->id_encuesta }}"
+                                            id="{{ $item->id_encuesta }}" wire:model="encuesta"
+                                            wire:key="{{ $item->id_encuesta }}">
                                         <label class="fs-5" for="{{ $item->id_encuesta }}"
                                             wire:key="{{ $item->id_encuesta }}">
                                             {{ $item->encuesta }}
