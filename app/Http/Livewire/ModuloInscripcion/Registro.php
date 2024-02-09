@@ -59,6 +59,12 @@ class Registro extends Component
 
     public function mount()
     {
+        // verificar si el proceso de admision esta activo
+        $proceso_aperturado = verificarProcesoAdmision();
+        if ($proceso_aperturado == false) {
+            abort(403, 'El proceso de admisión no se encuentra activo');
+        }
+
         $this->paso = 1;
         $this->modalidad_array = Modalidad::where('modalidad_estado', 1)->get();
         $this->programa_array = Collect();

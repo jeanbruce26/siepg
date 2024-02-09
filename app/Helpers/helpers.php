@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Admision;
 use App\Models\ExpedienteAdmision;
 use App\Models\ExpedienteInscripcion;
 
@@ -84,6 +85,16 @@ function registrarExpedientes($admision, $numero_documento, $expediente, $key, $
         $expediente_inscripcion->expediente_inscripcion_verificacion = 0;
         $expediente_inscripcion->expediente_inscripcion_fecha = now();
         $expediente_inscripcion->save();
+    }
+}
+
+function verificarProcesoAdmision()
+{
+    $admision = Admision::where('admision_estado', 1)->first();
+    if ($admision->admision_fecha_inicio_inscripcion <= date('Y-m-d') && $admision->admision_fecha_fin_inscripcion >= date('Y-m-d')) {
+        return true;
+    } else {
+        return false;
     }
 }
 
