@@ -70,7 +70,10 @@ class Index extends Component
     ];
 
     protected $listeners = [
-        'render', 'cambiarEstado', 'cambiarSeguimiento', 'reservarPago'
+        'render',
+        'cambiarEstado',
+        'cambiarSeguimiento',
+        'reservarPago'
     ];
 
     public function updated($propertyName)
@@ -220,6 +223,7 @@ class Index extends Component
     public function cargar_expedientes($id_inscripcion)
     {
         $inscripcion = Inscripcion::find($id_inscripcion);
+        $this->id_inscripcion = $inscripcion->id_inscripcion;
         $this->expedientes = ExpedienteInscripcion::where('id_inscripcion', $id_inscripcion)->get();
     }
 
@@ -238,6 +242,29 @@ class Index extends Component
         );
         // cargar expedientes
         $this->cargar_expedientes($expediente->id_inscripcion);
+        // verificar si todos los expedientes estan verificados para verificar la inscripcion
+        $expedientes = ExpedienteInscripcion::where('id_inscripcion', $expediente->id_inscripcion)->get();
+        $cantidad = $expedientes->count();
+        $verificados = $expedientes->where('expediente_inscripcion_verificacion', 1)->count();
+        if ($cantidad == $verificados) {
+            $inscripcion = Inscripcion::find($expediente->id_inscripcion);
+            $inscripcion->inscripcion_estado = 1; //verificado
+            $inscripcion->save();
+            // mostrar alerta
+            $this->alertaInscripcion(
+                '¡Exito!',
+                'La inscripción de ' . $inscripcion->persona->nombre_completo . ' ha sido verificada satisfactoriamente',
+                'success',
+                'Aceptar',
+                'success'
+            );
+            // ejecutamos el job para enviar el correo de verificacion de inscripcion
+            ObservarInscripcionJob::dispatch($inscripcion->id_inscripcion, 'verificar-inscripcion');
+        } else {
+            $inscripcion = Inscripcion::find($expediente->id_inscripcion);
+            $inscripcion->inscripcion_estado = 0; //pendiente
+            $inscripcion->save();
+        }
     }
 
     public function rechazar_expediente($id_expediente_inscripcion)
