@@ -181,9 +181,9 @@
                                     <tr align="center"
                                         class="fw-bold fs-5 text-gray-800 border-bottom-2 border-gray-200">
                                         <th scope="col">ID</th>
-                                        <th scope="col">Código</th>
                                         <th scope="col">Postulante</th>
                                         <th scope="col">Programa</th>
+                                        <th scope="col" class="col-md-1">Tipo</th>
                                         <th scope="col" class="col-md-1">Modalidad</th>
                                         <th scope="col" class="col-md-1">Fecha</th>
                                         <th scope="col" class="col-md-1">Verificación</th>
@@ -197,17 +197,31 @@
                                                 {{ $item->id_inscripcion }}
                                             </td>
                                             <td>
-                                                {{ $item->inscripcion_codigo }}
-                                            </td>
-                                            <td>
-                                                {{ $item->numero_documento }} - {{ $item->apellido_paterno }}
-                                                {{ $item->apellido_materno }} {{ $item->nombre }}
+                                                <div class="d-flex flex-column">
+                                                    <span class="text-gray-900 text-hover-primary mb-1">
+                                                        {{ $item->apellido_paterno }} {{ $item->apellido_materno }},
+                                                        {{ $item->nombre }}
+                                                    </span>
+                                                    <span class="text-gray-600">{{ $item->numero_documento }}</span>
+                                                </div>
                                             </td>
                                             <td>
                                                 {{ $item->programa }}
                                                 EN {{ $item->subprograma }}
                                                 @if ($item->mencion != '')
                                                     CON MENCION EN {{ $item->mencion }}
+                                                @endif
+                                            </td>
+                                            <td align="center">
+                                                @if ($item->es_traslado_externo == 1)
+                                                    <span class="badge badge-light-warning text-dark fs-6 px-3 py-2 text-uppercase">
+                                                        Traslado Externo
+                                                    </span>
+                                                @else
+                                                    <span
+                                                        class="badge badge-light-info text-dark fs-6 px-3 py-2 text-uppercase">
+                                                        Inscripción Regular
+                                                    </span>
                                                 @endif
                                             </td>
                                             <td align="center">
@@ -557,8 +571,8 @@
                             <label for="observacion_inscripcion" class="form-label">
                                 Observación
                             </label>
-                            <textarea class="form-control @error('observacion_inscripcion') is-invalid @enderror" wire:model="observacion_inscripcion"
-                                id="observacion_inscripcion" rows="3">
+                            <textarea class="form-control @error('observacion_inscripcion') is-invalid @enderror"
+                                wire:model="observacion_inscripcion" id="observacion_inscripcion" rows="3">
                             </textarea>
                             @error('observacion_inscripcion')
                                 <span class="text-danger">{{ $message }}</span>
