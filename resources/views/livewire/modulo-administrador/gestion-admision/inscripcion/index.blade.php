@@ -214,7 +214,8 @@
                                             </td>
                                             <td align="center">
                                                 @if ($item->es_traslado_externo == 1)
-                                                    <span class="badge badge-light-warning text-dark fs-6 px-3 py-2 text-uppercase">
+                                                    <span
+                                                        class="badge badge-light-warning text-dark fs-6 px-3 py-2 text-uppercase">
                                                         Traslado Externo
                                                     </span>
                                                 @else
@@ -291,6 +292,13 @@
                                                             class="menu-link px-3" data-bs-toggle="modal"
                                                             data-bs-target="#modal-estado-inscripcion">
                                                             Editar Estado de Inscripción
+                                                        </a>
+                                                    </div>
+                                                    <div class="menu-item px-3">
+                                                        <a style="cursor: pointer"
+                                                            wire:click="eliminar_inscripcion({{ $item->id_inscripcion }})"
+                                                            class="menu-link px-3">
+                                                            Eliminar Inscripción
                                                         </a>
                                                     </div>
                                                 </div>

@@ -73,7 +73,8 @@ class Index extends Component
         'render',
         'cambiarEstado',
         'cambiarSeguimiento',
-        'reservarPago'
+        'reservarPago',
+        'eliminar'
     ];
 
     public function updated($propertyName)
@@ -329,6 +330,52 @@ class Index extends Component
         }
         // limpiamos variables
         $this->reset('id_inscripcion', 'estado', 'observacion_inscripcion');
+    }
+
+    public function eliminar_inscripcion($id_inscripcion)
+    {
+        $inscripcion = Inscripcion::find($id_inscripcion);
+        $this->alertaConfirmacion('¿Estás seguro?', '¿Desea eliminar la inscripción de ' . $inscripcion->persona->nombre_completo . '?', 'question', 'Eliminar', 'Cancelar', 'primary', 'danger', 'eliminar', $inscripcion->id_inscripcion);
+    }
+
+    public function eliminar($id_inscripcion)
+    {
+        $inscripcion = Inscripcion::find($id_inscripcion);
+
+        // verificamos si tiene expedientes y si tiene lo eliminamos
+        $expedientes = ExpedienteInscripcion::where('id_inscripcion', $id_inscripcion)->get();
+        if ($expedientes->count() > 0) {
+            foreach ($expedientes as $expediente) {
+                // eliminamos los files si existe en el proyecto
+                $file = $expediente->expediente_inscripcion_url;
+                if (file_exists($file)) {
+                    unlink($file);
+                }
+                // eliminamos el expediente
+                $expediente->delete();
+            }
+        }
+
+        // verificamos si existe el pago y si tiene lo eliminamos
+        if ($inscripcion->pago) {
+            $file = $inscripcion->pago->pago_voucher_url;
+            if (file_exists($file)) {
+                unlink($file);
+            }
+            $inscripcion->pago->delete();
+        }
+
+        // eliminamos la inscripcion
+        $inscripcion->delete();
+
+        // mostrar alerta
+        $this->alertaInscripcion(
+            '¡Exito!',
+            'La inscripción de ' . $inscripcion->persona->nombre_completo . ' ha sido eliminada satisfactoriamente',
+            'success',
+            'Aceptar',
+            'success'
+        );
     }
 
     public function render()
