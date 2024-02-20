@@ -11,6 +11,7 @@ use App\Models\Modalidad;
 use App\Models\Programa;
 use App\Models\ProgramaProceso;
 use App\Models\TipoSeguimiento;
+use App\Models\UsuarioEstudiante;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -346,6 +347,15 @@ class Index extends Component
         $expedientes = ExpedienteInscripcion::where('id_inscripcion', $id_inscripcion)->get();
         if ($expedientes->count() > 0) {
             foreach ($expedientes as $expediente) {
+                // verificamos si la inscripcion tiene expedientes en seguimiento
+                $expedientes_seguimiento = ExpedienteInscripcionSeguimiento::where('id_expediente_inscripcion', $expediente->id_expediente_inscripcion)->get();
+                if ($expedientes_seguimiento->count() > 0) {
+                    foreach ($expedientes_seguimiento as $expediente_seguimiento) {
+                        // eliminamos el expediente
+                        $expediente_seguimiento->delete();
+                    }
+                }
+
                 // eliminamos los files si existe en el proyecto
                 $file = $expediente->expediente_inscripcion_url;
                 if (file_exists($file)) {
@@ -363,6 +373,13 @@ class Index extends Component
                 unlink($file);
             }
             $inscripcion->pago->delete();
+        }
+
+        // verificamos si la persona de la inscripcion tiene usuario y si tiene lo eliminamos
+        $persona = $inscripcion->persona;
+        $usuario_estudiante = UsuarioEstudiante::where('id_persona', $persona->id_persona)->first();
+        if ($usuario_estudiante) {
+            $usuario_estudiante->delete();
         }
 
         // eliminamos la inscripcion
