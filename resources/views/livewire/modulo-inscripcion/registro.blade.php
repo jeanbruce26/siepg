@@ -954,8 +954,18 @@
                             </label>
                         </div>
                     </div>
-                    <embed src="{{ asset('assets_pdf/manual-tipo-voucher.pdf') }}" class="rounded mt-2"
-                        type="application/pdf" width="100%" height="700" />
+                    {{-- <embed src="{{ asset('assets_pdf/manual-tipo-voucher.pdf') }}" class="rounded mt-2"
+                        type="application/pdf" width="100%" height="700" /> --}}
+                    <div>
+                        <img src="{{ asset('media/manual-voucher/page-0001.jpg') }}" alt="img" class="mw-100"
+                            style="width: 100%; height: auto" />
+                        <img src="{{ asset('media/manual-voucher/page-0002.jpg') }}" alt="img" class="mw-100"
+                            style="width: 100%; height: auto" />
+                        <img src="{{ asset('media/manual-voucher/page-0003.jpg') }}" alt="img" class="mw-100"
+                            style="width: 100%; height: auto" />
+                        <img src="{{ asset('media/manual-voucher/page-0004.jpg') }}" alt="img" class="mw-100"
+                            style="width: 100%; height: auto" />
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
