@@ -923,9 +923,9 @@
                     wire:click.prevent="paso_4()">
                     Regresar
                 </button>
-                <button type="button" wire:click.prevent="registrar_inscripcion()"
-                    wire:loading.attr="disabled" wire:target="registrar_inscripcion"
-                    class="btn btn-primary hover-elevate-down" style="width: 200px">
+                <button type="button" wire:click.prevent="registrar_inscripcion()" wire:loading.attr="disabled"
+                    wire:target="registrar_inscripcion" class="btn btn-primary hover-elevate-down"
+                    style="width: 200px">
                     Finalizar Inscripción
                 </button>
             </div>
@@ -945,9 +945,7 @@
                     </div>
                 </div>
                 <div class="modal-body">
-                    <embed src="{{ asset('assets_pdf/manual-tipo-voucher.pdf') }}" class="rounded"
-                        type="application/pdf" width="100%" height="700" />
-                    <div class="mt-5">
+                    <div class="mb-5">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" wire:model="check_formas_pago"
                                 id="check_formas_pago" />
@@ -956,9 +954,12 @@
                             </label>
                         </div>
                     </div>
+                    <embed src="{{ asset('assets_pdf/manual-tipo-voucher.pdf') }}" class="rounded mt-2"
+                        type="application/pdf" width="100%" height="700" />
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @if ($check_formas_pago == false) disabled @endif>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                        @if ($check_formas_pago == false) disabled @endif>
                         Cerrar
                     </button>
                 </div>
