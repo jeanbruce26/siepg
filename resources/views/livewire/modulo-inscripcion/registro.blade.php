@@ -924,6 +924,7 @@
                     Regresar
                 </button>
                 <button type="button" wire:click.prevent="registrar_inscripcion()"
+                    wire:loading.attr="disabled" wire:target="registrar_inscripcion"
                     class="btn btn-primary hover-elevate-down" style="width: 200px">
                     Finalizar Inscripción
                 </button>
