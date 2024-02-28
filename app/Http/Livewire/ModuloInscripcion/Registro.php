@@ -576,6 +576,40 @@ class Registro extends Component
             $this->id_persona = $persona->id_persona;
         }
 
+        // verificar si la persona ya se encuentra inscrita y evitar inscripciones duplicadas o multiples
+        $inscripcion = Inscripcion::where('id_persona', $this->id_persona)
+            ->where('id_programa_proceso', $this->programa)
+            ->first();
+        if ($inscripcion) {
+            // emitir evento para mostrar mensaje de alerta de inscripcion duplicada
+            $this->dispatchBrowserEvent('registro_inscripcion', [
+                'title' => '',
+                'text' => 'La persona ya se encuentra inscrita en el programa seleccionado',
+                'icon' => 'error',
+                'confirmButtonText' => 'Aceptar',
+                'color' => 'danger'
+            ]);
+            return;
+        }
+
+        // verificar si el pago ya se encuentra registrado
+        $pago = Pago::where('pago_operacion', $this->numero_operacion)
+            ->where('pago_documento', $this->documento_identidad)
+            ->where('pago_monto', $this->monto_operacion)
+            ->where('pago_fecha', $this->fecha_pago)
+            ->first();
+        if ($pago) {
+            // emitir evento para mostrar mensaje de alerta de pago duplicado
+            $this->dispatchBrowserEvent('registro_inscripcion', [
+                'title' => '',
+                'text' => 'El pago ya se encuentra registrado en el sistema',
+                'icon' => 'error',
+                'confirmButtonText' => 'Aceptar',
+                'color' => 'danger'
+            ]);
+            return;
+        }
+
         // registrar datos deL pago
         $pago = new Pago();
         $pago->pago_documento = $this->documento_identidad;
