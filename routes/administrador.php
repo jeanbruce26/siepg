@@ -72,3 +72,8 @@ Route::get('/expediente/{id}/gestion-vistas-evaluacion', [ExpedienteController::
 Route::get('/expediente/{id}/gestion-tipo-seguimiento', [ExpedienteController::class, 'seguimiento'])->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.expediente.gestion-tipo-seguimiento');
 //Ruta para ir a la vista de Tipo de Seguimiento en Configuracion
 Route::get('/tipo-seguimiento', [TipoSeguimientoController::class, 'index'])->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.tipo-seguimiento');
+
+// Ruta para generar fichas de inscripcion de quienes no se les genero y enviarlas por correo
+Route::get('/generar-fichas-inscripcion', [InscripcionController::class, 'generarFichasInscripcion'])->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.generar-fichas-inscripcion');
+
+//
