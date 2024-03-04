@@ -27,6 +27,9 @@ class Login extends Component
             'password' => 'required',
         ]);
 
+        // simulamos un retraso en la autenticacion
+        sleep(3);
+
         // aqui buscamos el usuario en la base de datos
         $usuario = UsuarioEstudiante::where('usuario_estudiante', $this->usuario)->first();
 
