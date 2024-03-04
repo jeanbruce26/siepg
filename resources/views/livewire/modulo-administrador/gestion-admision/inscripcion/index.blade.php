@@ -110,7 +110,10 @@
                                                     <option></option>
                                                     @if ($modalidad_filtro)
                                                         @php
-                                                            $programas = App\Models\Programa::where('id_modalidad', $modalidad_filtro)->get();
+                                                            $programas = App\Models\Programa::where(
+                                                                'id_modalidad',
+                                                                $modalidad_filtro,
+                                                            )->get();
                                                         @endphp
                                                         @foreach ($programas as $item)
                                                             <option value="{{ $item->id_programa }}">
@@ -146,7 +149,10 @@
                                                     <option></option>
                                                     @if ($proceso_filtro)
                                                         @php
-                                                            $anioAdmision = App\Models\Admision::where('id_admision', $proceso_filtro)->first();
+                                                            $anioAdmision = App\Models\Admision::where(
+                                                                'id_admision',
+                                                                $proceso_filtro,
+                                                            )->first();
                                                         @endphp
                                                         @foreach ($mesesUnicos as $item)
                                                             @if ($item->anio == $anioAdmision->admision_año)
@@ -156,6 +162,25 @@
                                                             @endif
                                                         @endforeach
                                                     @endif
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="mb-5 col-md-6">
+                                            <label class="form-label fw-semibold">Estado:</label>
+                                            <div>
+                                                <select class="form-select" wire:model="estado_filtro">
+                                                    <option value="">
+                                                        Seleccione un estado...
+                                                    </option>
+                                                    <option value="0">
+                                                        Pendiente
+                                                    </option>
+                                                    <option value="1">
+                                                        Verificado
+                                                    </option>
+                                                    <option value="2">
+                                                        Observado
+                                                    </option>
                                                 </select>
                                             </div>
                                         </div>
@@ -477,7 +502,10 @@
                                 <option></option>
                                 @foreach ($modalidadesModal as $item)
                                     @php
-                                        $modalidadAsignadas = App\Models\Modalidad::where('id_modalidad', $item)->first();
+                                        $modalidadAsignadas = App\Models\Modalidad::where(
+                                            'id_modalidad',
+                                            $item,
+                                        )->first();
                                     @endphp
                                     <option value="{{ $item }}">{{ $modalidadAsignadas->modalidad }}</option>
                                 @endforeach

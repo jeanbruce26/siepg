@@ -26,6 +26,8 @@ class Index extends Component
         'procesoFiltro' => ['except' => ''],
         'programaFiltro' => ['except' => ''],
         'seguimientoFiltro' => ['except' => ''],
+        'estadoFiltro' => ['except' => ''],
+        'estado_filtro' => ['except' => ''],
     ];
 
     public $search = '';
@@ -41,6 +43,8 @@ class Index extends Component
     public $seguimiento_filtro; //Para el filtro de inscripciones por seguimiento
     public $mesFiltro;
     public $mes_filtro;
+    public $estadoFiltro;
+    public $estado_filtro;
     //variables
     public $id_inscripcion;
     public $modalidad;
@@ -108,18 +112,21 @@ class Index extends Component
             'programa_filtro',
             'seguimiento_filtro',
             'modalidad_filtro',
-            'mes_filtro'
+            'mes_filtro',
+            'estadoFiltro',
+            'estado_filtro',
         );
     }
 
     //Asignamos los filtros
     public function filtrar()
     {
-        $this->procesoFiltro = $this->proceso_filtro;
-        $this->modalidadFiltro = $this->modalidad_filtro;
-        $this->programaFiltro = $this->programa_filtro;
-        $this->seguimientoFiltro = $this->seguimiento_filtro;
-        $this->mesFiltro = $this->mes_filtro;
+        $this->procesoFiltro = $this->proceso_filtro ?? null;
+        $this->modalidadFiltro = $this->modalidad_filtro ?? null;
+        $this->programaFiltro = $this->programa_filtro ?? null;
+        $this->seguimientoFiltro = $this->seguimiento_filtro ?? null;
+        $this->mesFiltro = $this->mes_filtro ?? null;
+        $this->estadoFiltro = $this->estado_filtro ?? null;
     }
 
     //Alerta de confirmacion
@@ -418,6 +425,7 @@ class Index extends Component
                 ->where('programa.id_modalidad', $this->modalidadFiltro == null ? '!=' : '=', $this->modalidadFiltro)
                 ->where('programa_plan.id_programa', $this->programaFiltro == null ? '!=' : '=', $this->programaFiltro)
                 ->where('programa_proceso.id_admision', $this->procesoFiltro == null ? '!=' : '=', $this->procesoFiltro)
+                ->where('inscripcion_estado', $this->estadoFiltro == null ? '!=' : '=', $this->estadoFiltro)
                 ->orderBy('id_inscripcion', 'desc')
                 ->paginate(10);
         } else { //Si no existe el seguimientoFiltro, se muestra la consulta normal
@@ -440,6 +448,7 @@ class Index extends Component
                 ->where('programa.id_modalidad', $this->modalidadFiltro == null ? '!=' : '=', $this->modalidadFiltro)
                 ->where('programa_plan.id_programa', $this->programaFiltro == null ? '!=' : '=', $this->programaFiltro)
                 ->where('programa_proceso.id_admision', $this->procesoFiltro == null ? '!=' : '=', $this->procesoFiltro)
+                ->where('inscripcion_estado', $this->estadoFiltro == null ? '!=' : '=', $this->estadoFiltro)
                 ->when($this->mesFiltro, function ($query, $mesFiltro) {
                     return $query->whereMonth('inscripcion_fecha', $mesFiltro);
                 })
