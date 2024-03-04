@@ -29,6 +29,9 @@ class Login extends Component
             'password' => 'required',
         ]);
 
+        // simulamos un retraso de 3 segundos para evitar ataques de fuerza bruta
+        sleep(3);
+
         // realizamos la consulta a la base de datos para verificar si el usuario existe
         $usuario = Usuario::where('usuario_correo',$this->email)->first();
 

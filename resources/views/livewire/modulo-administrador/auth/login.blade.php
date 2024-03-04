@@ -14,7 +14,8 @@
                     <label for="email" class="required form-label">
                         Correo electrónico
                     </label>
-                    <input type="email" wire:model="email" class="form-control @error('email') is-invalid @enderror" id="email" placeholder="Ingrese su correo electrónico" autocomplete="off"/>
+                    <input type="email" wire:model="email" class="form-control @error('email') is-invalid @enderror"
+                        id="email" placeholder="Ingrese su correo electrónico" autocomplete="off" />
                     @error('email')
                         <span class="text-danger" role="alert">
                             <strong>{{ $message }}</strong>
@@ -25,7 +26,9 @@
                     <label for="password" class="required form-label">
                         Contraseña
                     </label>
-                    <input type="password" wire:model="password" class="form-control @error('password') is-invalid @enderror" id="password" placeholder="Ingrese su contraseña" autocomplete="off"/>
+                    <input type="password" wire:model="password"
+                        class="form-control @error('password') is-invalid @enderror" id="password"
+                        placeholder="Ingrese su contraseña" autocomplete="off" />
                     @error('password')
                         <span class="text-danger" role="alert">
                             <strong>{{ $message }}</strong>
@@ -47,8 +50,8 @@
                             Ingresar
                         </div>
                         <div wire:loading wire:target="ingresar">
-                            Ingresando...
                             <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                            Verificando...
                         </div>
                     </button>
                 </div>
