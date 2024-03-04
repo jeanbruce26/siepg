@@ -23,11 +23,13 @@ class Index extends Component
     protected $queryString = [
         'search' => ['except' => ''],
         'filtro_concepto_pago' => ['except' => 'all'],
+        'filtro_estado' => ['except' => '']
     ]; // variable para almacenar el texto de busqueda
 
     // public $pagos = null; // variable para almacenar los pagos
     public $search = ''; // variable para almacenar el texto de busqueda
     public $filtro_concepto_pago = "all"; // variable para almacenar el texto de busqueda
+    public $filtro_estado; // variable para almacenar el texto de busqueda
     public $voucher; // variable para almacenar el voucher
     public $voucher_name; // variable para almacenar el voucher
     public $observacion; // variable para almacenar la observacion
@@ -580,6 +582,7 @@ class Index extends Component
         $concepto_pagos = ConceptoPago::where('concepto_pago_estado', 1)->get();
         $canal_pagos = CanalPago::where('canal_pago_estado', 1)->get();
         $pagos = Pago::where('id_concepto_pago', $this->filtro_concepto_pago == "all" ? '!=' : '=', $this->filtro_concepto_pago)
+            ->where('pago_verificacion', $this->filtro_estado ? '=' : '!=', $this->filtro_estado)
             ->where(function ($query) {
                 $query->where('pago_documento', 'like', '%' . $this->search . '%')
                     ->orWhere('pago_operacion', 'like', '%' . $this->search . '%');

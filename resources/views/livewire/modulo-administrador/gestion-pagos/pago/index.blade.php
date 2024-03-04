@@ -35,7 +35,8 @@
                             <i class="ki-outline ki-information-5 fs-2qx me-4 text-primary"></i>
                             <div class="d-flex flex-column">
                                 <span class="fw-bold fs-5">
-                                    A continuación se muestran los pagos registrados en el sistema. Podrá ver el detalle de
+                                    A continuación se muestran los pagos registrados en el sistema. Podrá ver el detalle
+                                    de
                                     cada pago, así como también el estado de cada uno de ellos.
                                 </span>
                             </div>
@@ -44,9 +45,24 @@
                         <div class="card shadow-sm">
                             <div class="card-body mb-0">
                                 <div class="table-responsive">
-                                    <div class="d-flex align-items-center mb-5">
-                                        <div class="col-md-4 pe-3"></div>
-                                        <div class="col-md-4 px-3">
+                                    <div class="row g-2 mb-5">
+                                        <div class="col-md-4">
+                                            <select class="form-select" wire:model="filtro_estado" id="filtro_estado">
+                                                <option value="">
+                                                    Seleccione un estado
+                                                </option>
+                                                <option value="0">
+                                                    Observado
+                                                </option>
+                                                <option value="1">
+                                                    Pendiente
+                                                </option>
+                                                <option value="2">
+                                                    Verificado
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
                                             <select class="form-select" wire:model="filtro_concepto_pago"
                                                 data-control="select2" id="filtro_concepto_pago"
                                                 data-placeholder="Seleccione el concepto de pago">
@@ -58,7 +74,7 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <div class="col-md-4 ps-3">
+                                        <div class="col-md-4">
                                             <input type="search" wire:model="search" class="form-control w-100"
                                                 placeholder="Buscar..." />
                                         </div>
@@ -113,7 +129,8 @@
                                                         <a href="#modal_pago_contable"
                                                             wire:click="cargar_pago({{ $item->id_pago }}, false)"
                                                             class="btn btn-outline btn-outline-dashed btn-outline-info btn-active-light-info hover-scale"
-                                                            data-bs-toggle="modal" data-bs-target="#modal_pago_contable">
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#modal_pago_contable">
                                                             Ver Pago
                                                         </a>
                                                         <a href="#modal_pago_editar"
