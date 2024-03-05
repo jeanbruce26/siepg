@@ -98,15 +98,37 @@
                     {{-- card monto de pagos --}}
                     <div class="card shadow-sm">
                         <div class="card-body mb-0">
-                            <div class="table-responsive">
-                                <div class="d-flex flex-column flex-md-row align-items-center mb-5 w-100">
-                                    <div class="col-md-4 pe-md-3"></div>
-                                    <div class="col-md-4 px-md-3"></div>
-                                    <div class="col-md-4 ps-md-3">
-                                        <input type="search" wire:model="search" class="form-control w-100"
-                                            placeholder="Buscar..." />
+                            <div class="row g-3 mb-5">
+                                <div class="col-md-8">
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <div class="d-flex align-items-center gap-2">
+                                                De <input type="text" class="form-control" wire:model="nombre_desde"
+                                                    placeholder="Ingrese el nombre completo">
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="d-flex align-items-center gap-2">
+                                                Hasta <input type="text" class="form-control"
+                                                    wire:model="nombre_hasta" placeholder="Ingrese el nombre completo">
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <button class="btn btn-info" wire:click="filtrar_nombre">
+                                                Buscar
+                                            </button>
+                                            <button class="btn btn-secondary" wire:click="limpiar_filtro_nombre">
+                                                Limpiar
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
+                                <div class="col-md-4">
+                                    <input type="search" wire:model="search" class="form-control w-full"
+                                        placeholder="Buscar..." />
+                                </div>
+                            </div>
+                            <div class="table-responsive">
                                 <table
                                     class="table table-hover table-rounded table-bordered align-middle table-row-bordered border mb-0 gy-4 gs-4">
                                     <thead class="bg-light-warning">
@@ -248,14 +270,16 @@
                                         @empty
                                             @if ($search != '')
                                                 <tr>
-                                                    <td colspan="7" class="text-center text-muted">
+                                                    <td colspan="{{ $programa->programa_tipo == 2 ? '9' : '8' }}"
+                                                        class="text-center text-muted">
                                                         No se encontraron resultados para la busqueda
                                                         "{{ $search }}"
                                                     </td>
                                                 </tr>
                                             @else
                                                 <tr>
-                                                    <td colspan="7" class="text-center text-muted">
+                                                    <td colspan="{{ $programa->programa_tipo == 2 ? '9' : '8' }}"
+                                                        class="text-center text-muted">
                                                         No hay registros
                                                     </td>
                                                 </tr>
