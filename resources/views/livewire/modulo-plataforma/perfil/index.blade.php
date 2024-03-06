@@ -17,7 +17,7 @@
             </div>
             <div class="d-flex align-items-center gap-2 gap-lg-3">
                 <a href="#modal_perfil" class="btn fw-bold btn-primary me-2" data-bs-toggle="modal"
-                    data-bs-target="#modal_perfil">
+                    wire:click="cargar_perfil" data-bs-target="#modal_perfil">
                     Editar Perfil
                 </a>
             </div>
@@ -130,7 +130,7 @@
     </div>
     {{-- modal perfil --}}
     <div wire:ignore.self class="modal fade" tabindex="-1" id="modal_perfil">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h3 class="modal-title">
@@ -142,8 +142,8 @@
                     </div>
                 </div>
                 <div class="modal-body">
-                    <form autocomplete="off">
-                        <div class="mb-5">
+                    <form autocomplete="off" class="row g-3">
+                        <div class="col-md-12">
                             <label for="perfil" class="form-label">
                                 Foto de Perfil
                             </label>
@@ -159,7 +159,62 @@
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
-                        <div class="mb-5">
+                        <div class="col-md-6">
+                            <label for="apellido_paterno" class="form-label required">
+                                Apellido Paterno
+                            </label>
+                            <input type="text" wire:model="apellido_paterno"
+                                class="form-control @error('apellido_paterno') is-invalid @enderror"
+                                placeholder="Ingrese su apellido paterno" id="apellido_paterno" />
+                            @error('apellido_paterno')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="col-md-6">
+                            <label for="apellido_materno" class="form-label required">
+                                Apellido Materno
+                            </label>
+                            <input type="text" wire:model="apellido_materno"
+                                class="form-control @error('apellido_materno') is-invalid @enderror"
+                                placeholder="Ingrese su apellido materno" id="apellido_materno" />
+                            @error('apellido_materno')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="col-md-12">
+                            <label for="nombre" class="form-label required">
+                                Nombre
+                            </label>
+                            <input type="text" wire:model="nombre"
+                                class="form-control @error('nombre') is-invalid @enderror"
+                                placeholder="Ingrese su nombre" id="nombre" />
+                            @error('nombre')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="col-md-6">
+                            <label for="celular" class="form-label required">
+                                Celular
+                            </label>
+                            <input type="text" wire:model="celular"
+                                class="form-control @error('celular') is-invalid @enderror"
+                                placeholder="Ingrese su celular" id="celular" />
+                            @error('celular')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="col-md-6">
+                            <label for="correo_electronico" class="form-label required">
+                                Correo Electrónico
+                            </label>
+                            <input type="email" wire:model="correo_electronico"
+                                class="form-control @error('correo_electronico') is-invalid @enderror"
+                                placeholder="Ingrese su nueva contraseña" id="correo_electronico" />
+                            @error('correo_electronico')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="col-md-6">
                             <label for="password" class="form-label">
                                 Nueva Contraseña
                             </label>
@@ -170,7 +225,7 @@
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
-                        <div class="mb-5">
+                        <div class="col-md-6">
                             <label for="confirm_password" class="form-label">
                                 Confirmar Contraseña
                             </label>
@@ -206,48 +261,3 @@
         </div>
     </div>
 </div>
-@push('scripts')
-    {{-- <script>
-        // filtro_proceso select2
-        $(document).ready(function () {
-            $('#filtro_proceso').select2({
-                placeholder: 'Seleccione',
-                allowClear: true,
-                width: '100%',
-                selectOnClose: true,
-                minimumResultsForSearch: Infinity,
-                language: {
-                    noResults: function () {
-                        return "No se encontraron resultados";
-                    },
-                    searching: function () {
-                        return "Buscando..";
-                    }
-                }
-            });
-            $('#filtro_proceso').on('change', function(){
-                @this.set('filtro_proceso', this.value);
-            });
-            Livewire.hook('message.processed', (message, component) => {
-                $('#filtro_proceso').select2({
-                    placeholder: 'Seleccione',
-                    allowClear: true,
-                    width: '100%',
-                    selectOnClose: true,
-                    minimumResultsForSearch: Infinity,
-                    language: {
-                        noResults: function () {
-                            return "No se encontraron resultados";
-                        },
-                        searching: function () {
-                            return "Buscando..";
-                        }
-                    }
-                });
-                $('#filtro_proceso').on('change', function(){
-                    @this.set('filtro_proceso', this.value);
-                });
-            });
-        });
-    </script> --}}
-@endpush

@@ -14,12 +14,31 @@ class Index extends Component
     use WithFileUploads; // trait para subir archivos
     public $perfil; // variable para el perfil del usuario logueado
     public $password, $confirm_password; // variables para el cambio de contraseña
+    public $nombre;
+    public $apellido_paterno;
+    public $apellido_materno;
+    public $celular;
+    public $correo_electronico;
     public $iteration = 0; // variable para la iteracion de la imagen
     public $usuario; // variable para el usuario logueado
 
     public function mount()
     {
         $this->usuario = UsuarioEstudiante::find(auth('plataforma')->user()->id_usuario_estudiante);
+        $this->nombre = $this->usuario->persona->nombre;
+        $this->apellido_paterno = $this->usuario->persona->apellido_paterno;
+        $this->apellido_materno = $this->usuario->persona->apellido_materno;
+        $this->celular = $this->usuario->persona->celular;
+        $this->correo_electronico = $this->usuario->persona->correo;
+    }
+
+    public function cargar_perfil()
+    {
+        $this->nombre = $this->usuario->persona->nombre;
+        $this->apellido_paterno = $this->usuario->persona->apellido_paterno;
+        $this->apellido_materno = $this->usuario->persona->apellido_materno;
+        $this->celular = $this->usuario->persona->celular;
+        $this->correo_electronico = $this->usuario->persona->correo;
     }
 
     public function refresh()
@@ -31,6 +50,11 @@ class Index extends Component
     {
         $this->validateOnly($propertyName, [
             'perfil' => 'nullable|image|max:2048', // validacion para la imagen
+            'nombre' => 'required|min:3|max:50', // validacion para el nombre
+            'apellido_paterno' => 'required|min:3|max:50', // validacion para el apellido paterno
+            'apellido_materno' => 'required|min:3|max:50', // validacion para el apellido materno
+            'celular' => 'required|numeric|digits:9', // validacion para el celular
+            'correo_electronico' => 'required|email|max:100', // validacion para el correo electronico
             'password' => 'nullable|min:8|max:20', // validacion para la contraseña
             'confirm_password' => 'nullable|same:password', // validacion para la confirmacion de la contraseña
         ]);
@@ -40,6 +64,11 @@ class Index extends Component
     {
         $this->reset([
             'perfil',
+            'nombre',
+            'apellido_paterno',
+            'apellido_materno',
+            'celular',
+            'correo_electronico',
             'password',
             'confirm_password',
         ]);
@@ -56,6 +85,11 @@ class Index extends Component
         // validamos los campos del formulario
         $this->validate([
             'perfil' => 'nullable|image|max:2048', // validacion para la imagen
+            'nombre' => 'required|min:3|max:50', // validacion para el nombre
+            'apellido_paterno' => 'required|min:3|max:50', // validacion para el apellido paterno
+            'apellido_materno' => 'required|min:3|max:50', // validacion para el apellido materno
+            'celular' => 'required|numeric|digits:9', // validacion para el celular
+            'correo_electronico' => 'required|email|max:100', // validacion para el correo electronico
             'password' => 'nullable|min:8|max:20', // validacion para la contraseña
             'confirm_password' => 'nullable|same:password', // validacion para la confirmacion de la contraseña
         ]);
@@ -103,29 +137,28 @@ class Index extends Component
         }
         $usuario->save();
 
+        // buscar persona para actualizar el perfil
+        $persona = Persona::where('id_persona', auth('plataforma')->user()->id_persona)->first();
+        $persona->nombre = mb_strtoupper($this->nombre, 'UTF-8');
+        $persona->apellido_paterno = mb_strtoupper($this->apellido_paterno, 'UTF-8');
+        $persona->apellido_materno = mb_strtoupper($this->apellido_materno, 'UTF-8');
+        $persona->celular = $this->celular;
+        $persona->correo = mb_strtolower($this->correo_electronico, 'UTF-8');
+        $persona->save();
+
         // cerrar modal
         $this->dispatchBrowserEvent('modal_perfil', [
             'action' => 'hide'
         ]);
 
         // emitir alerta de exito
-        if ($this->perfil || $this->password) {
-            $this->dispatchBrowserEvent('update_perfil', [
-                'title' => '¡Éxito!',
-                'text' => 'Se ha actualizado el perfil del usuario correctamente.',
-                'icon' => 'success',
-                'confirmButtonText' => 'Aceptar',
-                'color' => 'success'
-            ]);
-        } else {
-            $this->dispatchBrowserEvent('update_perfil', [
-                'title' => '¡Advertencia!',
-                'text' => 'No se ingresaron datos para actualizar el perfil del usuario.',
-                'icon' => 'warning',
-                'confirmButtonText' => 'Aceptar',
-                'color' => 'warning'
-            ]);
-        }
+        $this->dispatchBrowserEvent('update_perfil', [
+            'title' => '¡Éxito!',
+            'text' => 'Se ha actualizado el perfil del usuario correctamente.',
+            'icon' => 'success',
+            'confirmButtonText' => 'Aceptar',
+            'color' => 'success'
+        ]);
 
         // emitir evento para actualizar la imagen del usuario logueado
         $this->emit('update_avatar');
