@@ -16,7 +16,8 @@
                 </ul>
             </div>
             <div class="d-flex align-items-center gap-2 gap-lg-3">
-                <a href="#modal_perfil" class="btn fw-bold btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modal_perfil">
+                <a href="#modal_perfil" class="btn fw-bold btn-primary me-2" data-bs-toggle="modal"
+                    data-bs-target="#modal_perfil">
                     Editar Perfil
                 </a>
             </div>
@@ -27,7 +28,8 @@
             <div class="row mb-5 mb-xl-10">
                 <div class="col-md-12 mb-md-5 mb-xl-10">
                     {{-- alerta para que el usuario sepa que datos puede modificar --}}
-                    <div class="alert bg-light-primary border border-3 border-primary d-flex align-items-center p-5 mb-5">
+                    <div
+                        class="alert bg-light-primary border border-3 border-primary d-flex align-items-center p-5 mb-5">
                         <i class="ki-duotone ki-information-5 fs-2qx me-4 text-primary">
                             <i class="path1"></i>
                             <i class="path2"></i>
@@ -42,16 +44,24 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="position-relative object-fit-cover rounded-4 mb-10 mb-md-18">
-                                <img src="{{ asset('assets/media/auth/bg-login-posgrado.jpg') }}" class="object-fit-cover rounded-4 h-200px h-md-275px h-lg-350px" width="100%" alt="portada unu">
-                                <div class="object-fit-cover rounded-4 bg-success opacity-20 h-200px h-md-275px h-lg-350px position-absolute top-0 start-0" style="width: 100%;"></div>
-                                <div class="position-absolute" style="top: 50%; left: 50%; transform: translate(-50%, 0%);">
-                                    <img src="{{ $usuario->usuario_estudiante_perfil_url ? asset($usuario->usuario_estudiante_perfil_url) : $usuario->avatar }}" class="object-fit-cover rounded-circle shadow w-150px w-md-250px h-150px h-md-250px" alt="vista previa perfil">
+                                <img src="{{ asset('assets/media/auth/bg-login-posgrado.jpg') }}"
+                                    class="object-fit-cover rounded-4 h-200px h-md-275px h-lg-350px" width="100%"
+                                    alt="portada unu">
+                                <div class="object-fit-cover rounded-4 bg-success opacity-20 h-200px h-md-275px h-lg-350px position-absolute top-0 start-0"
+                                    style="width: 100%;"></div>
+                                <div class="position-absolute"
+                                    style="top: 50%; left: 50%; transform: translate(-50%, 0%);">
+                                    <img src="{{ $usuario->usuario_estudiante_perfil_url ? asset($usuario->usuario_estudiante_perfil_url) : $usuario->avatar }}"
+                                        class="object-fit-cover rounded-circle shadow w-150px w-md-250px h-150px h-md-250px"
+                                        alt="vista previa perfil">
                                 </div>
                             </div>
                             <br><br>
                             <div class="text-center">
                                 <span class="text-gray-900 fw-bold " style="font-size: 2rem">
-                                    {{ ucwords(strtolower($persona->nombre)) }} {{ ucwords(strtolower($persona->apellido_paterno)) }} {{ ucwords(strtolower($persona->apellido_materno)) }}
+                                    {{ ucwords(strtolower($persona->nombre)) }}
+                                    {{ ucwords(strtolower($persona->apellido_paterno)) }}
+                                    {{ ucwords(strtolower($persona->apellido_materno)) }}
                                 </span>
                                 <div class="d-flex flex-wrap fw-semibold fs-4 mb-2 justify-content-center mt-5">
                                     <span class="text-gray-600">
@@ -86,15 +96,27 @@
                                     <span class="text-gray-800 ms-2 fw-bold">
                                         @if ($admitido)
                                             @if ($admitido->programa_proceso->programa_plan->programa->mencion == null)
-                                                {{ ucwords(strtolower($admitido->programa_proceso->programa_plan->programa->programa)) }} en {{ ucwords(strtolower($admitido->programa_proceso->programa_plan->programa->subprograma)) }}
+                                                {{ ucwords(strtolower($admitido->programa_proceso->programa_plan->programa->programa)) }}
+                                                en
+                                                {{ ucwords(strtolower($admitido->programa_proceso->programa_plan->programa->subprograma)) }}
                                             @else
-                                                {{ ucwords(strtolower($admitido->programa_proceso->programa_plan->programa->programa)) }} en {{ ucwords(strtolower($admitido->programa_proceso->programa_plan->programa->subprograma)) }} con mención en {{ ucwords(strtolower($admitido->programa_proceso->programa_plan->programa->mencion)) }}
+                                                {{ ucwords(strtolower($admitido->programa_proceso->programa_plan->programa->programa)) }}
+                                                en
+                                                {{ ucwords(strtolower($admitido->programa_proceso->programa_plan->programa->subprograma)) }}
+                                                con mención en
+                                                {{ ucwords(strtolower($admitido->programa_proceso->programa_plan->programa->mencion)) }}
                                             @endif
                                         @else
                                             @if ($inscripcion->programa_proceso->programa_plan->programa->mencion == null)
-                                                {{ ucwords(strtolower($inscripcion->programa_proceso->programa_plan->programa->programa)) }} en {{ ucwords(strtolower($inscripcion->programa_proceso->programa_plan->programa->subprograma)) }}
+                                                {{ ucwords(strtolower($inscripcion->programa_proceso->programa_plan->programa->programa)) }}
+                                                en
+                                                {{ ucwords(strtolower($inscripcion->programa_proceso->programa_plan->programa->subprograma)) }}
                                             @else
-                                                {{ ucwords(strtolower($inscripcion->programa_proceso->programa_plan->programa->programa)) }} en {{ ucwords(strtolower($inscripcion->programa_proceso->programa_plan->programa->subprograma)) }} con mención en {{ ucwords(strtolower($inscripcion->programa_proceso->programa_plan->programa->mencion)) }}
+                                                {{ ucwords(strtolower($inscripcion->programa_proceso->programa_plan->programa->programa)) }}
+                                                en
+                                                {{ ucwords(strtolower($inscripcion->programa_proceso->programa_plan->programa->subprograma)) }}
+                                                con mención en
+                                                {{ ucwords(strtolower($inscripcion->programa_proceso->programa_plan->programa->mencion)) }}
                                             @endif
                                         @endif
                                     </span>
@@ -114,7 +136,8 @@
                     <h3 class="modal-title">
                         Editar Perfil
                     </h3>
-                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close" wire:click="limpiar_perfil">
+                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
+                        aria-label="Close" wire:click="limpiar_perfil">
                         <i class="bi bi-x fs-1"></i>
                     </div>
                 </div>
@@ -124,11 +147,14 @@
                             <label for="perfil" class="form-label">
                                 Foto de Perfil
                             </label>
-                            <input type="file" class="form-control" wire:model="perfil" accept=".png, .jpg, .jpeg" id="upload{{ $iteration }}">
+                            <input type="file" class="form-control" wire:model="perfil" accept=".png, .jpg, .jpeg"
+                                id="upload{{ $iteration }}">
                             <div class="image-input image-input-outline mt-3">
-                                <img src="@if($perfil) {{ asset($perfil->temporaryUrl()) }} @elseif($usuario->usuario_estudiante_perfil_url) {{ asset($usuario->usuario_estudiante_perfil_url) }} @else {{ asset('assets/media/avatars/blank.png') }} @endif" class="object-fit-cover image-input-wrapper w-125px h-125px" alt="vista previa perfil">
+                                <img src="@if ($perfil) {{ asset($perfil->temporaryUrl()) }} @elseif($usuario->usuario_estudiante_perfil_url) {{ asset($usuario->usuario_estudiante_perfil_url) }} @else {{ asset('assets/media/avatars/blank.png') }} @endif"
+                                    class="object-fit-cover image-input-wrapper w-125px h-125px"
+                                    alt="vista previa perfil">
                             </div>
-                            <div class="form-text">Formato de imagen:  png, jpg, jpeg.</div>
+                            <div class="form-text">Formato de imagen: png, jpg, jpeg.</div>
                             @error('perfil')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -137,7 +163,9 @@
                             <label for="password" class="form-label">
                                 Nueva Contraseña
                             </label>
-                            <input type="password" wire:model="password" class="form-control @error('password') is-invalid @enderror" placeholder="Ingrese su nueva contraseña" id="password"/>
+                            <input type="password" wire:model="password"
+                                class="form-control @error('password') is-invalid @enderror"
+                                placeholder="Ingrese su nueva contraseña" id="password" />
                             @error('password')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -146,7 +174,9 @@
                             <label for="confirm_password" class="form-label">
                                 Confirmar Contraseña
                             </label>
-                            <input type="password" wire:model="confirm_password" class="form-control @error('confirm_password') is-invalid @enderror" placeholder="Confirmar su nueva contraseña" id="confirm_password"/>
+                            <input type="password" wire:model="confirm_password"
+                                class="form-control @error('confirm_password') is-invalid @enderror"
+                                placeholder="Confirmar su nueva contraseña" id="confirm_password" />
                             @error('confirm_password')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -154,24 +184,21 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal" wire:click="limpiar_perfil">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal"
+                        wire:click="limpiar_perfil">
                         Cerrar
                     </button>
-                    <button
-                        type="button"
-                        wire:click="actualizar_perfil"
-                        class="btn btn-primary"
-                        style="width: 160px"
-                        wire:loading.attr="disabled"
-                        wire:loading.remove
-                        wire:target="actualizar_perfil, perfil"
-                    >
+                    <button type="button" wire:click="actualizar_perfil" class="btn btn-primary"
+                        style="width: 160px" wire:loading.attr="disabled" wire:loading.remove
+                        wire:target="actualizar_perfil, perfil">
                         Actualizar Datos
                     </button>
-                    <button type="button" class="btn btn-primary" style="width: 160px" wire:loading wire:target="actualizar_perfil" disabled>
+                    <button type="button" class="btn btn-primary" style="width: 160px" wire:loading
+                        wire:target="actualizar_perfil" disabled>
                         <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
                     </button>
-                    <button type="button" class="btn btn-primary" style="width: 160px" wire:loading wire:target="perfil" disabled>
+                    <button type="button" class="btn btn-primary" style="width: 160px" wire:loading
+                        wire:target="perfil" disabled>
                         <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
                     </button>
                 </div>
