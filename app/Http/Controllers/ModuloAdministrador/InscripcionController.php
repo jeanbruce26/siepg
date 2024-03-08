@@ -19,7 +19,7 @@ class InscripcionController extends Controller
         $inscripciones = Inscripcion::join('programa_proceso', 'inscripcion.id_programa_proceso', 'programa_proceso.id_programa_proceso')
             ->join('admision', 'programa_proceso.id_admision', 'admision.id_admision')
             ->where('admision.admision_estado', 1)
-            ->where('inscripcion.inscripcion_ficha_url', null)
+            ->where('inscripcion.envio_inscripcion', 0)
             ->get();
 
         foreach ($inscripciones as $inscripcion) {
