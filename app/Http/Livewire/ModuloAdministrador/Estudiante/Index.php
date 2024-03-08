@@ -12,6 +12,7 @@ use App\Models\Persona;
 use App\Models\Ubigeo;
 use App\Models\Universidad;
 use App\Models\UsuarioEstudiante;
+use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -73,7 +74,11 @@ class Index extends Component
     public $agregar_celular = false;
     public $agregar_correo = false;
 
-    protected $listeners = ['render', 'cambiarEstado'];
+    protected $listeners = [
+        'render',
+        'cambiarEstado',
+        'resetear_contraseña'
+    ];
 
     public function updated($propertyName)
     {
@@ -334,17 +339,17 @@ class Index extends Component
             'direccion' => 'required',
             'celular' => 'required|numeric|digits:9',
             'celular_opcional' => [
-                    'nullable',
-                    'numeric',
-                    'digits:9',
-                    function ($attribute, $value, $fail) {
-                        if ($this->celular_opcional) {
-                            if ($this->celular == $this->celular_opcional) {
-                                $fail('El celular opcional no puede ser igual al celular.');
-                            }
+                'nullable',
+                'numeric',
+                'digits:9',
+                function ($attribute, $value, $fail) {
+                    if ($this->celular_opcional) {
+                        if ($this->celular == $this->celular_opcional) {
+                            $fail('El celular opcional no puede ser igual al celular.');
                         }
-                    },
-                ],
+                    }
+                },
+            ],
             //Valida el correo que sea unico en el campo correo y correo opcional
             'correo' => [
                 'required',
@@ -489,6 +494,20 @@ class Index extends Component
             'titleModal' => '#modalPersona',
         ]);
 
+    }
+
+    public function alerta_resetear_contrasena($id_persona)
+    {
+        $this->alertaConfirmacion('¡Advertencia!', "¿Está seguro de resetear la contraseña del estudiante?", 'warning', 'Sí, resetear', 'Cancelar', 'warning', 'cancel', 'resetear_contraseña', $id_persona);
+    }
+
+    public function resetear_contraseña($id_persona)
+    {
+        $persona = Persona::findOrFail($id_persona);
+        $usuario = UsuarioEstudiante::where('id_persona', $id_persona)->first();
+        $usuario->usuario_estudiante_password = Hash::make($persona->numero_documento);
+        $usuario->save();
+        $this->alertaEstudiante('¡Éxito!', "La contraseña del estudiante se reseteó correctamente.", 'success', 'Aceptar', 'success');
     }
 
     public function render()
