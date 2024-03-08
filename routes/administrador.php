@@ -16,6 +16,7 @@ use App\Http\Controllers\ModuloAdministrador\SedeController;
 use App\Http\Controllers\ModuloAdministrador\TipoSeguimientoController;
 use App\Http\Controllers\ModuloAdministrador\TrabajadorController;
 use App\Http\Controllers\ModuloAdministrador\UsuarioTrabajadorController;
+use App\Models\UsuarioEstudiante;
 use Illuminate\Support\Facades\Route;
 
 //Vista del Dashboard. El inicio la parte administrativa del sistema
@@ -75,5 +76,18 @@ Route::get('/tipo-seguimiento', [TipoSeguimientoController::class, 'index'])->mi
 
 // Ruta para generar fichas de inscripcion de quienes no se les genero y enviarlas por correo
 Route::get('/generar-fichas-inscripcion', [InscripcionController::class, 'generarFichasInscripcion'])->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.generar-fichas-inscripcion');
+
+// cambiar todos los correos de los usuarios a minusculas
+Route::get('/cambiar-correos', function () {
+    $usuarios = UsuarioEstudiante::all();
+    foreach ($usuarios as $usuario) {
+        $usuario->usuario_correo = mb_strtolower($usuario->usuario_correo, 'UTF-8');
+        $usuario->save();
+    }
+    return response()->json([
+        'message' => 'Correos cambiados'
+    ]);
+})->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.cambiar-correos');
+
 
 //
