@@ -81,7 +81,7 @@ Route::get('/generar-fichas-inscripcion', [InscripcionController::class, 'genera
 Route::get('/cambiar-correos', function () {
     $usuarios = UsuarioEstudiante::all();
     foreach ($usuarios as $usuario) {
-        $usuario->usuario_estudiante = mb_strtolower($usuario->usuario_correo, 'UTF-8');
+        $usuario->usuario_estudiante = mb_strtolower($usuario->usuario_estudiante, 'UTF-8');
         $usuario->save();
     }
     return response()->json([
