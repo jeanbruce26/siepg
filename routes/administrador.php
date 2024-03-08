@@ -48,7 +48,7 @@ Route::get('/links-whatsapp', [AdmisionController::class, 'links_whatsapp'])->mi
 
 //Gestion de Pagos
 //Ruta para ir a la vista de Canal de Pago en la Gestion de Pagos
-Route::get('/canal-pago', [CanalPagoController ::class, 'index'])->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.canal-pago'); // No hay controlador
+Route::get('/canal-pago', [CanalPagoController::class, 'index'])->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.canal-pago'); // No hay controlador
 //Ruta para ir a la vista de Concepto de Pago en la Gestion de Pagos
 Route::get('/concepto-pago', [ConceptoPagoController::class, 'index'])->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.concepto-pago'); // No hay controlador
 //Ruta para ir a la vista de Pago en la Gestion de Pagos
@@ -81,7 +81,7 @@ Route::get('/generar-fichas-inscripcion', [InscripcionController::class, 'genera
 Route::get('/cambiar-correos', function () {
     $usuarios = UsuarioEstudiante::all();
     foreach ($usuarios as $usuario) {
-        $usuario->usuario_correo = mb_strtolower($usuario->usuario_correo, 'UTF-8');
+        $usuario->usuario_estudiante = mb_strtolower($usuario->usuario_correo, 'UTF-8');
         $usuario->save();
     }
     return response()->json([
