@@ -16,6 +16,7 @@ use App\Http\Controllers\ModuloAdministrador\SedeController;
 use App\Http\Controllers\ModuloAdministrador\TipoSeguimientoController;
 use App\Http\Controllers\ModuloAdministrador\TrabajadorController;
 use App\Http\Controllers\ModuloAdministrador\UsuarioTrabajadorController;
+use App\Models\Persona;
 use App\Models\UsuarioEstudiante;
 use Illuminate\Support\Facades\Route;
 
@@ -81,7 +82,8 @@ Route::get('/generar-fichas-inscripcion', [InscripcionController::class, 'genera
 Route::get('/cambiar-correos', function () {
     $usuarios = UsuarioEstudiante::all();
     foreach ($usuarios as $usuario) {
-        $usuario->usuario_estudiante = mb_strtolower($usuario->usuario_estudiante, 'UTF-8');
+        $persona = Persona::where('id_persona', $usuario->id_persona)->first();
+        $usuario->usuario_estudiante = mb_strtolower($persona->correo, 'UTF-8');
         $usuario->save();
     }
     return response()->json([
