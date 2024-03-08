@@ -22,6 +22,7 @@ class Inscripcion extends Model
         'id_persona',
         'inscripcion_estado',
         'inscripcion_observacion',
+        'envio_inscripcion',
         'id_pago',
         'id_programa_proceso',
         'inscripcion_tipo_programa',
@@ -29,28 +30,33 @@ class Inscripcion extends Model
     ];
 
     // Persona
-    public function persona(){
-        return $this->belongsTo(Persona::class, 'id_persona','id_persona');
+    public function persona()
+    {
+        return $this->belongsTo(Persona::class, 'id_persona', 'id_persona');
     }
 
     // pago
-    public function pago(){
-        return $this->belongsTo(Pago::class, 'id_pago','id_pago');
+    public function pago()
+    {
+        return $this->belongsTo(Pago::class, 'id_pago', 'id_pago');
     }
 
     // Programa Proceso
-    public function programa_proceso(){
-        return $this->belongsTo(ProgramaProceso::class, 'id_programa_proceso','id_programa_proceso');
+    public function programa_proceso()
+    {
+        return $this->belongsTo(ProgramaProceso::class, 'id_programa_proceso', 'id_programa_proceso');
     }
 
     // Inscripcion Expediente
-    public function expediente_inscripcion(){
-        return $this->hasMany(ExpedienteInscripcion::class, 'id_inscripcion','id_inscripcion');
+    public function expediente_inscripcion()
+    {
+        return $this->hasMany(ExpedienteInscripcion::class, 'id_inscripcion', 'id_inscripcion');
     }
 
     // Evaluacion
-    public function evaluacion(){
-        return $this->hasOne(Evaluacion::class, 'id_inscripcion','id_inscripcion');
+    public function evaluacion()
+    {
+        return $this->hasOne(Evaluacion::class, 'id_inscripcion', 'id_inscripcion');
     }
 
     // protected static function boot() {
