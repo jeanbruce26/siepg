@@ -135,6 +135,7 @@ class Index extends Component
         if ($this->password) {
             $usuario->usuario_estudiante_password = $this->password;
         }
+        $usuario->usuario_estudiante = mb_strtolower($this->correo_electronico, 'UTF-8');
         $usuario->save();
 
         // buscar persona para actualizar el perfil
