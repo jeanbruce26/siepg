@@ -121,5 +121,9 @@ class ProcessRegistroFichaInscripcion implements ShouldQueue
                 ->subject('Ficha de Inscripción - Escuela de Posgrado')
                 ->attachData($pdf_email, $nombre_pdf, ['mime' => 'application/pdf']);
         });
+
+        // cambiar estado del envio de la inscripcion
+        $inscripcion->envio_inscripcion = 1;
+        $inscripcion->save();
     }
 }
