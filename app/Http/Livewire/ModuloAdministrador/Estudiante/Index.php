@@ -11,6 +11,7 @@ use App\Models\Inscripcion;
 use App\Models\Persona;
 use App\Models\Ubigeo;
 use App\Models\Universidad;
+use App\Models\UsuarioEstudiante;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -103,12 +104,12 @@ class Index extends Component
                 'email',
                 function ($attribute, $value, $fail) {
                     $query = Persona::where('id_persona', '<>', $this->id_persona)
-                                ->where(function ($query) use ($value) {
-                                    $query->where('correo', $value)
-                                        ->orWhere('correo_opcional', $value);
-                                })
-                                ->exists();
-            
+                        ->where(function ($query) use ($value) {
+                            $query->where('correo', $value)
+                                ->orWhere('correo_opcional', $value);
+                        })
+                        ->exists();
+
                     if ($query) {
                         $fail('El correo ya está en uso en el campo correo o correo opcional.');
                     }
@@ -118,18 +119,18 @@ class Index extends Component
                 'nullable',
                 'email',
                 function ($attribute, $value, $fail) {
-                    if (!empty($value)) {
+                    if (!empty ($value)) {
                         $query = Persona::where('id_persona', '<>', $this->id_persona)
-                                ->where(function ($query) use ($value) {
-                                    $query->where('correo', $value)
-                                        ->orWhere('correo_opcional', $value);
-                                })
-                                ->exists();
-            
+                            ->where(function ($query) use ($value) {
+                                $query->where('correo', $value)
+                                    ->orWhere('correo_opcional', $value);
+                            })
+                            ->exists();
+
                         if ($query) {
                             $fail('El correo opcional ya está en uso en el campo correo o correo opcional.');
                         }
-                        if($this->correo_opcional == $this->correo){
+                        if ($this->correo_opcional == $this->correo) {
                             $fail('El correo opcional no puede ser igual al correo.');
                         }
                     }
@@ -151,13 +152,12 @@ class Index extends Component
 
     public function updatedUbigeoDireccion($ubigeo_direccion)
     {
-        if ($ubigeo_direccion) 
-        {
+        if ($ubigeo_direccion) {
             //Validar si escoge otro pais con ubigeo 000000
             $ubigeo = Ubigeo::findOrFail($ubigeo_direccion);
             if ($ubigeo->ubigeo == '000000') {
                 $this->pais_direccion_estado = true;
-            }else{
+            } else {
                 $this->pais_direccion_estado = false;
                 //Reseteamos el pais de direccion
                 $this->resetErrorBag('pais_direccion'); //Elimina los mensajes de error de validacion
@@ -169,13 +169,12 @@ class Index extends Component
 
     public function updatedUbigeoNacimiento($ubigeo_nacimiento)
     {
-        if ($ubigeo_nacimiento) 
-        {
+        if ($ubigeo_nacimiento) {
             //Validar si escoge otro pais con ubigeo 000000
             $ubigeo = Ubigeo::findOrFail($ubigeo_nacimiento);
             if ($ubigeo->ubigeo == '000000') {
                 $this->pais_nacimiento_estado = true;
-            }else{
+            } else {
                 $this->pais_nacimiento_estado = false;
                 //Reseteamos el pais de nacimiento
                 $this->resetErrorBag('pais_nacimiento'); //Elimina los mensajes de error de validacion
@@ -335,33 +334,33 @@ class Index extends Component
             'direccion' => 'required',
             'celular' => 'required|numeric|digits:9',
             'celular_opcional' => [
-                'nullable',
-                'numeric',
-                'digits:9',
-                function ($attribute, $value, $fail) {
-                    if ($this->celular_opcional) {
-                        if ($this->celular == $this->celular_opcional) {
-                            $fail('El celular opcional no puede ser igual al celular.');
+                    'nullable',
+                    'numeric',
+                    'digits:9',
+                    function ($attribute, $value, $fail) {
+                        if ($this->celular_opcional) {
+                            if ($this->celular == $this->celular_opcional) {
+                                $fail('El celular opcional no puede ser igual al celular.');
+                            }
                         }
-                    }
-                },
-            ],
+                    },
+                ],
             //Valida el correo que sea unico en el campo correo y correo opcional
             'correo' => [
                 'required',
                 'email',
                 function ($attribute, $value, $fail) {
                     $query = Persona::where('id_persona', '<>', $this->id_persona)
-                                ->where(function ($query) use ($value) {
-                                    $query->where('correo', $value)
-                                        ->orWhere('correo_opcional', $value);
-                                })
-                                ->exists();
-            
+                        ->where(function ($query) use ($value) {
+                            $query->where('correo', $value)
+                                ->orWhere('correo_opcional', $value);
+                        })
+                        ->exists();
+
                     if ($query) {
                         $fail('El correo ya está en uso en el campo correo o correo opcional.');
                     }
-                    if($this->correo_opcional == $this->correo){
+                    if ($this->correo_opcional == $this->correo) {
                         $fail('El correo no puede ser igual al correo opcional.');
                     }
                 },
@@ -370,18 +369,18 @@ class Index extends Component
                 'nullable',
                 'email',
                 function ($attribute, $value, $fail) {
-                    if (!empty($value)) {
+                    if (!empty ($value)) {
                         $query = Persona::where('id_persona', '<>', $this->id_persona)
-                                ->where(function ($query) use ($value) {
-                                    $query->where('correo', $value)
-                                        ->orWhere('correo_opcional', $value);
-                                })
-                                ->exists();
-            
+                            ->where(function ($query) use ($value) {
+                                $query->where('correo', $value)
+                                    ->orWhere('correo_opcional', $value);
+                            })
+                            ->exists();
+
                         if ($query) {
                             $fail('El correo opcional ya está en uso en el campo correo o correo opcional.');
                         }
-                        if($this->correo_opcional == $this->correo){
+                        if ($this->correo_opcional == $this->correo) {
                             $fail('El correo opcional no puede ser igual al correo.');
                         }
                     }
@@ -402,23 +401,17 @@ class Index extends Component
 
         // verificamos el pais de direccion
         $ubigeo_validar = Ubigeo::find($this->ubigeo_direccion)->ubigeo;
-        if ($ubigeo_validar == 000000)
-        {
+        if ($ubigeo_validar == 000000) {
             $this->pais_direccion = str_replace(["á", "é", "í", "ó", "ú", "Á", "É", "Í", "Ó", "Ú"], ["a", "e", "i", "o", "u", "A", "E", "I", "O", "U"], $this->pais_direccion);
-        }
-        else
-        {
+        } else {
             $this->pais_direccion = 'PERU';
         }
 
         // verificamos el pais de nacimiento
         $ubigeo_validar = Ubigeo::find($this->ubigeo_nacimiento)->ubigeo;
-        if ($ubigeo_validar == 000000)
-        {
+        if ($ubigeo_validar == 000000) {
             $this->pais_nacimiento = str_replace(["á", "é", "í", "ó", "ú", "Á", "É", "Í", "Ó", "Ú"], ["a", "e", "i", "o", "u", "A", "E", "I", "O", "U"], $this->pais_nacimiento);
-        }
-        else
-        {
+        } else {
             $this->pais_nacimiento = 'PERU';
         }
 
@@ -482,7 +475,12 @@ class Index extends Component
             $persona->pais_nacimiento = $this->pais_nacimiento;
         }
         $persona->save();
-        
+
+        // actualizamos el correo de la tabla de usuarios
+        $usuario = UsuarioEstudiante::where('id_persona', $this->id_persona)->first();
+        $usuario->usuario_estudiante = mb_strtoupper($this->correo, 'UTF-8');
+        $usuario->save();
+
         $this->alertaEstudiante('¡Éxito!', "El estudiante $persona->nombre_completo se actualizó correctamente.", 'success', 'Aceptar', 'success');
 
         $this->limpiar();
