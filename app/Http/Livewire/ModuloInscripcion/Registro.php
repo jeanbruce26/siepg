@@ -496,28 +496,28 @@ class Registro extends Component
         $persona = Persona::where('numero_documento', $this->documento_identidad)->first();
         if ($persona) {
             // actualizar datos de persona
-            $persona->apellido_paterno = strtoupper($this->paterno);
-            $persona->apellido_materno = strtoupper($this->materno);
-            $persona->nombre = strtoupper($this->nombres);
-            $persona->nombre_completo = strtoupper($this->paterno . ' ' . $this->materno . ' ' . $this->nombres);
+            $persona->apellido_paterno = mb_strtoupper($this->paterno, 'UTF-8');
+            $persona->apellido_materno = mb_strtoupper($this->materno, 'UTF-8');
+            $persona->nombre = mb_strtoupper($this->nombres, 'UTF-8');
+            $persona->nombre_completo = mb_strtoupper($this->paterno . ' ' . $this->materno . ' ' . $this->nombres, 'UTF-8');
             $persona->id_genero = $this->genero;
             $persona->fecha_nacimiento = $this->fecha_nacimiento;
-            $persona->direccion = strtoupper($this->direccion);
+            $persona->direccion = mb_strtoupper($this->direccion, 'UTF-8');
             $persona->celular = $this->celular;
             if ($this->celular_opcional != null) {
                 $persona->celular_opcional = $this->celular_opcional;
             } else {
                 $persona->celular_opcional = null;
             }
-            $persona->correo = $this->email;
+            $persona->correo = mb_strtolower($this->email, 'UTF-8');
             if ($this->email_opcional != null) {
-                $persona->correo_opcional = $this->email_opcional;
+                $persona->correo_opcional = mb_strtolower($this->email_opcional, 'UTF-8');
             } else {
                 $persona->correo_opcional = null;
             }
             $persona->año_egreso = $this->año_egreso;
-            $persona->especialidad_carrera = strtoupper($this->especialidad_carrera);
-            $persona->centro_trabajo = strtoupper($this->centro_trabajo);
+            $persona->especialidad_carrera = mb_strtoupper($this->especialidad_carrera, 'UTF-8');
+            $persona->centro_trabajo = mb_strtoupper($this->centro_trabajo, 'UTF-8');
             if (strlen($this->documento) == 8) {
                 $persona->id_tipo_documento = 1;
             } else if (strlen($this->documento) == 9) {
@@ -539,28 +539,28 @@ class Registro extends Component
             // registrar datos de persona
             $persona = new Persona();
             $persona->numero_documento = $this->documento_identidad;
-            $persona->apellido_paterno = strtoupper($this->paterno);
-            $persona->apellido_materno = strtoupper($this->materno);
-            $persona->nombre = strtoupper($this->nombres);
-            $persona->nombre_completo = strtoupper($this->paterno . ' ' . $this->materno . ' ' . $this->nombres);
+            $persona->apellido_paterno = mb_strtoupper($this->paterno, 'UTF-8');
+            $persona->apellido_materno = mb_strtoupper($this->materno, 'UTF-8');
+            $persona->nombre = mb_strtoupper($this->nombres, 'UTF-8');
+            $persona->nombre_completo = mb_strtoupper($this->paterno . ' ' . $this->materno . ' ' . $this->nombres, 'UTF-8');
             $persona->id_genero = $this->genero;
             $persona->fecha_nacimiento = $this->fecha_nacimiento;
-            $persona->direccion = strtoupper($this->direccion);
+            $persona->direccion = mb_strtoupper($this->direccion, 'UTF-8');
             $persona->celular = $this->celular;
             if ($this->celular_opcional != null) {
                 $persona->celular_opcional = $this->celular_opcional;
             } else {
                 $persona->celular_opcional = null;
             }
-            $persona->correo = $this->email;
+            $persona->correo = mb_strtolower($this->email, 'UTF-8');
             if ($this->email_opcional != null) {
-                $persona->correo_opcional = $this->email_opcional;
+                $persona->correo_opcional = mb_strtolower($this->email_opcional, 'UTF-8');
             } else {
                 $persona->correo_opcional = null;
             }
             $persona->año_egreso = $this->año_egreso;
-            $persona->especialidad_carrera = strtoupper($this->especialidad_carrera);
-            $persona->centro_trabajo = strtoupper($this->centro_trabajo);
+            $persona->especialidad_carrera = mb_strtoupper($this->especialidad_carrera, 'UTF-8');
+            $persona->centro_trabajo = mb_strtoupper($this->centro_trabajo, 'UTF-8');
             $persona->id_tipo_documento = $this->tipo_documento;
             $persona->id_discapacidad = $this->discapacidad;
             $persona->id_estado_civil = $this->estado_civil;
