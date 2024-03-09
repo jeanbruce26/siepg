@@ -262,6 +262,7 @@ class Index extends Component
         if ($cantidad == $verificados) {
             $inscripcion = Inscripcion::find($expediente->id_inscripcion);
             $inscripcion->inscripcion_estado = 1; //verificado
+            $inscripcion->verificar_expedientes = 1; //verificado
             $inscripcion->save();
             // mostrar alerta
             $this->alertaInscripcion(
@@ -276,6 +277,7 @@ class Index extends Component
         } else {
             $inscripcion = Inscripcion::find($expediente->id_inscripcion);
             $inscripcion->inscripcion_estado = 0; //pendiente
+            $inscripcion->verificar_expedientes = 0; //pendiente
             $inscripcion->save();
         }
     }
@@ -285,6 +287,12 @@ class Index extends Component
         $expediente = ExpedienteInscripcion::find($id_expediente_inscripcion);
         $expediente->expediente_inscripcion_verificacion = 2; //rechazado
         $expediente->save();
+
+        // cambiar el estado de la verificacion de expedientes de la inscripcion a observado
+        $inscripcion = Inscripcion::find($expediente->id_inscripcion);
+        $inscripcion->verificar_expedientes = 2; //observado
+        $inscripcion->save();
+
         // mostrar alerta
         $this->alertaInscripcion(
             '¡Exito!',
