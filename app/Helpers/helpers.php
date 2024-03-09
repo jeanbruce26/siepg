@@ -88,6 +88,26 @@ function registrarExpedientes($admision, $numero_documento, $expediente, $key, $
     }
 }
 
+function verEstadoExpediente($id_inscripcion)
+{
+    $expedientes = ExpedienteInscripcion::where('id_inscripcion', $id_inscripcion)->get();
+    $estado = 0;
+    // verificar si tiene expedientes pendientes por verificar, si tienes expedientes pendientes por verificar, el estado es 0
+    // si el estado es 1, significa que todos los expedientes han sido verificados y si el estado es 2, significa que hay expedientes observados
+    foreach ($expedientes as $expediente) {
+        if ($expediente->expediente_inscripcion_verificacion == 0) {
+            $estado = 0;
+            break;
+        } else if ($expediente->expediente_inscripcion_verificacion == 1) {
+            $estado = 1;
+        } else if ($expediente->expediente_inscripcion_verificacion == 2) {
+            $estado = 2;
+            break;
+        }
+    }
+    return $estado;
+}
+
 function verificarProcesoAdmision()
 {
     $admision = Admision::where('admision_estado', 1)->first();

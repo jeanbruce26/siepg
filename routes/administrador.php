@@ -16,6 +16,7 @@ use App\Http\Controllers\ModuloAdministrador\SedeController;
 use App\Http\Controllers\ModuloAdministrador\TipoSeguimientoController;
 use App\Http\Controllers\ModuloAdministrador\TrabajadorController;
 use App\Http\Controllers\ModuloAdministrador\UsuarioTrabajadorController;
+use App\Models\Inscripcion;
 use App\Models\Persona;
 use App\Models\UsuarioEstudiante;
 use Illuminate\Support\Facades\Route;
@@ -90,6 +91,23 @@ Route::get('/cambiar-correos', function () {
         'message' => 'Correos cambiados'
     ]);
 })->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.cambiar-correos');
+
+// verificar si hay expedientes pendientes por verificar
+Route::get('/verificar-expedientes-pendientes', function () {
+    $inscripciones = Inscripcion::where('inscripcion_estado', 1)->get();
+    foreach ($inscripciones as $inscripcion) {
+        // verificar si tiene expedientes pendientes por verificar, si tienes expedientes pendientes por verificar, el estado es 0
+        // si el estado es 1, significa que todos los expedientes han sido verificados y si el estado es 2, significa que hay expedientes observados
+        $estado = verEstadoExpediente($inscripcion->id_inscripcion);
+
+        // cambiar el estado de la verificacion de expedientes
+        $inscripcion->verificar_expedientes = $estado;
+        $inscripcion->save();
+    }
+    return response()->json([
+        'message' => 'Expedientes verificados'
+    ]);
+})->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.verificar-expedientes-pendientes');
 
 
 //

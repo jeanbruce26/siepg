@@ -28,6 +28,7 @@ class Index extends Component
         'seguimientoFiltro' => ['except' => ''],
         'estadoFiltro' => ['except' => ''],
         'estado_filtro' => ['except' => ''],
+        'estado_expediente_filtro' => ['except' => 'all'],
     ];
 
     public $search = '';
@@ -57,6 +58,9 @@ class Index extends Component
     // estado de la inscripcion
     public $estado;
     public $observacion_inscripcion;
+
+    // filtro de estado de expediente
+    public $estado_expediente_filtro = "all";
 
     //Para mapear el mes al filtrar
     public $meses = [
@@ -425,8 +429,9 @@ class Index extends Component
                 ->where('programa.id_modalidad', $this->modalidadFiltro == null ? '!=' : '=', $this->modalidadFiltro)
                 ->where('programa_plan.id_programa', $this->programaFiltro == null ? '!=' : '=', $this->programaFiltro)
                 ->where('programa_proceso.id_admision', $this->procesoFiltro == null ? '!=' : '=', $this->procesoFiltro)
-                ->where('inscripcion_estado', $this->estadoFiltro == null ? '!=' : '=', $this->estadoFiltro)
-                ->orderBy('id_inscripcion', 'desc')
+                ->where('inscripcion.inscripcion_estado', $this->estadoFiltro == null ? '!=' : '=', $this->estadoFiltro)
+                ->where('inscripcion.verificar_expedientes', $this->estado_expediente_filtro == 'all' ? '!=' : '=', $this->estado_expediente_filtro)
+                ->orderBy('inscripcion.id_inscripcion', 'desc')
                 ->paginate(10);
         } else { //Si no existe el seguimientoFiltro, se muestra la consulta normal
             $inscripcionModel = Inscripcion::Join('programa_proceso', 'inscripcion.id_programa_proceso', '=', 'programa_proceso.id_programa_proceso')
@@ -448,11 +453,12 @@ class Index extends Component
                 ->where('programa.id_modalidad', $this->modalidadFiltro == null ? '!=' : '=', $this->modalidadFiltro)
                 ->where('programa_plan.id_programa', $this->programaFiltro == null ? '!=' : '=', $this->programaFiltro)
                 ->where('programa_proceso.id_admision', $this->procesoFiltro == null ? '!=' : '=', $this->procesoFiltro)
-                ->where('inscripcion_estado', $this->estadoFiltro == null ? '!=' : '=', $this->estadoFiltro)
+                ->where('inscripcion.inscripcion_estado', $this->estadoFiltro == null ? '!=' : '=', $this->estadoFiltro)
+                ->where('inscripcion.verificar_expedientes', $this->estado_expediente_filtro == 'all' ? '!=' : '=', $this->estado_expediente_filtro == 'all' ? 3 : $this->estado_expediente_filtro)
                 ->when($this->mesFiltro, function ($query, $mesFiltro) {
                     return $query->whereMonth('inscripcion_fecha', $mesFiltro);
                 })
-                ->orderBy('id_inscripcion', 'desc')
+                ->orderBy('inscripcion.id_inscripcion', 'desc')
                 ->paginate(10);
         }
 

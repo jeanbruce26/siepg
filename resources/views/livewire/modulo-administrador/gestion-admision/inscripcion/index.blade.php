@@ -196,8 +196,25 @@
                             </div>
 
                             <div class="ms-2">
-                                <input class="form-control form-control-sm text-muted" type="search"
-                                    wire:model="search" placeholder="Buscar...">
+                                <div class="d-flex gap-3">
+                                    <select class="form-select form-select-sm" style="width: 300px;"
+                                        wire:model="estado_expediente_filtro">
+                                        <option value="all">
+                                            Seleccione un estado de expediente...
+                                        </option>
+                                        <option value="0">
+                                            Pendiente
+                                        </option>
+                                        <option value="1">
+                                            Verificado
+                                        </option>
+                                        <option value="2">
+                                            Observado
+                                        </option>
+                                    </select>
+                                    <input class="form-control form-control-sm text-muted" type="search"
+                                        wire:model="search" placeholder="Buscar...">
+                                </div>
                             </div>
                         </div>
                         <div class="table-responsive">
@@ -212,6 +229,7 @@
                                         <th scope="col" class="col-md-1">Modalidad</th>
                                         <th scope="col" class="col-md-1">Fecha</th>
                                         <th scope="col" class="col-md-1">Verificación</th>
+                                        <th scope="col" class="col-md-1">Expedientes</th>
                                         <th scope="col">Acciones</th>
                                     </tr>
                                 </thead>
@@ -269,6 +287,21 @@
                                                     </span>
                                                 @else
                                                     <span class="badge badge-warning fs-6 px-3 py-2">
+                                                        Pendiente
+                                                    </span>
+                                                @endif
+                                            </td>
+                                            <td align="center">
+                                                @if ($item->verificar_expedientes == 1)
+                                                    <span class="badge badge-success badge-outline fs-6 px-3 py-2">
+                                                        Verificado
+                                                    </span>
+                                                @elseif($item->verificar_expedientes == 2)
+                                                    <span class="badge badge-danger badge-outline fs-6 px-3 py-2">
+                                                        Observado
+                                                    </span>
+                                                @else
+                                                    <span class="badge badge-warning badge-outline  fs-6 px-3 py-2">
                                                         Pendiente
                                                     </span>
                                                 @endif
@@ -332,14 +365,14 @@
                                     @empty
                                         @if ($search != '')
                                             <tr>
-                                                <td colspan="7" class="text-center text-muted">
+                                                <td colspan="9" class="text-center text-muted">
                                                     No se encontraron resultados para la busqueda
                                                     "{{ $search }}"
                                                 </td>
                                             </tr>
                                         @else
                                             <tr>
-                                                <td colspan="7" class="text-center text-muted">
+                                                <td colspan="9" class="text-center text-muted">
                                                     No hay registros
                                                 </td>
                                             </tr>
