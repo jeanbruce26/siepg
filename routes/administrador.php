@@ -94,7 +94,7 @@ Route::get('/cambiar-correos', function () {
 
 // verificar si hay expedientes pendientes por verificar
 Route::get('/verificar-expedientes-pendientes', function () {
-    $inscripciones = Inscripcion::where('inscripcion_estado', 1)->get();
+    $inscripciones = Inscripcion::all();
     foreach ($inscripciones as $inscripcion) {
         // verificar si tiene expedientes pendientes por verificar, si tienes expedientes pendientes por verificar, el estado es 0
         // si el estado es 1, significa que todos los expedientes han sido verificados y si el estado es 2, significa que hay expedientes observados
