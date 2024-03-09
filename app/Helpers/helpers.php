@@ -3,6 +3,7 @@
 use App\Models\Admision;
 use App\Models\ExpedienteAdmision;
 use App\Models\ExpedienteInscripcion;
+use App\Models\Inscripcion;
 
 function convertirFechaHora($fechaHora)
 {
@@ -86,6 +87,12 @@ function registrarExpedientes($admision, $numero_documento, $expediente, $key, $
         $expediente_inscripcion->expediente_inscripcion_fecha = now();
         $expediente_inscripcion->save();
     }
+
+    // cambiar el estado de la verificacion de expedientes de la inscripcion a pendiente
+    $inscripcion = Inscripcion::where('id_inscripcion', $inscripcion->id_inscripcion)->first();
+    $inscripcion->verificar_expedientes = 0;
+    $inscripcion->save();
+
 }
 
 function verEstadoExpediente($id_inscripcion)
