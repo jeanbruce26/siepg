@@ -57,14 +57,18 @@
                                         <td align="center" class="fw-bold fs-5">{{ $item->id_correo }}</td>
                                         <td>{{ $item->correo_asunto }}</td>
                                         <td>
-                                            @php echo $item->correo_mensaje; @endphp
+                                            @php
+                                                echo substr($item->correo_mensaje, 0, 25) . '...';
+                                            @endphp
                                         </td>
-                                        <td>
-                                            <button class="btn btn-sm btn-light-primary">
-                                                Ver Enviado
+                                        <td align="center">
+                                            <button class="btn btn-sm btn-info"
+                                                wire:click="cargar_correos({{ $item->id_correo }})"
+                                                data-bs-toggle="modal" data-bs-target="#modal_correos">
+                                                Ver Correos Enviados
                                             </button>
                                         </td>
-                                        <td>
+                                        <td align="center">
                                             {{ convertirFechaHora($item->created_at) }}
                                         </td>
                                     </tr>
@@ -111,60 +115,44 @@
             </div>
         </div>
     </div>
-    {{-- Modal Sede --}}
-    {{-- <div wire:ignore.self class="modal fade" tabindex="-1" id="modalCanalPago">
-            <div class="modal-dialog modal-dialog-scrollable">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h2 class="modal-title">
-                            {{ $titulo }}
-                        </h2>
-                        <div class="btn btn-icon btn-sm btn-active-light-danger ms-2" data-bs-dismiss="modal"
-                            aria-label="Close">
-                            <span class="svg-icon svg-icon-2hx">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5"
-                                        fill="currentColor" />
-                                    <rect x="7" y="15.3137" width="12" height="2" rx="1"
-                                        transform="rotate(-45 7 15.3137)" fill="currentColor" />
-                                    <rect x="8.41422" y="7" width="12" height="2" rx="1"
-                                        transform="rotate(45 8.41422 7)" fill="currentColor" />
-                                </svg>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="modal-body">
-                        <form autocomplete="off">
-                            <div class="row">
-                                <div class="mb-3 col-md-12 col-sm-12">
-                                    <label class="form-label">Canal Pago<span class="text-danger">*</span></label>
-                                    <input wire:model="canalPago" type="text"
-                                        class="form-control @error('canalPago') is-invalid  @enderror"
-                                        placeholder="Ingrese el Canal de Pago">
-                                    @error('canalPago')
-                                        <span class="error text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer col-12 d-flex justify-content-between">
-                        <button type="button" wire:click="limpiar()" class="btn btn-secondary"
-                            data-bs-dismiss="modal">Cancelar</button>
 
-                        <button type="button" wire:click="guardarCanalPago" class="btn btn-primary"
-                            wire:loading.attr="disabled" wire:target="guardarCanalPago">
-                            <div wire:loading.remove wire:target="guardarCanalPago">
-                                Guardar
-                            </div>
-                            <div wire:loading wire:target="guardarCanalPago">
-                                Procesando <span class="spinner-border spinner-border-sm align-middle ms-2">
-                            </div>
-                        </button>
-
+    <div wire:ignore.self class="modal fade" tabindex="-1" id="modal_correos">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">
+                        Correos Enviados
+                    </h2>
+                    <div class="btn btn-icon btn-sm btn-active-light-danger ms-2" data-bs-dismiss="modal"
+                        aria-label="Close">
+                        <span class="svg-icon svg-icon-2hx">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5"
+                                    fill="currentColor" />
+                                <rect x="7" y="15.3137" width="12" height="2" rx="1"
+                                    transform="rotate(-45 7 15.3137)" fill="currentColor" />
+                                <rect x="8.41422" y="7" width="12" height="2" rx="1"
+                                    transform="rotate(45 8.41422 7)" fill="currentColor" />
+                            </svg>
+                        </span>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <span class="fs-3">
+                            Asunto: <strong>{{ $asunto }}</strong>
+                        </span>
+                    </div>
+                    <div class="d-flex flex-column">
+                        @foreach ($correos_enviados as $item)
+                            <li class="d-flex align-items-center py-2">
+                                <span class="bullet me-5"></span> {{ $item }}
+                            </li>
+                        @endforeach
                     </div>
                 </div>
             </div>
-        </div> --}}
+        </div>
+    </div>
 </div>
