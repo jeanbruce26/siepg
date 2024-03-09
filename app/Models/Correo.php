@@ -22,4 +22,12 @@ class Correo extends Model
     {
         ///...
     }
+
+    public function scopeSearch($query, $search)
+    {
+        if ($search) {
+            return $query->where('correo_asunto', 'LIKE', "%$search%")
+                ->orWhere('correo_mensaje', 'LIKE', "%$search%");
+        }
+    }
 }

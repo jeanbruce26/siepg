@@ -4,6 +4,7 @@ use App\Http\Controllers\ModuloAdministrador\AdmisionController;
 use App\Http\Controllers\ModuloAdministrador\AdmitidoController;
 use App\Http\Controllers\ModuloAdministrador\CanalPagoController;
 use App\Http\Controllers\ModuloAdministrador\ConceptoPagoController;
+use App\Http\Controllers\ModuloAdministrador\CorreoController;
 use App\Http\Controllers\ModuloAdministrador\DashboardController;
 use App\Http\Controllers\ModuloAdministrador\EstudianteController;
 use App\Http\Controllers\ModuloAdministrador\ExpedienteController;
@@ -16,7 +17,6 @@ use App\Http\Controllers\ModuloAdministrador\SedeController;
 use App\Http\Controllers\ModuloAdministrador\TipoSeguimientoController;
 use App\Http\Controllers\ModuloAdministrador\TrabajadorController;
 use App\Http\Controllers\ModuloAdministrador\UsuarioTrabajadorController;
-use App\Http\Livewire\ModuloAdministrador\GestionCorreo\Index as GestionCorreoIndex;
 use App\Models\Inscripcion;
 use App\Models\Persona;
 use App\Models\UsuarioEstudiante;
@@ -81,7 +81,7 @@ Route::get('/tipo-seguimiento', [TipoSeguimientoController::class, 'index'])->mi
 Route::get('/generar-fichas-inscripcion', [InscripcionController::class, 'generarFichasInscripcion'])->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.generar-fichas-inscripcion');
 
 // Ruta para el modulo de gestion de correos
-Route::get('/gestion-correo', GestionCorreoIndex::class)->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.gestion-correo');
+Route::get('/gestion-correo', [CorreoController::class, 'index'])->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.gestion-correo');
 
 // cambiar todos los correos de los usuarios a minusculas
 Route::get('/cambiar-correos', function () {
