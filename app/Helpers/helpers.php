@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Admision;
+use App\Models\Admitido;
 use App\Models\ExpedienteAdmision;
 use App\Models\ExpedienteInscripcion;
 use App\Models\Inscripcion;
@@ -123,6 +124,73 @@ function verificarProcesoAdmision()
     } else {
         return false;
     }
+}
+
+function calcularCantidadDePersonas($tipo, $proceso, $modalidad, $programa)
+{
+    $cantidad = 0;
+    if ($tipo == 1) {
+        if ($programa) {
+            $cantidad = Inscripcion::join('programa_proceso', 'programa_proceso.id_programa_proceso', '=', 'inscripcion.id_programa_proceso')
+                ->join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
+                ->join('programa', 'programa.id_programa', '=', 'programa_plan.id_programa')
+                ->join('persona', 'persona.id_persona', '=', 'inscripcion.id_persona')
+                ->where('programa.id_modalidad', $modalidad)
+                ->where('programa.id_programa', $programa)
+                ->get();
+        } else if ($modalidad) {
+            $cantidad = Inscripcion::join('programa_proceso', 'programa_proceso.id_programa_proceso', '=', 'inscripcion.id_programa_proceso')
+                ->join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
+                ->join('programa', 'programa.id_programa', '=', 'programa_plan.id_programa')
+                ->join('persona', 'persona.id_persona', '=', 'inscripcion.id_persona')
+                ->where('programa.id_modalidad', $modalidad)
+                ->get();
+        } else if ($proceso) {
+            $cantidad = Inscripcion::join('programa_proceso', 'programa_proceso.id_programa_proceso', '=', 'inscripcion.id_programa_proceso')
+                ->join('persona', 'persona.id_persona', '=', 'inscripcion.id_persona')
+                ->where('programa_proceso.id_admision', $proceso)
+                ->get();
+        }
+    } else {
+        if ($programa) {
+            $cantidad = Admitido::join('programa_proceso', 'programa_proceso.id_programa_proceso', '=', 'admitido.id_programa_proceso')
+                ->join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
+                ->join('programa', 'programa.id_programa', '=', 'programa_plan.id_programa')
+                ->join('persona', 'persona.id_persona', '=', 'inscripcion.id_persona')
+                ->where('programa.id_modalidad', $modalidad)
+                ->where('programa.id_programa', $programa)
+                ->get();
+        } else if ($modalidad) {
+            $cantidad = Admitido::join('programa_proceso', 'programa_proceso.id_programa_proceso', '=', 'admitido.id_programa_proceso')
+                ->join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
+                ->join('programa', 'programa.id_programa', '=', 'programa_plan.id_programa')
+                ->join('persona', 'persona.id_persona', '=', 'inscripcion.id_persona')
+                ->where('programa.id_modalidad', $modalidad)
+                ->get();
+        } else if ($proceso) {
+            $cantidad = Admitido::join('programa_proceso', 'programa_proceso.id_programa_proceso', '=', 'admitido.id_programa_proceso')
+                ->join('persona', 'persona.id_persona', '=', 'inscripcion.id_persona')
+                ->where('programa_proceso.id_admision', $proceso)
+                ->get();
+        }
+    }
+
+    $correos = [];
+
+    if ($tipo == 1) {
+        foreach ($cantidad as $item) {
+            $correos[] = $item->correo;
+        }
+    } else {
+        foreach ($cantidad as $item) {
+            $correos[] = $item->correo;
+        }
+    }
+
+    return [
+        'cantidad' => $cantidad->count(),
+        'correos' => $correos
+    ];
 }
 
 //

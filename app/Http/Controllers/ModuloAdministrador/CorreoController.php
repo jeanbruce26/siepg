@@ -11,4 +11,9 @@ class CorreoController extends Controller
     {
         return view('modulo-administrador.gestion-correo.index');
     }
+
+    public function create()
+    {
+        return view('modulo-administrador.gestion-correo.create');
+    }
 }

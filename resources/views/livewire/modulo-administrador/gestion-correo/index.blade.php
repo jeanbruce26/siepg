@@ -20,7 +20,8 @@
                 </ul>
             </div>
             <div class="d-flex align-items-center gap-2 gap-lg-3">
-                <a href="#" class="btn btn-primary btn-sm hover-elevate-up">
+                <a href="{{ route('administrador.gestion-correo.crear') }}"
+                    class="btn btn-primary btn-sm hover-elevate-up">
                     Nuevo
                 </a>
             </div>
@@ -56,7 +57,7 @@
                                         <td align="center" class="fw-bold fs-5">{{ $item->id_correo }}</td>
                                         <td>{{ $item->correo_asunto }}</td>
                                         <td>
-                                            {{ $item->correo_mensaje }}
+                                            @php echo $item->correo_mensaje; @endphp
                                         </td>
                                         <td>
                                             <button class="btn btn-sm btn-light-primary">

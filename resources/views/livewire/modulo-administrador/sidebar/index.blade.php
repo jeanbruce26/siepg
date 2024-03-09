@@ -306,7 +306,7 @@
 
                 {{-- Gestion de Correos Masivos --}}
                 <div class="menu-item">
-                    <a class="menu-link {{ $route === 'administrador.gestion-correo' ? 'active border-3 border-start border-primary' : '' }}"
+                    <a class="menu-link {{ request()->routeIs('administrador.gestion-correo*') ? 'active border-3 border-start border-primary' : '' }}"
                         href="{{ route('administrador.gestion-correo') }}">
                         <span class="menu-icon">
                             <span class="svg-icon svg-icon-2">
