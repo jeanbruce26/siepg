@@ -304,6 +304,21 @@
                     </div>
                 </div>
 
+                {{-- Gestion de Correos Masivos --}}
+                <div class="menu-item">
+                    <a class="menu-link {{ $route === 'administrador.gestion-correo' ? 'active border-3 border-start border-primary' : '' }}"
+                        href="{{ route('administrador.gestion-correo') }}">
+                        <span class="menu-icon">
+                            <span class="svg-icon svg-icon-2">
+                                <i class="ki-outline ki-sms fs-2"></i>
+                            </span>
+                        </span>
+                        <span class="menu-title fs-4">
+                            Gestion de Correos
+                        </span>
+                    </a>
+                </div>
+
                 {{-- Documentación --}}
                 <div class="menu-item">
                     <a class="menu-link" href="https://preview.keenthemes.com/html/metronic/docs" target="_blank">

@@ -16,6 +16,7 @@ use App\Http\Controllers\ModuloAdministrador\SedeController;
 use App\Http\Controllers\ModuloAdministrador\TipoSeguimientoController;
 use App\Http\Controllers\ModuloAdministrador\TrabajadorController;
 use App\Http\Controllers\ModuloAdministrador\UsuarioTrabajadorController;
+use App\Http\Livewire\ModuloAdministrador\GestionCorreo\Index as GestionCorreoIndex;
 use App\Models\Inscripcion;
 use App\Models\Persona;
 use App\Models\UsuarioEstudiante;
@@ -78,6 +79,9 @@ Route::get('/tipo-seguimiento', [TipoSeguimientoController::class, 'index'])->mi
 
 // Ruta para generar fichas de inscripcion de quienes no se les genero y enviarlas por correo
 Route::get('/generar-fichas-inscripcion', [InscripcionController::class, 'generarFichasInscripcion'])->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.generar-fichas-inscripcion');
+
+// Ruta para el modulo de gestion de correos
+Route::get('/gestion-correo', GestionCorreoIndex::class)->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.gestion-correo');
 
 // cambiar todos los correos de los usuarios a minusculas
 Route::get('/cambiar-correos', function () {
