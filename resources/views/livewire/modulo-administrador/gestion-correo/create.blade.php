@@ -67,12 +67,29 @@
                                                     class="form-control text-muted @error('buscar_dni') is-invalid @enderror"
                                                     type="text" wire:model="buscar_dni"
                                                     placeholder="Buscar persona por dni">
+                                                @error('buscar_dni')
+                                                    <span class="error text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                             <div class="col-md-3">
                                                 <button class="btn btn-primary hover-elevate-up w-100"
                                                     wire:click="buscar_persona">
                                                     Buscar
                                                 </button>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="separator separator-content my-3 text-secondary">
+                                                    O
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <input
+                                                    class="form-control text-muted @error('correo_electronico') is-invalid @enderror"
+                                                    type="text" wire:model="correo_electronico"
+                                                    placeholder="Ingrese un correo electrónico">
+                                                @error('correo_electronico')
+                                                    <span class="error text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                         </div>
                                     </div>

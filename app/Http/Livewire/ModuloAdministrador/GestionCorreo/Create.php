@@ -16,6 +16,7 @@ class Create extends Component
 {
     public $tipo_envio;
     public $buscar_dni;
+    public $correo_electronico;
     public $persona;
     public $tipo_envio_tabla;
     public $proceso;
@@ -103,11 +104,41 @@ class Create extends Component
 
         if ($this->tipo_envio == 1) {
             $this->validate([
-                'buscar_dni' => 'required|numeric|digits:8'
+                'buscar_dni' => 'nullable|numeric|digits:8',
+                'correo_electronico' => 'nullable|email',
             ]);
 
-            $correos_db = json_encode([$this->persona->correo]);
-            $correos = [$this->persona->correo];
+            // veriifcamos si el cambo buscar_dni y correo_electronico estan vacios
+            if ($this->buscar_dni == null && $this->correo_electronico == null) {
+                $this->addError('buscar_dni', 'El campo DNI o Correo Electrónico es requerido');
+                $this->addError('correo_electronico', 'El campo DNI o Correo Electrónico es requerido');
+                return;
+            }
+
+            // verificamos si el campo buscar_dni y correo_electronico estan llenos
+            if ($this->buscar_dni != null && $this->correo_electronico != null) {
+                $this->addError('buscar_dni', 'Solo debe llenar un campo');
+                $this->addError('correo_electronico', 'Solo debe llenar un campo');
+                return;
+            }
+
+            // verificamos si el campo buscar_dni esta lleno y correo_electronico esta vacio
+            if ($this->buscar_dni != null && $this->correo_electronico == null) {
+                $this->persona = Persona::where('numero_documento', $this->buscar_dni)->first();
+                if ($this->persona == null) {
+                    $this->addError('buscar_dni', 'El DNI no se encuentra registrado');
+                    return;
+                }
+
+                $correos_db = json_encode([$this->persona->correo]);
+                $correos = [$this->persona->correo];
+            }
+
+            // verificamos si el campo buscar_dni esta vacio y correo_electronico esta lleno
+            if ($this->buscar_dni == null && $this->correo_electronico != null) {
+                $correos_db = json_encode([$this->correo_electronico]);
+                $correos = [$this->correo_electronico];
+            }
         } else {
             $this->validate([
                 'proceso' => 'required',
