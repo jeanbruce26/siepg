@@ -531,6 +531,7 @@
                             </label>
                             <select class="form-select @error('modalidad') is-invalid @enderror"
                                 wire:model="modalidad" id="modalidad" data-control="select2"
+                                data-dropdown-parent="#ModalInscripcionEditar"
                                 data-placeholder="Seleccione la Modalidad">
                                 <option></option>
                                 @foreach ($modalidadesModal as $item)
@@ -552,19 +553,16 @@
                                 Programa
                             </label>
                             <select class="form-select @error('programa') is-invalid @enderror" wire:model="programa"
-                                id="programa" data-control="select2" data-placeholder="Seleccione el Programa">
+                                data-dropdown-parent="#ModalInscripcionEditar" id="programa" data-control="select2"
+                                data-placeholder="Seleccione el Programa">
                                 <option></option>
-                                @if ($modalidad)
-                                    @foreach ($programasModal as $item)
-                                        @if ($item->programa_proceso_estado == 1)
-                                            <option value="{{ $item->id_programa }}">{{ $item->programa }} EN
-                                                {{ $item->subprograma }} @if ($item->mencion != '')
-                                                    CON MENCION EN {{ $item->mencion }}
-                                                @endif
-                                            </option>
+                                @foreach ($programasModal as $item)
+                                    <option value="{{ $item->id_programa }}">{{ $item->programa }} EN
+                                        {{ $item->subprograma }} @if ($item->mencion != '')
+                                            CON MENCION EN {{ $item->mencion }}
                                         @endif
-                                    @endforeach
-                                @endif
+                                    </option>
+                                @endforeach
                             </select>
                             @error('programa')
                                 <span class="text-danger">{{ $message }}</span>
@@ -666,30 +664,12 @@
             </div>
         </div>
     </div>
-</div>
-@push('scripts')
-    <script>
-        //Select2 de Filtro
-        //Filtro de proceso_filtro select2
-        $(document).ready(function() {
-            $('#proceso_filtro').select2({
-                placeholder: 'Seleccione',
-                allowClear: true,
-                width: '100%',
-                selectOnClose: true,
-                language: {
-                    noResults: function() {
-                        return "No se encontraron resultados";
-                    },
-                    searching: function() {
-                        return "Buscando...";
-                    }
-                }
-            });
-            $('#proceso_filtro').on('change', function() {
-                @this.set('proceso_filtro', this.value);
-            });
-            Livewire.hook('message.processed', (message, component) => {
+    
+    @push('scripts')
+        <script>
+            //Select2 de Filtro
+            //Filtro de proceso_filtro select2
+            $(document).ready(function() {
                 $('#proceso_filtro').select2({
                     placeholder: 'Seleccione',
                     allowClear: true,
@@ -707,28 +687,28 @@
                 $('#proceso_filtro').on('change', function() {
                     @this.set('proceso_filtro', this.value);
                 });
+                Livewire.hook('message.processed', (message, component) => {
+                    $('#proceso_filtro').select2({
+                        placeholder: 'Seleccione',
+                        allowClear: true,
+                        width: '100%',
+                        selectOnClose: true,
+                        language: {
+                            noResults: function() {
+                                return "No se encontraron resultados";
+                            },
+                            searching: function() {
+                                return "Buscando...";
+                            }
+                        }
+                    });
+                    $('#proceso_filtro').on('change', function() {
+                        @this.set('proceso_filtro', this.value);
+                    });
+                });
             });
-        });
-        //Filtro de modalidad_filtro select2
-        $(document).ready(function() {
-            $('#modalidad_filtro').select2({
-                placeholder: 'Seleccione',
-                allowClear: true,
-                width: '100%',
-                selectOnClose: true,
-                language: {
-                    noResults: function() {
-                        return "No se encontraron resultados";
-                    },
-                    searching: function() {
-                        return "Buscando...";
-                    }
-                }
-            });
-            $('#modalidad_filtro').on('change', function() {
-                @this.set('modalidad_filtro', this.value);
-            });
-            Livewire.hook('message.processed', (message, component) => {
+            //Filtro de modalidad_filtro select2
+            $(document).ready(function() {
                 $('#modalidad_filtro').select2({
                     placeholder: 'Seleccione',
                     allowClear: true,
@@ -746,28 +726,28 @@
                 $('#modalidad_filtro').on('change', function() {
                     @this.set('modalidad_filtro', this.value);
                 });
+                Livewire.hook('message.processed', (message, component) => {
+                    $('#modalidad_filtro').select2({
+                        placeholder: 'Seleccione',
+                        allowClear: true,
+                        width: '100%',
+                        selectOnClose: true,
+                        language: {
+                            noResults: function() {
+                                return "No se encontraron resultados";
+                            },
+                            searching: function() {
+                                return "Buscando...";
+                            }
+                        }
+                    });
+                    $('#modalidad_filtro').on('change', function() {
+                        @this.set('modalidad_filtro', this.value);
+                    });
+                });
             });
-        });
-        //Filtro de programa_filtro select2
-        $(document).ready(function() {
-            $('#programa_filtro').select2({
-                placeholder: 'Seleccione',
-                allowClear: true,
-                width: '100%',
-                selectOnClose: true,
-                language: {
-                    noResults: function() {
-                        return "No se encontraron resultados";
-                    },
-                    searching: function() {
-                        return "Buscando...";
-                    }
-                }
-            });
-            $('#programa_filtro').on('change', function() {
-                @this.set('programa_filtro', this.value);
-            });
-            Livewire.hook('message.processed', (message, component) => {
+            //Filtro de programa_filtro select2
+            $(document).ready(function() {
                 $('#programa_filtro').select2({
                     placeholder: 'Seleccione',
                     allowClear: true,
@@ -785,28 +765,28 @@
                 $('#programa_filtro').on('change', function() {
                     @this.set('programa_filtro', this.value);
                 });
+                Livewire.hook('message.processed', (message, component) => {
+                    $('#programa_filtro').select2({
+                        placeholder: 'Seleccione',
+                        allowClear: true,
+                        width: '100%',
+                        selectOnClose: true,
+                        language: {
+                            noResults: function() {
+                                return "No se encontraron resultados";
+                            },
+                            searching: function() {
+                                return "Buscando...";
+                            }
+                        }
+                    });
+                    $('#programa_filtro').on('change', function() {
+                        @this.set('programa_filtro', this.value);
+                    });
+                });
             });
-        });
-        //Filtro de seguimiento_filtro de select2
-        $(document).ready(function() {
-            $('#seguimiento_filtro').select2({
-                placeholder: 'Seleccione',
-                allowClear: true,
-                width: '100%',
-                selectOnClose: true,
-                language: {
-                    noResults: function() {
-                        return "No se encontraron resultados";
-                    },
-                    searching: function() {
-                        return "Buscando...";
-                    }
-                }
-            });
-            $('#seguimiento_filtro').on('change', function() {
-                @this.set('seguimiento_filtro', this.value);
-            });
-            Livewire.hook('message.processed', (message, component) => {
+            //Filtro de seguimiento_filtro de select2
+            $(document).ready(function() {
                 $('#seguimiento_filtro').select2({
                     placeholder: 'Seleccione',
                     allowClear: true,
@@ -824,28 +804,28 @@
                 $('#seguimiento_filtro').on('change', function() {
                     @this.set('seguimiento_filtro', this.value);
                 });
+                Livewire.hook('message.processed', (message, component) => {
+                    $('#seguimiento_filtro').select2({
+                        placeholder: 'Seleccione',
+                        allowClear: true,
+                        width: '100%',
+                        selectOnClose: true,
+                        language: {
+                            noResults: function() {
+                                return "No se encontraron resultados";
+                            },
+                            searching: function() {
+                                return "Buscando...";
+                            }
+                        }
+                    });
+                    $('#seguimiento_filtro').on('change', function() {
+                        @this.set('seguimiento_filtro', this.value);
+                    });
+                });
             });
-        });
-        //Filtro de mes_filtro de select2
-        $(document).ready(function() {
-            $('#mes_filtro').select2({
-                placeholder: 'Seleccione',
-                allowClear: true,
-                width: '100%',
-                selectOnClose: true,
-                language: {
-                    noResults: function() {
-                        return "No se encontraron resultados";
-                    },
-                    searching: function() {
-                        return "Buscando...";
-                    }
-                }
-            });
-            $('#mes_filtro').on('change', function() {
-                @this.set('mes_filtro', this.value);
-            });
-            Livewire.hook('message.processed', (message, component) => {
+            //Filtro de mes_filtro de select2
+            $(document).ready(function() {
                 $('#mes_filtro').select2({
                     placeholder: 'Seleccione',
                     allowClear: true,
@@ -863,29 +843,29 @@
                 $('#mes_filtro').on('change', function() {
                     @this.set('mes_filtro', this.value);
                 });
+                Livewire.hook('message.processed', (message, component) => {
+                    $('#mes_filtro').select2({
+                        placeholder: 'Seleccione',
+                        allowClear: true,
+                        width: '100%',
+                        selectOnClose: true,
+                        language: {
+                            noResults: function() {
+                                return "No se encontraron resultados";
+                            },
+                            searching: function() {
+                                return "Buscando...";
+                            }
+                        }
+                    });
+                    $('#mes_filtro').on('change', function() {
+                        @this.set('mes_filtro', this.value);
+                    });
+                });
             });
-        });
-        //Select2 de Modal Inscripcion
-        //Filtro de modalidad de select2
-        $(document).ready(function() {
-            $('#modalidad').select2({
-                placeholder: 'Seleccione',
-                allowClear: true,
-                width: '100%',
-                selectOnClose: true,
-                language: {
-                    noResults: function() {
-                        return "No se encontraron resultados";
-                    },
-                    searching: function() {
-                        return "Buscando...";
-                    }
-                }
-            });
-            $('#modalidad').on('change', function() {
-                @this.set('modalidad', this.value);
-            });
-            Livewire.hook('message.processed', (message, component) => {
+            //Select2 de Modal Inscripcion
+            //Filtro de modalidad de select2
+            $(document).ready(function() {
                 $('#modalidad').select2({
                     placeholder: 'Seleccione',
                     allowClear: true,
@@ -903,28 +883,28 @@
                 $('#modalidad').on('change', function() {
                     @this.set('modalidad', this.value);
                 });
+                Livewire.hook('message.processed', (message, component) => {
+                    $('#modalidad').select2({
+                        placeholder: 'Seleccione',
+                        allowClear: true,
+                        width: '100%',
+                        selectOnClose: true,
+                        language: {
+                            noResults: function() {
+                                return "No se encontraron resultados";
+                            },
+                            searching: function() {
+                                return "Buscando...";
+                            }
+                        }
+                    });
+                    $('#modalidad').on('change', function() {
+                        @this.set('modalidad', this.value);
+                    });
+                });
             });
-        });
-        //Filtro de programa de select2
-        $(document).ready(function() {
-            $('#programa').select2({
-                placeholder: 'Seleccione',
-                allowClear: true,
-                width: '100%',
-                selectOnClose: true,
-                language: {
-                    noResults: function() {
-                        return "No se encontraron resultados";
-                    },
-                    searching: function() {
-                        return "Buscando...";
-                    }
-                }
-            });
-            $('#programa').on('change', function() {
-                @this.set('programa', this.value);
-            });
-            Livewire.hook('message.processed', (message, component) => {
+            //Filtro de programa de select2
+            $(document).ready(function() {
                 $('#programa').select2({
                     placeholder: 'Seleccione',
                     allowClear: true,
@@ -942,7 +922,26 @@
                 $('#programa').on('change', function() {
                     @this.set('programa', this.value);
                 });
+                Livewire.hook('message.processed', (message, component) => {
+                    $('#programa').select2({
+                        placeholder: 'Seleccione',
+                        allowClear: true,
+                        width: '100%',
+                        selectOnClose: true,
+                        language: {
+                            noResults: function() {
+                                return "No se encontraron resultados";
+                            },
+                            searching: function() {
+                                return "Buscando...";
+                            }
+                        }
+                    });
+                    $('#programa').on('change', function() {
+                        @this.set('programa', this.value);
+                    });
+                });
             });
-        });
-    </script>
-@endpush
+        </script>
+    @endpush
+</div>

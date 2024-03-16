@@ -12,6 +12,7 @@ use App\Models\Programa;
 use App\Models\ProgramaProceso;
 use App\Models\TipoSeguimiento;
 use App\Models\UsuarioEstudiante;
+use Illuminate\Support\Collection;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -50,7 +51,7 @@ class Index extends Component
     public $id_inscripcion;
     public $modalidad;
     public $programa;
-    public $programasModal; //Para mostrar los programas en el modal
+    public Collection $programasModal; //Para mostrar los programas en el modal
 
     // expeidentes de la inscripcion
     public $expedientes = [];
@@ -85,6 +86,11 @@ class Index extends Component
         'reservarPago',
         'eliminar'
     ];
+
+    public function mount()
+    {
+        $this->programasModal = new Collection();
+    }
 
     public function updated($propertyName)
     {
@@ -182,20 +188,13 @@ class Index extends Component
     }
 
     //Cargamos los datos de la inscripción para mostrarlos en el modal
-    public function cargarInscripcion(Inscripcion $inscripcion)
+    public function cargarInscripcion(Inscripcion $inscripcion, $value)
     {
         $admision = Admision::find($inscripcion->programa_proceso->id_admision);
         $this->id_inscripcion = $inscripcion->id_inscripcion;
         $this->modalidad = $inscripcion->programa_proceso->programa_plan->programa->modalidad->id_modalidad;
         $this->programa = $inscripcion->programa_proceso->programa_plan->programa->id_programa;
-        $this->programasModal = ProgramaProceso::join('programa_plan', 'programa_plan.id_programa_plan', 'programa_proceso.id_programa_plan')
-            ->join('programa', 'programa.id_programa', 'programa_plan.id_programa')
-            ->where('programa.id_modalidad', $this->modalidad)
-            ->where('programa_plan.programa_plan_estado', 1)
-            ->where('programa_proceso.id_admision', $admision->id_admision)
-            ->where('programa_proceso.programa_proceso_estado', 1)
-            ->where('programa_plan.programa_plan_estado', 1)
-            ->get();
+        $this->programasModal = Programa::where('id_modalidad', $this->modalidad)->where('programa_estado', 1)->get();
     }
 
     //Actualizar el programa de la inscripción
@@ -482,13 +481,6 @@ class Index extends Component
             ->selectRaw('programa.id_modalidad as id_modalidad')
             ->groupBy('id_modalidad')
             ->pluck('id_modalidad');
-
-        $this->programasModal = ProgramaProceso::join('programa_plan', 'programa_plan.id_programa_plan', 'programa_proceso.id_programa_plan')
-            ->join('programa', 'programa.id_programa', 'programa_plan.id_programa')
-            ->where('programa.id_modalidad', $this->modalidad)
-            ->where('programa_plan.programa_plan_estado', 1)
-            ->where('programa_proceso.programa_proceso_estado', 1)
-            ->get();
 
         return view('livewire.modulo-administrador.gestion-admision.inscripcion.index', [
             'inscripcionModel' => $inscripcionModel,
