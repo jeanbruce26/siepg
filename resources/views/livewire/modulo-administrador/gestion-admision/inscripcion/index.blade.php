@@ -353,6 +353,12 @@
                                                         </a>
                                                     </div>
                                                     <div class="menu-item px-3">
+                                                        <a wire:click="actualizar_ficha_inscripcion({{ $item->id_inscripcion }})"
+                                                            class="menu-link px-3 cursor-pointer">
+                                                            Actualizar Ficha de Inscripción
+                                                        </a>
+                                                    </div>
+                                                    <div class="menu-item px-3">
                                                         <a style="cursor: pointer"
                                                             wire:click="eliminar_inscripcion({{ $item->id_inscripcion }})"
                                                             class="menu-link px-3">
@@ -664,7 +670,7 @@
             </div>
         </div>
     </div>
-    
+
     @push('scripts')
         <script>
             //Select2 de Filtro

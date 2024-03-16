@@ -211,7 +211,10 @@ class Index extends Component
 
         $id_programa_proceso_actualizado = Programa::join('programa_plan', 'programa.id_programa', '=', 'programa_plan.id_programa')
             ->join('programa_proceso', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
-            ->where('programa.id_modalidad', $this->modalidad)->where('programa.id_programa', $this->programa)->first()->id_programa_proceso;
+            ->where('programa.id_modalidad', $this->modalidad)
+            ->where('programa.id_programa', $this->programa)
+            ->where('programa_proceso.id_admision', getAdmision()->id_admision)
+            ->first()->id_programa_proceso;
         // dd($id_programa_proceso_actualizado);
         //Validar que no hayan cambios
         if ($inscripcion->id_programa_proceso == $id_programa_proceso_actualizado) {
@@ -225,11 +228,20 @@ class Index extends Component
 
         $inscripcion->id_programa_proceso = $id_programa_proceso_actualizado;
         $inscripcion->save();
+        // mostrar alerta
         $this->alertaInscripcion('¡Exito!', 'El programa de la inscripción de ' . $inscripcion->persona->nombre_completo . ' ha sido actualizado satisfactoriamente', 'success', 'Aceptar', 'success');
         //Cerramos el modal
         $this->dispatchBrowserEvent('modal', [
             'titleModal' => '#ModalInscripcionEditar',
         ]);
+        // actualizamos la ficha de inscripcion
+        $this->actualizar_ficha_inscripcion($inscripcion);
+    }
+
+    public function actualizar_ficha_inscripcion(Inscripcion $inscripcion)
+    {
+        generarFichaInscripcion($inscripcion->id_inscripcion);
+        $this->alertaInscripcion('¡Exito!', 'La ficha de inscripción de ' . $inscripcion->persona->nombre_completo . ' ha sido actualizada satisfactoriamente', 'success', 'Aceptar', 'success');
     }
 
     public function cargar_expedientes($id_inscripcion)
