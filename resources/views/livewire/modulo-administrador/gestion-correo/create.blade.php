@@ -221,7 +221,11 @@
         <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>
         <script>
             ClassicEditor
-                .create(document.querySelector('#mensaje'))
+                .create(document.querySelector('#mensaje'), {
+                    ckfinder: {
+                        uploadUrl: "{{ route('ckeditor-upload-file') }}",
+                    },
+                })
                 .then(editor => {
                     editor.model.document.on('change:data', () => {
                         @this.set('mensaje', editor.getData());

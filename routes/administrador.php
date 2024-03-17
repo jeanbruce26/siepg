@@ -83,6 +83,7 @@ Route::get('/generar-fichas-inscripcion', [InscripcionController::class, 'genera
 // Ruta para el modulo de gestion de correos
 Route::get('/gestion-correo', [CorreoController::class, 'index'])->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.gestion-correo');
 Route::get('/gestion-correo/crear', [CorreoController::class, 'create'])->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.gestion-correo.crear');
+Route::post('gestion-correo/upload', [CorreoController::class, 'upload'])->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('ckeditor-upload-file');
 
 // cambiar todos los correos de los usuarios a minusculas
 Route::get('/cambiar-correos', function () {
