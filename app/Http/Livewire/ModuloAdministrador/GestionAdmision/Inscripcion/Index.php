@@ -30,9 +30,12 @@ class Index extends Component
         'estadoFiltro' => ['except' => ''],
         'estado_filtro' => ['except' => ''],
         'estado_expediente_filtro' => ['except' => 'all'],
+        'cant_paginas' => ['except' => 50],
     ];
 
     public $search = '';
+
+    public $cant_paginas = 50;
 
     //Variables para el filtro de Inscripión
     public $procesoFiltro; //Para la búsqueda de inscripciones por proceso
@@ -451,7 +454,7 @@ class Index extends Component
                 ->where('inscripcion.inscripcion_estado', $this->estadoFiltro == null ? '!=' : '=', $this->estadoFiltro)
                 ->where('inscripcion.verificar_expedientes', $this->estado_expediente_filtro == 'all' ? '!=' : '=', $this->estado_expediente_filtro)
                 ->orderBy('inscripcion.id_inscripcion', 'desc')
-                ->paginate(10);
+                ->paginate($this->cant_paginas);
         } else { //Si no existe el seguimientoFiltro, se muestra la consulta normal
             $inscripcionModel = Inscripcion::Join('programa_proceso', 'inscripcion.id_programa_proceso', '=', 'programa_proceso.id_programa_proceso')
                 ->Join('admision', 'programa_proceso.id_admision', '=', 'admision.id_admision')
@@ -478,7 +481,7 @@ class Index extends Component
                     return $query->whereMonth('inscripcion_fecha', $mesFiltro);
                 })
                 ->orderBy('inscripcion.id_inscripcion', 'desc')
-                ->paginate(10);
+                ->paginate($this->cant_paginas);
         }
 
         //Obtenemos los meses únicos de las inscripciones

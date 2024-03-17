@@ -51,7 +51,25 @@
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-5">
-                            <div class="me-1">
+                            <div class="me-1 d-flex gap-3">
+                                <div class="d-flex align-items-center gap-2">
+                                    mostrar
+                                    <select class="form-select form-select-sm" wire:model="cant_paginas">
+                                        <option value="10">
+                                            10
+                                        </option>
+                                        <option value="25">
+                                            25
+                                        </option>
+                                        <option value="50">
+                                            50
+                                        </option>
+                                        <option value="100">
+                                            100
+                                        </option>
+                                    </select>
+                                    registros
+                                </div>
                                 <a class="btn btn-sm btn-light-primary me-3 fw-bold" data-kt-menu-trigger="click"
                                     data-kt-menu-placement="bottom-start">
                                     <span class="svg-icon svg-icon-6 svg-icon-muted me-1">
