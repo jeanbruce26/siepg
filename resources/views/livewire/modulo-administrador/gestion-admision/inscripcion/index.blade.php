@@ -50,7 +50,7 @@
             <div id="kt_app_content_container" class="app-container container-fluid pt-5">
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center mb-5">
+                        <div class="d-flex justify-content-between align-items-center">
                             <div class="me-1 d-flex gap-3">
                                 <div class="d-flex align-items-center gap-2">
                                     mostrar
@@ -235,11 +235,13 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="card-body p-0">
                         <div class="table-responsive">
                             <table class="table table-hover table-rounded border gy-4 gs-4 mb-0 align-middle">
                                 <thead class="bg-light-primary">
                                     <tr align="center"
-                                        class="fw-bold fs-5 text-gray-800 border-bottom-2 border-gray-200">
+                                        class="fw-bold fs-6 text-gray-800 border-bottom-2 border-gray-200">
                                         <th scope="col">ID</th>
                                         <th scope="col">Postulante</th>
                                         <th scope="col">Programa</th>
@@ -405,9 +407,11 @@
                                 </tbody>
                             </table>
                         </div>
+                    </div>
+                    <div class="card-footer">
                         {{-- paginacion de la tabla --}}
                         @if ($inscripcionModel->hasPages())
-                            <div class="d-flex justify-content-between mt-5">
+                            <div class="d-flex justify-content-between">
                                 <div class="d-flex align-items-center text-gray-700">
                                     Mostrando {{ $inscripcionModel->firstItem() }} -
                                     {{ $inscripcionModel->lastItem() }} de
@@ -418,7 +422,7 @@
                                 </div>
                             </div>
                         @else
-                            <div class="d-flex justify-content-between mt-5">
+                            <div class="d-flex justify-content-between">
                                 <div class="d-flex align-items-center text-gray-700">
                                     Mostrando {{ $inscripcionModel->firstItem() }} -
                                     {{ $inscripcionModel->lastItem() }} de
