@@ -9,6 +9,7 @@ use App\Models\Modalidad;
 use App\Models\Persona;
 use App\Models\Programa;
 use App\Models\ProgramaProceso;
+use DOMDocument;
 use Illuminate\Support\Collection;
 use Livewire\Component;
 
@@ -101,6 +102,40 @@ class Create extends Component
             'asunto' => 'required',
             'mensaje' => 'required'
         ]);
+
+        // si hay imagenes en el mensaje con summer note
+        $mensaje = $this->mensaje;
+        $dom = new DOMDocument();
+        $dom->loadHtml($mensaje, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        $images = $dom->getElementsByTagName('img');
+        foreach ($images as $k => $img) {
+            // Crear directorios para guardar los archivos
+            $base_path = 'Posgrado/';
+            $folders = [
+                'files',
+                'media',
+            ];
+            // Asegurar que se creen los directorios con los permisos correctos
+            $path = asignarPermisoFolders($base_path, $folders);
+
+            // Nombre del archivo
+            $data = $img->getAttribute('src');
+            list($type, $data) = explode(';', $data);
+            list(, $data) = explode(',', $data);
+            $data = base64_decode($data);
+
+            // Nombre del archivo
+            $filename = time() . uniqid() . '.png';
+
+            // Guardar el archivo
+            $image_name = $filename;
+
+            file_put_contents(public_path($path . $filename), $data);
+            $img->removeAttribute('src');
+            $img->setAttribute('src', asset($path . $filename));
+        }
+
+        $this->mensaje = $dom->saveHTML();
 
         if ($this->tipo_envio == 1) {
             $this->validate([

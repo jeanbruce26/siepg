@@ -196,13 +196,15 @@
                                 <span class="error text-danger">{{ $message }}</span>
                             @enderror
                         </div>
-                        <div class="col-12" wire:ignore>
+                        <div class="col-12">
                             <label for="mensaje" class="form-label required">
                                 Mensaje
                             </label>
-                            <textarea class="form-control @error('mensaje') is-invalid @enderror" wire:model="mensaje" rows="10"
-                                id="mensaje" placeholder="Ingrese el mensaje del correo">
-                            </textarea>
+                            <div wire:ignore>
+                                <textarea class="form-control @error('mensaje') is-invalid @enderror" wire:model="mensaje" id="mensaje"
+                                    placeholder="Ingrese el mensaje del correo">
+                                </textarea>
+                            </div>
                             @error('mensaje')
                                 <span class="error text-danger">{{ $message }}</span>
                             @enderror
@@ -217,9 +219,12 @@
             </div>
         </div>
     </div>
+    @push('styles')
+        <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+    @endpush
     @push('scripts')
-        <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>
-        <script>
+        {{-- <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script> --}}
+        {{-- <script>
             ClassicEditor
                 .create(document.querySelector('#mensaje'), {
                     ckfinder: {
@@ -234,6 +239,29 @@
                 .catch(error => {
                     console.error(error);
                 });
+        </script> --}}
+        <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+        <script>
+            $(function() {
+                $('#mensaje').summernote({
+                    placeholder: 'Ingrese el mensaje del correo',
+                    height: 300,
+                    toolbar: [
+                        ['style', ['style']],
+                        ['font', ['bold', 'underline', 'clear']],
+                        ['color', ['color']],
+                        ['para', ['ul', 'ol', 'paragraph']],
+                        ['table', ['table']],
+                        ['insert', ['link', 'picture', 'video']],
+                        ['view', ['fullscreen', 'codeview', 'help']]
+                    ],
+                    callbacks: {
+                        onChange: function(contents, $editable) {
+                            @this.set('mensaje', contents);
+                        }
+                    }
+                });
+            })
         </script>
     @endpush
 </div>

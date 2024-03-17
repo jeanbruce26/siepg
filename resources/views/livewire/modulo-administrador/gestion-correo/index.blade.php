@@ -46,7 +46,6 @@
                                 <tr align="center" class="fw-bold fs-5 text-gray-800 border-bottom-2 border-gray-200">
                                     <th scope="col" class="col-md-1">ID</th>
                                     <th scope="col" class="col-md-3">Asunto</th>
-                                    <th scope="col" class="col-md-4">Mensaje</th>
                                     <th scope="col" class="col-md-2">Enviado</th>
                                     <th scope="col" class="col-md-2">Fecha</th>
                                 </tr>
@@ -56,11 +55,6 @@
                                     <tr>
                                         <td align="center" class="fw-bold fs-5">{{ $item->id_correo }}</td>
                                         <td>{{ $item->correo_asunto }}</td>
-                                        <td>
-                                            @php
-                                                echo substr($item->correo_mensaje, 0, 25) . '...';
-                                            @endphp
-                                        </td>
                                         <td align="center">
                                             <button class="btn btn-sm btn-info"
                                                 wire:click="cargar_correos({{ $item->id_correo }})"
