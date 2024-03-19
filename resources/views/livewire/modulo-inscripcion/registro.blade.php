@@ -719,6 +719,16 @@
                     </div>
                 @endif
             @endif
+            {{-- alerta --}}
+            <div
+                class="alert bg-light-warning border border-3 border-warning d-flex align-items-center gap-2 px-5 py-7 mb-8 mt-3">
+                <div class="d-flex flex-column">
+                    <h4 class="mb-1 text-dark">
+                        Nota: Recuerde que para el expediente CV, el tamaño máximo permitido es de 8MB. (cualquier otro
+                        formato de archivo no es aceptado/compatible)
+                    </h4>
+                </div>
+            </div>
             {{-- expedientes --}}
             <div class="card shadow-sm mt-5">
                 <div class="card-header">
