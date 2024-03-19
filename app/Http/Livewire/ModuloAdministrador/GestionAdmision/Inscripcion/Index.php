@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\ModuloAdministrador\GestionAdmision\Inscripcion;
 
 use App\Jobs\ObservarInscripcionJob;
+use App\Jobs\ProcessRegistroFichaInscripcion2;
 use App\Models\Admision;
 use App\Models\ExpedienteInscripcion;
 use App\Models\ExpedienteInscripcionSeguimiento;
@@ -244,6 +245,9 @@ class Index extends Component
     public function actualizar_ficha_inscripcion(Inscripcion $inscripcion)
     {
         generarFichaInscripcion($inscripcion->id_inscripcion);
+
+        ProcessRegistroFichaInscripcion2::dispatch($inscripcion, 'update');
+
         $this->alertaInscripcion('¡Exito!', 'La ficha de inscripción de ' . $inscripcion->persona->nombre_completo . ' ha sido actualizada satisfactoriamente', 'success', 'Aceptar', 'success');
     }
 

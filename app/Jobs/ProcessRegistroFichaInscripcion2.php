@@ -27,13 +27,15 @@ class ProcessRegistroFichaInscripcion2 implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $inscripcion;
+    protected $tipo;
 
     /**
      * Create a new job instance.
      */
-    public function __construct($inscripcion)
+    public function __construct($inscripcion, $tipo)
     {
         $this->inscripcion = $inscripcion;
+        $this->tipo = $tipo;
     }
 
     /**
@@ -150,6 +152,7 @@ class ProcessRegistroFichaInscripcion2 implements ShouldQueue
             'correo' => $persona->correo,
             'programa' => $programa_nombre,
             'link' => $link,
+            'tipo_correo' => $this->tipo,
         ];
 
         Mail::send('modulo-inscripcion.email', $detalle, function ($message) use ($detalle, $pdf_email, $nombre_pdf) {

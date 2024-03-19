@@ -23,7 +23,7 @@ class InscripcionController extends Controller
             ->get();
 
         foreach ($inscripciones as $inscripcion) {
-            ProcessRegistroFichaInscripcion2::dispatch($inscripcion); // Proceso para generar el pdf de inscripcion y enviarlo al correo
+            ProcessRegistroFichaInscripcion2::dispatch($inscripcion, 'create'); // Proceso para generar el pdf de inscripcion y enviarlo al correo
         }
 
         return response()->json([
