@@ -12,3 +12,5 @@ Route::get('/posgrado/registro', [InscripcionController::class, 'registro_alumno
 Route::get('/posgrado/{id}/gracias', [InscripcionController::class, 'gracias_registro'])->name('posgrado.gracias');
 // Ruta para para enviar email de las credenciales
 Route::get('/posgrado/{id}/credenciales', [InscripcionController::class, 'credenciales_email'])->name('posgrado.credenciales-email');
+
+//
