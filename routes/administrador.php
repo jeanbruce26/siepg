@@ -20,6 +20,7 @@ use App\Http\Controllers\ModuloAdministrador\UsuarioTrabajadorController;
 use App\Models\Inscripcion;
 use App\Models\Persona;
 use App\Models\UsuarioEstudiante;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 
 //Vista del Dashboard. El inicio la parte administrativa del sistema
@@ -115,5 +116,28 @@ Route::get('/verificar-expedientes-pendientes', function () {
     ]);
 })->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.verificar-expedientes-pendientes');
 
+// verificar si la persona tiene usuario estudiante creado y si tiene modificar su contraseña a su numero de documento
+Route::get('/verificar-usuario-estudiante', function () {
+    $personas = Persona::all();
+    foreach ($personas as $persona) {
+        $usuario = UsuarioEstudiante::where('id_persona', $persona->id_persona)->first();
+        if ($usuario) {
+            $usuario->password = Hash::make($persona->documento_identidad);
+            $usuario->save();
+        } else {
+            $usuario = new UsuarioEstudiante();
+            $usuario->usuario_estudiante = mb_strtolower($persona->correo, 'UTF-8');
+            $usuario->usuario_estudiante_password = Hash::make($persona->documento_identidad);
+            $usuario->usuario_estudiante_creacion = date('Y-m-d H:i:s');
+            $usuario->usuario_estudiante_estado = 1;
+            $usuario->id_persona = $persona->id_persona;
+            $usuario->usuario_estudiante_perfil_url = null;
+            $usuario->save();
+        }
+    }
+    return response()->json([
+        'message' => 'Usuarios estudiante verificados'
+    ]);
+})->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.verificar-usuario-estudiante');
 
 //
