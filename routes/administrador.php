@@ -121,10 +121,13 @@ Route::get('/verificar-usuario-estudiante', function () {
     $personas = Persona::all();
     foreach ($personas as $persona) {
         $usuario = UsuarioEstudiante::where('id_persona', $persona->id_persona)->first();
-        if (!$usuario) {
+        if ($usuario) {
+            $usuario->usuario_estudiante_password = Hash::make($persona->numero_documento);
+            $usuario->save();
+        } else {
             $usuario = new UsuarioEstudiante();
             $usuario->usuario_estudiante = mb_strtolower($persona->correo, 'UTF-8');
-            $usuario->usuario_estudiante_password = Hash::make($persona->documento_identidad);
+            $usuario->usuario_estudiante_password = Hash::make($persona->numero_documento);
             $usuario->usuario_estudiante_creacion = date('Y-m-d H:i:s');
             $usuario->usuario_estudiante_estado = 1;
             $usuario->id_persona = $persona->id_persona;
