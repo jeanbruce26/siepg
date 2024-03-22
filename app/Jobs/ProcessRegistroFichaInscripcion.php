@@ -114,6 +114,7 @@ class ProcessRegistroFichaInscripcion implements ShouldQueue
             'correo' => $persona->correo,
             'programa' => $programa_nombre,
             'link' => $link,
+            'tipo_correo' => 'create'
         ];
 
         Mail::send('modulo-inscripcion.email', $detalle, function ($message) use ($detalle, $pdf_email, $nombre_pdf) {
