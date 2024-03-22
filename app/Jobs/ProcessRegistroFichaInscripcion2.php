@@ -105,7 +105,7 @@ class ProcessRegistroFichaInscripcion2 implements ShouldQueue
         // $path = asignarPermisoFolders($base_path, $folders);
 
         // Crear directorios para guardar los archivos
-        $base_path = 'Posgrado/';
+        $base_path = 'Posgrado';
         $path = $base_path . '/' . $admision . '/' . $persona->numero_documento . '/Expedientes/';
 
         // Crear el directorio si no existe
