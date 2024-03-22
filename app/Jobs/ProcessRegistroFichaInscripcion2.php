@@ -94,7 +94,7 @@ class ProcessRegistroFichaInscripcion2 implements ShouldQueue
         ];
 
         // Crear directorios para guardar los archivos
-        $base_path = 'Posgrado/';
+        // $base_path = 'Posgrado/';
         // $folders = [
         //     $admision,
         //     $persona->numero_documento,
