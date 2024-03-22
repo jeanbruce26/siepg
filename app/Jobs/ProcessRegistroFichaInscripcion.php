@@ -107,6 +107,8 @@ class ProcessRegistroFichaInscripcion implements ShouldQueue
         $programa_nombre = ucwords($programa_nombre);
         $link = $grupo_whatsapp ? $grupo_whatsapp->link_whatsapp : '-';
 
+        $tipo_correo = 'create';
+
         // enviar ficha de inscripcion por correo
         $detalle = [
             'nombre' => ucwords(strtolower($persona->nombre_completo)),
@@ -114,7 +116,7 @@ class ProcessRegistroFichaInscripcion implements ShouldQueue
             'correo' => $persona->correo,
             'programa' => $programa_nombre,
             'link' => $link,
-            'tipo_correo' => 'create'
+            'tipo_correo' => $tipo_correo,
         ];
 
         Mail::send('modulo-inscripcion.email', $detalle, function ($message) use ($detalle, $pdf_email, $nombre_pdf) {
