@@ -18,6 +18,9 @@
         <p style="margin-bottom: 1rem;">
             Estimado/a {{ $nombre }},
         </p>
+        @php
+            $tipo_correo = $tipo_correo ?? 'create';
+        @endphp
         @if (isset($tipo_correo))
             @if ($tipo_correo === 'create')
                 <p style="margin-bottom: 1rem;">
