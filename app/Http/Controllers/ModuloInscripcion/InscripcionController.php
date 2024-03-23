@@ -5,6 +5,7 @@ namespace App\Http\Controllers\ModuloInscripcion;
 use App\Http\Controllers\Controller;
 use App\Jobs\ProcessEnvioCredenciales;
 use App\Jobs\ProcessRegistroFichaInscripcion;
+use App\Jobs\ProcessRegistroFichaInscripcion2;
 use App\Models\Admision;
 use App\Models\ExpedienteAdmision;
 use App\Models\ExpedienteInscripcion;
@@ -147,10 +148,11 @@ class InscripcionController extends Controller
 
         // Asignar todos los permisos al archivo
         chmod($nombre_db, 0777);
-        
+
         // Proceso para generar el pdf de inscripcion y enviarlo al correo
         $inscripcion = Inscripcion::find($id); // Datos de la inscripcion
-        ProcessRegistroFichaInscripcion::dispatch($inscripcion); // Proceso para generar el pdf de inscripcion y enviarlo al correo
+        // Proceso para generar el pdf de inscripcion y enviarlo al correo
+        ProcessRegistroFichaInscripcion2::dispatch($inscripcion, 'create'); // Proceso para generar el pdf de inscripcion y enviarlo al correo
 
         // redireccionar a la pagina final
         return redirect()->route('inscripcion.gracias', ['id' => $id]);

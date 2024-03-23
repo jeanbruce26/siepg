@@ -105,8 +105,9 @@ class ProcessRegistroFichaInscripcion2 implements ShouldQueue
         // $path = asignarPermisoFolders($base_path, $folders);
 
         // Crear directorios para guardar los archivos
-        $base_path = 'Posgrado';
-        $path = $base_path . '/' . $admision . '/' . $persona->numero_documento . '/Expedientes/';
+        // $base_path = 'Posgrado';
+        // $path = $base_path . '/' . $admision . '/' . $persona->numero_documento . '/Expedientes/';
+        $path = 'Posgrado/' . $admision . '/' . $persona->numero_documento . '/Expedientes/';
 
         // Crear el directorio si no existe
         $fullPath = public_path($path);
@@ -121,7 +122,7 @@ class ProcessRegistroFichaInscripcion2 implements ShouldQueue
         $nombre_db = $path . $nombre_pdf;
 
         // Generar el pdf de inscripcion
-        PDF::loadView('modulo-inscripcion.ficha-inscripcion', $data)->save($fullPath . '/' . $nombre_pdf);
+        PDF::loadView('modulo-inscripcion.ficha-inscripcion', $data)->save($fullPath . $nombre_pdf);
 
         $inscripcion = Inscripcion::find($id);
         $inscripcion->inscripcion_ficha_url = $nombre_db;
