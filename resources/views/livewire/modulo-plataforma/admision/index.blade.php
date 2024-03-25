@@ -176,7 +176,7 @@
                 <h2 class="card-title mb-5 text-center">
                     Prospecto de Admisión
                 </h2>
-                <a target="_blank" href="{{ asset('assets_pdf/prospecto-admision-posgrado.pdf') }}"
+                <a target="_blank" href="{{ asset('assets_pdf/prospecto-admision-2024.pdf') }}"
                     class="btn btn-info">
                     Descargar
                 </a>
