@@ -26,7 +26,7 @@ class CoordinadorController extends Controller
         ]);
     }
 
-    public function inscripciones($id , $id_admision)
+    public function inscripciones($id, $id_admision)
     {
         $id_programa = $id;
         $id_admision = $id_admision;
@@ -36,7 +36,7 @@ class CoordinadorController extends Controller
         ]);
     }
 
-    public function evaluaciones($id , $id_admision)
+    public function evaluaciones($id, $id_admision)
     {
         $id_programa = $id;
         $id_admision = $id_admision;
@@ -46,7 +46,7 @@ class CoordinadorController extends Controller
         ]);
     }
 
-    public function evaluacion_expediente($id , $id_admision, $id_evaluacion)
+    public function evaluacion_expediente($id, $id_admision, $id_evaluacion)
     {
         $id_programa = $id;
         $id_admision = $id_admision;
@@ -58,7 +58,7 @@ class CoordinadorController extends Controller
         ]);
     }
 
-    public function evaluacion_investigacion($id , $id_admision, $id_evaluacion)
+    public function evaluacion_investigacion($id, $id_admision, $id_evaluacion)
     {
         $id_programa = $id;
         $id_admision = $id_admision;
@@ -70,7 +70,7 @@ class CoordinadorController extends Controller
         ]);
     }
 
-    public function evaluacion_entrevista($id , $id_admision, $id_evaluacion)
+    public function evaluacion_entrevista($id, $id_admision, $id_evaluacion)
     {
         $id_programa = $id;
         $id_admision = $id_admision;
@@ -92,27 +92,27 @@ class CoordinadorController extends Controller
 
     public function reporte_maestria($id_programa, $id_admision)
     {
-        $evaluaciones = Evaluacion::join('inscripcion','evaluacion.id_inscripcion','=','inscripcion.id_inscripcion')
-                ->join('persona','inscripcion.id_persona','=','persona.id_persona')
-                ->join('programa_proceso', 'inscripcion.id_programa_proceso', '=', 'programa_proceso.id_programa_proceso')
-                ->join('programa_plan', 'programa_proceso.id_programa_plan', '=', 'programa_plan.id_programa_plan')
-                ->join('programa', 'programa_plan.id_programa', '=', 'programa.id_programa')
-                ->join('facultad','programa.id_facultad','=','facultad.id_facultad')
-                ->where('programa.id_programa',$id_programa)
-                ->where('programa_proceso.id_admision',$id_admision)
-                ->orderBy('persona.nombre_completo','asc')
-                ->get();
+        $evaluaciones = Evaluacion::join('inscripcion', 'evaluacion.id_inscripcion', '=', 'inscripcion.id_inscripcion')
+            ->join('persona', 'inscripcion.id_persona', '=', 'persona.id_persona')
+            ->join('programa_proceso', 'inscripcion.id_programa_proceso', '=', 'programa_proceso.id_programa_proceso')
+            ->join('programa_plan', 'programa_proceso.id_programa_plan', '=', 'programa_plan.id_programa_plan')
+            ->join('programa', 'programa_plan.id_programa', '=', 'programa.id_programa')
+            ->join('facultad', 'programa.id_facultad', '=', 'facultad.id_facultad')
+            ->where('programa.id_programa', $id_programa)
+            ->where('programa_proceso.id_admision', $id_admision)
+            ->orderBy('persona.nombre_completo', 'asc')
+            ->get();
 
-        $facultad = Programa::join('facultad','programa.id_facultad','=','facultad.id_facultad')
-                ->where('programa.id_programa', $id_programa)
-                ->first()->facultad;
+        $facultad = Programa::join('facultad', 'programa.id_facultad', '=', 'facultad.id_facultad')
+            ->where('programa.id_programa', $id_programa)
+            ->first()->facultad;
 
         $fecha = date('Y-m-d');
         $fecha2 = date('dmY');
 
-        $trabajador = TrabajadorTipoTrabajador::where('id_trabajador_tipo_trabajador',auth('usuario')->user()->id_trabajador_tipo_trabajador)
-                ->first()
-                ->trabajador;
+        $trabajador = TrabajadorTipoTrabajador::where('id_trabajador_tipo_trabajador', auth('usuario')->user()->id_trabajador_tipo_trabajador)
+            ->first()
+            ->trabajador;
 
         $coordinador = $trabajador->trabajador_apellido . ', ' . $trabajador->trabajador_nombre;
 
@@ -140,32 +140,32 @@ class CoordinadorController extends Controller
 
         $pdf = Pdf::loadView('modulo-coordinador.reporte-acta-evaluacion.reporte-evaluacion-maestria', $data);
 
-        return $pdf->stream('acta-evaluacion-maestria-'.$fecha2.'.pdf');
+        return $pdf->stream('acta-evaluacion-maestria-' . $fecha2 . '.pdf');
     }
 
     public function reporte_doctorado($id_programa, $id_admision)
     {
-        $evaluaciones = Evaluacion::join('inscripcion','evaluacion.id_inscripcion','=','inscripcion.id_inscripcion')
-                ->join('persona','inscripcion.id_persona','=','persona.id_persona')
-                ->join('programa_proceso', 'inscripcion.id_programa_proceso', '=', 'programa_proceso.id_programa_proceso')
-                ->join('programa_plan', 'programa_proceso.id_programa_plan', '=', 'programa_plan.id_programa_plan')
-                ->join('programa', 'programa_plan.id_programa', '=', 'programa.id_programa')
-                ->join('facultad','programa.id_facultad','=','facultad.id_facultad')
-                ->where('programa.id_programa',$id_programa)
-                ->where('programa_proceso.id_admision',$id_admision)
-                ->orderBy('persona.nombre_completo','asc')
-                ->get();
+        $evaluaciones = Evaluacion::join('inscripcion', 'evaluacion.id_inscripcion', '=', 'inscripcion.id_inscripcion')
+            ->join('persona', 'inscripcion.id_persona', '=', 'persona.id_persona')
+            ->join('programa_proceso', 'inscripcion.id_programa_proceso', '=', 'programa_proceso.id_programa_proceso')
+            ->join('programa_plan', 'programa_proceso.id_programa_plan', '=', 'programa_plan.id_programa_plan')
+            ->join('programa', 'programa_plan.id_programa', '=', 'programa.id_programa')
+            ->join('facultad', 'programa.id_facultad', '=', 'facultad.id_facultad')
+            ->where('programa.id_programa', $id_programa)
+            ->where('programa_proceso.id_admision', $id_admision)
+            ->orderBy('persona.nombre_completo', 'asc')
+            ->get();
 
-        $facultad = Programa::join('facultad','programa.id_facultad','=','facultad.id_facultad')
-                ->where('programa.id_programa', $id_programa)
-                ->first()->facultad;
+        $facultad = Programa::join('facultad', 'programa.id_facultad', '=', 'facultad.id_facultad')
+            ->where('programa.id_programa', $id_programa)
+            ->first()->facultad;
 
         $fecha = date('Y-m-d');
         $fecha2 = date('dmY');
 
-        $trabajador = TrabajadorTipoTrabajador::where('id_trabajador_tipo_trabajador',auth('usuario')->user()->id_trabajador_tipo_trabajador)
-                ->first()
-                ->trabajador;
+        $trabajador = TrabajadorTipoTrabajador::where('id_trabajador_tipo_trabajador', auth('usuario')->user()->id_trabajador_tipo_trabajador)
+            ->first()
+            ->trabajador;
 
         $coordinador = $trabajador->trabajador_apellido . ', ' . $trabajador->trabajador_nombre;
 
@@ -193,7 +193,7 @@ class CoordinadorController extends Controller
 
         $pdf = Pdf::loadView('modulo-coordinador.reporte-acta-evaluacion.reporte-evaluacion-doctorado', $data);
 
-        return $pdf->stream('acta-evaluacion-doctorado-'.$fecha2.'.pdf');
+        return $pdf->stream('acta-evaluacion-doctorado-' . $fecha2 . '.pdf');
     }
 
     public function docentes()
@@ -230,16 +230,16 @@ class CoordinadorController extends Controller
 
     public function reingreso_individual()
     {
-        return view('modulo-coordinador.gestion-reingreso.individual.index');
+        return view('modulo-administrador.gestion-reingreso.individual.index');
     }
 
     public function reingreso_masivo()
     {
-        return view('modulo-coordinador.gestion-reingreso.masivo.index');
+        return view('modulo-administrador.gestion-reingreso.masivo.index');
     }
 
     public function retiro()
     {
-        return view('modulo-coordinador.gestion-retiro.index');
+        return view('modulo-administrador.gestion-retiro.index');
     }
 }

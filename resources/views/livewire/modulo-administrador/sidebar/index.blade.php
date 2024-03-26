@@ -319,6 +319,51 @@
                     </a>
                 </div>
 
+                {{-- Gestion de Reingreso --}}
+                <div data-kt-menu-trigger="click"
+                    class="menu-item menu-accordion {{ request()->routeIs('administrador.reingreso.masivo') || request()->routeIs('administrador.reingreso.individual') ? 'show active' : '' }}">
+                    <span class="menu-link">
+                        <span class="menu-icon">
+                            <i class="ki-outline ki-abstract-37 fs-1"> </i>
+                        </span>
+                        <span class="menu-title fw-semibold fs-4">Gestión de Reingreso</span>
+                        <span class="menu-arrow"></span>
+                    </span>
+                    <div class="menu-sub menu-sub-accordion menu-active-bg">
+                        <div class="menu-item">
+                            <a class="menu-link {{ request()->routeIs('administrador.reingreso.individual') ? 'active' : '' }}"
+                                href="{{ route('administrador.reingreso.individual') }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title fs-4">Individual</span>
+                            </a>
+                        </div>
+                        <div class="menu-item">
+                            <a class="menu-link {{ request()->routeIs('administrador.reingreso.masivo') ? 'active' : '' }}"
+                                href="{{ route('administrador.reingreso.masivo') }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title fs-4">Masivo</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Gestion de Retiro --}}
+                <div class="menu-item">
+                    <a class="menu-link {{ request()->routeIs('administrador.retiro') ? 'active' : '' }}"
+                        href="{{ route('administrador.retiro') }}">
+                        <span class="menu-icon">
+                            <i class="ki-outline ki-abstract-42 fs-1"></i>
+                        </span>
+                        <span class="menu-title fw-semibold fs-4">
+                            Gestión de Retiro
+                        </span>
+                    </a>
+                </div>
+
                 {{-- Documentación --}}
                 <div class="menu-item">
                     <a class="menu-link" href="https://preview.keenthemes.com/html/metronic/docs" target="_blank">

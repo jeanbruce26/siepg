@@ -17,6 +17,7 @@ use App\Http\Controllers\ModuloAdministrador\SedeController;
 use App\Http\Controllers\ModuloAdministrador\TipoSeguimientoController;
 use App\Http\Controllers\ModuloAdministrador\TrabajadorController;
 use App\Http\Controllers\ModuloAdministrador\UsuarioTrabajadorController;
+use App\Http\Controllers\ModuloCoordinador\CoordinadorController;
 use App\Models\Inscripcion;
 use App\Models\Persona;
 use App\Models\UsuarioEstudiante;
@@ -85,6 +86,22 @@ Route::get('/generar-fichas-inscripcion', [InscripcionController::class, 'genera
 Route::get('/gestion-correo', [CorreoController::class, 'index'])->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.gestion-correo');
 Route::get('/gestion-correo/crear', [CorreoController::class, 'create'])->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.gestion-correo.crear');
 Route::post('gestion-correo/upload', [CorreoController::class, 'upload'])->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('ckeditor-upload-file');
+
+// ruta para ir a la pagina de gestion de reingreso invividual
+Route::get('/gestion-reingreso/individual', [CoordinadorController::class, 'reingreso_individual'])
+    ->middleware(['auth.usuario', 'verificar.usuario.administrador'])
+    ->name('administrador.reingreso.individual');
+
+// ruta para ir a la pagina de gestion de reingreso masivo
+Route::get('/gestion-reingreso/masivo', [CoordinadorController::class, 'reingreso_masivo'])
+    ->middleware(['auth.usuario', 'verificar.usuario.administrador'])
+    ->name('administrador.reingreso.masivo');
+
+// ruta para ir a la pagina de gestion de retiro
+Route::get('/gestion-retiro', [CoordinadorController::class, 'retiro'])
+    ->middleware(['auth.usuario', 'verificar.usuario.administrador'])
+    ->name('administrador.retiro');
+
 
 // cambiar todos los correos de los usuarios a minusculas
 Route::get('/cambiar-correos', function () {

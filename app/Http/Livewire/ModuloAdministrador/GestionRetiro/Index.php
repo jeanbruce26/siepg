@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\ModuloCoordinador\GestionRetiro;
+namespace App\Http\Livewire\ModuloAdministrador\GestionRetiro;
 
 use App\Models\Admision;
 use App\Models\Admitido;
@@ -21,7 +21,6 @@ class Index extends Component
     public $search;
 
     // variables generales
-    public $facultad;
     public $data = [];
 
     // variables de modal
@@ -40,13 +39,6 @@ class Index extends Component
     protected $listeners = [
         'eliminar_retiro' => 'eliminar_retiro',
     ];
-
-    public function mount()
-    {
-        $trabajador = auth('usuario')->user()->trabajador_tipo_trabajador->trabajador;
-        $coordinador = $trabajador->coordinador;
-        $this->facultad = $coordinador->facultad;
-    }
 
     public function updated($propertyName)
     {
@@ -68,7 +60,6 @@ class Index extends Component
     {
         $this->limpiar_modal();
         $this->title_modal = 'Nuevo Retiro';
-
     }
 
     public function limpiar_modal()
@@ -356,7 +347,6 @@ class Index extends Component
             ->join('programa_plan', 'programa_proceso.id_programa_plan', 'programa_plan.id_programa_plan')
             ->join('programa', 'programa_plan.id_programa', 'programa.id_programa')
             ->join('persona', 'admitido.id_persona', 'persona.id_persona')
-            ->where('programa.id_facultad', $this->facultad->id_facultad)
             ->where('admitido.admitido_estado', 1)
             ->orderBy('persona.nombre_completo', 'asc')
             ->get();
@@ -366,13 +356,12 @@ class Index extends Component
         $programas = $this->proceso ?
             ProgramaProceso::join('programa_plan', 'programa_proceso.id_programa_plan', 'programa_plan.id_programa_plan')
                 ->join('programa', 'programa_plan.id_programa', 'programa.id_programa')
-                ->where('programa.id_facultad', $this->facultad->id_facultad)
                 ->where('programa_proceso.id_admision', $this->proceso)
                 ->orderBy('programa.programa', 'asc')
                 ->get() :
             collect();
 
-        return view('livewire.modulo-coordinador.gestion-retiro.index', [
+        return view('livewire.modulo-administrador.gestion-retiro.index', [
             'retiros' => $retiros,
             'estudiantes' => $estudiantes,
             'procesos' => $procesos,

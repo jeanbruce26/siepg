@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\ModuloCoordinador\GestionReingreso\Individual;
+namespace App\Http\Livewire\ModuloAdministrador\GestionReingreso\Individual;
 
 use App\Models\Admitido;
 use App\Models\CursoProgramaPlan;
@@ -25,9 +25,6 @@ class Index extends Component
 
     public $search = ''; // variable para la busqueda
 
-    // variables
-    public $facultad;
-
     // variables del model
     public $title_modal = 'Nuevo Reingreso Individual';
     public $paso = 1;
@@ -44,13 +41,6 @@ class Index extends Component
     protected $queryString = [ // para que la paginacion se mantenga con el buscador
         'search' => ['except' => '', 'as' => 's'],
     ];
-
-    public function mount()
-    {
-        $trabajador = auth('usuario')->user()->trabajador_tipo_trabajador->trabajador;
-        $coordinador = $trabajador->coordinador;
-        $this->facultad = $coordinador->facultad;
-    }
 
     public function updated($propertyName)
     {
@@ -184,7 +174,6 @@ class Index extends Component
                 ->join('programa', 'programa_plan.id_programa', 'programa.id_programa')
                 ->join('plan', 'programa_plan.id_plan', 'plan.id_plan')
                 ->join('admision', 'programa_proceso.id_admision', 'admision.id_admision')
-                ->where('programa.id_facultad', $this->facultad->id_facultad)
                 ->where('programa.programa_tipo', $estudiante->programa_proceso->programa_plan->programa->programa_tipo)
                 ->where('plan.id_plan', $this->plan)
                 ->where('admision.id_admision', $this->proceso)
@@ -348,7 +337,6 @@ class Index extends Component
             ->join('programa_plan', 'programa_proceso.id_programa_plan', 'programa_plan.id_programa_plan')
             ->join('programa', 'programa_plan.id_programa', 'programa.id_programa')
             ->join('persona', 'admitido.id_persona', 'persona.id_persona')
-            ->where('programa.id_facultad', $this->facultad->id_facultad)
             ->where('admitido.admitido_estado', 2)
             ->orderBy('persona.nombre_completo', 'asc')
             ->get();
@@ -359,7 +347,6 @@ class Index extends Component
 
             $planes = ProgramaPlan::join('programa', 'programa_plan.id_programa', 'programa.id_programa')
                 ->join('plan', 'programa_plan.id_plan', 'plan.id_plan')
-                ->where('programa.id_facultad', $this->facultad->id_facultad)
                 ->orderBy('plan.plan', 'asc')
                 ->select('plan.id_plan', 'plan.plan')
                 ->distinct()
@@ -381,7 +368,6 @@ class Index extends Component
                         ->join('programa', 'programa_plan.id_programa', 'programa.id_programa')
                         ->join('plan', 'programa_plan.id_plan', 'plan.id_plan')
                         ->join('admision', 'programa_proceso.id_admision', 'admision.id_admision')
-                        ->where('programa.id_facultad', $this->facultad->id_facultad)
                         ->where('programa.programa_tipo', $estudiante->programa_proceso->programa_plan->programa->programa_tipo)
                         ->where('plan.id_plan', $this->plan)
                         ->orderBy('admision.admision', 'asc')
@@ -401,7 +387,6 @@ class Index extends Component
                 ->join('programa', 'programa_plan.id_programa', 'programa.id_programa')
                 ->join('plan', 'programa_plan.id_plan', 'plan.id_plan')
                 ->join('admision', 'programa_proceso.id_admision', 'admision.id_admision')
-                ->where('programa.id_facultad', $this->facultad->id_facultad)
                 ->where('programa.programa_tipo', $estudiante->programa_proceso->programa_plan->programa->programa_tipo)
                 ->where('plan.id_plan', $this->plan)
                 ->where('admision.id_admision', $this->proceso)
@@ -421,7 +406,7 @@ class Index extends Component
 
 
 
-        return view('livewire.modulo-coordinador.gestion-reingreso.individual.index', [
+        return view('livewire.modulo-administrador.gestion-reingreso.individual.index', [
             'reingresos' => $reingresos,
             'estudiantes' => $estudiantes,
             'planes' => $planes,

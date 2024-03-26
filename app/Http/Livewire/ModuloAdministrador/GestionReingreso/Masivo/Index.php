@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\ModuloCoordinador\GestionReingreso\Masivo;
+namespace App\Http\Livewire\ModuloAdministrador\GestionReingreso\Masivo;
 
 use App\Models\Admision;
 use App\Models\Admitido;
@@ -38,15 +38,7 @@ class Index extends Component
 
     // variables
     public $id_reingreso;
-    public $facultad;
     public $tipo_programa;
-
-    public function mount()
-    {
-        $trabajador = auth('usuario')->user()->trabajador_tipo_trabajador->trabajador;
-        $coordinador = $trabajador->coordinador;
-        $this->facultad = $coordinador->facultad;
-    }
 
     public function updated($propertyName)
     {
@@ -224,8 +216,6 @@ class Index extends Component
         $programas = $this->proceso ?
             ProgramaProceso::join('programa_plan', 'programa_proceso.id_programa_plan', 'programa_plan.id_programa_plan')
                 ->join('programa', 'programa_plan.id_programa', 'programa.id_programa')
-                ->join('facultad', 'programa.id_facultad', 'facultad.id_facultad')
-                ->where('facultad.id_facultad', $this->facultad->id_facultad)
                 ->where('programa_proceso.id_admision', $this->proceso)
                 ->get() :
             collect();
@@ -238,10 +228,8 @@ class Index extends Component
             ProgramaProceso::join('programa_plan', 'programa_proceso.id_programa_plan', 'programa_plan.id_programa_plan')
                 ->join('programa', 'programa_plan.id_programa', 'programa.id_programa')
                 ->join('plan', 'programa_plan.id_plan', 'plan.id_plan')
-                ->join('facultad', 'programa.id_facultad', 'facultad.id_facultad')
                 ->join('admision', 'programa_proceso.id_admision', 'admision.id_admision')
                 ->where('plan.id_plan', $this->plan_nuevo)
-                ->where('programa.id_facultad', $this->facultad->id_facultad)
                 ->where('programa.programa_tipo', $this->tipo_programa)
                 ->get() :
             collect();
@@ -260,7 +248,7 @@ class Index extends Component
             ->orderBy('id_reingreso', 'desc')
             ->paginate(20);
 
-        return view('livewire.modulo-coordinador.gestion-reingreso.masivo.index', [
+        return view('livewire.modulo-administrador.gestion-reingreso.masivo.index', [
             'reingresos' => $reingresos,
             'procesos' => $procesos,
             'programas' => $programas,

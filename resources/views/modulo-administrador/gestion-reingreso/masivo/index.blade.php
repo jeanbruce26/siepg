@@ -1,7 +1,7 @@
-@extends('layouts.modulo-coordinador')
-@section('title', 'Gestión de Reingreso Individual - Director de Unidad - Escuela de Posgrado')
+@extends('layouts.modulo-administrador')
+@section('title', 'Gestión de Reingreso Masivo - Escuela de Posgrado')
 @section('content')
-@livewire('modulo-coordinador.gestion-reingreso.individual.index')
+@livewire('modulo-administrador.gestion-reingreso.masivo.index')
 @endsection
 @section('scripts')
     <script>
@@ -34,7 +34,7 @@
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
-                    Livewire.emitTo('modulo-coordinador.gestion-reingreso.individual.index', event.detail.function);
+                    Livewire.emitTo('modulo-coordinador.gestion-docentes.index', event.detail.function);
                 }
             });
         });

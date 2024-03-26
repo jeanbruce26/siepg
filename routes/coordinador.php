@@ -50,12 +50,3 @@ Route::get('/reporte-pagos/{id_programa_proceso}/programa', [CoordinadorControll
 
 // ruta para ir a la pagina de gestion de matriculas
 Route::get('/matriculas', [CoordinadorController::class, 'matriculas'])->middleware(['auth.usuario', 'verificar.usuario.coordinador'])->name('coordinador.matriculas');
-
-// ruta para ir a la pagina de gestion de reingreso invividual
-Route::get('/gestion-reingreso/individual', [CoordinadorController::class, 'reingreso_individual'])->middleware(['auth.usuario', 'verificar.usuario.coordinador'])->name('coordinador.reingreso.individual');
-
-// ruta para ir a la pagina de gestion de reingreso masivo
-Route::get('/gestion-reingreso/masivo', [CoordinadorController::class, 'reingreso_masivo'])->middleware(['auth.usuario', 'verificar.usuario.coordinador'])->name('coordinador.reingreso.masivo');
-
-// ruta para ir a la pagina de gestion de retiro
-Route::get('/gestion-retiro', [CoordinadorController::class, 'retiro'])->middleware(['auth.usuario', 'verificar.usuario.coordinador'])->name('coordinador.retiro');
