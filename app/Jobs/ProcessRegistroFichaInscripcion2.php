@@ -131,6 +131,9 @@ class ProcessRegistroFichaInscripcion2 implements ShouldQueue
         // // Asignar todos los permisos al archivo
         // chmod($nombre_db, 0777);
 
+        // asignar memoria
+        ini_set('memory_limit', '256M');
+
         $pdf2 = PDF::loadView('modulo-inscripcion.ficha-inscripcion', $data);
         $pdf_email = $pdf2->output();
 
