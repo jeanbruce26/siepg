@@ -942,7 +942,7 @@
         @endif
     </form>
     {{-- modal formas de pago --}}
-    <div wire:ignore.self class="modal fade" tabindex="-1" id="modal_formas_pago" data-bs-backdrop="static"
+    {{-- <div wire:ignore.self class="modal fade" tabindex="-1" id="modal_formas_pago" data-bs-backdrop="static"
         data-bs-keyboard="false">
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
             <div class="modal-content">
@@ -964,8 +964,6 @@
                             </label>
                         </div>
                     </div>
-                    {{-- <embed src="{{ asset('assets_pdf/manual-tipo-voucher.pdf') }}" class="rounded mt-2"
-                        type="application/pdf" width="100%" height="700" /> --}}
                     <div>
                         <img src="{{ asset('media/manual-voucher/page-0001.jpg') }}" alt="img" class="mw-100"
                             style="width: 100%; height: auto" />
@@ -985,7 +983,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 </div>
 @push('scripts')
     <script>
