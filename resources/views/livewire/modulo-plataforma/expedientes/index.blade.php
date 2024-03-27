@@ -312,7 +312,7 @@
                                 class="form-control mb-1 @error('expediente') is-invalid @enderror" accept=".pdf"
                                 id="upload{{ $iteration }}" />
                             <span class="text-muted">
-                                Nota: El archivo debe ser en formato PDF y no debe pesar mas de 10MB <br>
+                                Nota: El archivo debe ser en formato PDF <br>
                             </span>
                             @error('expediente')
                                 <span class="text-danger">{{ $message }}</span>
