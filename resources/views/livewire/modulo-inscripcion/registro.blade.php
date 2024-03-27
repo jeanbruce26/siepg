@@ -100,25 +100,25 @@
                             <label for="documento_identidad" class="required form-label">
                                 Documento de Identidad
                             </label>
-                            <span class="ms-1" data-bs-toggle="tooltip"
+                            {{-- <span class="ms-1" data-bs-toggle="tooltip"
                                 aria-label="Si ya postuló en inscripciones anteriores, ingrese su DNI y presione el botón Buscar."
                                 data-bs-original-title="Si ya postuló en inscripciones anteriores, ingrese su DNI y presione el botón Buscar.">
                                 <i class="ki-outline ki-information-5 text-gray-600 fs-4"></i>
-                            </span>
-                            <div class="d-flex">
-                                <div class="flex-grow-1 me-3">
+                            </span> --}}
+                            {{-- <div class="d-flex">
+                                <div class="flex-grow-1 me-3"> --}}
                                     <input type="number" wire:model="documento_identidad"
                                         class="form-control @error('documento_identidad') is-invalid @enderror"
                                         placeholder="12345678" id="documento_identidad" />
                                     @error('documento_identidad')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
-                                </div>
+                                {{-- </div>
                                 <button type="button" wire:click="buscar_persona"
                                     class="btn btn-secondary fw-bold flex-shrink-0">
                                     Buscar
                                 </button>
-                            </div>
+                            </div> --}}
                         </div>
                         <div class="col-md-6">
                             <label for="numero_operacion" class="required form-label">
