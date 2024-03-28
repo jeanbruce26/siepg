@@ -44,9 +44,9 @@ class ProcessRegistroFichaInscripcion2 implements ShouldQueue
     public function handle(): void
     {
         $id = $this->inscripcion->id_inscripcion;
-        $inscripcion = Inscripcion::where('id_inscripcion', $id)->first(); // Datos de la inscripcion
+        $inscripcion = Inscripcion::find($id);
 
-        $pago = Pago::where('id_pago', $inscripcion->id_pago)->first();
+        $pago = Pago::find($inscripcion->id_pago); // Pago de la inscripcion
         $pago_monto = $pago->pago_monto; // Monto del pago
 
         $admision = $inscripcion->programa_proceso->admision->admision; // Admision de la inscripcion
@@ -111,11 +111,14 @@ class ProcessRegistroFichaInscripcion2 implements ShouldQueue
 
         // Crear el directorio si no existe
         $fullPath = public_path($path);
-        if (!file_exists($fullPath)) {
-            if (!mkdir($fullPath, 0777, true) && !is_dir($fullPath)) {
-                throw new \RuntimeException(sprintf('Directory "%s" was not created', $fullPath));
-            }
+        if (!file_exists($fullPath) && !mkdir($fullPath, 0777, true)) {
+            throw new \RuntimeException(sprintf('Directory "%s" was not created', $fullPath));
         }
+        // if (!file_exists($fullPath)) {
+        //     if (!mkdir($fullPath, 0777, true) && !is_dir($fullPath)) {
+        //         throw new \RuntimeException(sprintf('Directory "%s" was not created', $fullPath));
+        //     }
+        // }
 
         // Nombre del archivo
         $nombre_pdf = 'ficha-inscripcion-' . Str::slug($persona->nombre_completo, '-') . '.pdf';
@@ -132,7 +135,7 @@ class ProcessRegistroFichaInscripcion2 implements ShouldQueue
         // chmod($nombre_db, 0777);
 
         // asignar memoria
-        ini_set('memory_limit', '256M');
+        // ini_set('memory_limit', '256M');
 
         $pdf2 = PDF::loadView('modulo-inscripcion.ficha-inscripcion', $data);
         $pdf_email = $pdf2->output();
