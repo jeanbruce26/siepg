@@ -25,6 +25,7 @@ class Inscripcion extends Model
         'envio_inscripcion',
         'verificar_expedientes',
         'es_convenio',
+        'retiro_inscripcion',
         'id_pago',
         'id_programa_proceso',
         'inscripcion_tipo_programa',
