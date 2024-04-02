@@ -32,8 +32,20 @@ function getIdConceptoPagoInscripcion()
 {
     return [
         1, // id de concepto de pago de inscripcion
-        8 // id de concepto de pago de inscripcion para traslado externo
+        8, // id de concepto de pago de inscripcion para traslado externo
+        9, // id de concepto de pago de inscripcion para CONVENIO
+        10 // id de concepto de pago de inscripcion para VICTIMAS DE LA VIOLENCIA
     ];
+}
+
+function getIdConceptoPagoConvenio()
+{
+    return 9; // id de concepto de pago de convenio
+}
+
+function getIdConceptoPagoVictimasViolencia()
+{
+    return 10; // id de concepto de pago de victimas de la violencia
 }
 
 function asignarPermisoFolders($base_path, $folders)

@@ -183,41 +183,46 @@ class Registro extends Component
     public function paso_2()
     {
         $this->validacion();
-        // validar si el numero de operacion ya existe
-        $pago = Pago::where('pago_operacion', $this->numero_operacion)->first();
-        if ($pago) {
-            if ($pago->pago_documento == $this->documento_identidad && $pago->pago_fecha == $this->fecha_pago) {
-                // emitir evento para mostrar mensaje de alerta
-                $this->dispatchBrowserEvent('registro_inscripcion', [
-                    'title' => '¡Error!',
-                    'text' => 'El Número de Operación y el Documento de Identidad ya se encuentran registrados en el sistema en la fecha seleccionada',
-                    'icon' => 'error',
-                    'confirmButtonText' => 'Cerrar',
-                    'color' => 'danger'
-                ]);
-                return;
-            } else if ($pago->pago_fecha == $this->fecha_pago) {
-                // emitir evento para mostrar mensaje de alerta
-                $this->dispatchBrowserEvent('registro_inscripcion', [
-                    'title' => '¡Error!',
-                    'text' => 'El número de operación ya ha sido ingresado en la fecha seleccionada',
-                    'icon' => 'error',
-                    'confirmButtonText' => 'Cerrar',
-                    'color' => 'danger'
-                ]);
-                return;
-            } else if ($pago->pago_documento == $this->documento_identidad) {
-                // emitir evento para mostrar mensaje de alerta
-                $this->dispatchBrowserEvent('registro_inscripcion', [
-                    'title' => '¡Error!',
-                    'text' => 'El Número de Operación y el Documento de Identidad ya se encuentran registrados en el sistema',
-                    'icon' => 'error',
-                    'confirmButtonText' => 'Cerrar',
-                    'color' => 'danger'
-                ]);
-                return;
+
+        // verificamos el el concepto de pago es de convenio o victimas de violencia
+        if ($this->concepto_pago != getIdConceptoPagoConvenio() || $this->concepto_pago != getIdConceptoPagoVictimasViolencia()) {
+            // validar si el numero de operacion ya existe
+            $pago = Pago::where('pago_operacion', $this->numero_operacion)->first();
+            if ($pago) {
+                if ($pago->pago_documento == $this->documento_identidad && $pago->pago_fecha == $this->fecha_pago) {
+                    // emitir evento para mostrar mensaje de alerta
+                    $this->dispatchBrowserEvent('registro_inscripcion', [
+                        'title' => '¡Error!',
+                        'text' => 'El Número de Operación y el Documento de Identidad ya se encuentran registrados en el sistema en la fecha seleccionada',
+                        'icon' => 'error',
+                        'confirmButtonText' => 'Cerrar',
+                        'color' => 'danger'
+                    ]);
+                    return;
+                } else if ($pago->pago_fecha == $this->fecha_pago) {
+                    // emitir evento para mostrar mensaje de alerta
+                    $this->dispatchBrowserEvent('registro_inscripcion', [
+                        'title' => '¡Error!',
+                        'text' => 'El número de operación ya ha sido ingresado en la fecha seleccionada',
+                        'icon' => 'error',
+                        'confirmButtonText' => 'Cerrar',
+                        'color' => 'danger'
+                    ]);
+                    return;
+                } else if ($pago->pago_documento == $this->documento_identidad) {
+                    // emitir evento para mostrar mensaje de alerta
+                    $this->dispatchBrowserEvent('registro_inscripcion', [
+                        'title' => '¡Error!',
+                        'text' => 'El Número de Operación y el Documento de Identidad ya se encuentran registrados en el sistema',
+                        'icon' => 'error',
+                        'confirmButtonText' => 'Cerrar',
+                        'color' => 'danger'
+                    ]);
+                    return;
+                }
             }
         }
+
         // validar si el monto ingresado es igual al monto por concepto de inscripción
         $concepto_pago_monto = ConceptoPago::where('id_concepto_pago', $this->concepto_pago)->first()->concepto_pago_monto;
         if ($this->monto_operacion < $concepto_pago_monto) {
@@ -674,6 +679,9 @@ class Registro extends Component
         $inscripcion->inscripcion_fecha = now();
         $inscripcion->id_persona = $this->id_persona;
         $inscripcion->inscripcion_estado = 0; // 0: pendiente, 1: inscrito
+        if ($this->concepto_pago == getIdConceptoPagoConvenio() || $this->concepto_pago == getIdConceptoPagoVictimasViolencia()) {
+            $inscripcion->es_convenio = 1;
+        }
         $inscripcion->id_pago = $pago->id_pago;
         $inscripcion->id_programa_proceso = $this->programa;
         $inscripcion->inscripcion_tipo_programa = $this->mostrar_tipo_expediente;
