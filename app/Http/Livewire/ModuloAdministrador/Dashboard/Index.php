@@ -32,6 +32,7 @@ class Index extends Component
         $this->ingreso_inscripcion = Inscripcion::join('pago', 'pago.id_pago', '=', 'inscripcion.id_pago')
                                         ->join('programa_proceso', 'programa_proceso.id_programa_proceso', '=', 'inscripcion.id_programa_proceso')
                                         ->where('programa_proceso.id_admision', $this->filtro_proceso)
+                                        ->where('inscripcion.retiro_inscripcion', 0)
                                         ->sum('pago.pago_monto');
         // $this->ingreso_inscripcion = Pago::where('pago_estado', 1)->sum('pago_monto');
 
