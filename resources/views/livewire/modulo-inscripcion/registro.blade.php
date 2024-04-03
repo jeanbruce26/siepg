@@ -942,7 +942,7 @@
         @endif
     </form>
     {{-- modal formas de pago --}}
-    {{-- <div wire:ignore.self class="modal fade" tabindex="-1" id="modal_formas_pago" data-bs-backdrop="static"
+    <div wire:ignore.self class="modal fade" tabindex="-1" id="modal_formas_pago" data-bs-backdrop="static"
         data-bs-keyboard="false">
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
             <div class="modal-content">
@@ -983,7 +983,7 @@
                 </div>
             </div>
         </div>
-    </div> --}}
+    </div>
 </div>
 @push('scripts')
     <script>
