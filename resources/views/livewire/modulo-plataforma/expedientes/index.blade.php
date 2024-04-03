@@ -230,6 +230,7 @@
                                                         <span class="badge badge-danger fs-6 px-3 py-2">No
                                                             Entregado</span>
                                                     </td>
+                                                    <td></td>
                                                     <td>
                                                         Sin fecha
                                                     </td>
