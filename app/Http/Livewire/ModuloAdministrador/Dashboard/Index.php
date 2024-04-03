@@ -46,6 +46,7 @@ class Index extends Component
                                         ->where('programa.programa_estado',1)
                                         ->where('programa.programa_tipo',1) // 1 = Maestria
                                         ->where('programa_proceso.id_admision', $this->filtro_proceso)
+                                        ->where('inscripcion.retiro_inscripcion', 0)
                                         ->groupBy('inscripcion.id_programa_proceso')
                                         ->orderBy(Inscripcion::raw('count(inscripcion.id_programa_proceso)'), 'desc')
                                         ->get();
@@ -56,6 +57,7 @@ class Index extends Component
                                         ->where('programa.programa_estado',1)
                                         ->where('programa.programa_tipo',2) // 1 = Doctorado
                                         ->where('programa_proceso.id_admision', $this->filtro_proceso)
+                                        ->where('inscripcion.retiro_inscripcion', 0)
                                         ->groupBy('inscripcion.id_programa_proceso')
                                         ->orderBy(Inscripcion::raw('count(inscripcion.id_programa_proceso)'), 'desc')
                                         ->get();
@@ -81,6 +83,7 @@ class Index extends Component
                                         ->where('programa.programa_estado',1)
                                         ->where('programa.programa_tipo',1) // 1 = Maestria
                                         ->where('programa_proceso.id_admision', $this->filtro_proceso)
+                                        ->where('inscripcion.retiro_inscripcion', 0)
                                         ->groupBy('inscripcion.id_programa_proceso')
                                         ->orderBy(Inscripcion::raw('count(inscripcion.id_programa_proceso)'), 'DESC')
                                         ->get();
@@ -91,6 +94,7 @@ class Index extends Component
                                         ->where('programa.programa_estado',1)
                                         ->where('programa.programa_tipo',2) // 1 = Doctorado
                                         ->where('programa_proceso.id_admision', $this->filtro_proceso)
+                                        ->where('inscripcion.retiro_inscripcion', 0)
                                         ->groupBy('inscripcion.id_programa_proceso')
                                         ->orderBy(Inscripcion::raw('count(inscripcion.id_programa_proceso)'), 'DESC')
                                         ->get();
