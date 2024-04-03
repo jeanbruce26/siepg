@@ -244,7 +244,7 @@
                     </div>
                     <div class="card-body p-0">
                         <div class="table-responsive">
-                            <table class="table table-hover table-rounded border gy-4 gs-4 mb-0 align-middle">
+                            <table class="table table-rounded border gy-4 gs-4 mb-0 align-middle">
                                 <thead class="bg-light-primary">
                                     <tr align="center"
                                         class="fw-bold fs-6 text-gray-800 border-bottom-2 border-gray-200">
@@ -261,7 +261,7 @@
                                 </thead>
                                 <tbody>
                                     @forelse ($inscripcionModel as $item)
-                                        <tr>
+                                        <tr wire:key="{{ $item->id_inscripcion }}" class="{{ $item->retiro_inscripcion == 1 ? 'bg-light-warning' : '' }}">
                                             <td align="center" class="fw-bold">
                                                 {{ $item->id_inscripcion }}
                                             </td>
@@ -289,7 +289,7 @@
                                                     </span>
                                                 @else
                                                     <span
-                                                        class="badge badge-light-info text-dark fs-6 px-3 py-2 text-uppercase">
+                                                        class="badge badge-light-primary text-dark fs-6 px-3 py-2 text-uppercase">
                                                         Inscripción Regular
                                                     </span>
                                                 @endif
@@ -382,6 +382,13 @@
                                                         <a wire:click="actualizar_ficha_inscripcion({{ $item->id_inscripcion }})"
                                                             class="menu-link px-3 cursor-pointer">
                                                             Actualizar Ficha de Inscripción
+                                                        </a>
+                                                    </div>
+                                                    <div class="menu-item px-3">
+                                                        <a style="cursor: pointer"
+                                                            wire:click="reservar_inscripcion({{ $item->id_inscripcion }})"
+                                                            class="menu-link px-3">
+                                                            Reservar Inscripción
                                                         </a>
                                                     </div>
                                                     <div class="menu-item px-3">

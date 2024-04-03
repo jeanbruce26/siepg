@@ -432,6 +432,22 @@ class Index extends Component
         );
     }
 
+    public function reservar_inscripcion($id_inscripcion)
+    {
+        $inscripcion = Inscripcion::find($id_inscripcion);
+        $inscripcion->retiro_inscripcion = 1;
+        $inscripcion->save();
+
+        // mostrar alerta
+        $this->alertaInscripcion(
+            '¡Exito!',
+            'La inscripción de ' . $inscripcion->persona->nombre_completo . ' ha sido reservada satisfactoriamente',
+            'success',
+            'Aceptar',
+            'success'
+        );
+    }
+
     public function render()
     {
         if ($this->seguimientoFiltro) { //Si existe el seguimientoFiltro, se cambia de consulta, con el fin de mostrar las inscripciones que tienen un seguimiento
