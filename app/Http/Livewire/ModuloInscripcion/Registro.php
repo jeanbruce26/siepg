@@ -700,7 +700,7 @@ class Registro extends Component
 
         // Sirve para asignar el seguimiento del expediente
         if ($this->check_expediente == true) {
-            $exp_ins = ExpedienteInscripcion::join('expediente_admision', 'expediente_inscripcion.id_expediente_admsiion', '=', 'expediente_admision.id_expediente_admsiion')
+            $exp_ins = ExpedienteInscripcion::join('expediente_admision', 'expediente_inscripcion.id_expediente_admision', '=', 'expediente_admision.id_expediente_admision')
                 ->join('expediente', 'expediente_admision.id_expediente', '=', 'expediente.id_expediente')
                 ->where('expediente_inscripcion.id_inscripcion', $this->id_inscripcion)
                 ->where(function ($query) {
