@@ -63,10 +63,10 @@
                                             </select>
                                         </div>
                                         <div class="col-md-4">
-                                            <select class="form-select" wire:model="filtro_concepto_pago"
-                                                data-control="select2" id="filtro_concepto_pago"
-                                                data-placeholder="Seleccione el concepto de pago">
-                                                <option></option>
+                                            <select class="form-select" wire:model="filtro_concepto_pago">
+                                                {{-- data-control="select2" id="filtro_concepto_pago"
+                                                data-placeholder="Seleccione el concepto de pago"> --}}
+                                                {{-- <option></option> --}}
                                                 <option value="all">Mostrar todos los pagos</option>
                                                 @foreach ($concepto_pagos as $item)
                                                     <option value="{{ $item->id_concepto_pago }}">Concepto de
