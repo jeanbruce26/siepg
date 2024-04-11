@@ -105,34 +105,79 @@ class Create extends Component
 
         // si hay imagenes en el mensaje con summer note
         $mensaje = $this->mensaje;
+
+        $mensaje = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head><body>' . $mensaje . '</body></html>';
+
+        // $dom = new DOMDocument();
+        // @$dom->loadHTML($mensaje, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD | LIBXML_NOERROR | LIBXML_NOWARNING);
+        // $body = $dom->getElementsByTagName('body')->item(0);
+        // $newHtml = '';
+        // foreach ($body->childNodes as $child) {
+        //     $newHtml .= $dom->saveHTML($child);
+        // }
+        // dd($newHtml);
+        // $newHtml = mb_convert_encoding($newHtml, 'UTF-8', 'HTML-ENTITIES');
+        // dd($newHtml);
+
+        // $dom = new DOMDocument();
+        // $dom->encoding = 'utf-8';
+        // @$dom->loadHTML($newHtml, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD | LIBXML_NOERROR | LIBXML_NOWARNING);
+        // $images = $dom->getElementsByTagName('img');
+        // foreach ($images as $k => $img) {
+        //     Crear directorios para guardar los archivos
+        //     $base_path = 'Posgrado/';
+        //     $folders = [
+        //         'files',
+        //         'media',
+        //     ];
+        //     Asegurar que se creen los directorios con los permisos correctos
+        //     $path = asignarPermisoFolders($base_path, $folders);
+
+        //     Nombre del archivo
+        //     $data = $img->getAttribute('src');
+        //     list($type, $data) = explode(';', $data);
+        //     list(, $data) = explode(',', $data);
+        //     $data = base64_decode($data);
+
+        //     Nombre del archivo
+        //     $filename = time() . uniqid() . '.png';
+
+        //     Guardar el archivo
+        //     $image_name = $filename;
+
+        //     file_put_contents(public_path($path . $filename), $data);
+        //     $img->removeAttribute('src');
+        //     $img->setAttribute('src', asset($path . $filename));
+        // }
+
         $dom = new DOMDocument();
-        $dom->loadHtml($mensaje, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        // Convertir y cargar el contenido HTML en UTF-8
+        $utf8Html = mb_convert_encoding($mensaje, 'HTML-ENTITIES', 'UTF-8');
+        @$dom->loadHTML($utf8Html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD | LIBXML_NOERROR | LIBXML_NOWARNING);
+
         $images = $dom->getElementsByTagName('img');
-        foreach ($images as $k => $img) {
-            // Crear directorios para guardar los archivos
-            $base_path = 'Posgrado/';
-            $folders = [
-                'files',
-                'media',
-            ];
-            // Asegurar que se creen los directorios con los permisos correctos
-            $path = asignarPermisoFolders($base_path, $folders);
 
-            // Nombre del archivo
+        foreach ($images as $img) {
             $data = $img->getAttribute('src');
-            list($type, $data) = explode(';', $data);
-            list(, $data) = explode(',', $data);
-            $data = base64_decode($data);
+            if (preg_match('/^data:image\/(\w+);base64,/', $data, $type)) {
+                // Obtener el tipo y decodificar
+                $data = substr($data, strpos($data, ',') + 1);
+                $type = strtolower($type[1]); // jpg, png, gif
 
-            // Nombre del archivo
-            $filename = time() . uniqid() . '.png';
+                $data = base64_decode($data);
+                if ($data === false) {
+                    continue;
+                }
 
-            // Guardar el archivo
-            $image_name = $filename;
+                // Crear y guardar el archivo
+                $filename = time() . uniqid() . ".$type";
+                $filePath = public_path('Posgrado/files/media/' . $filename);
+                file_put_contents($filePath, $data);
 
-            file_put_contents(public_path($path . $filename), $data);
-            $img->removeAttribute('src');
-            $img->setAttribute('src', asset($path . $filename));
+                // Actualizar la fuente de la imagen en el HTML
+                $img->removeAttribute('src');
+                $img->setAttribute('src', asset('Posgrado/files/media/' . $filename));
+            }
         }
 
         $this->mensaje = $dom->saveHTML();

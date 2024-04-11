@@ -223,36 +223,20 @@
         <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
     @endpush
     @push('scripts')
-        {{-- <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script> --}}
-        {{-- <script>
-            ClassicEditor
-                .create(document.querySelector('#mensaje'), {
-                    ckfinder: {
-                        uploadUrl: "{{ route('ckeditor-upload-file') }}",
-                    },
-                })
-                .then(editor => {
-                    editor.model.document.on('change:data', () => {
-                        @this.set('mensaje', editor.getData());
-                    });
-                })
-                .catch(error => {
-                    console.error(error);
-                });
-        </script> --}}
         <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
         <script>
             $(function() {
                 $('#mensaje').summernote({
                     placeholder: 'Ingrese el mensaje del correo',
                     height: 300,
+                    tabsize: 2,
                     toolbar: [
                         ['style', ['style']],
                         ['font', ['bold', 'underline', 'clear']],
                         ['color', ['color']],
                         ['para', ['ul', 'ol', 'paragraph']],
                         ['table', ['table']],
-                        ['insert', ['link', 'picture', 'video']],
+                        ['insert', ['link', 'picture']],
                         ['view', ['fullscreen', 'codeview', 'help']]
                     ],
                     callbacks: {
