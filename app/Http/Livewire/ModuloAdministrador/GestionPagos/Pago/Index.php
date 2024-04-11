@@ -582,7 +582,11 @@ class Index extends Component
         $concepto_pagos = ConceptoPago::where('concepto_pago_estado', 1)->get();
         $canal_pagos = CanalPago::where('canal_pago_estado', 1)->get();
         $pagos = Pago::where('id_concepto_pago', $this->filtro_concepto_pago == "all" ? '!=' : '=', $this->filtro_concepto_pago)
-            ->where('pago_verificacion', $this->filtro_estado == "all" ? '!=' : '=', $this->filtro_estado)
+            ->where(function ($query) {
+                if ($this->filtro_estado != 'all') {
+                    $query->where('pago_verificacion', $this->filtro_estado);
+                }
+            })
             ->where(function ($query) {
                 $query->where('pago_documento', 'like', '%' . $this->search . '%')
                     ->orWhere('pago_operacion', 'like', '%' . $this->search . '%');
