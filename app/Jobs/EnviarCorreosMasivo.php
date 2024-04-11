@@ -8,24 +8,23 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Mail;
 
-class EnviarCorreos implements ShouldQueue
+class EnviarCorreosMasivo implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $asunto;
     public $mensaje;
-    public $correo;
+    public $correos;
 
     /**
      * Create a new job instance.
      */
-    public function __construct($asunto, $mensaje, $correo)
+    public function __construct($asunto, $mensaje, $correos)
     {
         $this->asunto = $asunto;
         $this->mensaje = $mensaje;
-        $this->correo = $correo;
+        $this->correos = $correos;
     }
 
     /**
@@ -35,16 +34,8 @@ class EnviarCorreos implements ShouldQueue
     {
         $asunto = $this->asunto;
         $mensaje = $this->mensaje;
-        $correo = $this->correo;
-
-        $data = [
-            'asunto' => $asunto,
-            'mensaje' => $mensaje,
-            'correo' => $correo,
-        ];
-        Mail::send('components.email.base-correo', $data, function ($message) use ($data) {
-            $message->to($data['correo'])
-                ->subject($data['asunto']);
-        });
+        foreach ($this->correos as $correo) {
+            EnviarCorreos::dispatch($asunto, $mensaje, $correo);
+        }
     }
 }
