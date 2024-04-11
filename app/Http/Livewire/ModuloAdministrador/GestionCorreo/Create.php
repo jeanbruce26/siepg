@@ -241,7 +241,10 @@ class Create extends Component
         $correo->save();
 
         // ejecutar el envio de correos masivos o individuales con un job
-        EnviarCorreosMasivo::dispatch($asunto, $mensaje, $correos);
+        // EnviarCorreosMasivo::dispatch($asunto, $mensaje, $correos);
+        foreach ($correos as $correo) {
+            EnviarCorreos::dispatch($asunto, $mensaje, $correo);
+        }
 
         // redireccionar a la vista de correos
         return redirect()->route('administrador.gestion-correo');

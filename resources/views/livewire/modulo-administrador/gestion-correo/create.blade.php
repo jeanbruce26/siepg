@@ -210,8 +210,13 @@
                             @enderror
                         </div>
                         <div class="col-12">
-                            <button class="btn btn-success hover-elevate-up w-100" wire:click="enviar_correo">
-                                Enviar Correo
+                            <button class="btn btn-success hover-elevate-up w-100" wire:click="enviar_correo" wire:loading.attr="disabled" wire:target="enviar_correo">
+                                <span wire:loading.remove wire:target="enviar_correo">
+                                    Enviar Correo
+                                </span>
+                                <span wire:loading wire:target="enviar_correo">
+                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                </span>
                             </button>
                         </div>
                     </div>
