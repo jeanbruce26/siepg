@@ -23,7 +23,7 @@ class Index extends Component
     protected $queryString = [
         'search' => ['except' => ''],
         'filtro_concepto_pago' => ['except' => 'all'],
-        'filtro_estado' => ['except' => '']
+        'filtro_estado' => ['except' => 'all']
     ]; // variable para almacenar el texto de busqueda
 
     // public $pagos = null; // variable para almacenar los pagos
