@@ -48,7 +48,7 @@
                                     <div class="row g-2 mb-5">
                                         <div class="col-md-4">
                                             <select class="form-select" wire:model="filtro_estado" id="filtro_estado">
-                                                <option value="">
+                                                <option value="all">
                                                     Seleccione un estado
                                                 </option>
                                                 <option value="0">
