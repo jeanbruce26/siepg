@@ -41,7 +41,7 @@
                                 alt="avatar" />
                         </div>
                         <span class="fs-2 fw-bold text-center">
-                            {{ $trabajador->primeros_nombres }}
+                            {{ $trabajador->trabajador_nombre_completo }}
                         </span>
                         <span class="badge badge-light-info py-3 d-flex justify-content-center fs-7">
                             DIRECTOR DE UNIDAD
