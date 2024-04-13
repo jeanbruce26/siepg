@@ -710,7 +710,7 @@ class Registro extends Component
                 ->get();
             $exp_seg = ExpedienteTipoSeguimiento::join('expediente', 'expediente_tipo_seguimiento.id_expediente', '=', 'expediente.id_expediente')
                 ->where('expediente_tipo_seguimiento.expediente_tipo_seguimiento_estado', 1)
-                ->where('expediente_tipo_seguimiento.tipo_seguimiento', 1)
+                ->where('expediente_tipo_seguimiento.id_tipo_seguimiento', 1)
                 ->where(function ($query) {
                     $query->where('expediente.expediente_tipo', 0)
                         ->orWhere('expediente.expediente_tipo', $this->mostrar_tipo_expediente);
