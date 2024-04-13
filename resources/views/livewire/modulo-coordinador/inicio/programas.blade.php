@@ -80,6 +80,7 @@
                                     ->where('programa.id_programa', $item->id_programa)
                                     ->where('programa.id_modalidad', $modalidad->id_modalidad)
                                     ->where('programa_proceso.id_admision', $proceso)
+                                    ->where('inscripcion.inscripcion_estado', 1)
                                     ->count();
                             @endphp
                             <div class="col-md-6 col-lg-4">
