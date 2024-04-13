@@ -84,18 +84,19 @@ class Inscripciones extends Component
     public function render()
     {
         $this->inscripciones = Inscripcion::join('programa_proceso', 'programa_proceso.id_programa_proceso', '=', 'inscripcion.id_programa_proceso')
-                                        ->join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
-                                        ->join('programa', 'programa.id_programa', '=', 'programa_plan.id_programa')
-                                        ->join('persona', 'persona.id_persona', '=', 'inscripcion.id_persona')
-                                        ->where('programa.id_programa', $this->id_programa)
-                                        ->where('programa_proceso.id_admision', $this->id_admision)
-                                        ->where('inscripcion.retiro_inscripcion', 0)
-                                        ->where(function($query) {
-                                            $query->where('persona.nombre_completo', 'like', '%' . $this->search . '%')
-                                                ->orWhere('persona.numero_documento', 'like', '%' . $this->search . '%');
-                                        })
-                                        ->orderBy($this->sort_nombre == 'nombre_completo' ? 'persona.' . $this->sort_nombre :'inscripcion.' .  $this->sort_nombre, $this->sort_direccion)
-                                        ->get();
+            ->join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
+            ->join('programa', 'programa.id_programa', '=', 'programa_plan.id_programa')
+            ->join('persona', 'persona.id_persona', '=', 'inscripcion.id_persona')
+            ->where('programa.id_programa', $this->id_programa)
+            ->where('programa_proceso.id_admision', $this->id_admision)
+            ->where('inscripcion.retiro_inscripcion', 0)
+            ->where('inscripcion.inscripcion_estado', 1)
+            ->where(function($query) {
+                $query->where('persona.nombre_completo', 'like', '%' . $this->search . '%')
+                    ->orWhere('persona.numero_documento', 'like', '%' . $this->search . '%');
+            })
+            ->orderBy($this->sort_nombre == 'nombre_completo' ? 'persona.' . $this->sort_nombre :'inscripcion.' .  $this->sort_nombre, $this->sort_direccion)
+            ->get();
         return view('livewire.modulo-coordinador.inicio.inscripciones');
     }
 }
