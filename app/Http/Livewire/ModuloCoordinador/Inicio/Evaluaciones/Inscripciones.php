@@ -309,6 +309,7 @@ class Inscripciones extends Component
             ->where('programa.id_programa', $this->id_programa)
             ->where('programa_proceso.id_admision', $this->id_admision)
             ->where('inscripcion.retiro_inscripcion', 0)
+            ->where('inscripcion.inscripcion_estado', 1)
             ->where(function ($query) {
                 $query->where('persona.nombre_completo', 'like', '%' . $this->search . '%')
                     ->orWhere('persona.numero_documento', 'like', '%' . $this->search . '%');
