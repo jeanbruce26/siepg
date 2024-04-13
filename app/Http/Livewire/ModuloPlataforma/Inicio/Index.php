@@ -117,15 +117,20 @@ class Index extends Component
         $usuario = auth('plataforma')->user();
         $persona = $usuario->persona;
         $inscripcion = $persona->inscripcion()->orderBy('id_inscripcion', 'desc')->first();
-        $programa = ProgramaProceso::where('id_programa_proceso', $inscripcion->id_programa_proceso)->first();
-        $programa = $programa->programa_plan->programa;
-        if($programa->mencion){
-            $programa = $programa->programa . ' EN ' . $programa->subprograma . ' CON MENCION EN ' . $programa->mencion;
-        }else{
-            $programa = $programa->programa . ' EN ' . $programa->subprograma;
+        if ($inscripcion) {
+            $programa = ProgramaProceso::where('id_programa_proceso', $inscripcion->id_programa_proceso)->first();
+            $programa = $programa->programa_plan->programa;
+            if($programa->mencion){
+                $programa = $programa->programa . ' EN ' . $programa->subprograma . ' CON MENCION EN ' . $programa->mencion;
+            }else{
+                $programa = $programa->programa . ' EN ' . $programa->subprograma;
+            }
+            $link = LinkWhatsapp::where('id_programa_proceso', $inscripcion->id_programa_proceso)->first();
+            $link = $link->link_whatsapp;
+        } else {
+            $programa = null;
+            $link = null;
         }
-        $link = LinkWhatsapp::where('id_programa_proceso', $inscripcion->id_programa_proceso)->first();
-        $link = $link->link_whatsapp;
         return view('livewire.modulo-plataforma.inicio.index', [
             'encuestas' => $encuestas,
             'inscripcion' => $inscripcion,

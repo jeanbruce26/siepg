@@ -80,20 +80,22 @@
                         </div>
                     </div>
                 </div> --}}
-                <div class="col-md-12">
-                    {{-- alerta  --}}
-                    <div class="alert bg-light-warning border border-3 border-warning d-flex align-items-center p-5">
-                        <i class="ki-outline ki-sms fs-2qx me-4 text-warning"></i>
-                        <div class="d-flex flex-column">
-                            <span class="fw-bold fs-5">
-                                LINK DEL GRUPO DE WHATSAPP DE {{ $programa }}: <br>
-                                <a href="{{ $link }}" target="_blank" class="fw-bold">
-                                    {{ $link }}
-                                </a>
-                            </span>
+                @if ($programa && $link)
+                    <div class="col-md-12">
+                        {{-- alerta  --}}
+                        <div class="alert bg-light-warning border border-3 border-warning d-flex align-items-center p-5">
+                            <i class="ki-outline ki-sms fs-2qx me-4 text-warning"></i>
+                            <div class="d-flex flex-column">
+                                <span class="fw-bold fs-5">
+                                    LINK DEL GRUPO DE WHATSAPP DE {{ $programa }}: <br>
+                                    <a href="{{ $link }}" target="_blank" class="fw-bold">
+                                        {{ $link }}
+                                    </a>
+                                </span>
+                            </div>
                         </div>
                     </div>
-                </div>
+                @endif
                 <div class="col-md-12">
                     {{-- alerta  --}}
                     <div class="alert bg-light-primary border border-3 border-primary d-flex align-items-center p-5">
