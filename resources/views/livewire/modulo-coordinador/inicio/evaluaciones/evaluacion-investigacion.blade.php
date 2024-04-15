@@ -98,7 +98,7 @@
                                     <thead class="bg-light-warning">
                                         <tr class="fw-bold fs-6 text-gray-800 border-bottom-2 border-gray-200">
                                             <th class="col-md-6">Concepto</th>
-                                            <th class="text-center">Punatje Especifico</th>
+                                            <th class="text-center">Puntaje Especifico</th>
                                             <th class="text-center">Calificación</th>
                                             <th class="text-center">Puntaje</th>
                                         </tr>
