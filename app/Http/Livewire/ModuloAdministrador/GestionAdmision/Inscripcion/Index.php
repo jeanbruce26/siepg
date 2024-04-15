@@ -213,15 +213,15 @@ class Index extends Component
 
         $inscripcion = Inscripcion::find($this->id_inscripcion);
 
-        $id_programa_proceso_actualizado = Programa::join('programa_plan', 'programa.id_programa', '=', 'programa_plan.id_programa')
+        $programa_proceso_actualizado = Programa::join('programa_plan', 'programa.id_programa', '=', 'programa_plan.id_programa')
             ->join('programa_proceso', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
             ->where('programa.id_modalidad', $this->modalidad)
             ->where('programa.id_programa', $this->programa)
             ->where('programa_proceso.id_admision', getAdmision()->id_admision)
-            ->first()->id_programa_proceso;
+            ->first();
         // dd($id_programa_proceso_actualizado);
         //Validar que no hayan cambios
-        if ($inscripcion->id_programa_proceso == $id_programa_proceso_actualizado) {
+        if ($inscripcion->id_programa_proceso == $programa_proceso_actualizado->id_programa_proceso) {
             $this->alertaInscripcion('¡Información!', 'No se han realizado cambios en el programa de la inscripción', 'info', 'Aceptar', 'info');
             //Cerramos el modal
             $this->dispatchBrowserEvent('modal', [
@@ -230,7 +230,8 @@ class Index extends Component
             return;
         }
 
-        $inscripcion->id_programa_proceso = $id_programa_proceso_actualizado;
+        $inscripcion->id_programa_proceso = $programa_proceso_actualizado->id_programa_proceso;
+        $inscripcion->inscripcion_tipo_programa = $programa_proceso_actualizado->programa_tipo;
         $inscripcion->save();
         // mostrar alerta
         $this->alertaInscripcion('¡Exito!', 'El programa de la inscripción de ' . $inscripcion->persona->nombre_completo . ' ha sido actualizado satisfactoriamente', 'success', 'Aceptar', 'success');
