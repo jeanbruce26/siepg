@@ -41,27 +41,28 @@ class Index extends Component
         $this->ingreso_por_dia_inscripcion = Pago::where('id_concepto_pago', 1)->whereDate('pago_fecha', Carbon::today())->sum('pago_monto');
 
         $this->programas_maestria = Inscripcion::join('programa_proceso', 'programa_proceso.id_programa_proceso', '=', 'inscripcion.id_programa_proceso')
-                                        ->join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
-                                        ->join('programa','programa_plan.id_programa','=','programa.id_programa')
-                                        ->select('programa.subprograma', 'programa.mencion', 'programa.programa', Inscripcion::raw('count(inscripcion.id_programa_proceso) as cantidad'))
-                                        ->where('programa.programa_estado',1)
-                                        ->where('programa.programa_tipo',1) // 1 = Maestria
-                                        ->where('programa_proceso.id_admision', $this->filtro_proceso)
-                                        ->where('inscripcion.retiro_inscripcion', 0)
-                                        ->groupBy('inscripcion.id_programa_proceso')
-                                        ->orderBy(Inscripcion::raw('count(inscripcion.id_programa_proceso)'), 'desc')
-                                        ->get();
+            ->join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
+            ->join('programa','programa_plan.id_programa','=','programa.id_programa')
+            ->select('programa.subprograma', 'programa.mencion', 'programa.programa', Inscripcion::raw('count(inscripcion.id_programa_proceso) as cantidad'), Inscripcion::raw('sum(case when inscripcion.inscripcion_estado = 1 then 1 else 0 end) as verificados'))
+            ->where('programa.programa_estado',1)
+            ->where('programa.programa_tipo',1) // 1 = Maestria
+            ->where('programa_proceso.id_admision', $this->filtro_proceso)
+            ->where('inscripcion.retiro_inscripcion', 0)
+            ->where('inscripcion.retiro_inscripcion', 0)
+            ->groupBy('inscripcion.id_programa_proceso')
+            ->orderBy(Inscripcion::raw('count(inscripcion.id_programa_proceso)'), 'desc')
+            ->get();
         $this->programas_doctorado = Inscripcion::join('programa_proceso', 'programa_proceso.id_programa_proceso', '=', 'inscripcion.id_programa_proceso')
-                                        ->join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
-                                        ->join('programa','programa_plan.id_programa','=','programa.id_programa')
-                                        ->select('programa.subprograma', 'programa.mencion', 'programa.programa', Inscripcion::raw('count(inscripcion.id_programa_proceso) as cantidad'))
-                                        ->where('programa.programa_estado',1)
-                                        ->where('programa.programa_tipo',2) // 1 = Doctorado
-                                        ->where('programa_proceso.id_admision', $this->filtro_proceso)
-                                        ->where('inscripcion.retiro_inscripcion', 0)
-                                        ->groupBy('inscripcion.id_programa_proceso')
-                                        ->orderBy(Inscripcion::raw('count(inscripcion.id_programa_proceso)'), 'desc')
-                                        ->get();
+            ->join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
+            ->join('programa','programa_plan.id_programa','=','programa.id_programa')
+            ->select('programa.subprograma', 'programa.mencion', 'programa.programa', Inscripcion::raw('count(inscripcion.id_programa_proceso) as cantidad'), Inscripcion::raw('sum(case when inscripcion.inscripcion_estado = 1 then 1 else 0 end) as verificados'))
+            ->where('programa.programa_estado',1)
+            ->where('programa.programa_tipo',2) // 1 = Doctorado
+            ->where('programa_proceso.id_admision', $this->filtro_proceso)
+            ->where('inscripcion.retiro_inscripcion', 0)
+            ->groupBy('inscripcion.id_programa_proceso')
+            ->orderBy(Inscripcion::raw('count(inscripcion.id_programa_proceso)'), 'desc')
+            ->get();
     }
 
     public function aplicar_filtro()
@@ -78,27 +79,27 @@ class Index extends Component
                                         ->where('programa_proceso.id_admision', $this->filtro_proceso)
                                         ->sum('pago.pago_monto');
             $this->programas_maestria = Inscripcion::join('programa_proceso', 'programa_proceso.id_programa_proceso', '=', 'inscripcion.id_programa_proceso')
-                                        ->join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
-                                        ->join('programa','programa_plan.id_programa','=','programa.id_programa')
-                                        ->select('programa.subprograma', 'programa.mencion', 'programa.programa', Inscripcion::raw('count(inscripcion.id_programa_proceso) as cantidad'))
-                                        ->where('programa.programa_estado',1)
-                                        ->where('programa.programa_tipo',1) // 1 = Maestria
-                                        ->where('programa_proceso.id_admision', $this->filtro_proceso)
-                                        ->where('inscripcion.retiro_inscripcion', 0)
-                                        ->groupBy('inscripcion.id_programa_proceso')
-                                        ->orderBy(Inscripcion::raw('count(inscripcion.id_programa_proceso)'), 'DESC')
-                                        ->get();
+                ->join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
+                ->join('programa','programa_plan.id_programa','=','programa.id_programa')
+                ->select('programa.subprograma', 'programa.mencion', 'programa.programa', Inscripcion::raw('count(inscripcion.id_programa_proceso) as cantidad'), Inscripcion::raw('sum(case when inscripcion.inscripcion_estado = 1 then 1 else 0 end as verificados'))
+                ->where('programa.programa_estado',1)
+                ->where('programa.programa_tipo',1) // 1 = Maestria
+                ->where('programa_proceso.id_admision', $this->filtro_proceso)
+                ->where('inscripcion.retiro_inscripcion', 0)
+                ->groupBy('inscripcion.id_programa_proceso')
+                ->orderBy(Inscripcion::raw('count(inscripcion.id_programa_proceso)'), 'DESC')
+                ->get();
             $this->programas_doctorado = Inscripcion::join('programa_proceso', 'programa_proceso.id_programa_proceso', '=', 'inscripcion.id_programa_proceso')
-                                        ->join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
-                                        ->join('programa','programa_plan.id_programa','=','programa.id_programa')
-                                        ->select('programa.subprograma', 'programa.mencion', 'programa.programa', Inscripcion::raw('count(inscripcion.id_programa_proceso) as cantidad'))
-                                        ->where('programa.programa_estado',1)
-                                        ->where('programa.programa_tipo',2) // 1 = Doctorado
-                                        ->where('programa_proceso.id_admision', $this->filtro_proceso)
-                                        ->where('inscripcion.retiro_inscripcion', 0)
-                                        ->groupBy('inscripcion.id_programa_proceso')
-                                        ->orderBy(Inscripcion::raw('count(inscripcion.id_programa_proceso)'), 'DESC')
-                                        ->get();
+                ->join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
+                ->join('programa','programa_plan.id_programa','=','programa.id_programa')
+                ->select('programa.subprograma', 'programa.mencion', 'programa.programa', Inscripcion::raw('count(inscripcion.id_programa_proceso) as cantidad'), Inscripcion::raw('sum(case when inscripcion.inscripcion_estado = 1 then 1 else 0 end) as verificados'))
+                ->where('programa.programa_estado',1)
+                ->where('programa.programa_tipo',2) // 1 = Doctorado
+                ->where('programa_proceso.id_admision', $this->filtro_proceso)
+                ->where('inscripcion.retiro_inscripcion', 0)
+                ->groupBy('inscripcion.id_programa_proceso')
+                ->orderBy(Inscripcion::raw('count(inscripcion.id_programa_proceso)'), 'DESC')
+                ->get();
         }
     }
 

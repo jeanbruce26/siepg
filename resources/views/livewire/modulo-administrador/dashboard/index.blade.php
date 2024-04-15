@@ -89,7 +89,7 @@
             </div>
 		</div>
 	</div>
-	
+
 	<!--begin::Content-->
 	<div id="kt_app_content" class="app-content flex-column-fluid">
 		<!--begin::Content container-->
@@ -116,7 +116,7 @@
                                 <!--end::Number-->
                                 @if($ingreso_por_dia_total > 0)
                                     <!--begin::Cantidad de ingresos por día-->
-                                    <span class="badge badge-light-success fs-base ms-6" data-bs-toggle="tooltip" data-bs-toggle="tooltip" data-bs-delay-show="300" data-bs-delay-hide="100" data-bs-placement="right" title="Ingresos por día">                                
+                                    <span class="badge badge-light-success fs-base ms-6" data-bs-toggle="tooltip" data-bs-toggle="tooltip" data-bs-delay-show="300" data-bs-delay-hide="100" data-bs-placement="right" title="Ingresos por día">
                                         <div class="d-flex align-items-center">
                                             <!--begin::Svg Icon-->
                                             <span class="svg-icon svg-icon-muted svg-icon-3 text-success"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -158,7 +158,7 @@
                                 <!--end::Number-->
                                 @if($ingreso_por_dia_inscripcion > 0)
                                     <!--begin::Cantidad de ingresos por día-->
-                                    <span class="badge badge-light-success fs-base ms-6" data-bs-toggle="tooltip" data-bs-placement="right" title="Ingresos por día">                                
+                                    <span class="badge badge-light-success fs-base ms-6" data-bs-toggle="tooltip" data-bs-placement="right" title="Ingresos por día">
                                         <div class="d-flex align-items-center">
                                             <!--begin::Svg Icon-->
                                             <span class="svg-icon svg-icon-muted svg-icon-3 text-success"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -200,7 +200,7 @@
                                 <!--end::Number-->
                                 @if($ingreso_por_dia_constancia > 0)
                                     <!--begin::Cantidad de ingresos por día-->
-                                    <span class="badge badge-light-success fs-base ms-6" data-bs-toggle="tooltip" data-bs-placement="right" title="Ingresos por día">                                
+                                    <span class="badge badge-light-success fs-base ms-6" data-bs-toggle="tooltip" data-bs-placement="right" title="Ingresos por día">
                                         <div class="d-flex align-items-center">
                                             <!--begin::Svg Icon-->
                                             <span class="svg-icon svg-icon-muted svg-icon-3 text-success"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -223,7 +223,7 @@
                 </div>
                 <!--end::Col-->
             </div>
-        
+
             <div class="row g-5 card-maestria">
                 <div class="col-md-6">
                     <div class="card shadow-sm">
@@ -243,6 +243,7 @@
                                             <th class="text-center col-md-1">#</th>
                                             <th>Programa</th>
                                             <th class="col-md-2 text-center">Cantidad</th>
+                                            <th class="col-md-2 text-center">Verificados</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -261,6 +262,9 @@
                                                 <td class="fw-bold text-center">
                                                     {{ $item->cantidad }}
                                                 </td>
+                                                <td class="fw-bold text-center">
+                                                    {{ $item->verificados }}
+                                                </td>
                                             </tr>
                                         @empty
                                             <tr>
@@ -278,6 +282,9 @@
                                         </td>
                                         <td class="fw-bold text-center">
                                             {{ $programas_maestria->sum('cantidad') }}
+                                        </td>
+                                        <td class="fw-bold text-center">
+                                            {{ $programas_maestria->sum('verificados') }}
                                         </td>
                                     </tfoot>
                                 </table>
@@ -303,6 +310,7 @@
                                             <th class="text-center col-md-1">#</th>
                                             <th>Programa</th>
                                             <th class="col-md-2 text-center">Cantidad</th>
+                                            <th class="col-md-2 text-center">Verificados</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -321,6 +329,9 @@
                                                 <td class="fw-bold text-center">
                                                     {{ $item->cantidad }}
                                                 </td>
+                                                <td class="fw-bold text-center">
+                                                    {{ $item->verificados }}
+                                                </td>
                                             </tr>
                                         @empty
                                             <tr>
@@ -338,6 +349,9 @@
                                         </td>
                                         <td class="fw-bold text-center">
                                             {{ $programas_doctorado->sum('cantidad') }}
+                                        </td>
+                                        <td class="fw-bold text-center">
+                                            {{ $programas_doctorado->sum('verificados') }}
                                         </td>
                                     </tfoot>
                                 </table>
