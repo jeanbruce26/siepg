@@ -243,7 +243,7 @@
                                             <th class="text-center col-md-1">#</th>
                                             <th>Programa</th>
                                             <th class="col-md-2 text-center">Cantidad</th>
-                                            <th class="col-md-2 text-center">Verificados</th>
+                                            <th class="col-md-2 text-center text-primary">Verificados</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -262,7 +262,7 @@
                                                 <td class="fw-bold text-center">
                                                     {{ $item->cantidad }}
                                                 </td>
-                                                <td class="fw-bold text-center">
+                                                <td class="fw-bold text-center text-primary">
                                                     {{ $item->verificados }}
                                                 </td>
                                             </tr>
@@ -283,7 +283,7 @@
                                         <td class="fw-bold text-center">
                                             {{ $programas_maestria->sum('cantidad') }}
                                         </td>
-                                        <td class="fw-bold text-center">
+                                        <td class="fw-bold text-center text-primary">
                                             {{ $programas_maestria->sum('verificados') }}
                                         </td>
                                     </tfoot>
@@ -310,7 +310,7 @@
                                             <th class="text-center col-md-1">#</th>
                                             <th>Programa</th>
                                             <th class="col-md-2 text-center">Cantidad</th>
-                                            <th class="col-md-2 text-center">Verificados</th>
+                                            <th class="col-md-2 text-center text-primary">Verificados</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -329,7 +329,7 @@
                                                 <td class="fw-bold text-center">
                                                     {{ $item->cantidad }}
                                                 </td>
-                                                <td class="fw-bold text-center">
+                                                <td class="fw-bold text-center text-primary">
                                                     {{ $item->verificados }}
                                                 </td>
                                             </tr>
@@ -350,7 +350,7 @@
                                         <td class="fw-bold text-center">
                                             {{ $programas_doctorado->sum('cantidad') }}
                                         </td>
-                                        <td class="fw-bold text-center">
+                                        <td class="fw-bold text-center text-primary">
                                             {{ $programas_doctorado->sum('verificados') }}
                                         </td>
                                     </tfoot>
