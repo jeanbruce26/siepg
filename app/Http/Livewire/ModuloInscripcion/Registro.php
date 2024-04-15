@@ -184,6 +184,20 @@ class Registro extends Component
     {
         $this->validacion();
 
+        // si el pago tiene fecha de pago mayor al 14 de abril se valida para que ingrese un pago con fecha menor o igual al 14 de abril
+        $fecha_limite = '2021-04-14';
+        if ($this->fecha_pago > $fecha_limite) {
+            // emitir evento para mostrar mensaje de alerta
+            $this->dispatchBrowserEvent('registro_inscripcion', [
+                'title' => '¡Error!',
+                'text' => 'La fecha de pago no puede ser mayor al 14 de abril ya que el proceso de admisión se cerró ese día.',
+                'icon' => 'error',
+                'confirmButtonText' => 'Cerrar',
+                'color' => 'danger'
+            ]);
+            return;
+        }
+
         // verificamos el el concepto de pago es de convenio o victimas de violencia
         if ($this->concepto_pago != getIdConceptoPagoConvenio() || $this->concepto_pago != getIdConceptoPagoVictimasViolencia()) {
             // validar si el numero de operacion ya existe
