@@ -329,7 +329,8 @@ class Index extends Component
             ->where('inscripcion.retiro_inscripcion', 0)
             ->where('programa_proceso.id_admision', getAdmision()->id_admision)
             ->where(function ($query) {
-                $query->where('persona.nombre_completo', 'like', '%' . $this->search . '%');
+                $query->where('persona.nombre_completo', 'like', '%' . $this->search . '%')
+                    ->orWhere('persona.numero_documento', 'like', '%' . $this->search . '%');
             })
             ->where(function ($query) {
                 if ($this->programa_filtro != 0) {
