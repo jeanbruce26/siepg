@@ -25,7 +25,7 @@ class Index extends Component
     public $variable = 'expediente';
     public $es_doctorado = false;
 
-    public $cant_paginas = 10;
+    public $cant_paginas = 50;
     public $search = '';
     public $programa_filtro = 0;
 
