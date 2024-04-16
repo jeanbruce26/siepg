@@ -314,29 +314,33 @@ function finalizar_evaluacion($evaluacion, $puntaje)
     if($evaluacion->id_tipo_evaluacion == 1)
     {
         $puntaje_final = $evaluacion->puntaje_expediente + $evaluacion->puntaje_entrevista;
-        if($puntaje->puntaje_maestria <= $puntaje_final)
-        {
-            $evaluacion->evaluacion_observacion = null;
-            $evaluacion->evaluacion_estado = 2; // 1 = Pendiente // 2 = Aprobado // 3 = Rechazado
-        }
-        else
-        {
-            $evaluacion->evaluacion_observacion = 'El puntaje total no supera el puntaje mínimo.';
-            $evaluacion->evaluacion_estado = 3; // 1 = Pendiente // 2 = Aprobado // 3 = Rechazado
+        if ($evaluacion->puntaje_expediente && $evaluacion->puntaje_entrevista) {
+            if($puntaje->puntaje_maestria <= $puntaje_final)
+            {
+                $evaluacion->evaluacion_observacion = null;
+                $evaluacion->evaluacion_estado = 2; // 1 = Pendiente // 2 = Aprobado // 3 = Rechazado
+            }
+            else
+            {
+                $evaluacion->evaluacion_observacion = 'El puntaje total no supera el puntaje mínimo.';
+                $evaluacion->evaluacion_estado = 3; // 1 = Pendiente // 2 = Aprobado // 3 = Rechazado
+            }
         }
     }
     else if($evaluacion->id_tipo_evaluacion == 2)
     {
         $puntaje_final = $evaluacion->puntaje_expediente + $evaluacion->puntaje_investigacion + $evaluacion->puntaje_entrevista;
-        if($puntaje->puntaje_doctorado <= $puntaje_final)
-        {
-            $evaluacion->evaluacion_observacion = null;
-            $evaluacion->evaluacion_estado = 2; // 1 = Pendiente // 2 = Aprobado // 3 = Rechazado
-        }
-        else
-        {
-            $evaluacion->evaluacion_observacion = 'El puntaje total no supera el puntaje mínimo.';
-            $evaluacion->evaluacion_estado = 3; // 1 = Pendiente // 2 = Aprobado // 3 = Rechazado
+        if ($evaluacion->puntaje_expediente && $evaluacion->puntaje_investigacion && $evaluacion->puntaje_entrevista) {
+            if($puntaje->puntaje_doctorado <= $puntaje_final)
+            {
+                $evaluacion->evaluacion_observacion = null;
+                $evaluacion->evaluacion_estado = 2; // 1 = Pendiente // 2 = Aprobado // 3 = Rechazado
+            }
+            else
+            {
+                $evaluacion->evaluacion_observacion = 'El puntaje total no supera el puntaje mínimo.';
+                $evaluacion->evaluacion_estado = 3; // 1 = Pendiente // 2 = Aprobado // 3 = Rechazado
+            }
         }
     }
     $evaluacion->puntaje_final = $puntaje_final;
