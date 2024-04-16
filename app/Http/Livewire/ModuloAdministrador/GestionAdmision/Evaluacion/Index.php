@@ -325,8 +325,8 @@ class Index extends Component
             ->join('programa', 'programa_plan.id_programa', '=', 'programa.id_programa')
             ->join('persona', 'inscripcion.id_persona', '=', 'persona.id_persona')
             ->where('inscripcion.inscripcion_estado', 1)
-            // ->where('inscripcion.verificar_expedientes', 1)
-            // ->where('inscripcion.retiro_inscripcion', 0)
+            ->where('inscripcion.verificar_expedientes', 1)
+            ->where('inscripcion.retiro_inscripcion', 0)
             ->where('programa_proceso.id_admision', getAdmision()->id_admision)
             ->where(function ($query) {
                 $query->where('persona.nombre_completo', 'like', '%' . $this->search . '%');
