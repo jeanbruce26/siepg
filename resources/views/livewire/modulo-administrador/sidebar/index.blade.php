@@ -119,11 +119,11 @@
 
                 {{-- Gestion de Admisión --}}
                 <div data-kt-menu-trigger="click"
-                    class="menu-item menu-accordion {{ $route === 'administrador.admision' || $route === 'administrador.inscripcion' || $route === 'administrador.inscripcion-pago' || $route === 'administrador.admitidos' || $route === 'administrador.links-whatsapp' ? 'active show border-2 border-start border-gray-300 rounded' : '' }}">
+                    class="menu-item menu-accordion {{ $route === 'administrador.admision' || $route === 'administrador.inscripcion' || $route === 'administrador.evaluacion' || $route === 'administrador.inscripcion-pago' || $route === 'administrador.admitidos' || $route === 'administrador.links-whatsapp' ? 'active show border-2 border-start border-gray-300 rounded' : '' }}">
                     <span class="menu-link">
                         <span class="menu-icon">
                             <span
-                                class="svg-icon svg-icon-muted svg-icon-2 {{ $route === 'administrador/admision' || $route === 'administrador.inscripcion' || $route === 'administrador.inscripcion-pago' || $route === 'administrador.admitidos' ? 'text-primary' : '' }}">
+                                class="svg-icon svg-icon-muted svg-icon-2 {{ $route === 'administrador/admision' || $route === 'administrador.inscripcion' || $route === 'administrador.evaluacion' || $route === 'administrador.inscripcion-pago' || $route === 'administrador.admitidos' ? 'text-primary' : '' }}">
                                 <i class="ki-outline ki-note-2 fs-2"></i>
                             </span>
                         </span>
