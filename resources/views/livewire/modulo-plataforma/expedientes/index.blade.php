@@ -124,6 +124,15 @@
                             </span>
                         </div>
                     </div>
+                    <div
+                        class="alert bg-light-warning border border-3 border-warning d-flex align-items-center p-5 mb-5">
+                        <i class="ki-outline ki-information-5 fs-2qx me-4 text-warning"></i>
+                        <div class="d-flex flex-column">
+                            <span class="fw-bold fs-5">
+                                Nota: Una vez evaluado su expediente, ya no podrá modificarlo
+                            </span>
+                        </div>
+                    </div>
                     {{-- tabla de expedientes --}}
                     <div class="card shadow-sm mb-5">
                         <div class="table-responsive">
