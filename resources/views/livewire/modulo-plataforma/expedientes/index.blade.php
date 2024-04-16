@@ -152,11 +152,11 @@
                                                 $evaluacion = App\Models\Evaluacion::where('id_inscripcion', $inscripcion->id_inscripcion)->first();
                                             @endphp
                                             @if (!$evaluacion)
-                                                @if ($inscripcion->programa_proceso->admision->id_admision == $admision->id_admision)
-                                                    @if ($admision->admision_fecha_fin_inscripcion >= date('Y-m-d'))
+                                                {{-- @if ($inscripcion->programa_proceso->admision->id_admision == $admision->id_admision)
+                                                    @if ($admision->admision_fecha_fin_inscripcion >= date('Y-m-d')) --}}
                                                         <th></th>
-                                                    @endif
-                                                @endif
+                                                    {{-- @endif
+                                                @endif --}}
                                             @endif
                                         @endif
                                     </tr>
@@ -211,8 +211,8 @@
                                                             @endif
                                                         @else
                                                             @if (!$evaluacion)
-                                                                @if ($inscripcion->programa_proceso->admision->id_admision == $admision->id_admision)
-                                                                    @if ($admision->admision_fecha_fin_inscripcion >= date('Y-m-d'))
+                                                                {{-- @if ($inscripcion->programa_proceso->admision->id_admision == $admision->id_admision)
+                                                                    @if ($admision->admision_fecha_fin_inscripcion >= date('Y-m-d')) --}}
                                                                         <td class="text-end">
                                                                             <a href="#modal_expediente"
                                                                                 wire:click="cargar_expediente_inscripcion({{ $item->id_expediente_inscripcion }})"
@@ -222,8 +222,8 @@
                                                                                 Editar
                                                                             </a>
                                                                         </td>
-                                                                    @endif
-                                                                @endif
+                                                                    {{-- @endif
+                                                                @endif --}}
                                                             @endif
                                                         @endif
                                                     </tr>
@@ -264,8 +264,8 @@
                                                         @endif
                                                     @else
                                                         @if (!$evaluacion)
-                                                            @if ($inscripcion->programa_proceso->admision->id_admision == $admision->id_admision)
-                                                                @if ($admision->admision_fecha_fin_inscripcion >= date('Y-m-d'))
+                                                            {{-- @if ($inscripcion->programa_proceso->admision->id_admision == $admision->id_admision)
+                                                                @if ($admision->admision_fecha_fin_inscripcion >= date('Y-m-d')) --}}
                                                                     <td class="text-end">
                                                                         <a href="#modal_expediente"
                                                                             wire:click="cargar_expediente({{ $item2->id_expediente_admision }})"
@@ -275,8 +275,8 @@
                                                                             Agregar
                                                                         </a>
                                                                     </td>
-                                                                @endif
-                                                            @endif
+                                                                {{-- @endif
+                                                            @endif --}}
                                                         @endif
                                                     @endif
                                                 </tr>
