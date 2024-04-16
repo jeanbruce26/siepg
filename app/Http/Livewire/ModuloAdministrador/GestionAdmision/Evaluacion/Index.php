@@ -20,6 +20,7 @@ use Livewire\WithPagination;
 class Index extends Component
 {
     use WithPagination;
+    protected $paginationTheme = 'bootstrap'; //paginacion de bootstrap
 
     public $variable = 'expediente';
     public $es_doctorado = false;
