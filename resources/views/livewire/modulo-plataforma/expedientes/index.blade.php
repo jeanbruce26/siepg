@@ -139,9 +139,14 @@
                                                 <th></th>
                                             @endif
                                         @else
-                                            @if ($inscripcion->programa_proceso->admision->id_admision == $admision->id_admision)
-                                                @if ($admision->admision_fecha_fin_inscripcion >= date('Y-m-d'))
-                                                    <th></th>
+                                            @php
+                                                $evaluacion = App\Models\Evaluacion::where('id_inscripcion', $inscripcion->id_inscripcion)->first();
+                                            @endphp
+                                            @if (!$evaluacion)
+                                                @if ($inscripcion->programa_proceso->admision->id_admision == $admision->id_admision)
+                                                    @if ($admision->admision_fecha_fin_inscripcion >= date('Y-m-d'))
+                                                        <th></th>
+                                                    @endif
                                                 @endif
                                             @endif
                                         @endif
@@ -196,17 +201,19 @@
                                                                 </td>
                                                             @endif
                                                         @else
-                                                            @if ($inscripcion->programa_proceso->admision->id_admision == $admision->id_admision)
-                                                                @if ($admision->admision_fecha_fin_inscripcion >= date('Y-m-d'))
-                                                                    <td class="text-end">
-                                                                        <a href="#modal_expediente"
-                                                                            wire:click="cargar_expediente_inscripcion({{ $item->id_expediente_inscripcion }})"
-                                                                            class="btn btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary hover-scale"
-                                                                            data-bs-toggle="modal"
-                                                                            data-bs-target="#modal_expediente">
-                                                                            Editar
-                                                                        </a>
-                                                                    </td>
+                                                            @if (!$evaluacion)
+                                                                @if ($inscripcion->programa_proceso->admision->id_admision == $admision->id_admision)
+                                                                    @if ($admision->admision_fecha_fin_inscripcion >= date('Y-m-d'))
+                                                                        <td class="text-end">
+                                                                            <a href="#modal_expediente"
+                                                                                wire:click="cargar_expediente_inscripcion({{ $item->id_expediente_inscripcion }})"
+                                                                                class="btn btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary hover-scale"
+                                                                                data-bs-toggle="modal"
+                                                                                data-bs-target="#modal_expediente">
+                                                                                Editar
+                                                                            </a>
+                                                                        </td>
+                                                                    @endif
                                                                 @endif
                                                             @endif
                                                         @endif
@@ -247,17 +254,19 @@
                                                             </td>
                                                         @endif
                                                     @else
-                                                        @if ($inscripcion->programa_proceso->admision->id_admision == $admision->id_admision)
-                                                            @if ($admision->admision_fecha_fin_inscripcion >= date('Y-m-d'))
-                                                                <td class="text-end">
-                                                                    <a href="#modal_expediente"
-                                                                        wire:click="cargar_expediente({{ $item2->id_expediente_admision }})"
-                                                                        class="btn btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary hover-scale"
-                                                                        data-bs-toggle="modal"
-                                                                        data-bs-target="#modal_expediente">
-                                                                        Agregar
-                                                                    </a>
-                                                                </td>
+                                                        @if (!$evaluacion)
+                                                            @if ($inscripcion->programa_proceso->admision->id_admision == $admision->id_admision)
+                                                                @if ($admision->admision_fecha_fin_inscripcion >= date('Y-m-d'))
+                                                                    <td class="text-end">
+                                                                        <a href="#modal_expediente"
+                                                                            wire:click="cargar_expediente({{ $item2->id_expediente_admision }})"
+                                                                            class="btn btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary hover-scale"
+                                                                            data-bs-toggle="modal"
+                                                                            data-bs-target="#modal_expediente">
+                                                                            Agregar
+                                                                        </a>
+                                                                    </td>
+                                                                @endif
                                                             @endif
                                                         @endif
                                                     @endif
