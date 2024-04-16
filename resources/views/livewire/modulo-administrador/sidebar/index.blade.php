@@ -159,12 +159,12 @@
                             </a>
                         </div>
                         <div class="menu-item">
-                            <a class="menu-link {{ $route === 'administrador.' ? 'active border-3 border-start border-primary' : '' }}""
-                                href=" {{ route('administrador.inscripcion-pago') }}">
+                            <a class="menu-link {{ $route === 'administrador.evaluacion' ? 'active border-3 border-start border-primary' : '' }}""
+                                href=" {{ route('administrador.evaluacion') }}">
                                 <span class="menu-bullet">
                                     <span class="bullet bullet-dot"></span>
                                 </span>
-                                <span class="menu-title fs-4">Puntajes de Evaluación</span>
+                                <span class="menu-title fs-4">Evaluación</span>
                             </a>
                         </div>
                         <div class="menu-item">

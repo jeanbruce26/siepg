@@ -7,6 +7,7 @@ use App\Http\Controllers\ModuloAdministrador\ConceptoPagoController;
 use App\Http\Controllers\ModuloAdministrador\CorreoController;
 use App\Http\Controllers\ModuloAdministrador\DashboardController;
 use App\Http\Controllers\ModuloAdministrador\EstudianteController;
+use App\Http\Controllers\ModuloAdministrador\EvaluacionController;
 use App\Http\Controllers\ModuloAdministrador\ExpedienteController;
 use App\Http\Controllers\ModuloAdministrador\InscripcionController;
 use App\Http\Controllers\ModuloAdministrador\InscripcionPagoController;
@@ -44,6 +45,8 @@ Route::get('/estudiante', [EstudianteController::class, 'index'])->middleware(['
 Route::get('/admision', [AdmisionController::class, 'index'])->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.admision');
 //Ruta para ir a la vista de Inscripción en la Gestion Admision
 Route::get('/inscripcion', [InscripcionController::class, 'index'])->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.inscripcion');
+//Ruta para ir a la vista de Evaluacion en la Gestion Admision
+Route::get('/evaluacion', [EvaluacionController::class, 'index'])->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.evaluacion');
 //Inscripcion Pago en la Gestion Admision
 Route::get('/inscripcion-pago', [InscripcionPagoController::class, 'index'])->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.inscripcion-pago');
 //Ruta para Admitidos en la Gestion Admision
