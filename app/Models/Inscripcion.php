@@ -16,6 +16,7 @@ class Inscripcion extends Model
     protected $table = 'inscripcion';
     protected $fillable = [
         'id_inscripcion',
+        'numero',
         'inscripcion_codigo',
         'inscripcion_ficha_url',
         'inscripcion_fecha',

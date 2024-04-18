@@ -105,6 +105,47 @@ Route::get('/gestion-retiro', [CoordinadorController::class, 'retiro'])
     ->middleware(['auth.usuario', 'verificar.usuario.administrador'])
     ->name('administrador.retiro');
 
+// ruta para generar numeros consecutivos por programa academico de las inscripciones verificadas
+Route::get('/generar-numero-consecutivo', function () {
+    $programas = Inscripcion::join('programa_proceso', 'inscripcion.id_programa_proceso', '=', 'programa_proceso.id_programa_proceso')
+            ->join('programa_plan', 'programa_proceso.id_programa_plan', '=', 'programa_plan.id_programa_plan')
+            ->join('programa', 'programa_plan.id_programa', '=', 'programa.id_programa')
+            ->where('programa.programa_estado', 1)
+            ->where('programa.id_modalidad', 2)
+            ->where('inscripcion.inscripcion_estado', 1)
+            ->where('inscripcion.retiro_inscripcion', 0)
+            ->where('inscripcion.verificar_expedientes', 1)
+            ->distinct()
+            ->select('programa_proceso.id_programa_proceso', 'programa.programa', 'programa.subprograma', 'programa.mencion')
+            ->get();
+
+    foreach ($programas as $programa) {
+        $inscripciones = Inscripcion::join('programa_proceso','inscripcion.id_programa_proceso','=','programa_proceso.id_programa_proceso')
+            ->join('programa_plan','programa_proceso.id_programa_plan','=','programa_plan.id_programa_plan')
+            ->join('programa','programa_plan.id_programa','=','programa.id_programa')
+            ->join('persona','inscripcion.id_persona','=','persona.id_persona')
+            ->where('programa.programa_estado',1)
+            ->where('programa.id_modalidad',2)
+            ->where('inscripcion.inscripcion_estado',1)
+            ->where('inscripcion.retiro_inscripcion',0)
+            ->where('inscripcion.verificar_expedientes',1)
+            ->where('inscripcion.id_programa_proceso',$programa->id_programa_proceso)
+            ->orderBy('persona.nombre_completo', 'asc')
+            ->get();
+
+        $numero = 1;
+        foreach ($inscripciones as $inscripcion) {
+            $inscripcion->numero = $numero;
+            $inscripcion->save();
+            $numero++;
+        }
+    }
+
+    return response()->json([
+        'message' => 'Numeros consecutivos generados'
+    ]);
+})->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.generar-numero-consecutivo');
+
 
 // cambiar todos los correos de los usuarios a minusculas
 Route::get('/cambiar-correos', function () {
