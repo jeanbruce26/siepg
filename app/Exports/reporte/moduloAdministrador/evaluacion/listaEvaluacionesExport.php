@@ -13,6 +13,7 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithCustomStartCell;
+use Illuminate\Support\Str;
 
 class listaEvaluacionesExport implements FromCollection, WithMapping, ShouldAutoSize, WithTitle, WithEvents, WithCustomStartCell
 {
@@ -21,14 +22,21 @@ class listaEvaluacionesExport implements FromCollection, WithMapping, ShouldAuto
     protected $item = 0;
     protected $programa;
     protected $programa_nombre;
+    protected $programa_nombre_corto;
 
     public function __construct($programa)
     {
         $this->item = 1;
         $this->programa = ProgramaProceso::find($programa);
-        $this->programa_nombre = $this->programa->programa_plan->programa->mencion
-            ? ($this->programa->programa_plan->programa->programa . ' EN ' . $this->programa->programa_plan->programa->subprograma . ' CON MENCION EN ' . $this->programa->programa_plan->programa->mencion)
-            : ($this->programa->programa_plan->programa->programa . ' EN ' . $this->programa->programa_plan->programa->subprograma);
+        if ($this->programa->programa_plan->programa->mencion) {
+            $this->programa_nombre = $this->programa->programa_plan->programa->programa . ' EN ' . $this->programa->programa_plan->programa->subprograma . ' CON MENCION EN ' . $this->programa->programa_plan->programa->mencion;
+            $this->programa_nombre_corto = 'MENCION EN ' . $this->programa->programa_plan->programa->mencion;
+            $this->programa_nombre_corto = Str::slug($this->programa_nombre_corto, ' ');
+        } else {
+            $this->programa_nombre = $this->programa->programa_plan->programa->programa . ' EN ' . $this->programa->programa_plan->programa->subprograma;
+            $this->programa_nombre_corto = $this->programa->programa_plan->programa->programa . ' EN ' . $this->programa->programa_plan->programa->subprograma;
+            $this->programa_nombre_corto = Str::slug($this->programa_nombre_corto, ' ');
+        }
     }
 
     public function collection()
@@ -138,6 +146,6 @@ class listaEvaluacionesExport implements FromCollection, WithMapping, ShouldAuto
 
     public function title(): string
     {
-        return $this->programa_nombre;
+        return $this->programa_nombre_corto;
     }
 }
