@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\ModuloAdministrador\GestionAdmision\Evaluacion;
 
+use App\Exports\reporte\moduloAdministrador\evaluacion\listaProgramasExport;
 use App\Models\Evaluacion;
 use App\Models\EvaluacionEntrevista;
 use App\Models\EvaluacionEntrevistaItem;
@@ -16,6 +17,7 @@ use App\Models\Puntaje;
 use Illuminate\Support\Collection;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Maatwebsite\Excel\Facades\Excel;
 
 class Index extends Component
 {
@@ -316,6 +318,12 @@ class Index extends Component
         finalizar_evaluacion($this->evaluacion, $this->puntaje);
 
         $this->alerta('¡Exito!', 'Se ha registrado el puntaje de su evaluación correctamente.', 'success', 'Aceptar', 'success');
+    }
+
+    public function exportar_excel()
+    {
+        // return (new listaProgramasExport)->download('listado-evaluaciones-por-programas.xlsx');
+        return Excel::download(new listaProgramasExport, 'listado-evaluaciones-por-programas.xlsx');
     }
 
     public function render()
