@@ -26,9 +26,9 @@ class listaEvaluacionesExport implements FromCollection, WithMapping, ShouldAuto
     {
         $this->item = 1;
         $this->programa = ProgramaProceso::find($programa);
-        $this->programa_nombre = $this->programa->mencion
-            ? ($this->programa->programa . ' EN ' . $this->programa->subprograma . ' CON MENCION EN ' . $this->programa->mencion)
-            : ($this->programa->programa . ' EN ' . $this->programa->subprograma);
+        $this->programa_nombre = $this->programa->programa_plan->programa->mencion
+            ? ($this->programa->programa_plan->programa->programa . ' EN ' . $this->programa->programa_plan->programa->subprograma . ' CON MENCION EN ' . $this->programa->programa_plan->programa->mencion)
+            : ($this->programa->programa_plan->programa->programa . ' EN ' . $this->programa->programa_plan->programa->subprograma);
     }
 
     public function collection()
@@ -112,19 +112,19 @@ class listaEvaluacionesExport implements FromCollection, WithMapping, ShouldAuto
                 ];
 
                 $event->sheet->setCellValue('A1', 'LISTADO DE INSCRITOS PARA LAS EVALUACIONES - ' . $this->programa_nombre);
-                $event->sheet->getDelegate()->getStyle('A1:F1')->applyFromArray($tamanio);
-                $event->sheet->getDelegate()->getStyle('A1:F1')->applyFromArray($negrita);
-                $event->sheet->getDelegate()->mergeCells('A1:F1');
-                $event->sheet->getDelegate()->getStyle('A1:F1')->applyFromArray($centrar);
+                $event->sheet->getDelegate()->getStyle('A1:E1')->applyFromArray($tamanio);
+                $event->sheet->getDelegate()->getStyle('A1:E1')->applyFromArray($negrita);
+                $event->sheet->getDelegate()->mergeCells('A1:E1');
+                $event->sheet->getDelegate()->getStyle('A1:E1')->applyFromArray($centrar);
 
-                $columnas = ['N°', 'DNI', 'APELLIDO PATERNO', 'APELLIDO MATERNO', 'NOMBRES', 'PROGRAMA ACADEMICO'];
+                $columnas = ['N°', 'DNI', 'APELLIDOS', 'NOMBRES', 'PROGRAMA ACADEMICO'];
                 $event->sheet->getDelegate()->fromArray($columnas, NULL, 'A3');
 
-                $event->sheet->getDelegate()->getStyle('A3:F3')->applyFromArray($header);
-                $event->sheet->getDelegate()->getStyle('A3:F3')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('99a3a4');
+                $event->sheet->getDelegate()->getStyle('A3:E3')->applyFromArray($header);
+                $event->sheet->getDelegate()->getStyle('A3:E3')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('99a3a4');
                 for ($i = 1; $i <= $this->item; $i++) {
                     $event->sheet->getDelegate()->getStyle('A' . ($i + 2))->applyFromArray($negrita);
-                    $event->sheet->getDelegate()->getStyle('A' . ($i + 2) . ':F' . ($i + 2))->applyFromArray($border);
+                    $event->sheet->getDelegate()->getStyle('A' . ($i + 2) . ':E' . ($i + 2))->applyFromArray($border);
                     $event->sheet->getDelegate()->getStyle('A' . ($i + 2) . ':B' . ($i + 2))->applyFromArray($centrar);
                 }
             },
