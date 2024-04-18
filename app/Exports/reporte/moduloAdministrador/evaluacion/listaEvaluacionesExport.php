@@ -37,7 +37,7 @@ class listaEvaluacionesExport implements FromCollection
             ->where('inscripcion.inscripcion_estado',1)
             ->where('inscripcion.retiro_inscripcion',0)
             ->where('inscripcion.verificar_expedientes',1)
-            ->where('programa.id_programa_proceso',$this->programa->id_programa_proceso)
+            ->where('inscripcion.id_programa_proceso',$this->programa->id_programa_proceso)
             ->orderBy('persona.nombre_completo', 'asc')
             ->get();
 
