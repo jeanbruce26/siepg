@@ -26,13 +26,11 @@ class listaProgramasExport implements WithMultipleSheets
             ->where('inscripcion.retiro_inscripcion', 0)
             ->where('inscripcion.verificar_expedientes', 1)
             ->distinct()
-            ->select('programa.id_programa', 'programa.programa', 'programa.subprograma', 'programa.mencion', DB::raw('count(inscripcion.id_programa_proceso) as total'))
+            ->select('programa.id_programa_proceso', 'programa.programa', 'programa.subprograma', 'programa.mencion')
             ->get();
 
         foreach ($programas as $programa) {
-            if ($programa->total != 0) {
-                $sheets[] = new listaEvaluacionesExport($programa->id_programa);
-            }
+            $sheets[] = new listaEvaluacionesExport($programa->id_programa_proceso);
         }
 
         return $sheets;
