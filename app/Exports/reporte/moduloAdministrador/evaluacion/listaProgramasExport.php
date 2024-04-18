@@ -26,7 +26,7 @@ class listaProgramasExport implements WithMultipleSheets
             ->where('inscripcion.retiro_inscripcion', 0)
             ->where('inscripcion.verificar_expedientes', 1)
             ->distinct()
-            ->select('programa.id_programa_proceso', 'programa.programa', 'programa.subprograma', 'programa.mencion')
+            ->select('programa_proceso.id_programa_proceso', 'programa.programa', 'programa.subprograma', 'programa.mencion')
             ->get();
 
         foreach ($programas as $programa) {
