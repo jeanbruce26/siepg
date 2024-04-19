@@ -170,6 +170,7 @@ class Inscripciones extends Component
 
     public function cargar_evaluacion($id_inscripcion, $value)
     {
+        $this->limpiar();
         $this->change_title($value);
         $this->inscripcion = Inscripcion::find($id_inscripcion);
         $this->es_doctorado = $this->inscripcion->inscripcion_tipo_programa == 2 ? true : false;
@@ -386,6 +387,8 @@ class Inscripciones extends Component
             'id' => '#modal-evaluacion',
             'action' => 'hide'
         ]);
+
+        $this->limpiar();
     }
 
     public function evaluar_investigacion()
@@ -440,6 +443,8 @@ class Inscripciones extends Component
             'id' => '#modal-evaluacion',
             'action' => 'hide'
         ]);
+
+        $this->limpiar();
     }
 
     public function evaluar_entrevista()
@@ -494,6 +499,8 @@ class Inscripciones extends Component
             'id' => '#modal-evaluacion',
             'action' => 'hide'
         ]);
+
+        $this->limpiar();
     }
 
     public function render()
