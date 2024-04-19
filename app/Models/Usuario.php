@@ -29,6 +29,11 @@ class Usuario extends Authenticatable
         'id_trabajador_tipo_trabajador','id_trabajador_tipo_trabajador');
     }
 
+    // usuario evaluaciones
+    public function usuario_evaluaciones(){
+        return $this->hasMany(UsuarioEvaluacion::class, 'id_usuario', 'id_usuario');
+    }
+
     // protected static function boot() {
     //     parent::boot();
 
