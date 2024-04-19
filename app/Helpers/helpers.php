@@ -311,8 +311,7 @@ function generarFichaInscripcion($id_inscripcion)
 
 function finalizar_evaluacion($evaluacion, $puntaje)
 {
-    if($evaluacion->id_tipo_evaluacion == 1)
-    {
+    if($evaluacion->id_tipo_evaluacion == 1) {
         $puntaje_final = $evaluacion->puntaje_expediente + $evaluacion->puntaje_entrevista;
         if ($evaluacion->puntaje_expediente && $evaluacion->puntaje_entrevista) {
             if($puntaje->puntaje_maestria <= $puntaje_final)
@@ -326,9 +325,9 @@ function finalizar_evaluacion($evaluacion, $puntaje)
                 $evaluacion->evaluacion_estado = 3; // 1 = Pendiente // 2 = Aprobado // 3 = Rechazado
             }
         }
-    }
-    else if($evaluacion->id_tipo_evaluacion == 2)
-    {
+        $evaluacion->puntaje_final = $puntaje_final;
+        $evaluacion->save();
+    } else if($evaluacion->id_tipo_evaluacion == 2) {
         $puntaje_final = $evaluacion->puntaje_expediente + $evaluacion->puntaje_investigacion + $evaluacion->puntaje_entrevista;
         if ($evaluacion->puntaje_expediente && $evaluacion->puntaje_investigacion && $evaluacion->puntaje_entrevista) {
             if($puntaje->puntaje_doctorado <= $puntaje_final)
@@ -342,9 +341,9 @@ function finalizar_evaluacion($evaluacion, $puntaje)
                 $evaluacion->evaluacion_estado = 3; // 1 = Pendiente // 2 = Aprobado // 3 = Rechazado
             }
         }
+        $evaluacion->puntaje_final = $puntaje_final;
+        $evaluacion->save();
     }
-    $evaluacion->puntaje_final = $puntaje_final;
-    $evaluacion->save();
 
     if($puntaje_final == 0){
         $evaluacion->evaluacion_observacion = 'No se presentó a la evaluación de entrevista.';
