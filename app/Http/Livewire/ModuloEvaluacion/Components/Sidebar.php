@@ -6,6 +6,12 @@ use Livewire\Component;
 
 class Sidebar extends Component
 {
+    public function cerrar_sesion()
+    {
+        auth('evaluacion')->logout();
+        return redirect()->route('evaluacion.login');
+    }
+
     public function render()
     {
         $usuario = auth('evaluacion')->user();
