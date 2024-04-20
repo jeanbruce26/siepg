@@ -460,7 +460,7 @@
                             </div>
                         @endif
                     @elseif ($variable === 'entrevista') --}}
-                        @if ($expedientes_inscripcion->count() > 0)
+                        {{-- @if ($expedientes_inscripcion->count() > 0)
                             <div class="row g-5 mb-5">
                                 @foreach ($expedientes_inscripcion as $item)
                                     @php $expediente_tipo_evaluacion = App\Models\ExpedienteTipoEvaluacion::where('expediente_tipo_evaluacion', 3)->where('id_expediente', $item->id_expediente)->first(); @endphp
@@ -484,7 +484,7 @@
                                     @endif
                                 @endforeach
                             </div>
-                        @endif
+                        @endif --}}
                     {{-- @endif --}}
                     @if ($variable === 'expediente')
                         <div class="row">
