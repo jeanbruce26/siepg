@@ -63,6 +63,8 @@ class Inscripciones extends Component
     public $puntaje_total = 0;
     public $observacion;
 
+    public Collection $expedientes_inscripcion;
+
     public function mount($id_programa_proceso)
     {
         $this->usuario = auth('evaluacion')->user();
@@ -88,6 +90,8 @@ class Inscripciones extends Component
         $this->evaluacion_investigacion = collect();
         $this->evaluacion_entrevista = collect();
         $this->puntaje = Puntaje::where('puntaje_estado', 1)->first();
+
+        $this->expedientes_inscripcion = collect();
     }
 
     public function detalle_evaluacion(Inscripcion $inscripcion)
@@ -164,6 +168,7 @@ class Inscripciones extends Component
         $this->evaluacion_expediente = collect();
         $this->evaluacion_investigacion = collect();
         $this->evaluacion_entrevista = collect();
+        $this->expedientes_inscripcion = collect();
         $this->resetErrorBag();
         $this->resetValidation();
     }
@@ -173,6 +178,15 @@ class Inscripciones extends Component
         $this->limpiar();
         $this->change_title($value);
         $this->inscripcion = Inscripcion::find($id_inscripcion);
+        $this->expedientes_inscripcion = ExpedienteInscripcion::join('expediente_admision', 'expediente_inscripcion.id_expediente_admision', 'expediente_admision.id_expediente_admision')
+            ->join('expediente', 'expediente_admision.id_expediente', 'expediente.id_expediente')
+            ->where('expediente_inscripcion.id_inscripcion',$this->inscripcion->id_inscripcion)
+            ->where(function($query){
+                $query->where('expediente.expediente_tipo', 0)
+                    ->orWhere('expediente.expediente_tipo', $this->inscripcion->inscripcion_tipo_programa);
+            })
+            ->orderBy('expediente.id_expediente', 'asc')
+            ->get();
         $this->es_doctorado = $this->inscripcion->inscripcion_tipo_programa == 2 ? true : false;
         // validamos las fechas de las evaluciones
         $admision = Admision::find($this->programa_proceso->id_admision);

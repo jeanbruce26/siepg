@@ -407,6 +407,32 @@
                             </div>
                         @endif
                     </div>
+                    @if ($expedientes_inscripcion->count() > 0)
+                        {{-- card de exediente --}}
+                        <div class="row g-5 mb-5">
+                            @foreach ($expedientes_inscripcion as $item)
+                                @php $expediente_tipo_evaluacion = App\Models\ExpedienteTipoEvaluacion::where('expediente_tipo_evaluacion', 2)->where('id_expediente', $item->id_expediente)->first(); @endphp
+                                @if ($expediente_tipo_evaluacion)
+                                    <div class="col-xl-4 col-lg-6 col-md-6">
+                                        <div class="card shadow-sm bg-info bg-opacity-20 h-100">
+                                            <div class="card-body mb-0 d-flex flex-column justify-content-center">
+                                                <div class="text-center mb-5">
+                                                    <span class="fs-4 fs-md-3 fw-bold text-gray-800">
+                                                        {{ $item->expediente }}
+                                                    </span>
+                                                </div>
+                                                <div>
+                                                    <a href="{{ asset($item->expediente_inscripcion_url) }}" target="_blank" class="btn btn-info w-100 hover-scale">
+                                                        Abrir Expediente
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+                            @endforeach
+                        </div>
+                    @endif
                     @if ($variable === 'expediente')
                         <div class="row">
                             <div class="col-md-12">
