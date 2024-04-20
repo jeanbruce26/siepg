@@ -179,6 +179,15 @@ class Inscripciones extends Component
     {
         $this->limpiar();
         $this->change_title($value);
+        if ($this->variable === 'expediente') {
+            $this->expediente_tipo_evaluacion = 1;
+        }
+        if ($this->variable === 'investigacion') {
+            $this->expediente_tipo_evaluacion = 2;
+        }
+        if ($this->variable === 'entrevista') {
+            $this->expediente_tipo_evaluacion = 3;
+        }
         $this->inscripcion = Inscripcion::find($id_inscripcion);
         $this->expedientes_inscripcion = ExpedienteInscripcion::join('expediente_admision', 'expediente_inscripcion.id_expediente_admision', 'expediente_admision.id_expediente_admision')
             ->join('expediente', 'expediente_admision.id_expediente', 'expediente.id_expediente')

@@ -411,7 +411,7 @@
                         {{-- card de exediente --}}
                         <div class="row g-5 mb-5">
                             @foreach ($expedientes_inscripcion as $item)
-                                @php $expediente_tipo_evaluacion = App\Models\ExpedienteTipoEvaluacion::where('expediente_tipo_evaluacion', 2)->where('id_expediente', $item->id_expediente)->first(); @endphp
+                                @php $expediente_tipo_evaluacion = App\Models\ExpedienteTipoEvaluacion::where('expediente_tipo_evaluacion', $expediente_tipo_evaluacion)->where('id_expediente', $item->id_expediente)->first(); @endphp
                                 @if ($expediente_tipo_evaluacion)
                                     <div class="col-xl-4 col-lg-6 col-md-6">
                                         <div class="card shadow-sm bg-info bg-opacity-20 h-100">
@@ -476,7 +476,7 @@
                                         <thead class="bg-light-warning">
                                             <tr class="fw-bold fs-6 text-gray-800 border-bottom-2 border-gray-200">
                                                 <th class="col-md-6">Concepto</th>
-                                                <th class="text-center">Punatje Especifico</th>
+                                                <th class="text-center">Puntaje Especifico</th>
                                                 <th class="text-center">Puntaje</th>
                                             </tr>
                                         </thead>
@@ -653,7 +653,7 @@
                                         <thead class="bg-light-warning">
                                             <tr class="fw-bold fs-6 text-gray-800 border-bottom-2 border-gray-200">
                                                 <th class="col-md-6">Concepto</th>
-                                                <th class="text-center">Punatje Especifico</th>
+                                                <th class="text-center">Puntaje Especifico</th>
                                                 <th class="text-center">Puntaje</th>
                                             </tr>
                                         </thead>
