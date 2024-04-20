@@ -485,7 +485,7 @@
                                 @endforeach
                             </div>
                         @endif
-                    @endif
+                    {{-- @endif --}}
                     @if ($variable === 'expediente')
                         <div class="row">
                             <div class="col-md-12">
