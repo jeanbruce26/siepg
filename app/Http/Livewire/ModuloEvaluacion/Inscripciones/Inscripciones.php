@@ -50,6 +50,7 @@ class Inscripciones extends Component
     ];
 
     public $variable = 'expediente';
+    public $expediente_tipo_evaluacion = 1;
     public $es_doctorado = false;
     public $inscripcion;
     public $evaluacion;
@@ -159,6 +160,7 @@ class Inscripciones extends Component
             'search',
             'inscripcion',
             'evaluacion',
+            'expediente_tipo_evaluacion',
             'puntajes_expediente',
             'puntajes_investigacion',
             'puntajes_entrevista',
@@ -278,6 +280,7 @@ class Inscripciones extends Component
         $this->puntajes_investigacion = [];
         $this->puntajes_entrevista = [];
         if ($this->variable == 'expediente') {
+            $this->expediente_tipo_evaluacion = 1;
             foreach ($this->evaluacion_expediente as $evaluacion) {
                 $evaluacion_expediente = EvaluacionExpediente::where('id_evaluacion', $this->evaluacion->id_evaluacion)
                     ->where('id_evaluacion_expediente_titulo', $evaluacion->id_evaluacion_expediente_titulo)
@@ -287,6 +290,7 @@ class Inscripciones extends Component
                 $this->puntaje_total += $this->puntajes_expediente[$evaluacion->id_evaluacion_expediente_titulo];
             }
         } elseif ($this->variable == 'investigacion') {
+            $this->expediente_tipo_evaluacion = 2;
             foreach ($this->evaluacion_investigacion as $evaluacion) {
                 $evaluacion_investigacion = EvaluacionInvestigacion::where('id_evaluacion', $this->evaluacion->id_evaluacion)
                     ->where('id_evaluacion_investigacion_item', $evaluacion->id_evaluacion_investigacion_item)
@@ -296,6 +300,7 @@ class Inscripciones extends Component
                 $this->puntaje_total += $this->puntajes_investigacion[$evaluacion->id_evaluacion_investigacion_item];
             }
         } elseif ($this->variable == 'entrevista') {
+            $this->expediente_tipo_evaluacion = 3;
             foreach ($this->evaluacion_entrevista as $evaluacion) {
                 $evaluacion_entrevista = EvaluacionEntrevista::where('id_evaluacion', $this->evaluacion->id_evaluacion)
                     ->where('id_evaluacion_entrevista_item', $evaluacion->id_evaluacion_entrevista_item)
