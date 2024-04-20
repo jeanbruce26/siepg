@@ -93,6 +93,7 @@ class Index extends Component
 
     public function cargar_evaluacion($id_inscripcion)
     {
+        $this->limpiar();
         $this->inscripcion = Inscripcion::find($id_inscripcion);
         $this->es_doctorado = $this->inscripcion->inscripcion_tipo_programa == 2 ? true : false;
         // verificamos si tiene evaluacion

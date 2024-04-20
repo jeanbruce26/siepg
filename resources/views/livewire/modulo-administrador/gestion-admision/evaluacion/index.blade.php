@@ -185,7 +185,7 @@
                                                     <a wire:click="cargar_evaluacion({{ $item->id_inscripcion }})"
                                                         class="menu-link px-3 cursor-pointer" data-bs-toggle="modal"
                                                         data-bs-target="#modal-evaluacion">
-                                                        Ver Expedientes
+                                                        Evaluar
                                                     </a>
                                                 </div>
                                             </div>
