@@ -117,11 +117,29 @@
                                 <tr align="center"
                                     class="fw-bold fs-6 text-gray-800 border-bottom-2 border-gray-200">
                                     <th scope="col">ID</th>
-                                    <th scope="col">Postulante</th>
+                                    <th scope="col"
+                                        @if ($sort_nombre == 'nombre_completo')
+                                            @if ($sort_direccion == 'asc')
+                                                class="table-sort-asc"
+                                            @else
+                                                class="table-sort-desc"
+                                            @endif
+                                        @endif  style="cursor: pointer;" wire:click="ordenar_tabla('nombre_completo')">
+                                        Postulante
+                                    </th>
                                     <th scope="col">Programa</th>
                                     <th scope="col">Expediente</th>
                                     <th scope="col">Investigacion</th>
-                                    <th scope="col">Entrevista</th>
+                                    <th scope="col"
+                                        @if ($sort_nombre == 'puntaje_entrevista')
+                                            @if ($sort_direccion == 'asc')
+                                                class="table-sort-asc"
+                                            @else
+                                                class="table-sort-desc"
+                                            @endif
+                                        @endif  style="cursor: pointer;" wire:click="ordenar_tabla('puntaje_entrevista')">
+                                        Entrevista
+                                    </th>
                                     <th scope="col">Acciones</th>
                                 </tr>
                             </thead>

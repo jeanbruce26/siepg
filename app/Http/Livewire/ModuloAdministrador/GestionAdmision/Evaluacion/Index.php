@@ -46,6 +46,9 @@ class Index extends Component
     public $puntaje_total = 0;
     public $observacion;
 
+    public $sort_nombre = 'nombre_completo'; // Columna de la tabla a ordenar
+    public $sort_direccion = 'asc'; // Orden de la columna a ordenar
+
     public function mount()
     {
         $this->evaluacion_expediente = collect();
@@ -327,12 +330,27 @@ class Index extends Component
         return Excel::download(new listaProgramasExport, 'listado-evaluaciones-por-programas.xlsx');
     }
 
+    public function ordenar_tabla($value)
+    {
+        if ($this->sort_nombre == $value) {
+            if ($this->sort_direccion == 'asc') {
+                $this->sort_direccion = 'desc';
+            } else {
+                $this->sort_direccion = 'asc';
+            }
+        } else {
+            $this->sort_nombre = $value;
+            $this->sort_direccion = 'asc';
+        }
+    }
+
     public function render()
     {
         $inscripciones = Inscripcion::join('programa_proceso', 'inscripcion.id_programa_proceso', '=', 'programa_proceso.id_programa_proceso')
             ->join('programa_plan', 'programa_proceso.id_programa_plan', '=', 'programa_plan.id_programa_plan')
             ->join('programa', 'programa_plan.id_programa', '=', 'programa.id_programa')
             ->join('persona', 'inscripcion.id_persona', '=', 'persona.id_persona')
+            ->leftJoin('evaluacion', 'inscripcion.id_inscripcion', '=', 'evaluacion.id_inscripcion')
             ->where('inscripcion.inscripcion_estado', 1)
             ->where('inscripcion.verificar_expedientes', 1)
             ->where('inscripcion.retiro_inscripcion', 0)
@@ -346,6 +364,8 @@ class Index extends Component
                     $query->where('programa.id_programa', $this->programa_filtro);
                 }
             })
+            ->select('inscripcion.*', 'persona.*', 'programa.*')
+            ->orderBy($this->sort_nombre == 'nombre_completo' ? 'persona.' . $this->sort_nombre :'evaluacion.' .  $this->sort_nombre, $this->sort_direccion)
             ->paginate($this->cant_paginas);
         $programas = Programa::where('programa_estado', 1)->where('id_modalidad', 2)->get();
         return view('livewire.modulo-administrador.gestion-admision.evaluacion.index', [
