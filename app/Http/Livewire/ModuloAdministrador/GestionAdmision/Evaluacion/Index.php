@@ -31,7 +31,12 @@ class Index extends Component
     public $search = '';
     public $programa_filtro = 0;
 
-    protected $queryString = ['search' => ['except' => ''], 'programa_filtro' => ['except' => 0]];
+    protected $queryString = [
+        'search' => ['except' => ''],
+        'programa_filtro' => ['except' => 0],
+        'sort_nombre' => ['except' => 'nombre_completo'],
+        'sort_direccion' => ['except' => 'asc'],
+    ];
 
     public $inscripcion;
     public $evaluacion;

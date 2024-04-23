@@ -128,8 +128,26 @@
                                         Postulante
                                     </th>
                                     <th scope="col">Programa</th>
-                                    <th scope="col">Expediente</th>
-                                    <th scope="col">Investigacion</th>
+                                    <th scope="col"
+                                        @if ($sort_nombre == 'puntaje_expediente')
+                                            @if ($sort_direccion == 'asc')
+                                                class="table-sort-asc"
+                                            @else
+                                                class="table-sort-desc"
+                                            @endif
+                                        @endif  style="cursor: pointer;" wire:click="ordenar_tabla('puntaje_expediente')">
+                                        Expediente
+                                    </th>
+                                    <th scope="col"
+                                        @if ($sort_nombre == 'puntaje_investigacion')
+                                            @if ($sort_direccion == 'asc')
+                                                class="table-sort-asc"
+                                            @else
+                                                class="table-sort-desc"
+                                            @endif
+                                        @endif  style="cursor: pointer;" wire:click="ordenar_tabla('puntaje_investigacion')">
+                                        Investigacion
+                                    </th>
                                     <th scope="col"
                                         @if ($sort_nombre == 'puntaje_entrevista')
                                             @if ($sort_direccion == 'asc')
