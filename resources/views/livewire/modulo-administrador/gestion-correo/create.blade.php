@@ -123,59 +123,75 @@
                                                 Inscripciones
                                             </label>
                                         </div>
-                                        <div class="form-check form-check-custom">
+                                        <div class="form-check form-check-custom mb-3">
                                             <input class="form-check-input" type="radio" wire:model="tipo_envio_tabla"
                                                 value="2" id="admitidos" />
                                             <label class="form-check-label" for="admitidos">
                                                 Admitidos
                                             </label>
                                         </div>
+                                        <div class="form-check form-check-custom">
+                                            <input class="form-check-input" type="radio" wire:model="tipo_envio_tabla"
+                                                value="3" id="otros" />
+                                            <label class="form-check-label" for="otros">
+                                                Otros
+                                            </label>
+                                        </div>
                                     </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label fw-semibold">Proceso de Admisión</label>
-                                        <select class="form-select" wire:model="proceso" id="proceso_filtro">
-                                            <option value="">
-                                                Seleccione el Proceso
-                                            </option>
-                                            @foreach ($procesos as $item)
-                                                <option value="{{ $item->id_admision }}">
-                                                    {{ $item->admision }}
+                                    @if ($tipo_envio_tabla != 3)
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-semibold">Proceso de Admisión</label>
+                                            <select class="form-select" wire:model="proceso" id="proceso_filtro">
+                                                <option value="">
+                                                    Seleccione el Proceso
                                                 </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label fw-semibold">Modalidad del Programa</label>
-                                        <select class="form-select" wire:model="modalidad" id="modalidad_filtro">
-                                            <option value="">
-                                                Seleccione la Modalidad
-                                            </option>
-                                            @foreach ($modalidades as $item)
-                                                <option value="{{ $item->id_modalidad }}">
-                                                    {{ $item->modalidad }}
+                                                @foreach ($procesos as $item)
+                                                    <option value="{{ $item->id_admision }}">
+                                                        {{ $item->admision }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-semibold">Modalidad del Programa</label>
+                                            <select class="form-select" wire:model="modalidad" id="modalidad_filtro">
+                                                <option value="">
+                                                    Seleccione la Modalidad
                                                 </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label fw-semibold">Programa</label>
-                                        <select class="form-select" wire:model="programa" id="programa_filtro">
-                                            <option>
-                                                Seleccione el Programa
-                                            </option>
-                                            @foreach ($programas as $item)
-                                                <option value="{{ $item->id_programa }}">
-                                                    {{ $item->programa }} EN {{ $item->subprograma }}
-                                                    @if ($item->mencion)
-                                                        CON MENCION EN {{ $item->mencion }}
-                                                    @endif
+                                                @foreach ($modalidades as $item)
+                                                    <option value="{{ $item->id_modalidad }}">
+                                                        {{ $item->modalidad }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-semibold">Programa</label>
+                                            <select class="form-select" wire:model="programa" id="programa_filtro">
+                                                <option>
+                                                    Seleccione el Programa
                                                 </option>
-                                            @endforeach
-                                        </select>
+                                                @foreach ($programas as $item)
+                                                    <option value="{{ $item->id_programa }}">
+                                                        {{ $item->programa }} EN {{ $item->subprograma }}
+                                                        @if ($item->mencion)
+                                                            CON MENCION EN {{ $item->mencion }}
+                                                        @endif
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-md-12">
+                                            Cantidad de correos que se enviará: {{ $cantidad_correos }}
+                                        </div>
+                                    @else
+                                    <div class="col-md-4">
+                                        <label class="form-label fw-semibold required">
+                                            Subir TXT con los correos
+                                        </label>
+                                        <input type="file" wire:model="archivo" class="form-control {{ $errors->has('archivo') ? 'is-invalid' : ($archivo ? 'is-valid' : '') }}">
                                     </div>
-                                    <div class="col-md-12">
-                                        Cantidad de correos que se enviará: {{ $cantidad_correos }}
-                                    </div>
+                                    @endif
                                 </div>
                             </div>
                         @endif

@@ -13,9 +13,12 @@ use App\Models\ProgramaProceso;
 use DOMDocument;
 use Illuminate\Support\Collection;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class Create extends Component
 {
+    use WithFileUploads;
+
     public $tipo_envio;
     public $buscar_dni;
     public $correo_electronico;
@@ -27,6 +30,7 @@ class Create extends Component
     public $programa;
     public Collection $programas;
     public $cantidad_correos = 0;
+    public $archivo;
 
     public $asunto;
     public $mensaje;
@@ -220,13 +224,32 @@ class Create extends Component
                 $correos_db = json_encode([$this->correo_electronico]);
                 $correos = [$this->correo_electronico];
             }
-        } else {
+        }
+        if ($this->tipo_envio == 2 && $this->tipo_envio_tabla != 3){
             $this->validate([
                 'proceso' => 'required',
             ]);
 
             $correos_db = json_encode(calcularCantidadDePersonas($this->tipo_envio_tabla, $this->proceso, $this->modalidad, $this->programa)['correos']);
             $correos = calcularCantidadDePersonas($this->tipo_envio_tabla, $this->proceso, $this->modalidad, $this->programa)['correos'];
+        }
+        if ($this->tipo_envio == 2 && $this->tipo_envio_tabla == 3) {
+            $this->validate([
+                'archivo' => 'required|file|mimes:txt',
+            ]);
+
+            $correos_db = json_encode([]);
+            $correos = [];
+
+            $file = $this->archivo;
+
+            $file = fopen($file->getRealPath(), 'r');
+            while (($data = fgetcsv($file, 1000, ',')) !== false) {
+                $correos[] = $data[0];
+            }
+            fclose($file);
+
+            $correos_db = json_encode($correos);
         }
 
         $asunto = $this->asunto;
