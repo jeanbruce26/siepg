@@ -46,7 +46,7 @@
                     </li>
                 </ul>
             </div>
-            {{-- <div class="d-flex flex-stack">
+            <div class="d-flex flex-stack">
                 <div class="d-flex align-items-center text-center gap-2 gap-lg-3 ms-5">
                     @if ($inscripciones->count() == $evaluaciones->count())
                         @if ($programa->programa_tipo == 1)
@@ -66,7 +66,7 @@
                         </button>
                     @endif
                 </div>
-            </div> --}}
+            </div>
         </div>
     </div>
     <div id="kt_app_content" class="app-content flex-column-fluid">

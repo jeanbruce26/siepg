@@ -154,6 +154,48 @@
             </tbody>
         </table>
     </div>
+    @if ($evaluaciones_trasalados_externos->count() > 0 )
+        <div style="padding-right: 6rem; padding-left: 6rem; padding-top: 1.5rem; font-size: 0.9rem; text-align: justify; line-height: 1.5;">
+            A continuación, se presenta el cuadro de resultados de la evaluación de las inscripciones con Modalidad de <strong>Traslado Externo</strong>:
+        </div>
+        <div style="padding-right: 6rem; padding-left: 6rem; padding-top: 1rem; font-size: 0.9rem; text-align: justify;">
+            <table class="customTable">
+                <thead>
+                    <tr style="font-size: 0.7rem; font-weight: 700;">
+                        <th rowspan="2">N°</th>
+                        <th rowspan="2">APELLIDOS Y NOMBRES</th>
+                        <th colspan="2">EVALUACION (PUNTOS)</th>
+                        <th rowspan="2">PUNTAJE <br> TOTAL</th>
+                        <th rowspan="2">RESULTADO</th>
+                        <th rowspan="2">OBSERVACION</th>
+                    </tr>
+                    <tr style="font-size: 0.7rem; font-weight: 700;">
+                        <th>EXPEDIENTE <br> C. VITAE (20)</th>
+                        <th>ENTREVISTA <br> PERSONAL (30)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($evaluaciones_trasalados_externos as $item)
+                        <tr style="font-size: 0.55rem">
+                            <td align="center">{{ $loop->iteration }}</td>
+                            <td>{{ $item->nombre_completo }}</td>
+                            <td align="center">{{ number_format($item->puntaje_expediente,0) }}</td>
+                            <td align="center">{{ number_format($item->puntaje_entrevista,0) }}</td>
+                            <td align="center">{{ number_format($item->puntaje_final,0) }}</td>
+                            @if ($item->evaluacion_estado == 2)
+                                <td align="center">ADMITIDO</td>
+                            @elseif ($item->evaluacion_estado == 3)
+                                <td align="center">NO ADMITIDO</td>
+                            @else
+                                <td align="center">POR EVALUAR</td>
+                            @endif
+                            <td>{{ $item->evaluacion_observacion ? $item->evaluacion_observacion : '' }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    @endif
     <div style="padding-right: 6rem; padding-left: 6rem; padding-top: 1rem; font-size: 0.9rem; text-align: justify; line-height: 1.5;">
         Terminado el acto de evaluación, a los ..... días del mes de .................. del 202...., se hace llegar los resultados a la Dirección de la Escuela de Posgrado de la UNU y se procede a firmar el acta en señal de conformidad.
     </div>

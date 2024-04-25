@@ -100,6 +100,23 @@ class CoordinadorController extends Controller
             ->join('facultad', 'programa.id_facultad', '=', 'facultad.id_facultad')
             ->where('programa.id_programa', $id_programa)
             ->where('programa_proceso.id_admision', $id_admision)
+            ->where('inscripcion.inscripcion_estado', 1)
+            ->where('inscripcion.retiro_inscripcion', 0)
+            ->where('inscripcion.es_traslado_externo', 0)
+            ->orderBy('persona.nombre_completo', 'asc')
+            ->get();
+
+        $evaluaciones_trasalados_externos = Evaluacion::join('inscripcion', 'evaluacion.id_inscripcion', '=', 'inscripcion.id_inscripcion')
+            ->join('persona', 'inscripcion.id_persona', '=', 'persona.id_persona')
+            ->join('programa_proceso', 'inscripcion.id_programa_proceso', '=', 'programa_proceso.id_programa_proceso')
+            ->join('programa_plan', 'programa_proceso.id_programa_plan', '=', 'programa_plan.id_programa_plan')
+            ->join('programa', 'programa_plan.id_programa', '=', 'programa.id_programa')
+            ->join('facultad', 'programa.id_facultad', '=', 'facultad.id_facultad')
+            ->where('programa.id_programa', $id_programa)
+            ->where('programa_proceso.id_admision', $id_admision)
+            ->where('inscripcion.inscripcion_estado', 1)
+            ->where('inscripcion.retiro_inscripcion', 0)
+            ->where('inscripcion.es_traslado_externo', 1)
             ->orderBy('persona.nombre_completo', 'asc')
             ->get();
 
@@ -128,6 +145,7 @@ class CoordinadorController extends Controller
 
         $data = [
             'evaluaciones' => $evaluaciones,
+            'evaluaciones_trasalados_externos' => $evaluaciones_trasalados_externos,
             'facultad' => $facultad,
             'fecha' => $fecha,
             'coordinador' => $coordinador,
@@ -153,6 +171,23 @@ class CoordinadorController extends Controller
             ->join('facultad', 'programa.id_facultad', '=', 'facultad.id_facultad')
             ->where('programa.id_programa', $id_programa)
             ->where('programa_proceso.id_admision', $id_admision)
+            ->where('inscripcion.inscripcion_estado', 1)
+            ->where('inscripcion.retiro_inscripcion', 0)
+            ->where('inscripcion.es_traslado_externo', 0)
+            ->orderBy('persona.nombre_completo', 'asc')
+            ->get();
+
+        $evaluaciones_trasalados_externos = Evaluacion::join('inscripcion', 'evaluacion.id_inscripcion', '=', 'inscripcion.id_inscripcion')
+            ->join('persona', 'inscripcion.id_persona', '=', 'persona.id_persona')
+            ->join('programa_proceso', 'inscripcion.id_programa_proceso', '=', 'programa_proceso.id_programa_proceso')
+            ->join('programa_plan', 'programa_proceso.id_programa_plan', '=', 'programa_plan.id_programa_plan')
+            ->join('programa', 'programa_plan.id_programa', '=', 'programa.id_programa')
+            ->join('facultad', 'programa.id_facultad', '=', 'facultad.id_facultad')
+            ->where('programa.id_programa', $id_programa)
+            ->where('programa_proceso.id_admision', $id_admision)
+            ->where('inscripcion.inscripcion_estado', 1)
+            ->where('inscripcion.retiro_inscripcion', 0)
+            ->where('inscripcion.es_traslado_externo', 1)
             ->orderBy('persona.nombre_completo', 'asc')
             ->get();
 
@@ -181,6 +216,7 @@ class CoordinadorController extends Controller
 
         $data = [
             'evaluaciones' => $evaluaciones,
+            'evaluaciones_trasalados_externos' => $evaluaciones_trasalados_externos,
             'facultad' => $facultad,
             'fecha' => $fecha,
             'coordinador' => $coordinador,
