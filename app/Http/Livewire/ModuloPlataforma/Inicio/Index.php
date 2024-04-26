@@ -2,13 +2,14 @@
 
 namespace App\Http\Livewire\ModuloPlataforma\Inicio;
 
+use Livewire\Component;
 use App\Models\Admision;
+use App\Models\Admitido;
 use App\Models\Encuesta;
-use App\Models\EncuestaDetalle;
 use App\Models\Inscripcion;
 use App\Models\LinkWhatsapp;
+use App\Models\EncuestaDetalle;
 use App\Models\ProgramaProceso;
-use Livewire\Component;
 
 class Index extends Component
 {
@@ -111,6 +112,36 @@ class Index extends Component
         ]);
     }
 
+    public function alerta_admitido()
+    {
+        $this->dispatchBrowserEvent('modal', [
+            'action' => 'show',
+            'id' => '#modal-alerta-admitido'
+        ]);
+        $this->dispatchBrowserEvent('confetti');
+        $this->dispatchBrowserEvent('confetti');
+        $this->dispatchBrowserEvent('confetti');
+    }
+
+    public function mostrar_confetti()
+    {
+        $this->dispatchBrowserEvent('confetti');
+        $this->dispatchBrowserEvent('confetti');
+        $this->dispatchBrowserEvent('confetti');
+    }
+
+    public function cerrar_alerta_admitido($id_admitido)
+    {
+        $admitido = Admitido::find($id_admitido);
+        $admitido->admitido_alerta = 1;
+        $admitido->save();
+
+        $this->dispatchBrowserEvent('modal', [
+            'action' => 'hide',
+            'id' => '#modal-alerta-admitido'
+        ]);
+    }
+
     public function render()
     {
         $encuestas = Encuesta::where('encuesta_estado', 1)->get(); // obtenemos las encuestas activas
@@ -131,11 +162,13 @@ class Index extends Component
             $programa = null;
             $link = null;
         }
+        $admitido = Admitido::where('id_persona', $persona->id_persona)->orderBy('id_admitido', 'desc')->first(); // obtenemos el admitido de la inscripcion de la persona del usuario autenticado en la plataforma
         return view('livewire.modulo-plataforma.inicio.index', [
             'encuestas' => $encuestas,
             'inscripcion' => $inscripcion,
             'programa' => $programa,
-            'link' => $link
+            'link' => $link,
+            'admitido' => $admitido
         ]);
     }
 }

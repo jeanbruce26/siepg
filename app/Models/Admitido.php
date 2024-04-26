@@ -19,7 +19,8 @@ class Admitido extends Model
         'id_programa_proceso',
         'id_programa_proceso_antiguo',
         'id_tipo_estudiante',
-        'admitido_estado'
+        'admitido_estado',
+        'admitido_alerta'
     ];
 
     public $timestamps = false;

@@ -3,13 +3,30 @@
     @if ($admision->admision_fecha_resultados <= today())
         @if ($admitido)
             {{-- alerta de admitido --}}
-            <div class="alert bg-light-success border border-3 border-success d-flex align-items-center p-5 mb-5">
-                <i class="ki-outline ki-like fs-2qx me-4 text-success"></i>
-                <div class="d-flex flex-column">
-                    <span class="fw-bold fs-4">
-                        Fue admitido en el Proceso de
-                        {{ ucwords(strtolower($inscripcion_admision->admision->admision)) }}
-                    </span>
+            <div class="alert alert-dismissible bg-light-success border border-3 border-success d-flex flex-center flex-column py-10 px-10 px-lg-20">
+                <i class="ki-outline ki-like fs-5tx text-success mb-5"></i>
+
+                <div class="text-center">
+                    <h1 class="fw-bold mb-5">
+                        ¡Fuiste admitido en el Proceso de
+                        {{ ucwords(strtolower($inscripcion_admision->admision->admision)) }}!
+                    </h1>
+
+                    <div class="separator separator-dashed border-success opacity-25 mb-5"></div>
+
+                    <div class="text-gray-900 fs-5">
+                        <strong>
+                            Estimado(a) postulante, se le informa que ha sido admitido al PROGRAMA DE
+                            @if ($admitido->programa_proceso->programa_plan->programa->mencion)
+                                {{ $admitido->programa_proceso->programa_plan->programa->programa }} EN
+                                {{ $admitido->programa_proceso->programa_plan->programa->subprograma }} CON MENCION EN
+                                {{ $admitido->programa_proceso->programa_plan->programa->mencion }}
+                            @else
+                                {{ $admitido->programa_proceso->programa_plan->programa->programa }} EN
+                                {{ $admitido->programa_proceso->programa_plan->programa->subprograma }}
+                            @endif
+                        </strong>
+                    </div>
                 </div>
             </div>
             {{-- alerta de observaciones de la evaluacion --}}
@@ -25,7 +42,7 @@
             </div>
         @else
             @if ($evaluacion)
-                @if ($evaluacion->evaluacion_estado == 2)
+                @if ($evaluacion->evaluacion_estado == 1 || $evaluacion->evaluacion_estado == 2)
                     {{-- alerta de fecha de resultados de admitidos --}}
                     <div
                         class="alert bg-light-primary border border-3 border-primary d-flex align-items-center p-5 mb-5">
@@ -36,7 +53,7 @@
                             </span>
                         </div>
                     </div>
-                @else
+                @elseif ($evaluacion->evaluacion_estado == 3)
                     {{-- alerta de no admitido --}}
                     <div class="alert bg-light-danger border border-3 border-danger d-flex align-items-center p-5 mb-5">
                         <i class="ki-outline ki-dislike fs-2qx me-4 text-danger"></i>

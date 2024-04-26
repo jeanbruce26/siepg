@@ -192,6 +192,37 @@
             </div>
         </div>
     </div>
+    <!-- Modal alerta admitido -->
+    @if ($admitido)
+        @if ($admitido->admitido_alerta == 0)
+            <div wire:init="alerta_admitido"></div>
+        @endif
+    @endif
+    <div wire:init="open_modal_encuesta" wire:ignore.self class="modal fade" id="modal-alerta-admitido"
+        data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content bg-light-success">
+                <div class="modal-header py-2">
+                    <h3 class="modal-title fw-bolder text-success">¡Admitido!</h3>
+                    <div class="btn btn-icon btn-sm btn-active-light-danger" wire:click="cerrar_alerta_admitido({{ $admitido->id_admitido }})">
+                        <i class="ki-outline ki-cross fs-2x"></i>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex flex-column align-items-center gap-3 bg-light-success border border-3 border-success rounded">
+                        <lord-icon
+                            src="https://cdn.lordicon.com/fkmafinl.json"
+                            trigger="in"
+                            style="width:200px;height:200px">
+                        </lord-icon>
+                        <span class="fs-1 mb-5 text-center text-success" style="font-weight: 800">
+                            ¡Fuiste admitido a la Escuela de Posgrado!
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @push('scripts')
     <script></script>

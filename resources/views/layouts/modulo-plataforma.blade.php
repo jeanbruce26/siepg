@@ -145,6 +145,31 @@
     <script src="{{ asset('assets/js/custom/utilities/modals/create-app.js') }}"></script>
     <script src="{{ asset('assets/js/custom/utilities/modals/users-search.js') }}"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js"></script>
+    <script src="https://cdn.lordicon.com/lordicon.js"></script>
+
+    <script>
+        window.addEventListener('modal', event => {
+            $(event.detail.id).modal(event.detail.action);
+        })
+        window.addEventListener('alerta', event => {
+            Swal.fire({
+                title: event.detail.title,
+                text: event.detail.text,
+                icon: event.detail.icon,
+                buttonsStyling: false,
+                confirmButtonText: event.detail.confirmButtonText,
+                customClass: {
+                    confirmButton: "btn btn-"+event.detail.color,
+                }
+            });
+        })
+        window.addEventListener('confetti', event => {
+            const jsConfetti = new JSConfetti()
+            jsConfetti.addConfetti()
+        })
+    </script>
+
     @stack('scripts')
     @yield('scripts')
     @livewireScripts()
