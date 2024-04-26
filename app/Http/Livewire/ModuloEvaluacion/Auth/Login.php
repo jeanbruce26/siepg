@@ -43,7 +43,7 @@ class Login extends Component
         }
 
         // verificamos si el usuairo tiene evaluaciones asigmnadas
-        $usuairo_evaluaciones = $usuario->usuario_evaluaciones;
+        $usuairo_evaluaciones = $usuario->usuario_evaluaciones()->where('usuario_evaluacion_estado', 1)->get();
 
         if ($usuairo_evaluaciones->count() == 0) {
             $this->dispatchBrowserEvent('alerta', [
