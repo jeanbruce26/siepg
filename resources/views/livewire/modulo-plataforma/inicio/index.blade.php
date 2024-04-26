@@ -83,7 +83,8 @@
                 @if ($programa && $link)
                     <div class="col-md-12">
                         {{-- alerta  --}}
-                        <div class="alert bg-light-warning border border-3 border-warning d-flex align-items-center p-5">
+                        <div
+                            class="alert bg-light-warning border border-3 border-warning d-flex align-items-center p-5">
                             <i class="ki-outline ki-sms fs-2qx me-4 text-warning"></i>
                             <div class="d-flex flex-column">
                                 <span class="fw-bold fs-5">
@@ -108,7 +109,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
+                {{-- <div class="col-md-6">
                     <div id="slider" class="carousel carousel-custom slide" data-bs-ride="carousel"
                         data-bs-interval="5000">
                         <div class="carousel-inner pt-8">
@@ -121,11 +122,16 @@
                             <ol
                                 class="p-0 m-0 carousel-indicators carousel-indicators-bullet carousel-indicators-active-primary">
                                 <li data-bs-target="#slider" data-bs-slide-to="0" class="ms-1 active"></li>
-                                {{-- <li data-bs-target="#slider" data-bs-slide-to="1" class="ms-1"></li>
-                                <li data-bs-target="#slider" data-bs-slide-to="2" class="ms-1"></li>
-                                <li data-bs-target="#slider" data-bs-slide-to="3" class="ms-1"></li> --}}
                             </ol>
                         </div>
+                    </div>
+                </div> --}}
+                <div class="col-md-6">
+                    <div class="">
+                        <iframe width="100%" height="500"
+                            src="https://www.youtube.com/embed/95hwC62HqXM?si=t43N0gdHWoEUGgGA"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                     </div>
                 </div>
             </div>
@@ -166,9 +172,9 @@
                             <div class="mt-5 mb-5 mx-5 px-5">
                                 @foreach ($encuestas as $item)
                                     <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" value="{{ $item->id_encuesta }}"
-                                            id="{{ $item->id_encuesta }}" wire:model="encuesta"
-                                            wire:key="{{ $item->id_encuesta }}">
+                                        <input class="form-check-input" type="checkbox"
+                                            value="{{ $item->id_encuesta }}" id="{{ $item->id_encuesta }}"
+                                            wire:model="encuesta" wire:key="{{ $item->id_encuesta }}">
                                         <label class="fs-5" for="{{ $item->id_encuesta }}"
                                             wire:key="{{ $item->id_encuesta }}">
                                             {{ $item->encuesta }}
@@ -204,15 +210,15 @@
             <div class="modal-content bg-light-success">
                 <div class="modal-header py-2">
                     <h3 class="modal-title fw-bolder text-success">¡Admitido!</h3>
-                    <div class="btn btn-icon btn-sm btn-active-light-danger" wire:click="cerrar_alerta_admitido({{ $admitido->id_admitido }})">
+                    <div class="btn btn-icon btn-sm btn-active-light-danger"
+                        wire:click="cerrar_alerta_admitido({{ $admitido->id_admitido }})">
                         <i class="ki-outline ki-cross fs-2x"></i>
                     </div>
                 </div>
                 <div class="modal-body">
-                    <div class="d-flex flex-column align-items-center gap-3 bg-light-success border border-3 border-success rounded">
-                        <lord-icon
-                            src="https://cdn.lordicon.com/fkmafinl.json"
-                            trigger="in"
+                    <div
+                        class="d-flex flex-column align-items-center gap-3 bg-light-success border border-3 border-success rounded">
+                        <lord-icon src="https://cdn.lordicon.com/fkmafinl.json" trigger="in"
                             style="width:200px;height:200px">
                         </lord-icon>
                         <span class="fs-1 mb-5 text-center text-success" style="font-weight: 800">

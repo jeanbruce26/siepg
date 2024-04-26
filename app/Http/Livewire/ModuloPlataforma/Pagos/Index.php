@@ -394,7 +394,7 @@ class Index extends Component
                 $persona = Persona::where('numero_documento', $this->documento_identidad)->first();
                 $inscripcion = Inscripcion::where('id_persona', $persona->id_persona)->orderBy('id_inscripcion', 'desc')->first();
                 $admision = $inscripcion->programa_proceso->admision->admision;
-                
+
                 $base_path = 'Posgrado/';
                 $folders = [
                     $admision,
@@ -419,6 +419,7 @@ class Index extends Component
             }
             $pago->id_canal_pago = $this->canal_pago;
             $pago->id_concepto_pago = $this->concepto_pago;
+            $pago->id_persona = Persona::where('numero_documento', $this->documento_identidad)->first()->id_persona;
             $pago->save();
 
             // registrar tipo de pago
