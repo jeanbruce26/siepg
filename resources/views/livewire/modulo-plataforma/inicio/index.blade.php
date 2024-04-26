@@ -204,16 +204,17 @@
             <div wire:init="alerta_admitido"></div>
         @endif
     @endif
-    <div wire:init="open_modal_encuesta" wire:ignore.self class="modal fade" id="modal-alerta-admitido"
+    <div wire:ignore.self class="modal fade" id="modal-alerta-admitido"
         data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content bg-light-success">
                 <div class="modal-header py-2">
                     <h3 class="modal-title fw-bolder text-success">¡Admitido!</h3>
-                    <div class="btn btn-icon btn-sm btn-active-light-danger"
-                        wire:click="cerrar_alerta_admitido({{ $admitido->id_admitido }})">
-                        <i class="ki-outline ki-cross fs-2x"></i>
-                    </div>
+                    @if ($admitido)
+                        <div class="btn btn-icon btn-sm btn-active-light-danger" wire:click="cerrar_alerta_admitido({{ $admitido->id_admitido }})">
+                            <i class="ki-outline ki-cross fs-2x"></i>
+                        </div>
+                    @endif
                 </div>
                 <div class="modal-body">
                     <div

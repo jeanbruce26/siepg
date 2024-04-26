@@ -10,7 +10,7 @@ class Index extends Component
     {
         $usuario = auth('evaluacion')->user();
 
-        $evaluaciones = $usuario->usuario_evaluaciones;
+        $evaluaciones = $usuario->usuario_evaluaciones()->where('usuario_evaluacion_estado', 1)->get();
 
         return view('livewire.modulo-evaluacion.inscripciones.index', [
             'usuario' => $usuario,
