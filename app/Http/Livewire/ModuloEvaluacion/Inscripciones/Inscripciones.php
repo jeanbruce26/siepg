@@ -69,8 +69,8 @@ class Inscripciones extends Component
     public function mount($id_programa_proceso)
     {
         $this->usuario = auth('evaluacion')->user();
-        $this->usuario_evaluacion = $this->usuario->usuario_evaluaciones->where('id_programa_proceso', $id_programa_proceso)->first();
-        $this->evaluaciones = $this->usuario->usuario_evaluaciones;
+        $this->usuario_evaluacion = $this->usuario->usuario_evaluaciones->where('id_programa_proceso', $id_programa_proceso)->where('usuario_evaluacion_estado', 1)->first();
+        $this->evaluaciones = $this->usuario->usuario_evaluaciones()->where('usuario_evaluacion_estado', 1)->get();
         $this->programa_proceso = ProgramaProceso::find($id_programa_proceso);
         $esatdo = false;
         foreach ($this->evaluaciones as $evaluacion) {
