@@ -109,7 +109,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div id="slider" class="carousel carousel-custom slide pe-5" data-bs-ride="carousel"
                         data-bs-interval="5000">
                         <div class="carousel-inner">
@@ -126,8 +126,25 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <iframe width="100%" height="500" class="rounded"
+                <div class="col-md-4">
+                    <div id="slider" class="carousel carousel-custom slide pe-5" data-bs-ride="carousel"
+                        data-bs-interval="5000">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img src="{{ asset('media/banner-posgrado-cuentas.jpeg') }}" alt="carousel"
+                                    class="w-100 rounded" />
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-center flex-wrap">
+                            <ol
+                                class="p-0 m-0 carousel-indicators carousel-indicators-bullet carousel-indicators-active-primary">
+                                <li data-bs-target="#slider" data-bs-slide-to="0" class="ms-1 active"></li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <iframe width="100%" height="350" class="rounded"
                         src="https://www.youtube.com/embed/95hwC62HqXM?si=t43N0gdHWoEUGgGA"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
