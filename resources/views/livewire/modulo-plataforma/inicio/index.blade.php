@@ -109,12 +109,12 @@
                         </div>
                     </div>
                 </div>
-                {{-- <div class="col-md-6">
-                    <div id="slider" class="carousel carousel-custom slide" data-bs-ride="carousel"
+                <div class="col-md-6">
+                    <div id="slider" class="carousel carousel-custom slide pe-5" data-bs-ride="carousel"
                         data-bs-interval="5000">
-                        <div class="carousel-inner pt-8">
+                        <div class="carousel-inner">
                             <div class="carousel-item active">
-                                <img src="{{ asset('media/banner_posgrado.jpeg') }}" alt="carousel"
+                                <img src="{{ asset('media/banner-posgrado-cronograma.jpeg') }}" alt="carousel"
                                     class="w-100 rounded" />
                             </div>
                         </div>
@@ -125,15 +125,13 @@
                             </ol>
                         </div>
                     </div>
-                </div> --}}
+                </div>
                 <div class="col-md-6">
-                    <div class="">
-                        <iframe width="100%" height="500"
-                            src="https://www.youtube.com/embed/95hwC62HqXM?si=t43N0gdHWoEUGgGA"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
-                        </iframe>
-                    </div>
+                    <iframe width="100%" height="500" class="rounded"
+                        src="https://www.youtube.com/embed/95hwC62HqXM?si=t43N0gdHWoEUGgGA"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+                    </iframe>
                 </div>
             </div>
         </div>
