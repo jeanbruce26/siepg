@@ -27,13 +27,19 @@ class Index extends Component
         $this->filtro_proceso = $admision->id_admision;
         $this->admision = Admision::where('id_admision', $this->filtro_proceso)->first();
 
-        $this->ingreso_total = Pago::sum('pago_monto');
-        $this->ingreso_constancia = Pago::where('pago_estado', 3)->sum('pago_monto');
+        $this->ingreso_total = Pago::where('pago_estado', 2)
+            ->where('pago_verificacion', 2)
+            ->sum('pago_monto');
+        $this->ingreso_constancia = Pago::where('pago_estado', 2)
+            ->where('pago_verificacion', 2)
+            ->sum('pago_monto');
         $this->ingreso_inscripcion = Inscripcion::join('pago', 'pago.id_pago', '=', 'inscripcion.id_pago')
-                                        ->join('programa_proceso', 'programa_proceso.id_programa_proceso', '=', 'inscripcion.id_programa_proceso')
-                                        ->where('programa_proceso.id_admision', $this->filtro_proceso)
-                                        ->where('inscripcion.retiro_inscripcion', 0)
-                                        ->sum('pago.pago_monto');
+            ->join('programa_proceso', 'programa_proceso.id_programa_proceso', '=', 'inscripcion.id_programa_proceso')
+            ->where('programa_proceso.id_admision', $this->filtro_proceso)
+            ->where('inscripcion.retiro_inscripcion', 0)
+            ->where('pago.pago_estado', 2)
+            ->where('pago.pago_verificacion', 2)
+            ->sum('pago.pago_monto');
         // $this->ingreso_inscripcion = Pago::where('pago_estado', 1)->sum('pago_monto');
 
         $this->ingreso_por_dia_total = Pago::whereDate('pago_fecha', Carbon::today())->sum('pago_monto');
