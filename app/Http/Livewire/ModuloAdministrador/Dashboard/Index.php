@@ -44,8 +44,8 @@ class Index extends Component
         // $this->ingreso_inscripcion = Pago::where('pago_estado', 1)->sum('pago_monto');
 
         $this->ingreso_por_dia_total = Pago::whereDate('pago_fecha', Carbon::today())->sum('pago_monto');
-        $this->ingreso_por_dia_constancia = Pago::where('id_concepto_pago', 2)->whereDate('pago_fecha', Carbon::today())->where('id_concepto_pago', 2)->sum('pago_monto');
-        $this->ingreso_por_dia_inscripcion = Pago::where('id_concepto_pago', 1)->whereDate('pago_fecha', Carbon::today())->where('id_concepto_pago', 1)->sum('pago_monto');
+        $this->ingreso_por_dia_constancia = Pago::where('id_concepto_pago', 2)->whereDate('pago_fecha', Carbon::today())->sum('pago_monto');
+        $this->ingreso_por_dia_inscripcion = Pago::where('id_concepto_pago', 1)->whereDate('pago_fecha', Carbon::today())->sum('pago_monto');
 
         $this->programas_maestria = Inscripcion::join('programa_proceso', 'programa_proceso.id_programa_proceso', '=', 'inscripcion.id_programa_proceso')
             ->join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
