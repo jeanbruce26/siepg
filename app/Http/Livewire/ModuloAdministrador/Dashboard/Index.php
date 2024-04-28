@@ -16,8 +16,8 @@ class Index extends Component
 
     public $admisiones, $admision; // variable para almacenar las admisiones y filtrar
     public $filtro_proceso; // variable para filtrar por proceso de admision
-    public $ingreso_total, $ingreso_inscripcion, $ingreso_constancia; // variables para los totales
-    public $ingreso_por_dia_total, $ingreso_por_dia_inscripcion, $ingreso_por_dia_constancia; // Variables para las cantidades diarias
+    public $ingreso_total, $ingreso_inscripcion, $ingreso_constancia, $ingreso_matricula; // variables para los totales
+    public $ingreso_por_dia_total, $ingreso_por_dia_inscripcion, $ingreso_por_dia_constancia, $ingreso_por_dia_matricula; // Variables para las cantidades diarias
     public $programas_maestria, $programas_doctorado; // variables para almacenar los programas
 
     public function mount()
@@ -30,10 +30,40 @@ class Index extends Component
         $this->ingreso_total = Pago::where('pago_estado', 2)
             ->where('pago_verificacion', 2)
             ->sum('pago_monto');
+
+        // Se calcula el ingreso por concepto de constancias
         $this->ingreso_constancia = Pago::where('pago_estado', 2)
             ->where('pago_verificacion', 2)
             ->where('id_concepto_pago', 2)
             ->sum('pago_monto');
+        $ingreso_constancia_matricula = Pago::where('pago_estado', 2)
+            ->where('pago_verificacion', 2)
+            ->where('id_concepto_pago',4)
+            ->get();
+        $ingreso_constancia_matricula_extemporanea = Pago::where('pago_estado', 2)
+            ->where('pago_verificacion', 2)
+            ->where('id_concepto_pago',6)
+            ->get();
+        $sum_constancia_matricula = $ingreso_constancia_matricula->sum('pago_monto');
+        $count_constancia_matricula = $ingreso_constancia_matricula->count();
+        $diferencia_constancia_matricula = $sum_constancia_matricula - ($count_constancia_matricula * 150);
+        $sum_constancia_matricula_extemporanea = $ingreso_constancia_matricula_extemporanea->sum('pago_monto');
+        $count_constancia_matricula_extemporanea = $ingreso_constancia_matricula_extemporanea->count();
+        $diferencia_constancia_matricula_extemporanea = $sum_constancia_matricula_extemporanea - ($count_constancia_matricula_extemporanea * 200);
+        $this->ingreso_constancia = $this->ingreso_constancia + $diferencia_constancia_matricula + $diferencia_constancia_matricula_extemporanea;
+
+        // Se calcula el ingreso por concepto de matriculas
+        $this->ingreso_matricula = Pago::where('pago_estado', 2)
+            ->where('pago_verificacion', 2)
+            ->where(function($query){
+                $query->where('id_concepto_pago', 3)
+                    ->orWhere('id_concepto_pago', 5);
+            })
+            ->sum('pago_monto');
+        $diferencia_matricula_constancia = $sum_constancia_matricula - ($count_constancia_matricula * 30);
+        $diferencia_matricula_constancia_extemporanea = $sum_constancia_matricula_extemporanea - ($count_constancia_matricula_extemporanea * 30);
+        $this->ingreso_matricula = $this->ingreso_matricula + $diferencia_matricula_constancia + $diferencia_matricula_constancia_extemporanea;
+
         $this->ingreso_inscripcion = Inscripcion::join('pago', 'pago.id_pago', '=', 'inscripcion.id_pago')
             ->join('programa_proceso', 'programa_proceso.id_programa_proceso', '=', 'inscripcion.id_programa_proceso')
             ->where('programa_proceso.id_admision', $this->filtro_proceso)
@@ -41,7 +71,6 @@ class Index extends Component
             ->where('pago.pago_estado', 2)
             ->where('pago.pago_verificacion', 2)
             ->sum('pago.pago_monto');
-        // $this->ingreso_inscripcion = Pago::where('pago_estado', 1)->sum('pago_monto');
 
         $this->ingreso_por_dia_total = Pago::whereDate('pago_fecha', Carbon::today())->sum('pago_monto');
         $this->ingreso_por_dia_constancia = Pago::where('id_concepto_pago', 2)->whereDate('pago_fecha', Carbon::today())->sum('pago_monto');
