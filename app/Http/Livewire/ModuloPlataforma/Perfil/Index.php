@@ -6,6 +6,7 @@ use App\Models\Admision;
 use App\Models\Admitido;
 use App\Models\Persona;
 use App\Models\UsuarioEstudiante;
+use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -133,7 +134,7 @@ class Index extends Component
             chmod($nombre_db, 0777);
         }
         if ($this->password) {
-            $usuario->usuario_estudiante_password = $this->password;
+            $usuario->usuario_estudiante_password = Hash::make($this->password);
         }
         $usuario->usuario_estudiante = mb_strtolower($this->correo_electronico, 'UTF-8');
         $usuario->save();
