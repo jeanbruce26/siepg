@@ -303,7 +303,7 @@ class Index extends Component
         $usuario_estudiante->usuario_estudiante_creacion = date('Y-m-d H:i:s');
         $usuario_estudiante->usuario_estudiante_estado = 1;
         $usuario_estudiante->id_persona = $persona->id_persona;
-        $usuario_estudiante->usuario_estudiante_perfil_url = '/public/assets/media/avatars/blank.png';
+        $usuario_estudiante->usuario_estudiante_perfil_url = null;
         $usuario_estudiante->save();
 
         //Inactivamos el codigo del estudiante registrado
