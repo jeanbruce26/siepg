@@ -44,23 +44,23 @@ class ObservarPagoJob implements ShouldQueue
             ->first()->pago_observacion;
 
         if ($pago->id_concepto_pago == 1) {
-            $concepto_pago = 'inscripción';
+            $concepto_pago = 'Inscripción';
         } elseif ($pago->id_concepto_pago == 2) {
-            $concepto_pago = 'constancia de ingreso';
+            $concepto_pago = 'Constancia de Ingreso';
         } elseif ($pago->id_concepto_pago == 3) {
-            $concepto_pago = 'matricula';
+            $concepto_pago = 'Matricula';
         } elseif ($pago->id_concepto_pago == 4) {
-            $concepto_pago = 'constancia de ingreso y matricula';
+            $concepto_pago = 'Constancia de Ingreso y Matricula';
         } elseif ($pago->id_concepto_pago == 5) {
-            $concepto_pago = 'matricula extemporanea';
+            $concepto_pago = 'Matricula Extemporanea';
         } elseif ($pago->id_concepto_pago == 6) {
-            $concepto_pago = 'constancia de ingreso y matricula extemporanea';
+            $concepto_pago = 'Constancia de Ingreso y Matricula Mxtemporanea';
         } elseif ($pago->id_concepto_pago == 7) {
-            $concepto_pago = 'costo por enseñanza';
+            $concepto_pago = 'Costo por Enseñanza';
         } elseif ($pago->id_concepto_pago == 8) {
-            $concepto_pago = 'inscripcion de traslado externo';
+            $concepto_pago = 'Inscripcion de Traslado Externo';
         } else {
-            $concepto_pago = 'otros conceptos';
+            $concepto_pago = 'Otros conceptos';
         }
         // datos del correo
         $detalle = [
