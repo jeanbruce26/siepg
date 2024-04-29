@@ -21,51 +21,63 @@
         <div id="kt_app_content_container" class="app-container container-fluid">
             <div class="row g-0">
                 <div class="col-md-12">
-                    @if ($inscripcion->inscripcion_estado == 0)
-                        <div
-                            class="alert alert-dismissible bg-light-warning border border-3 border-warning d-flex flex-center flex-column py-10 px-10 px-lg-20">
+                    @if ($inscripcion)
+                        @if ($inscripcion->inscripcion_estado == 0)
+                            <div
+                                class="alert alert-dismissible bg-light-warning border border-3 border-warning d-flex flex-center flex-column py-10 px-10 px-lg-20">
+                                <i class="ki-outline ki-information fs-5tx text-warning mb-5"></i>
+
+                                <div class="text-center">
+                                    <h1 class="fw-bold mb-5">
+                                        ¡Bienvenido a la Plataforma del Estudiante de la Escuela de Posgrado!
+                                    </h1>
+
+                                    <div class="separator separator-dashed border-warning opacity-25 mb-5"></div>
+
+                                    <div class="text-gray-900 fs-5">
+                                        <strong>
+                                            Estimado(a) postulante, se le informa que la inscripción realizada está en
+                                            proceso
+                                            de verificación, por favor espere la verificación, caso contrario, se le
+                                            notificará
+                                            por correo electrónico.
+                                        </strong>
+                                    </div>
+                                </div>
+                            </div>
+                        @else
+                            <div
+                                class="alert alert-dismissible bg-light-success border border-3 border-success d-flex flex-center flex-column py-10 px-10 px-lg-20">
+                                <i class="ki-outline ki-like fs-5tx text-success mb-5"></i>
+
+                                <div class="text-center">
+                                    <h1 class="fw-bold mb-5">
+                                        ¡Bienvenido a la Plataforma del Estudiante de la Escuela de Posgrado!
+                                    </h1>
+
+                                    <div class="separator separator-dashed border-success opacity-25 mb-5"></div>
+
+                                    <div class="text-gray-900 fs-5">
+                                        <strong>
+                                            Estimado(a) postulante, se le informa que su inscripción ha sido verificada, por
+                                            favor espere las evaluaciones correspondientes a este proceso de admisión, se le
+                                            estará notificando por correo electrónico y en el modulo de
+                                            <a href="{{ route('plataforma.admision') }}">
+                                                "Proceso de Admisión" -> "Admisión"
+                                            </a>.
+                                        </strong>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                    @else
+                        <div class="alert alert-dismissible bg-light-warning border border-3 border-warning d-flex flex-center flex-column py-10 px-10 px-lg-20">
                             <i class="ki-outline ki-information fs-5tx text-warning mb-5"></i>
 
                             <div class="text-center">
                                 <h1 class="fw-bold mb-5">
                                     ¡Bienvenido a la Plataforma del Estudiante de la Escuela de Posgrado!
                                 </h1>
-
-                                <div class="separator separator-dashed border-warning opacity-25 mb-5"></div>
-
-                                <div class="text-gray-900 fs-5">
-                                    <strong>
-                                        Estimado(a) postulante, se le informa que la inscripción realizada está en
-                                        proceso
-                                        de verificación, por favor espere la verificación, caso contrario, se le
-                                        notificará
-                                        por correo electrónico.
-                                    </strong>
-                                </div>
-                            </div>
-                        </div>
-                    @else
-                        <div
-                            class="alert alert-dismissible bg-light-success border border-3 border-success d-flex flex-center flex-column py-10 px-10 px-lg-20">
-                            <i class="ki-outline ki-like fs-5tx text-success mb-5"></i>
-
-                            <div class="text-center">
-                                <h1 class="fw-bold mb-5">
-                                    ¡Bienvenido a la Plataforma del Estudiante de la Escuela de Posgrado!
-                                </h1>
-
-                                <div class="separator separator-dashed border-success opacity-25 mb-5"></div>
-
-                                <div class="text-gray-900 fs-5">
-                                    <strong>
-                                        Estimado(a) postulante, se le informa que su inscripción ha sido verificada, por
-                                        favor espere las evaluaciones correspondientes a este proceso de admisión, se le
-                                        estará notificando por correo electrónico y en el modulo de
-                                        <a href="{{ route('plataforma.admision') }}">
-                                            "Proceso de Admisión" -> "Admisión"
-                                        </a>.
-                                    </strong>
-                                </div>
                             </div>
                         </div>
                     @endif
