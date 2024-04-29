@@ -43,12 +43,33 @@ class ObservarPagoJob implements ShouldQueue
             ->orderBy('id_pago_observacion', 'desc')
             ->first()->pago_observacion;
 
+        if ($pago->id_concepto_pago == 1) {
+            $concepto = 'inscripción';
+        } elseif ($pago->id_concepto_pago == 2) {
+            $concepto = 'constancia de ingreso';
+        } elseif ($pago->id_concepto_pago == 3) {
+            $concepto = 'matricula';
+        } elseif ($pago->id_concepto_pago == 4) {
+            $concepto = 'constancia de ingreso y matricula';
+        } elseif ($pago->id_concepto_pago == 5) {
+            $concepto = 'matricula extemporanea';
+        } elseif ($pago->id_concepto_pago == 6) {
+            $concepto = 'constancia de ingreso y matricula extemporanea';
+        } elseif ($pago->id_concepto_pago == 7) {
+            $concepto = 'costo por enseñanza';
+        } elseif ($pago->id_concepto_pago == 8) {
+            $concepto = 'inscripcion de traslado externo';
+        } else {
+            $concepto = 'otros';
+        }
+
         // datos del correo
         $detalle = [
             'correo' => $correo,
             'nombre' => $nombre,
             'pago' => $pago,
             'observacion' => $observacion,
+            'concepto' => $concepto,
         ];
 
         Mail::send('components.email.observar-pago', $detalle, function ($message) use ($detalle) {
