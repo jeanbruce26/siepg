@@ -109,6 +109,21 @@
                         </div>
                     </div>
                 @endif
+                @if ($admitido)
+                    @if ($admitido->es_traslado_externo == 1)
+                    <div class="col-md-12">
+                        {{-- alerta  --}}
+                        <div class="alert bg-light-danger border border-3 border-danger d-flex align-items-center p-5">
+                            <i class="ki-outline ki-information-5 fs-2qx me-4 text-danger"></i>
+                            <div class="d-flex flex-column">
+                                <span class="fw-bold fs-5">
+                                    Aviso: Por favor, recuerde que debe presentar físicamente sus sílabos y el Certificado de Estudios en las oficinas de la Escuela de Posgrado para proceder con la convalidación de los cursos.
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+                @endif
                 <div class="col-md-12">
                     {{-- alerta  --}}
                     <div class="alert bg-light-primary border border-3 border-primary d-flex align-items-center p-5">
