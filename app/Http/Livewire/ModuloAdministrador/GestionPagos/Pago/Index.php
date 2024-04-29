@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\ModuloAdministrador\GestionPagos\Pago;
 
 use App\Jobs\ObservarInscripcionJob;
+use App\Jobs\ObservarPagoJob;
 use App\Models\CanalPago;
 use App\Models\ConceptoPago;
 use App\Models\ConstanciaIngreso;
@@ -189,7 +190,7 @@ class Index extends Component
         ]);
 
         // ejecutamos el job para enviar el correo de rechazo de pago
-        ObservarPagoJob::dispatch($pago->id_pago);
+        ObservarPagoJobb::dispatch($pago->id_pago);
 
         // limpiar los campos
         $this->limpiar();
