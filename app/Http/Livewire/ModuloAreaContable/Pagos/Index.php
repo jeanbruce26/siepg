@@ -2,18 +2,19 @@
 
 namespace App\Http\Livewire\ModuloAreaContable\Pagos;
 
-use App\Jobs\ObservarInscripcionJob;
-use App\Models\Admision;
-use App\Models\CanalPago;
-use App\Models\ConceptoPago;
-use App\Models\ConstanciaIngreso;
-use App\Models\Inscripcion;
 use App\Models\Pago;
-use App\Models\PagoObservacion;
 use App\Models\Persona;
 use Livewire\Component;
-use Livewire\WithFileUploads;
+use App\Models\Admision;
+use App\Models\CanalPago;
+use App\Models\Inscripcion;
+use App\Models\ConceptoPago;
 use Livewire\WithPagination;
+use App\Jobs\ObservarPagoJob;
+use Livewire\WithFileUploads;
+use App\Models\PagoObservacion;
+use App\Models\ConstanciaIngreso;
+use App\Jobs\ObservarInscripcionJob;
 use Illuminate\Support\Facades\File;
 
 class Index extends Component
@@ -192,7 +193,7 @@ class Index extends Component
         ]);
 
         // ejecutamos el job para enviar el correo de rechazo de pago
-        ObservarInscripcionJob::dispatch($pago->inscripcion->id_inscripcion, 'observar-pago');
+        ObservarPagoJob::dispatch($pago->id_pago);
 
         // limpiar los campos
         $this->limpiar();
