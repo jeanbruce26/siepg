@@ -15,6 +15,7 @@ use App\Models\ProgramaProceso;
 use App\Models\Ubigeo;
 use App\Models\Universidad;
 use App\Models\UsuarioEstudiante;
+use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
 use Psy\Command\WhereamiCommand;
 
@@ -298,7 +299,7 @@ class Index extends Component
         //Creamos sus credenciales en la tabla usuario_estudiante
         $usuario_estudiante = new UsuarioEstudiante();
         $usuario_estudiante->usuario_estudiante = $persona->correo;
-        $usuario_estudiante->usuario_estudiante_password = $persona->numero_documento;
+        $usuario_estudiante->usuario_estudiante_password = Hash::make($persona->numero_documento);
         $usuario_estudiante->usuario_estudiante_creacion = date('Y-m-d H:i:s');
         $usuario_estudiante->usuario_estudiante_estado = 1;
         $usuario_estudiante->id_persona = $persona->id_persona;
@@ -1133,7 +1134,7 @@ class Index extends Component
     public function render()
     {
 
-        return view('livewire.modulo-inscripcion.registro-alumnos.index', 
+        return view('livewire.modulo-inscripcion.registro-alumnos.index',
         [
             'admision_model' => Admision::all(),
             'ubigeo_model' => Ubigeo::all(),
