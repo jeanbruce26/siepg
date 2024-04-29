@@ -24,8 +24,8 @@
         <p>
             <strong>Concepto Pago:</strong>
             <span>
-                {{ $concepto_pago }}
-                {{-- Constancia de Ingreso o Matricula --}}
+                {{-- {{ $concepto_pago }} --}}
+                Constancia de Ingreso o Matricula
             </span>
         </p>
         <p>
