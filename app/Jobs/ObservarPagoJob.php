@@ -18,15 +18,13 @@ class ObservarPagoJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $id_pago;
-    public $concepto_pago;
 
     /**
      * Create a new job instance.
      */
-    public function __construct($id_pago, $concepto_pago)
+    public function __construct($id_pago)
     {
         $this->id_pago = $id_pago;
-        $this->concepto_pago = $concepto_pago;
     }
 
     /**
