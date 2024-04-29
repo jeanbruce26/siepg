@@ -46,25 +46,25 @@ class ObservarPagoJob implements ShouldQueue
             ->orderBy('id_pago_observacion', 'desc')
             ->first()->pago_observacion;
 
-        $concepto = '';
+        $concepto_pago = '';
         if ($this->id_concepto_pago === 1) {
-            $concepto = 'inscripción';
+            $concepto_pago = 'inscripción';
         } elseif ($this->id_concepto_pago === 2) {
-            $concepto = 'constancia de ingreso';
+            $concepto_pago = 'constancia de ingreso';
         } elseif ($this->id_concepto_pago === 3) {
-            $concepto = 'matricula';
+            $concepto_pago = 'matricula';
         } elseif ($this->id_concepto_pago === 4) {
-            $concepto = 'constancia de ingreso y matricula';
+            $concepto_pago = 'constancia de ingreso y matricula';
         } elseif ($this->id_concepto_pago === 5) {
-            $concepto = 'matricula extemporanea';
+            $concepto_pago = 'matricula extemporanea';
         } elseif ($this->id_concepto_pago === 6) {
-            $concepto = 'constancia de ingreso y matricula extemporanea';
+            $concepto_pago = 'constancia de ingreso y matricula extemporanea';
         } elseif ($this->id_concepto_pago === 7) {
-            $concepto = 'costo por enseñanza';
+            $concepto_pago = 'costo por enseñanza';
         } elseif ($this->id_concepto_pago === 8) {
-            $concepto = 'inscripcion de traslado externo';
+            $concepto_pago = 'inscripcion de traslado externo';
         } else {
-            $concepto = 'otros conceptos';
+            $concepto_pago = 'otros conceptos';
         }
 
         // datos del correo
@@ -73,7 +73,7 @@ class ObservarPagoJob implements ShouldQueue
             'nombre' => $nombre,
             'pago' => $pago,
             'observacion' => $observacion,
-            'concepto_pago' => $concepto,
+            'concepto_pago' => $concepto_pago,
         ];
 
         Mail::send('components.email.observar-pago', $detalle, function ($message) use ($detalle) {
