@@ -45,12 +45,13 @@ class ObservarPagoJob implements ShouldQueue
             ->orderBy('id_pago_observacion', 'desc')
             ->first()->pago_observacion;
 
+        $concepto = $this->concepto_pago;
         // datos del correo
         $detalle = [
             'correo' => $correo,
             'nombre' => $nombre,
             'observacion' => $observacion,
-            'concepto_pago' => $this->concepto_pago
+            'concepto' => $concepto
         ];
 
         Mail::send('components.email.observar-pago', $detalle, function ($message) use ($detalle) {
