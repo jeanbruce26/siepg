@@ -54,7 +54,7 @@ class ObservarPagoJob implements ShouldQueue
             'concepto' => $concepto
         ];
 
-        Mail::send('components.email.observar-pago', $detalle, function ($message) use ($detalle) {
+        Mail::send('components.email.observar-pago-conceptos', $detalle, function ($message) use ($detalle) {
             $message->to($detalle['correo'])
                 ->subject('Pago Observado - Escuela de Posgrado');
         });
