@@ -189,28 +189,8 @@ class Index extends Component
             'action' => 'hide'
         ]);
 
-        if ($pago->id_concepto_pago == 1) {
-            $concepto_pago = 'inscripción';
-        } elseif ($pago->id_concepto_pago == 2) {
-            $concepto_pago = 'constancia de ingreso';
-        } elseif ($pago->id_concepto_pago == 3) {
-            $concepto_pago = 'matricula';
-        } elseif ($pago->id_concepto_pago == 4) {
-            $concepto_pago = 'constancia de ingreso y matricula';
-        } elseif ($pago->id_concepto_pago == 5) {
-            $concepto_pago = 'matricula extemporanea';
-        } elseif ($pago->id_concepto_pago == 6) {
-            $concepto_pago = 'constancia de ingreso y matricula extemporanea';
-        } elseif ($pago->id_concepto_pago == 7) {
-            $concepto_pago = 'costo por enseñanza';
-        } elseif ($pago->id_concepto_pago == 8) {
-            $concepto_pago = 'inscripcion de traslado externo';
-        } else {
-            $concepto_pago = 'otros conceptos';
-        }
-
         // ejecutamos el job para enviar el correo de rechazo de pago
-        ObservarPagoJob::dispatch($pago->id_pago, $concepto_pago);
+        ObservarPagoJob::dispatch($pago->id_pago);
 
         // limpiar los campos
         $this->limpiar();
