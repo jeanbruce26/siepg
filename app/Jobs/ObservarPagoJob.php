@@ -50,7 +50,7 @@ class ObservarPagoJob implements ShouldQueue
         $detalle = [
             'correo' => $correo,
             'nombre' => $nombre,
-            'concepto' => $concepto,
+            'con_pago' => $concepto,
             'observacion' => $observacion,
         ];
 
