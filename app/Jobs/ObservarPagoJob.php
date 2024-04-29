@@ -49,7 +49,6 @@ class ObservarPagoJob implements ShouldQueue
         $detalle = [
             'correo' => $correo,
             'nombre' => $nombre,
-            'pago' => $pago,
             'observacion' => $observacion,
             'concepto_pago' => $this->concepto_pago
         ];
