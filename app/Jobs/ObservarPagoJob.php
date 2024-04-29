@@ -45,12 +45,12 @@ class ObservarPagoJob implements ShouldQueue
             ->orderBy('id_pago_observacion', 'desc')
             ->first()->pago_observacion;
 
-        $concepto = $this->concepto_pago;
+        $concepto_pago = $this->concepto_pago;
         // datos del correo
         $detalle = [
             'correo' => $correo,
             'nombre' => $nombre,
-            'con_pago' => $concepto,
+            'con_pago' => $concepto_pago,
             'observacion' => $observacion,
         ];
 
