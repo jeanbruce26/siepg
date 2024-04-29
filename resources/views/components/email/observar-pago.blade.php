@@ -19,7 +19,7 @@
             Estimado/a {{ $nombre }},
         </p>
         <p style="text-align: justify; text-justify: inter-word; margin-bottom: 1rem;">
-            Nos complace informarle que su pago realizado por el concepto de {{ $concepto }} al proceso de admisión ha sido
+            Nos complace informarle que su pago realizado por el concepto de <strong>{{ $concepto_pago }}</strong> al proceso de admisión ha sido
             observado.
         </p>
         <p>

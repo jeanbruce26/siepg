@@ -64,7 +64,7 @@ class ObservarPagoJob implements ShouldQueue
         } elseif ($this->id_concepto_pago === 8) {
             $concepto = 'inscripcion de traslado externo';
         } else {
-            $concepto = 'otros';
+            $concepto = 'otros conceptos';
         }
 
         // datos del correo
@@ -73,7 +73,7 @@ class ObservarPagoJob implements ShouldQueue
             'nombre' => $nombre,
             'pago' => $pago,
             'observacion' => $observacion,
-            'concepto' => $concepto,
+            'concepto_pago' => $concepto,
         ];
 
         Mail::send('components.email.observar-pago', $detalle, function ($message) use ($detalle) {
