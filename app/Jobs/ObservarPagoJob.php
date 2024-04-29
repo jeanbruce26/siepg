@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\ConceptoPago;
 use App\Models\Pago;
 use App\Models\PagoObservacion;
 use App\Models\Persona;
@@ -18,13 +19,15 @@ class ObservarPagoJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $id_pago;
+    public $id_concepto_pago;
 
     /**
      * Create a new job instance.
      */
-    public function __construct($id_pago)
+    public function __construct($id_pago, $id_concepto_pago)
     {
         $this->id_pago = $id_pago;
+        $this->id_concepto_pago = $id_concepto_pago;
     }
 
     /**
@@ -44,21 +47,21 @@ class ObservarPagoJob implements ShouldQueue
             ->first()->pago_observacion;
 
         $concepto = '';
-        if ($pago->id_concepto_pago == 1) {
+        if ($this->id_concepto_pago === 1) {
             $concepto = 'inscripción';
-        } elseif ($pago->id_concepto_pago == 2) {
+        } elseif ($this->id_concepto_pago === 2) {
             $concepto = 'constancia de ingreso';
-        } elseif ($pago->id_concepto_pago == 3) {
+        } elseif ($this->id_concepto_pago === 3) {
             $concepto = 'matricula';
-        } elseif ($pago->id_concepto_pago == 4) {
+        } elseif ($this->id_concepto_pago === 4) {
             $concepto = 'constancia de ingreso y matricula';
-        } elseif ($pago->id_concepto_pago == 5) {
+        } elseif ($this->id_concepto_pago === 5) {
             $concepto = 'matricula extemporanea';
-        } elseif ($pago->id_concepto_pago == 6) {
+        } elseif ($this->id_concepto_pago === 6) {
             $concepto = 'constancia de ingreso y matricula extemporanea';
-        } elseif ($pago->id_concepto_pago == 7) {
+        } elseif ($this->id_concepto_pago === 7) {
             $concepto = 'costo por enseñanza';
-        } elseif ($pago->id_concepto_pago == 8) {
+        } elseif ($this->id_concepto_pago === 8) {
             $concepto = 'inscripcion de traslado externo';
         } else {
             $concepto = 'otros';
