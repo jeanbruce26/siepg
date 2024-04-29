@@ -1,29 +1,30 @@
 <?php
 
-use App\Http\Controllers\ModuloAdministrador\AdmisionController;
-use App\Http\Controllers\ModuloAdministrador\AdmitidoController;
-use App\Http\Controllers\ModuloAdministrador\CanalPagoController;
-use App\Http\Controllers\ModuloAdministrador\ConceptoPagoController;
-use App\Http\Controllers\ModuloAdministrador\CorreoController;
-use App\Http\Controllers\ModuloAdministrador\DashboardController;
-use App\Http\Controllers\ModuloAdministrador\EstudianteController;
-use App\Http\Controllers\ModuloAdministrador\EvaluacionController;
-use App\Http\Controllers\ModuloAdministrador\ExpedienteController;
-use App\Http\Controllers\ModuloAdministrador\InscripcionController;
-use App\Http\Controllers\ModuloAdministrador\InscripcionPagoController;
-use App\Http\Controllers\ModuloAdministrador\PagoController;
-use App\Http\Controllers\ModuloAdministrador\PlanController;
-use App\Http\Controllers\ModuloAdministrador\ProgramaController;
-use App\Http\Controllers\ModuloAdministrador\SedeController;
-use App\Http\Controllers\ModuloAdministrador\TipoSeguimientoController;
-use App\Http\Controllers\ModuloAdministrador\TrabajadorController;
-use App\Http\Controllers\ModuloAdministrador\UsuarioTrabajadorController;
-use App\Http\Controllers\ModuloCoordinador\CoordinadorController;
-use App\Models\Inscripcion;
 use App\Models\Persona;
+use App\Models\Admitido;
+use App\Models\Inscripcion;
 use App\Models\UsuarioEstudiante;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ModuloAdministrador\PagoController;
+use App\Http\Controllers\ModuloAdministrador\PlanController;
+use App\Http\Controllers\ModuloAdministrador\SedeController;
+use App\Http\Controllers\ModuloAdministrador\CorreoController;
+use App\Http\Controllers\ModuloAdministrador\AdmisionController;
+use App\Http\Controllers\ModuloAdministrador\AdmitidoController;
+use App\Http\Controllers\ModuloAdministrador\ProgramaController;
+use App\Http\Controllers\ModuloAdministrador\CanalPagoController;
+use App\Http\Controllers\ModuloAdministrador\DashboardController;
+use App\Http\Controllers\ModuloCoordinador\CoordinadorController;
+use App\Http\Controllers\ModuloAdministrador\EstudianteController;
+use App\Http\Controllers\ModuloAdministrador\EvaluacionController;
+use App\Http\Controllers\ModuloAdministrador\ExpedienteController;
+use App\Http\Controllers\ModuloAdministrador\TrabajadorController;
+use App\Http\Controllers\ModuloAdministrador\InscripcionController;
+use App\Http\Controllers\ModuloAdministrador\ConceptoPagoController;
+use App\Http\Controllers\ModuloAdministrador\InscripcionPagoController;
+use App\Http\Controllers\ModuloAdministrador\TipoSeguimientoController;
+use App\Http\Controllers\ModuloAdministrador\UsuarioTrabajadorController;
 
 //Vista del Dashboard. El inicio la parte administrativa del sistema
 Route::get('/', [DashboardController::class, 'dashboard'])->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.dashboard');
@@ -197,5 +198,21 @@ Route::get('/verificar-usuario-estudiante', function () {
         'message' => 'Usuarios estudiante verificados'
     ]);
 })->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.verificar-usuario-estudiante');
+
+Route::get('/generar-es-traslado-externo-admitidos', function () {
+    $inscripciones = Inscripcion::where('es_traslado_externo', 1)->get();
+    foreach ($inscripciones as $inscripcion) {
+        $admitido = Admitido::where('id_persona', $inscripcion->id_persona)
+            ->where('id_programa_proceso', $inscripcion->id_programa_proceso)
+            ->first();
+        if ($admitido) {
+            $admitido->es_traslado_externo = 1;
+            $admitido->save();
+        }
+    }
+    return response()->json([
+        'message' => 'Admitidos actualizados'
+    ]);
+})->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.generar-es-traslado-externo-admitidos');
 
 //
