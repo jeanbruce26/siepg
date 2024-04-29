@@ -584,7 +584,7 @@ class Index extends Component
     public function eliminar_pago($id_pago)
     {
         $this->id_pago = $id_pago;
-        $this->dispatchBrowserEvent('alerta-2', [
+        $this->dispatchBrowserEvent('alerta-3', [
             'title' => 'Confirmar Eliminación',
             'text' => '¿Está seguro de eliminar el pago?',
             'icon' => 'question',
