@@ -2,7 +2,6 @@
 
 namespace App\Jobs;
 
-use App\Models\ConceptoPago;
 use App\Models\Pago;
 use App\Models\PagoObservacion;
 use App\Models\Persona;
@@ -75,8 +74,6 @@ class ObservarPagoJob implements ShouldQueue
             'observacion' => $observacion,
             'concepto_pago' => $concepto_pago,
         ];
-
-        dd($detalle);
 
         Mail::send('components.email.observar-pago', $detalle, function ($message) use ($detalle) {
             $message->to($detalle['correo'])
