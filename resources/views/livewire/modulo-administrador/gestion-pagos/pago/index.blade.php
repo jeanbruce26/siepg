@@ -139,6 +139,10 @@
                                                             data-bs-toggle="modal" data-bs-target="#modal_pago_editar">
                                                             Editar
                                                         </a>
+                                                        <button type="button" wire:click="eliminar_pago({{ $item->id_pago }})"
+                                                            class="btn btn-outline btn-outline-dashed btn-outline-danger btn-active-light-danger hover-scale">
+                                                            Eliminar
+                                                        </button>
                                                     </td>
                                                 </tr>
                                             @empty

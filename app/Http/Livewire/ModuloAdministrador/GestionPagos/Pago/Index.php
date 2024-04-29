@@ -8,6 +8,8 @@ use App\Models\CanalPago;
 use App\Models\ConceptoPago;
 use App\Models\ConstanciaIngreso;
 use App\Models\Inscripcion;
+use App\Models\Matricula;
+use App\Models\MatriculaCurso;
 use App\Models\Pago;
 use App\Models\PagoObservacion;
 use App\Models\Persona;
@@ -51,6 +53,7 @@ class Index extends Component
 
     protected $listeners = [
         'guardar_pago' => 'guardar_pago',
+        'confirmar_eliminar_pago' => 'confirmar_eliminar_pago',
     ]; // listener para mostrar alertas
 
     public function updatedFiltroConceptoPago($value)
@@ -576,6 +579,75 @@ class Index extends Component
         $this->dispatchBrowserEvent('modal', [
             'action' => 'hide'
         ]);
+    }
+
+    public function eliminar_pago($id_pago)
+    {
+        $this->id_pago = $id_pago;
+        $this->dispatchBrowserEvent('alerta-2', [
+            'title' => 'Confirmar Eliminación',
+            'text' => '¿Está seguro de eliminar el pago?',
+            'icon' => 'question',
+            'confirmButtonText' => 'Eliminar',
+            'cancelButtonText' => 'Cancelar',
+            'confirmButtonColor' => 'primary',
+            'cancelButtonColor' => 'danger',
+            'function' => 'confirmar_eliminar_pago'
+        ]);
+    }
+
+    public function confirmar_eliminar_pago()
+    {
+        $pago = Pago::find($this->id_pago);
+        if ($pago->pago_voucher_url) {
+            File::delete($pago->pago_voucher_url);
+        }
+        if ($pago->pago_observacion->count() > 0) {
+            $observaciones = PagoObservacion::where('id_pago', $pago->id_pago)->get();
+            foreach ($observaciones as $observacion) {
+                $observacion->delete();
+            }
+        }
+        if ($pago->id_concepto_pago == 1) {
+            // $inscripcion = Inscripcion::where('id_pago', $pago->id_pago)->first();
+            // if ($inscripcion) {
+            //     $inscripcion->id_pago = null;
+            //     $inscripcion->save();
+            // }
+        } else if ($pago->id_concepto_pago == 2 || $pago->id_concepto_pago == 4 || $pago->id_concepto_pago == 6) {
+            $constancia = ConstanciaIngreso::where('id_pago', $pago->id_pago)->first();
+            if ($constancia) {
+                if ($constancia->constancia_ingreso_url) {
+                    File::delete($constancia->constancia_ingreso_url);
+                }
+                $constancia->delete();
+            }
+        } else if ($pago->id_concepto_pago == 3 || $pago->id_concepto_pago == 4 || $pago->id_concepto_pago == 5 || $pago->id_concepto_pago == 6) {
+            $matricula = Matricula::where('id_pago', $pago->id_pago)->first();
+            if ($matricula) {
+                $cursos = MatriculaCurso::where('id_matricula', $matricula->id_matricula)->get();
+                foreach ($cursos as $curso) {
+                    $curso->delete();
+                }
+                if ($matricula->matricula_url) {
+                    File::delete($matricula->matricula_url);
+                }
+                $matricula->delete();
+            }
+        }
+        $pago->delete();
+
+        // emitir alerta de exito
+        $this->dispatchBrowserEvent('alerta', [
+            'title' => '!Exito!',
+            'text' => 'Pago ha sido eliminado con exito.',
+            'icon' => 'success',
+            'confirmButtonText' => 'Aceptar',
+            'color' => 'success'
+        ]);
+
+        // emitir evento para actualizar el sidebar de la plataforma del estudiante
+        $this->emit('actualizar_sidebar');
     }
 
     public function render()
