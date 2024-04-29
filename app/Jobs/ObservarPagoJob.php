@@ -18,15 +18,15 @@ class ObservarPagoJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $id_pago;
-    public $id_concepto_pago;
+    public $concepto_pago;
 
     /**
      * Create a new job instance.
      */
-    public function __construct($id_pago, $id_concepto_pago)
+    public function __construct($id_pago, $concepto_pago)
     {
         $this->id_pago = $id_pago;
-        $this->id_concepto_pago = $id_concepto_pago;
+        $this->concepto_pago = $concepto_pago;
     }
 
     /**
@@ -45,34 +45,13 @@ class ObservarPagoJob implements ShouldQueue
             ->orderBy('id_pago_observacion', 'desc')
             ->first()->pago_observacion;
 
-        $concepto_pago = '';
-        if ($this->id_concepto_pago === 1) {
-            $concepto_pago = 'inscripción';
-        } elseif ($this->id_concepto_pago === 2) {
-            $concepto_pago = 'constancia de ingreso';
-        } elseif ($this->id_concepto_pago === 3) {
-            $concepto_pago = 'matricula';
-        } elseif ($this->id_concepto_pago === 4) {
-            $concepto_pago = 'constancia de ingreso y matricula';
-        } elseif ($this->id_concepto_pago === 5) {
-            $concepto_pago = 'matricula extemporanea';
-        } elseif ($this->id_concepto_pago === 6) {
-            $concepto_pago = 'constancia de ingreso y matricula extemporanea';
-        } elseif ($this->id_concepto_pago === 7) {
-            $concepto_pago = 'costo por enseñanza';
-        } elseif ($this->id_concepto_pago === 8) {
-            $concepto_pago = 'inscripcion de traslado externo';
-        } else {
-            $concepto_pago = 'otros conceptos';
-        }
-
         // datos del correo
         $detalle = [
             'correo' => $correo,
             'nombre' => $nombre,
             'pago' => $pago,
             'observacion' => $observacion,
-            'concepto_pago' => $concepto_pago
+            'concepto_pago' => $this->concepto_pago
         ];
 
         Mail::send('components.email.observar-pago', $detalle, function ($message) use ($detalle) {
