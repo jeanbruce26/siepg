@@ -71,8 +71,8 @@
                             </div>
                         @endif
                     @else
-                        <div class="alert alert-dismissible bg-light-warning border border-3 border-warning d-flex flex-center flex-column py-10 px-10 px-lg-20">
-                            <i class="ki-outline ki-information fs-5tx text-warning mb-5"></i>
+                        <div class="alert alert-dismissible bg-light-success border border-3 border-success d-flex flex-center flex-column py-10 px-10 px-lg-20">
+                            <i class="ki-outline ki-like fs-5tx text-success mb-5"></i>
 
                             <div class="text-center">
                                 <h1 class="fw-bold mb-5">
