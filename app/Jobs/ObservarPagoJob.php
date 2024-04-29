@@ -43,6 +43,7 @@ class ObservarPagoJob implements ShouldQueue
             ->orderBy('id_pago_observacion', 'desc')
             ->first()->pago_observacion;
 
+        $concepto = '';
         if ($pago->id_concepto_pago == 1) {
             $concepto = 'inscripción';
         } elseif ($pago->id_concepto_pago == 2) {
