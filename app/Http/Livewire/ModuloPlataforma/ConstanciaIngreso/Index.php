@@ -79,10 +79,14 @@ class Index extends Component
                 $programa = 'la MAESTRIA EN ' . $datos->subprograma . ' CON MENCIÓN EN ' . $datos->mencion;
             }
         }
-        if ($datos->id_modalidad == 1) {
-            $modalidad = 'PRESENCIAL';
+        if ($datos->es_traslado_externo == 1) {
+            $modalidad = 'TRASLADO EXTERNO';
         } else {
-            $modalidad = 'a DISTANCIA';
+            if ($datos->id_modalidad == 1) {
+                $modalidad = 'PRESENCIAL';
+            } else {
+                $modalidad = 'a DISTANCIA';
+            }
         }
         $fecha = Carbon::parse(today());
         $fecha->locale('es');
