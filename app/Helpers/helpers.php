@@ -179,7 +179,7 @@ function calcularCantidadDePersonas($tipo, $proceso, $modalidad, $programa)
             $cantidad = Admitido::join('programa_proceso', 'programa_proceso.id_programa_proceso', '=', 'admitido.id_programa_proceso')
                 ->join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
                 ->join('programa', 'programa.id_programa', '=', 'programa_plan.id_programa')
-                ->join('persona', 'persona.id_persona', '=', 'inscripcion.id_persona')
+                ->join('persona', 'persona.id_persona', '=', 'admitido.id_persona')
                 ->where('programa.id_modalidad', $modalidad)
                 ->where('programa.id_programa', $programa)
                 ->get();
@@ -187,12 +187,12 @@ function calcularCantidadDePersonas($tipo, $proceso, $modalidad, $programa)
             $cantidad = Admitido::join('programa_proceso', 'programa_proceso.id_programa_proceso', '=', 'admitido.id_programa_proceso')
                 ->join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
                 ->join('programa', 'programa.id_programa', '=', 'programa_plan.id_programa')
-                ->join('persona', 'persona.id_persona', '=', 'inscripcion.id_persona')
+                ->join('persona', 'persona.id_persona', '=', 'admitido.id_persona')
                 ->where('programa.id_modalidad', $modalidad)
                 ->get();
         } else if ($proceso) {
             $cantidad = Admitido::join('programa_proceso', 'programa_proceso.id_programa_proceso', '=', 'admitido.id_programa_proceso')
-                ->join('persona', 'persona.id_persona', '=', 'inscripcion.id_persona')
+                ->join('persona', 'persona.id_persona', '=', 'admitido.id_persona')
                 ->where('programa_proceso.id_admision', $proceso)
                 ->get();
         }
