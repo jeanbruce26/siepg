@@ -236,6 +236,17 @@
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
+                        <div class="col-md-6">
+                            <label for="direccion" class="form-label">
+                                Dirección
+                            </label>
+                            <input type="text" wire:model="direccion"
+                                class="form-control @error('direccion') is-invalid @enderror"
+                                placeholder="Ingrese su direccion" id="direccion" />
+                            @error('direccion')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">

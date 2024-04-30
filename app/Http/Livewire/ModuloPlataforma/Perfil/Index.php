@@ -20,6 +20,7 @@ class Index extends Component
     public $apellido_materno;
     public $celular;
     public $correo_electronico;
+    public $direccion;
     public $iteration = 0; // variable para la iteracion de la imagen
     public $usuario; // variable para el usuario logueado
 
@@ -58,6 +59,7 @@ class Index extends Component
             'correo_electronico' => 'required|email|max:100', // validacion para el correo electronico
             'password' => 'nullable|min:8|max:20', // validacion para la contraseña
             'confirm_password' => 'nullable|same:password', // validacion para la confirmacion de la contraseña
+            'direccion' => 'required|min:3', // validacion para la direccion
         ]);
     }
 
@@ -93,6 +95,7 @@ class Index extends Component
             'correo_electronico' => 'required|email|max:100', // validacion para el correo electronico
             'password' => 'nullable|min:8|max:20', // validacion para la contraseña
             'confirm_password' => 'nullable|same:password', // validacion para la confirmacion de la contraseña
+            'direccion' => 'required|min:3', // validacion para la direccion
         ]);
 
         // buscar usuario logueado para actualizar el perfil
@@ -146,6 +149,7 @@ class Index extends Component
         $persona->apellido_materno = mb_strtoupper($this->apellido_materno, 'UTF-8');
         $persona->celular = $this->celular;
         $persona->correo = mb_strtolower($this->correo_electronico, 'UTF-8');
+        $persona->direccion = mb_strtoupper($this->direccion, 'UTF-8');
         $persona->save();
 
         // cerrar modal
