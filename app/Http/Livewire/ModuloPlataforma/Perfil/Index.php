@@ -41,6 +41,7 @@ class Index extends Component
         $this->apellido_materno = $this->usuario->persona->apellido_materno;
         $this->celular = $this->usuario->persona->celular;
         $this->correo_electronico = $this->usuario->persona->correo;
+        $this->direccion = $this->usuario->persona->direccion;
     }
 
     public function refresh()

@@ -236,7 +236,7 @@
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <label for="direccion" class="form-label">
                                 Dirección
                             </label>
