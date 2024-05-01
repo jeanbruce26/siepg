@@ -13,6 +13,10 @@
 		$('#modalUsuario').modal('hide');
 	})
 
+    window.addEventListener('modal', event => {
+		$(event.detail.id).modal(event.detail.action);
+	})
+
 	// Alerta para confirmacion
 	window.addEventListener('alerta-usuario', event => {
         Swal.fire({

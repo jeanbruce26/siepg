@@ -2,13 +2,16 @@
 
 namespace App\Http\Livewire\ModuloAdministrador\Dashboard;
 
+use App\Exports\reporte\moduloAdministrador\matriculados\listaGruposExport;
 use App\Models\Admision;
 use App\Models\Inscripcion;
+use App\Models\Matricula;
 use App\Models\Pago;
 use App\Models\ProgramaProceso;
 use Carbon\Carbon;
 use Livewire\Component;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
 use NumberFormatter;
 
 class Index extends Component
@@ -19,6 +22,7 @@ class Index extends Component
     public $ingreso_total, $ingreso_inscripcion, $ingreso_constancia, $ingreso_matricula; // variables para los totales
     public $ingreso_por_dia_total, $ingreso_por_dia_inscripcion, $ingreso_por_dia_constancia, $ingreso_por_dia_matricula; // Variables para las cantidades diarias
     public $programas_maestria, $programas_doctorado; // variables para almacenar los programas
+    public $proceso, $programa;
 
     public function mount()
     {
@@ -144,8 +148,66 @@ class Index extends Component
         $this->mount();
     }
 
+    public function updatedProceso()
+    {
+        $this->programa = null;
+    }
+
+    public function limpiar()
+    {
+        $this->reset([
+            'proceso',
+            'programa'
+        ]);
+    }
+
+    public function descargar_reporte_matriculados()
+    {
+        $this->validate([
+            'proceso' => 'required',
+            'programa' => 'required'
+        ]);
+        // verificamos si el programa tiene matriculados
+        $matriculados = Matricula::join('admitido', 'matricula.id_admitido', '=', 'admitido.id_admitido')
+            ->join('programa_proceso', 'admitido.id_programa_proceso', '=', 'programa_proceso.id_programa_proceso')
+            ->join('programa_plan', 'programa_proceso.id_programa_plan', '=', 'programa_plan.id_programa_plan')
+            ->join('programa', 'programa_plan.id_programa', '=', 'programa.id_programa')
+            ->where('admitido.id_programa_proceso', $this->programa)
+            ->get();
+        if ($matriculados->count() == 0) {
+            $this->dispatchBrowserEvent('alerta-usuario', [
+                'title' => 'No hay matriculados',
+                'text' => 'El programa seleccionado no tiene matriculados registrados',
+                'icon' => 'warning',
+                'confirmButtonText' => 'Aceptar',
+                'color' => 'warning'
+            ]);
+            return;
+        }
+        $nombre = Str::slug('Reporte de Matriculados ' . $this->programa, '-');
+        $this->dispatchBrowserEvent('modal', [
+            'id' => '#modal-reporte-matriculados',
+            'action' => 'hide'
+        ]);
+        $id_programa = $this->programa;
+        $this->limpiar();
+        return Excel::download(new listaGruposExport($id_programa), $nombre . '.xlsx');
+    }
+
     public function render()
     {
-        return view('livewire.modulo-administrador.dashboard.index');
+        if ($this->proceso) {
+            $programas = ProgramaProceso::join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
+                ->join('programa', 'programa.id_programa', '=', 'programa_plan.id_programa')
+                ->where('programa_proceso.id_admision', $this->proceso)
+                ->where('programa.id_modalidad', 2)
+                ->get();
+        } else {
+            $programas = collect();
+        }
+
+        return view('livewire.modulo-administrador.dashboard.index', [
+            'programas' => $programas
+        ]);
     }
 }
