@@ -23,12 +23,13 @@ class listaMatriculadosExport implements FromCollection, WithMapping, ShouldAuto
 
     protected $item = 0;
     protected $programa;
+    protected $id_programa_proceso_grupo;
     protected $nombre_grupo;
     protected $tipo_programa;
     protected $programa_nombre;
     protected $programa_nombre_corto;
 
-    public function __construct($programa, $nombre_grupo)
+    public function __construct($programa, $nombre_grupo, $id_programa_proceso_grupo)
     {
         $this->item = 1;
         $this->programa = ProgramaProceso::find($programa);
@@ -42,6 +43,7 @@ class listaMatriculadosExport implements FromCollection, WithMapping, ShouldAuto
             $this->programa_nombre_corto = Str::slug($this->programa_nombre_corto, ' ');
         }
         $this->tipo_programa = $this->programa->programa_plan->programa->programa_tipo;
+        $this->id_programa_proceso_grupo = $id_programa_proceso_grupo;
         $this->nombre_grupo = $nombre_grupo;
     }
 
@@ -55,6 +57,7 @@ class listaMatriculadosExport implements FromCollection, WithMapping, ShouldAuto
             ->where('programa.programa_estado',1)
             ->where('programa.id_modalidad',2)
             ->where('admitido.id_programa_proceso',$this->programa->id_programa_proceso)
+            ->where('matricula.id_programa_proceso_grupo',$this->id_programa_proceso_grupo)
             ->orderBy('persona.nombre_completo', 'asc')
             ->get();
 

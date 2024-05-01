@@ -30,7 +30,7 @@ class listaGruposExport implements WithMultipleSheets
             ->get();
 
         foreach ($grupos as $grupo) {
-            $sheets[] = new listaMatriculadosExport($grupo->id_programa_proceso, $grupo->grupo_detalle);
+            $sheets[] = new listaMatriculadosExport($grupo->id_programa_proceso, $grupo->grupo_detalle, $grupo->id_programa_proceso_grupo);
         }
 
         return $sheets;
