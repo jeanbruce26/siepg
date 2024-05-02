@@ -292,22 +292,28 @@ class Index extends Component
                 }
             }
 
-            // validar si el concepto es el de matriccula o matricula extemporanea y verificar si ya genero su constancia de ingreso
-            if ($this->concepto_pago == 3 || $this->concepto_pago == 5) {
-                $persona = Persona::where('numero_documento', $this->documento_identidad)->first();
-                $admitido = Admitido::where('id_persona', $persona->id_persona)->orderBy('id_admitido', 'desc')->first();
-                $constancia = ConstanciaIngreso::where('id_admitido', $admitido->id_admitido)->first();
-                if ($constancia == null) {
-                    $this->dispatchBrowserEvent('alerta_pago_plataforma', [
-                        'title' => '¡Error!',
-                        'text' => 'Constancia de Ingreso no generada, por favor realice el proceso para generar su Constancia de Ingreso.',
-                        'icon' => 'error',
-                        'confirmButtonText' => 'Aceptar',
-                        'color' => 'danger'
-                    ]);
-                    return;
+            // validamos si el admitido tiene no tiene un proceso antiguo y validar constancia de ingreso
+            $persona = Persona::where('numero_documento', $this->documento_identidad)->first();
+            $admitido = Admitido::where('id_persona', $persona->id_persona)->orderBy('id_admitido', 'desc')->first();
+            if ($admitido) {
+                if ($admitido->id_programa_proceso_antiguo == null) {
+                    // validar si el concepto es el de matriccula o matricula extemporanea y verificar si ya genero su constancia de ingreso
+                    if ($this->concepto_pago == 3 || $this->concepto_pago == 5) {
+                        $constancia = ConstanciaIngreso::where('id_admitido', $admitido->id_admitido)->first();
+                        if ($constancia == null) {
+                            $this->dispatchBrowserEvent('alerta_pago_plataforma', [
+                                'title' => '¡Error!',
+                                'text' => 'Constancia de Ingreso no generada, por favor realice el proceso para generar su Constancia de Ingreso.',
+                                'icon' => 'error',
+                                'confirmButtonText' => 'Aceptar',
+                                'color' => 'danger'
+                            ]);
+                            return;
+                        }
+                    }
                 }
             }
+
 
             // validar si el pago a registrar pertenece a la matricula extemporanea
             $fecha_matricula_extemporanea_inicio = Admision::where('admision_estado', 1)->first()->admision_fecha_inicio_matricula_extemporanea;
