@@ -402,14 +402,17 @@ class Index extends Component
                 ->where('admision.id_admision', $this->proceso)
                 ->where('programa.id_programa', $estudiante->programa_proceso->programa_plan->programa->id_programa)
                 ->first();
-
-            $cursos = CursoProgramaPlan::join('curso', 'curso_programa_plan.id_curso', 'curso.id_curso')
-                ->where('curso_programa_plan.id_programa_plan', $programa->id_programa_plan)
-                ->orderBy('curso.curso_codigo', 'asc')
-                ->orderBy('curso.id_ciclo', 'asc')
-                ->get();
-
-            $grupos = ProgramaProcesoGrupo::where('id_programa_proceso', $programa->id_programa_proceso)->get();
+            if ($programa) {
+                $cursos = CursoProgramaPlan::join('curso', 'curso_programa_plan.id_curso', 'curso.id_curso')
+                    ->where('curso_programa_plan.id_programa_plan', $programa->id_programa_plan)
+                    ->orderBy('curso.curso_codigo', 'asc')
+                    ->orderBy('curso.id_ciclo', 'asc')
+                    ->get();
+                $grupos = ProgramaProcesoGrupo::where('id_programa_proceso', $programa->id_programa_proceso)->get();
+            } else {
+                $cursos = collect();
+                $grupos = collect();
+            }
         } else {
             $cursos = collect();
             $grupos = collect();
