@@ -37,7 +37,7 @@ class ProcessEnvioCredenciales implements ShouldQueue
         $nombres = $persona->nombre_completo;
         $usuario_estudiante = UsuarioEstudiante::where('id_persona', $this->id_persona)->first();
         $usuario = $usuario_estudiante->usuario_estudiante;
-        $contraseña = $usuario_estudiante->usuario_estudiante_password;
+        $contraseña = $persona->numero_documento;
 
         $data = [
             'nombres' => $nombres,
