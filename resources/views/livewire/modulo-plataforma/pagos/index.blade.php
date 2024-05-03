@@ -227,8 +227,8 @@
                                 Numero de Operación
                             </label>
                             <span class="ms-1" data-bs-toggle="tooltip"
-                                aria-label="Ver como poner el número de operación según tipo de pago."
-                                data-bs-original-title="Ver como poner el número de operación según tipo de pago.">
+                                aria-label="Para encontrar la forma de poner el número de operación según el tipo de pago, haga clic en el icono de información."
+                                data-bs-original-title="Para encontrar la forma de poner el número de operación según el tipo de pago, haga clic en el icono de información.">
                                 <i class="ki-outline ki-information-5 text-gray-600 fs-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#modal_formas_pago"></i>
                             </span>
                             <input type="number" wire:model="numero_operacion" class="form-control @error('numero_operacion') is-invalid @enderror" placeholder="6543" id="numero_operacion"/>
