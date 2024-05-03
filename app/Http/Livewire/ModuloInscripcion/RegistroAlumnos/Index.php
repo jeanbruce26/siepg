@@ -294,6 +294,7 @@ class Index extends Component
         $admitido->id_programa_proceso_antiguo = null;
         $admitido->id_tipo_estudiante = 1;
         $admitido->admitido_estado = 1;
+        $admitido->admitido_alerta = 1;
         $admitido->save();
 
         //Creamos sus credenciales en la tabla usuario_estudiante
