@@ -203,6 +203,7 @@ class Index extends Component
 
         // actualizar programa del admitido (estudiante) y el estado
         $estudiante->id_programa_proceso_antiguo = $estudiante->id_programa_proceso;
+        $estudiante->save();
         $estudiante->id_programa_proceso = $programa->id_programa_proceso;
         $estudiante->admitido_estado = 1;  // 1 = admitido normal | 2 = retirado | 0 = desactivado
         $estudiante->save();
