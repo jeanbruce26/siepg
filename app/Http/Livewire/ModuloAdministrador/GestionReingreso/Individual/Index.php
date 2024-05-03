@@ -353,17 +353,17 @@ class Index extends Component
                 ->get();
 
             if ($this->plan) {
-                if ($this->plan == $estudiante->programa_proceso->programa_plan->id_plan) {
-                    // emitir alerta de que el estudiante no puede reingresar al mismo plan de estudios
-                    $this->dispatchBrowserEvent('alerta-basica', [
-                        'title' => '¡Alerta!',
-                        'text' => 'El estudiante no puede reingresar al mismo plan de estudios',
-                        'icon' => 'warning',
-                        'confirmButtonText' => 'Aceptar',
-                        'color' => 'warning'
-                    ]);
-                    $procesos = collect();
-                } else {
+                // if ($this->plan == $estudiante->programa_proceso->programa_plan->id_plan) {
+                //     // emitir alerta de que el estudiante no puede reingresar al mismo plan de estudios
+                //     $this->dispatchBrowserEvent('alerta-basica', [
+                //         'title' => '¡Alerta!',
+                //         'text' => 'El estudiante no puede reingresar al mismo plan de estudios',
+                //         'icon' => 'warning',
+                //         'confirmButtonText' => 'Aceptar',
+                //         'color' => 'warning'
+                //     ]);
+                //     $procesos = collect();
+                // } else {
                     $procesos = ProgramaProceso::join('programa_plan', 'programa_proceso.id_programa_plan', 'programa_plan.id_programa_plan')
                         ->join('programa', 'programa_plan.id_programa', 'programa.id_programa')
                         ->join('plan', 'programa_plan.id_plan', 'plan.id_plan')
@@ -371,8 +371,10 @@ class Index extends Component
                         ->where('programa.programa_tipo', $estudiante->programa_proceso->programa_plan->programa->programa_tipo)
                         ->where('plan.id_plan', $this->plan)
                         ->orderBy('admision.admision', 'asc')
+                        ->select('admision.id_admision', 'admision.admision')
+                        ->distinct()
                         ->get();
-                }
+                // }
             } else {
                 $procesos = collect();
             }
@@ -390,6 +392,7 @@ class Index extends Component
                 ->where('programa.programa_tipo', $estudiante->programa_proceso->programa_plan->programa->programa_tipo)
                 ->where('plan.id_plan', $this->plan)
                 ->where('admision.id_admision', $this->proceso)
+                ->where('programa.id_programa', $estudiante->programa_proceso->programa_plan->programa->id_programa)
                 ->first();
 
             $cursos = CursoProgramaPlan::join('curso', 'curso_programa_plan.id_curso', 'curso.id_curso')
