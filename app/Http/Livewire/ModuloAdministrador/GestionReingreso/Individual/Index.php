@@ -290,16 +290,20 @@ class Index extends Component
             $nota->nota_matricula_curso_estado = 1;
             if ( $item >= 14 ) {
                 $nota->id_estado_cursos = 1;
+                // cambiamos el estado de la matricula_curso a finalizado
+                $matricula_curso->matricula_curso_estado = 2; // 2 = curso finalizado
             } else if ( $item >= 10 && $item < 14) {
                 $nota->id_estado_cursos = 2;
+                // cambiamos el estado de la matricula_curso a finalizado
+                $matricula_curso->matricula_curso_estado = 0; // 2 = curso finalizado
             } else {
                 $nota->id_estado_cursos = 3;
+                // cambiamos el estado de la matricula_curso a finalizado
+                $matricula_curso->matricula_curso_estado = 0; // 2 = curso finalizado
             }
             $nota->id_docente = null;
             $nota->save();
 
-            // cambiamos el estado de la matricula_curso a finalizado
-            $matricula_curso->matricula_curso_estado = 2; // 2 = curso finalizado
             $matricula_curso->save();
         }
 
