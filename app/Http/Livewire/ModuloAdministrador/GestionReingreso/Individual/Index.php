@@ -175,6 +175,7 @@ class Index extends Component
                 ->join('plan', 'programa_plan.id_plan', 'plan.id_plan')
                 ->join('admision', 'programa_proceso.id_admision', 'admision.id_admision')
                 ->where('programa.programa_tipo', $estudiante->programa_proceso->programa_plan->programa->programa_tipo)
+                ->where('programa.id_programa', $estudiante->programa_proceso->programa_plan->programa->id_programa)
                 ->where('plan.id_plan', $this->plan)
                 ->where('admision.id_admision', $this->proceso)
                 ->first();
