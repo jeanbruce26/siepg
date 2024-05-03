@@ -293,7 +293,7 @@ class Index extends Component
         $admitido->id_programa_proceso = $this->programa;
         $admitido->id_programa_proceso_antiguo = null;
         $admitido->id_tipo_estudiante = 1;
-        $admitido->admitido_estado = 1;
+        $admitido->admitido_estado = 2;
         $admitido->admitido_alerta = 1;
         $admitido->save();
 
