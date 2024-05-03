@@ -1,5 +1,5 @@
 <div>
-    
+
     <div class="py-10 border-bottom border-gray-500 d-flex flex-column gap-5">
         <span class="text-success" style="font-weight: 700; font-size: 3rem">
             Gracias por registrarte
@@ -8,7 +8,7 @@
             Los datos rellenados han sido registrados con éxito.
         </span>
     </div>
-    
+
     <div class="alert bg-light-primary border border-3 border-primary d-flex align-items-center gap-2 mt-5 p-5">
         <i class="ki-duotone ki-information-5 fs-2qx me-4 text-primary">
             <i class="path1"></i>
@@ -60,7 +60,7 @@
                                 :
                             </td>
                             <td>
-                                {{ $admitidoModel->programa_proceso->programa_plan->programa->programa }} EN 
+                                {{ $admitidoModel->programa_proceso->programa_plan->programa->programa }} EN
                                 {{ $admitidoModel->programa_proceso->programa_plan->programa->subprograma }}
                                 @if ($admitidoModel->programa_proceso->programa_plan->programa->mencion)
                                     CON MENCIÓN EN {{ $admitidoModel->programa_proceso->programa_plan->programa->mencion }}
@@ -149,7 +149,7 @@
                                 :
                             </td>
                             <td class="col-md-11">
-                                {{ $usuarioModel->usuario_estudiante_password }}
+                                {{ $personaModel->numero_documento }}
                             </td>
                         </tr>
                     </tbody>
