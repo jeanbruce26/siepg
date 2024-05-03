@@ -226,6 +226,11 @@
                             <label for="numero_operacion" class="required form-label">
                                 Numero de Operación
                             </label>
+                            <span class="ms-1" data-bs-toggle="tooltip"
+                                aria-label="Ver como poner el número de operación según tipo de pago."
+                                data-bs-original-title="Ver como poner el número de operación según tipo de pago.">
+                                <i class="ki-outline ki-information-5 text-gray-600 fs-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#modal_formas_pago"></i>
+                            </span>
                             <input type="number" wire:model="numero_operacion" class="form-control @error('numero_operacion') is-invalid @enderror" placeholder="6543" id="numero_operacion"/>
                             <span class="form-text text-muted mt-2 fst-italic">
                                 Nota: Omitir los ceros a la izquierda. Ejemplo: 00001265, debe ser ingresado como 1265. <br>
@@ -327,6 +332,38 @@
                         <div wire:loading wire:target="alerta_guardar_pago">
                             Procesando <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
                         </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div wire:ignore.self class="modal fade" tabindex="-1" id="modal_formas_pago"
+        data-bs-keyboard="false">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">
+                        Formas de Pago
+                    </h3>
+                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#modal_pago_plataforma">
+                        <i class="bi bi-x fs-1"></i>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <img src="{{ asset('media/manual-voucher/page-0001.jpg') }}" alt="img" class="mw-100"
+                            style="width: 100%; height: auto" />
+                        <img src="{{ asset('media/manual-voucher/page-0002.jpg') }}" alt="img" class="mw-100"
+                            style="width: 100%; height: auto" />
+                        <img src="{{ asset('media/manual-voucher/page-0003.jpg') }}" alt="img" class="mw-100"
+                            style="width: 100%; height: auto" />
+                        <img src="{{ asset('media/manual-voucher/page-0004.jpg') }}" alt="img" class="mw-100"
+                            style="width: 100%; height: auto" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#modal_pago_plataforma">
+                        Cerrar
                     </button>
                 </div>
             </div>
