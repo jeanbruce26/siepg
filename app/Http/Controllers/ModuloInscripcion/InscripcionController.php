@@ -4,9 +4,11 @@ namespace App\Http\Controllers\ModuloInscripcion;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\ProcessEnvioCredenciales;
+use App\Jobs\ProcessEnvioCredencialesDocentes;
 use App\Jobs\ProcessRegistroFichaInscripcion;
 use App\Jobs\ProcessRegistroFichaInscripcion2;
 use App\Models\Admision;
+use App\Models\Docente;
 use App\Models\ExpedienteAdmision;
 use App\Models\ExpedienteInscripcion;
 use App\Models\ExpedienteInscripcionSeguimiento;
@@ -14,6 +16,7 @@ use App\Models\Inscripcion;
 use App\Models\Pago;
 use App\Models\Persona;
 use App\Models\ProgramaProceso;
+use App\Models\Trabajador;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Str;
 
@@ -164,5 +167,34 @@ class InscripcionController extends Controller
 
         // redireccionar a la pagina final
         return redirect()->route('posgrado.gracias', ['id' => $id]);
+    }
+
+    public function registro_docente()
+    {
+        return view('modulo-inscripcion.registro-docente.index');
+    }
+
+    public function gracias_registro_docente($id)
+    {
+        $id_trabajador = $id;
+
+        $trabajador = Trabajador::find($id_trabajador);
+        // dd($trabajador);
+        if (!$trabajador) {
+            abort(404);
+        }
+        return view('modulo-inscripcion.registro-docente.gracias', [
+            'id_trabajador' => $id_trabajador
+        ]);
+    }
+
+    public function credenciales_email_docente($id)
+    {
+        ProcessEnvioCredencialesDocentes::dispatch($id, 'create');
+
+        $docente = Docente::find($id);
+
+        // redireccionar a la pagina final
+        return redirect()->route('posgrado.gracias.docente', ['id' => $docente->id_trabajador]);
     }
 }

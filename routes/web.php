@@ -18,4 +18,11 @@ Route::get('/hash/{password}', function($password){
     return Hash::make($password);
 });
 
+// Ruta para ir a la vista de registro de docentes
+Route::get('/posgrado/registro-docente', [InscripcionController::class, 'registro_docente'])->name('posgrado.registro.docente');
+// Ruta para ir a la vista de gracias al final del registro de docentes
+Route::get('/posgrado/{id}/gracias-docente', [InscripcionController::class, 'gracias_registro_docente'])->name('posgrado.gracias.docente');
+// Ruta para para enviar email de las credenciales
+Route::get('/posgrado/{id}/credenciales-docente', [InscripcionController::class, 'credenciales_email_docente'])->name('posgrado.credenciales-email.docente');
+
 //
