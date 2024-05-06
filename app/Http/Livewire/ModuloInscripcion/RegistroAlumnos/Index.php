@@ -344,9 +344,9 @@ class Index extends Component
                 {
                     $this->validate([
                         'numero_documento' => 'required|numeric|digits_between:8,9|unique:persona,numero_documento',
-                        'apellido_paterno' => 'required|max:50|alpha',
-                        'apellido_materno' => 'required|max:50|alpha',
-                        'nombre' => 'required|max:50|alpha',
+                        'apellido_paterno' => 'required|max:50',
+                        'apellido_materno' => 'required|max:50',
+                        'nombre' => 'required|max:50',
                         'genero' => 'required|numeric',
                         'fecha_nacimiento' => 'required|date',
                         'direccion' => 'required|max:100',
@@ -411,9 +411,9 @@ class Index extends Component
                 {
                     $this->validate([
                         'numero_documento' => 'required|numeric|digits_between:8,9|unique:persona,numero_documento',
-                        'apellido_paterno' => 'required|max:50|alpha',
-                        'apellido_materno' => 'required|max:50|alpha',
-                        'nombre' => 'required|max:50|alpha',
+                        'apellido_paterno' => 'required|max:50',
+                        'apellido_materno' => 'required|max:50',
+                        'nombre' => 'required|max:50',
                         'genero' => 'required|numeric',
                         'fecha_nacimiento' => 'required|date',
                         'direccion' => 'required|max:100',
@@ -478,9 +478,9 @@ class Index extends Component
                 {
                     $this->validate([
                         'numero_documento' => 'required|numeric|digits_between:8,9|unique:persona,numero_documento',
-                        'apellido_paterno' => 'required|max:50|alpha',
-                        'apellido_materno' => 'required|max:50|alpha',
-                        'nombre' => 'required|max:50|alpha',
+                        'apellido_paterno' => 'required|max:50',
+                        'apellido_materno' => 'required|max:50',
+                        'nombre' => 'required|max:50',
                         'genero' => 'required|numeric',
                         'fecha_nacimiento' => 'required|date',
                         'direccion' => 'required|max:100',
@@ -543,9 +543,9 @@ class Index extends Component
                 }else{
                     $this->validate([
                         'numero_documento' => 'required|numeric|digits_between:8,9|unique:persona,numero_documento',
-                        'apellido_paterno' => 'required|max:50|alpha',
-                        'apellido_materno' => 'required|max:50|alpha',
-                        'nombre' => 'required|max:50|alpha',
+                        'apellido_paterno' => 'required|max:50',
+                        'apellido_materno' => 'required|max:50',
+                        'nombre' => 'required|max:50',
                         'genero' => 'required|numeric',
                         'fecha_nacimiento' => 'required|date',
                         'direccion' => 'required|max:100',
@@ -616,9 +616,9 @@ class Index extends Component
                     {
                         $this->validate([
                             'numero_documento' => 'required|numeric|digits_between:8,9|unique:persona,numero_documento',
-                            'apellido_paterno' => 'required|max:50|alpha',
-                            'apellido_materno' => 'required|max:50|alpha',
-                            'nombre' => 'required|max:50|alpha',
+                            'apellido_paterno' => 'required|max:50',
+                            'apellido_materno' => 'required|max:50',
+                            'nombre' => 'required|max:50',
                             'genero' => 'required|numeric',
                             'fecha_nacimiento' => 'required|date',
                             'direccion' => 'required|max:100',
@@ -683,9 +683,9 @@ class Index extends Component
                     {
                         $this->validate([
                             'numero_documento' => 'required|numeric|digits_between:8,9|unique:persona,numero_documento',
-                            'apellido_paterno' => 'required|max:50|alpha',
-                            'apellido_materno' => 'required|max:50|alpha',
-                            'nombre' => 'required|max:50|alpha',
+                            'apellido_paterno' => 'required|max:50',
+                            'apellido_materno' => 'required|max:50',
+                            'nombre' => 'required|max:50',
                             'genero' => 'required|numeric',
                             'fecha_nacimiento' => 'required|date',
                             'direccion' => 'required|max:100',
@@ -754,9 +754,9 @@ class Index extends Component
                     {
                         $this->validate([
                             'numero_documento' => 'required|numeric|digits_between:8,9|unique:persona,numero_documento',
-                            'apellido_paterno' => 'required|max:50|alpha',
-                            'apellido_materno' => 'required|max:50|alpha',
-                            'nombre' => 'required|max:50|alpha',
+                            'apellido_paterno' => 'required|max:50',
+                            'apellido_materno' => 'required|max:50',
+                            'nombre' => 'required|max:50',
                             'genero' => 'required|numeric',
                             'fecha_nacimiento' => 'required|date',
                             'direccion' => 'required|max:100',
@@ -821,9 +821,9 @@ class Index extends Component
                     {
                         $this->validate([
                             'numero_documento' => 'required|numeric|digits_between:8,9|unique:persona,numero_documento',
-                            'apellido_paterno' => 'required|max:50|alpha',
-                            'apellido_materno' => 'required|max:50|alpha',
-                            'nombre' => 'required|max:50|alpha',
+                            'apellido_paterno' => 'required|max:50',
+                            'apellido_materno' => 'required|max:50',
+                            'nombre' => 'required|max:50',
                             'genero' => 'required|numeric',
                             'fecha_nacimiento' => 'required|date',
                             'direccion' => 'required|max:100',
@@ -889,9 +889,9 @@ class Index extends Component
                 {
                     $this->validate([
                         'numero_documento' => 'required|numeric|digits_between:8,9|unique:persona,numero_documento',
-                        'apellido_paterno' => 'required|max:50|alpha',
-                        'apellido_materno' => 'required|max:50|alpha',
-                        'nombre' => 'required|max:50|alpha',
+                        'apellido_paterno' => 'required|max:50',
+                        'apellido_materno' => 'required|max:50',
+                        'nombre' => 'required|max:50',
                         'genero' => 'required|numeric',
                         'fecha_nacimiento' => 'required|date',
                         'direccion' => 'required|max:100',
