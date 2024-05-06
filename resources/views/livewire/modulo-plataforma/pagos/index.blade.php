@@ -110,6 +110,7 @@
                                         <th>Monto</th>
                                         <th>Fecha</th>
                                         <th>Estado</th>
+                                        <th>Voucher</th>
                                         <th class="text-end">Acciones</th>
                                     </tr>
                                 </thead>
@@ -141,6 +142,11 @@
                                             @elseif ($item->pago_verificacion == 0)
                                                 <span class="badge badge-danger fs-6 px-3 py-2">Observado</span>
                                             @endif
+                                        </td>
+                                        <td>
+                                            <a href="{{ asset($item->pago_voucher_url) }}" target="_blank" class="btn btn-outline btn-outline-info">
+                                                Ver Voucher
+                                            </a>
                                         </td>
                                         <td class="text-end">
                                             @if ($item->pago_verificacion != 2)
