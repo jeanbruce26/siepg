@@ -47,7 +47,7 @@ class ProcessEnvioCredencialesDocentes implements ShouldQueue
 
         Mail::send('modulo-coordinador.gestion-docentes.email-credenciales', $data, function ($message) use ($data) {
             $message->to($data['correo'])
-                    ->subject('Credenciales de acceso - Escuela de Posgrado');
+                    ->subject('Credenciales de Acceso - Escuela de Posgrado');
         });
     }
 }
