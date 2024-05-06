@@ -412,7 +412,7 @@ class Index extends Component
                 $path = asignarPermisoFolders($base_path, $folders);
 
                 // Nombre del archivo
-                $filename = 'voucher-pago.' . $this->voucher->getClientOriginalExtension();
+                $filename = 'voucher-pago-' . uniqid() . '.' . $this->voucher->getClientOriginalExtension();
                 $nombre_db = $path . $filename;
 
                 // Guardar el archivo
@@ -462,7 +462,7 @@ class Index extends Component
                 $path = asignarPermisoFolders($base_path, $folders);
 
                 // Nombre del archivo
-                $filename = 'voucher-pago.' . $this->voucher->getClientOriginalExtension();
+                $filename = 'voucher-pago-' . uniqid() . '.' . $this->voucher->getClientOriginalExtension();
                 $nombre_db = $path . $filename;
 
                 // Guardar el archivo
