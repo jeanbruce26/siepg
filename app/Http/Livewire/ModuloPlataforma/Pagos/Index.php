@@ -440,6 +440,13 @@ class Index extends Component
             $pago->pago_verificacion = 1;
             $pago->pago_leido = 1;
             if ($this->voucher) {
+                // eliminar el archivo anterior
+                if ($pago->pago_voucher_url) {
+                    if (file_exists($pago->pago_voucher_url)) {
+                        unlink($pago->pago_voucher_url);
+                    }
+                }
+
                 $persona = Persona::where('numero_documento', $this->documento_identidad)->first();
                 $inscripcion = Inscripcion::where('id_persona', $persona->id_persona)->orderBy('id_inscripcion', 'desc')->first();
                 $admision = $inscripcion->programa_proceso->admision->admision;
