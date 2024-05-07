@@ -344,6 +344,24 @@
                 <div class="modal-body">
                     <form autocomplete="off" class="row g-5">
                         <div class="col-md-6">
+                            <label for="tipo_documento" class="required form-label">
+                                Tipo de Documento
+                            </label>
+                            <select
+                                class="form-select @error('tipo_documento') is-invalid @enderror"
+                                wire:model="tipo_documento" id="tipo_documento" data-control="select2"
+                                data-placeholder="Seleccione su tipo de documento" data-allow-clear="true">
+                                <option></option>
+                                @foreach ($tipo_documentos as $item)
+                                    <option value="{{ $item->id_tipo_documento }}">{{ $item->tipo_documento }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('tipo_documento')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="col-md-6">
                             <label for="documento_identidad" class="required form-label">
                                 Documento de Identidad
                             </label>
@@ -355,6 +373,17 @@
                             @enderror
                         </div>
                         <div class="col-md-6">
+                            <label for="apellidos" class="required form-label">
+                                Apellidos
+                            </label>
+                            <input type="text" wire:model="apellidos"
+                                class="form-control @error('apellidos') is-invalid @enderror"
+                                placeholder="Ingrese el apellido del docente" id="apellidos" />
+                            @error('apellidos')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="col-md-6">
                             <label for="nombre" class="required form-label">
                                 Nombre
                             </label>
@@ -362,28 +391,6 @@
                                 class="form-control @error('nombre') is-invalid @enderror"
                                 placeholder="Ingrese el nombre del docente" id="nombre" />
                             @error('nombre')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        <div class="col-md-6">
-                            <label for="apellido_paterno" class="required form-label">
-                                Apellido Paterno
-                            </label>
-                            <input type="text" wire:model="apellido_paterno"
-                                class="form-control @error('apellido_paterno') is-invalid @enderror"
-                                placeholder="Ingrese el apellido paterno del docente" id="apellido_paterno" />
-                            @error('apellido_paterno')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        <div class="col-md-6">
-                            <label for="apellido_materno" class="required form-label">
-                                Apellido Materno
-                            </label>
-                            <input type="text" wire:model="apellido_materno"
-                                class="form-control @error('apellido_materno') is-invalid @enderror"
-                                placeholder="Ingrese el apellido materno del docente" id="apellido_materno" />
-                            @error('apellido_materno')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
@@ -411,7 +418,7 @@
                         </div>
                         <div class="col-md-6">
                             <label for="grado_academico" class="required form-label">
-                                Grado Académico
+                                Maximo Grado Académico
                             </label>
                             <select class="form-select @error('grado_academico') is-invalid @enderror"
                                 wire:model="grado_academico" id="grado_academico" data-control="select2"
@@ -419,7 +426,8 @@
                                 data-dropdown-parent="#modal_docente">
                                 <option></option>
                                 @foreach ($grados_academicos as $item)
-                                    <option value="{{ $item->id_grado_academico }}">{{ $item->grado_academico }}
+                                    <option value="{{ $item->id_grado_academico }}">
+                                        ({{ $item->grado_academico_prefijo }}) {{ $item->grado_academico }}
                                     </option>
                                 @endforeach
                             </select>
@@ -460,19 +468,22 @@
                                 @enderror
                             </div>
                         @endif
-                        <div class="col-md-12">
-                            <label for="foto_perfil"
-                                class="@if ($modo == 'create') required @endif form-label">
-                                Foto de Perfil
+                        <div class="mb-3 col-md-6">
+                            <label for="categoria_docente" class="required form-label">
+                                Categoria Docente
                             </label>
-                            <input type="file" wire:model="foto_perfil"
-                                class="form-control @error('foto_perfil') is-invalid @enderror" id="foto_perfil"
-                                accept="image/jpeg, image/png, image/jpg" />
-                            <span class="form-text text-muted mt-2 fst-italic">
-                                Nota: La foto de perfil debe ser imagen en formato JPG, JPEG, PNG y no debe superar los
-                                2MB. <br>
-                            </span>
-                            @error('foto_perfil')
+                            <select
+                                class="form-select @error('categoria_docente') is-invalid @enderror"
+                                wire:model="categoria_docente" id="categoria_docente" data-control="select2"
+                                data-placeholder="Seleccione la categoria" data-allow-clear="true">
+                                <option></option>
+                                @foreach ($categoria_docentes as $item)
+                                    <option value="{{ $item->id_categoria_docente }}">
+                                        {{ $item->categoria_docente }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('categoria_docente')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
