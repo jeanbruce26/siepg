@@ -399,7 +399,12 @@ class Index extends Component
             if ($this->voucher) {
                 $persona = Persona::where('numero_documento', $this->documento_identidad)->first();
                 $inscripcion = Inscripcion::where('id_persona', $persona->id_persona)->orderBy('id_inscripcion', 'desc')->first();
-                $admision = $inscripcion->programa_proceso->admision->admision;
+                if ($inscripcion) {
+                    $admision = $inscripcion->programa_proceso->admision->admision;
+                } else {
+                    $admitido = Admitido::where('id_persona', $persona->id_persona)->orderBy('id_admitido', 'desc')->first();
+                    $admision = $admitido->programa_proceso->admision->admision;
+                }
 
                 $base_path = 'Posgrado/';
                 $folders = [
@@ -449,7 +454,12 @@ class Index extends Component
 
                 $persona = Persona::where('numero_documento', $this->documento_identidad)->first();
                 $inscripcion = Inscripcion::where('id_persona', $persona->id_persona)->orderBy('id_inscripcion', 'desc')->first();
-                $admision = $inscripcion->programa_proceso->admision->admision;
+                if ($inscripcion) {
+                    $admision = $inscripcion->programa_proceso->admision->admision;
+                } else {
+                    $admitido = Admitido::where('id_persona', $persona->id_persona)->orderBy('id_admitido', 'desc')->first();
+                    $admision = $admitido->programa_proceso->admision->admision;
+                }
 
                 $base_path = 'Posgrado/';
                 $folders = [
