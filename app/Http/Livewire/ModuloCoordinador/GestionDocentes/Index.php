@@ -6,6 +6,7 @@ use App\Jobs\ProcessEnvioCredencialesDocentes;
 use App\Models\Docente;
 use App\Models\GradoAcademico;
 use App\Models\TipoDocente;
+use App\Models\CategoriaDocente;
 use App\Models\Trabajador;
 use App\Models\TrabajadorTipoTrabajador;
 use App\Models\Usuario;
