@@ -92,7 +92,7 @@
 
                         <div class="mb-3 col-md-6">
                             <label for="grado" class="required form-label">
-                                Grado Académico
+                                Maxmimo Grado Académico
                             </label>
                             <select
                                 class="form-select @if ($errors->has('grado')) is-invalid @elseif($grado) is-valid @endif"
@@ -100,7 +100,8 @@
                                 data-placeholder="Seleccione su grado académico" data-allow-clear="true">
                                 <option></option>
                                 @foreach ($grados_academicos as $item)
-                                    <option value="{{ $item->id_grado_academico }}">{{ $item->grado_academico }}
+                                    <option value="{{ $item->id_grado_academico }}">
+                                        ({{ $item->grado_academico_prefijo }}) {{ $item->grado_academico }}
                                     </option>
                                 @endforeach
                             </select>

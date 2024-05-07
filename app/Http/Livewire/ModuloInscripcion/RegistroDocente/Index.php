@@ -17,6 +17,7 @@ class Index extends Component
 {
     public $paso = 1;
 
+    public $prefijo;
     public $tipo_documento;
     public $documento;
     public $nombres;
@@ -38,6 +39,7 @@ class Index extends Component
     {
         if($this->paso == 1) {
             $this->validateOnly($propertyName, [
+                'prefijo' => 'required',
                 'tipo_documento' => 'required|exists:tipo_documento,id_tipo_documento',
                 'documento' => 'required|numeric|unique:trabajador,trabajador_numero_documento|digits:8',
                 'nombres' => 'required',
@@ -72,6 +74,7 @@ class Index extends Component
             $this->resetErrorBag();
             $this->resetValidation();
             $this->validate([
+                'prefijo' => 'required',
                 'tipo_documento' => 'required|exists:tipo_documento,id_tipo_documento',
                 'documento' => 'required|numeric|unique:trabajador,trabajador_numero_documento|digits:8',
                 'nombres' => 'required',
@@ -154,7 +157,7 @@ class Index extends Component
     public function render()
     {
         $tipo_documentos = TipoDocumento::where('tipo_documento_estado', 1)->get();
-        $grados_academicos = GradoAcademico::where('grado_academico_estado', 1)->get();
+        $grados_academicos = GradoAcademico::where('grado_academico_estado', 1)->orderBy('grado_academico', 'desc')->get();
         $tipo_docentes = TipoDocente::where('tipo_docente_estado', 1)->get();
         $categoria_docentes = CategoriaDocente::where('categoria_docente_estado', 1)->get();
 
