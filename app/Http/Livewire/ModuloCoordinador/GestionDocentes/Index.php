@@ -27,14 +27,15 @@ class Index extends Component
     public $title_modal = 'Agregar Docente'; // Título del modal
     public $iteration = 0; // Variable para limpiar el modal
     public $iteration2 = 0; // Variable para limpiar el modal
+    public $tipo_documento; // Variable para almacenar el tipo de documento
     public $documento_identidad; // Variable para almacenar el número de documento
     public $nombre; // Variable para almacenar el nombre
-    public $apellido_paterno; // Variable para almacenar el apellido paterno
-    public $apellido_materno; // Variable para almacenar el apellido materno
+    public $apellidos; // Variable para almacenar el apellido paterno
     public $correo_electronico; // Variable para almacenar el correo electrónico
     public $direccion; // Variable para almacenar la dirección
     public $grado_academico; // Variable para almacenar el grado académico
     public $tipo_docente; // Variable para almacenar el tipo de docente
+    public $categoria_docente; // Variable para almacenar la categoría del docente
     public $id_docente; // Variable para almacenar el id del docente
     public $curriculum_vitae; // Variable para almacenar el curriculum vitae
     public $foto_perfil; // Variable para almacenar la foto de perfil
@@ -66,14 +67,14 @@ class Index extends Component
                 // Validación de los campos
                 'documento_identidad' => 'required|numeric|digits_between:8,9',
                 'nombre' => 'required|regex:/^[\pL\s-]+$/u|max:100',
-                'apellido_paterno' => 'required|regex:/^[\pL\s-]+$/u|max:50',
-                'apellido_materno' => 'required|regex:/^[\pL\s-]+$/u|max:50',
+                'apellidos' => 'required|regex:/^[\pL\s-]+$/u|max:100',
                 'correo_electronico' => 'required|email|max:50',
                 'direccion' => 'required|max:100',
                 'grado_academico' => 'required',
                 'tipo_docente' => 'required',
+                'categoria_docente' => 'required',
                 'curriculum_vitae' => $this->mostrar_curriculum == true ? 'required|mimes:pdf|max:10240' : 'nullable|mimes:pdf|max:10240',
-                'foto_perfil' => 'required|image|max:2048'
+                'foto_perfil' => 'nullable|image|max:2048'
             ]);
         }
         else
@@ -82,12 +83,12 @@ class Index extends Component
                 // Validación de los campos
                 'documento_identidad' => 'required|numeric|digits_between:8,9',
                 'nombre' => 'required|regex:/^[\pL\s-]+$/u|max:100',
-                'apellido_paterno' => 'required|regex:/^[\pL\s-]+$/u|max:50',
-                'apellido_materno' => 'required|regex:/^[\pL\s-]+$/u|max:50',
+                'apellidos' => 'required|regex:/^[\pL\s-]+$/u|max:100',
                 'correo_electronico' => 'required|email|max:50',
                 'direccion' => 'required|max:100',
                 'grado_academico' => 'required',
                 'tipo_docente' => 'required',
+                'categoria_docente' => 'required',
                 'curriculum_vitae' => 'nullable|mimes:pdf|max:10240',
                 'foto_perfil' => 'nullable|image|max:2048'
             ]);
@@ -122,12 +123,12 @@ class Index extends Component
         $this->reset([
             'documento_identidad',
             'nombre',
-            'apellido_paterno',
-            'apellido_materno',
+            'apellidos',
             'correo_electronico',
             'direccion',
             'grado_academico',
             'tipo_docente',
+            'categoria_docente',
             'id_docente',
             'curriculum_vitae',
             'foto_perfil',
@@ -162,17 +163,12 @@ class Index extends Component
         $this->trabajador = $docente->trabajador;
         $this->documento_identidad = $this->trabajador->trabajador_numero_documento;
         $this->nombre = $this->trabajador->trabajador_nombre;
-        $apellidos = explode(' ', $this->trabajador->trabajador_apellido);
-        $this->apellido_paterno = $apellidos[0];
-        if (count($apellidos) > 1) {
-            $this->apellido_materno = implode(' ', array_slice($apellidos, 1));
-        } else {
-            $this->apellido_materno = '';
-        }
+        $this->apellidos = $this->trabajador->trabajador_apellido;
         $this->correo_electronico = $this->trabajador->trabajador_correo;
         $this->direccion = $this->trabajador->trabajador_direccion;
         $this->grado_academico = $tipo == 'edit' ? $this->trabajador->id_grado_academico : ($tipo == 'show' ? $this->trabajador->grado_academico->grado_academico : '');
         $this->tipo_docente = $tipo == 'edit' ? $docente->id_tipo_docente : ($tipo == 'show' ? $docente->tipo_docente->tipo_docente : '');
+        $this->categoria_docente = $tipo == 'edit' ? $docente->docente_categoria : ($tipo == 'show' ? $docente->docente_categoria : '');
     }
 
     public function guardar_docente()
@@ -203,14 +199,14 @@ class Index extends Component
                 // Validación de los campos
                 'documento_identidad' => 'required|numeric|digits_between:8,9',
                 'nombre' => 'required|regex:/^[\pL\s-]+$/u|max:100',
-                'apellido_paterno' => 'required|regex:/^[\pL\s-]+$/u|max:50',
-                'apellido_materno' => 'required|regex:/^[\pL\s-]+$/u|max:50',
+                'apellidos' => 'required|regex:/^[\pL\s-]+$/u|max:100',
                 'correo_electronico' => 'required|email|max:50',
                 'direccion' => 'required|max:100',
                 'grado_academico' => 'required',
                 'tipo_docente' => 'required',
+                'categoria_docente' => 'required',
                 'curriculum_vitae' => $this->mostrar_curriculum == true ? 'required|mimes:pdf|max:10240' : 'nullable|mimes:pdf|max:10240',
-                'foto_perfil' => 'required|image|max:2048'
+                'foto_perfil' => 'nullable|image|max:2048'
             ]);
         }
         else
@@ -219,12 +215,12 @@ class Index extends Component
                 // Validación de los campos
                 'documento_identidad' => 'required|numeric|digits_between:8,9',
                 'nombre' => 'required|regex:/^[\pL\s-]+$/u|max:100',
-                'apellido_paterno' => 'required|regex:/^[\pL\s-]+$/u|max:50',
-                'apellido_materno' => 'required|regex:/^[\pL\s-]+$/u|max:50',
+                'apellidos' => 'required|regex:/^[\pL\s-]+$/u|max:100',
                 'correo_electronico' => 'required|email|max:50',
                 'direccion' => 'required|max:100',
                 'grado_academico' => 'required',
                 'tipo_docente' => 'required',
+                'categoria_docente' => 'required',
                 'curriculum_vitae' => 'nullable|mimes:pdf|max:10240',
                 'foto_perfil' => 'nullable|image|max:2048'
             ]);
@@ -234,9 +230,9 @@ class Index extends Component
         {
             // Creación de un nuevo trabajador
             $trabajador = new Trabajador();
-            $trabajador->trabajador_apellido = ucwords($this->apellido_paterno . ' ' . $this->apellido_materno);
+            $trabajador->trabajador_apellido = ucwords($this->apellidos);
             $trabajador->trabajador_nombre = ucwords($this->nombre);
-            $trabajador->trabajador_nombre_completo = ucwords($this->nombre . ' ' . $this->apellido_paterno . ' ' . $this->apellido_materno);
+            $trabajador->trabajador_nombre_completo = ucwords($this->nombre . ' ' . $this->apellidos);
             $trabajador->trabajador_numero_documento = $this->documento_identidad;
             $trabajador->trabajador_correo = $this->correo_electronico;
             $trabajador->trabajador_direccion = $this->direccion;
@@ -246,18 +242,18 @@ class Index extends Component
 
             $this->trabajador = Trabajador::find($trabajador->id_trabajador);
             // Asignamos su foto de perfil al trabajador en caso de que se haya subido una foto
-            if($this->foto_perfil)
-            {
-                if (file_exists($this->trabajador->trabajador_perfil_url)) {
-                    unlink($this->trabajador->trabajador_perfil_url);
-                }
-                $path = 'Posgrado/Usuarios/' . $this->trabajador->id_trabajador . '/Perfil' . '/';
-                $filename = 'foto-perfil-' . date('HisdmY') . '.' . $this->foto_perfil->getClientOriginalExtension();
-                $nombre_db = $path.$filename;
-                $this->foto_perfil->storeAs($path, $filename, 'files_publico');
-                $this->trabajador->trabajador_perfil_url = $nombre_db;
-                $this->trabajador->save();
-            }
+            // if($this->foto_perfil)
+            // {
+            //     if (file_exists($this->trabajador->trabajador_perfil_url)) {
+            //         unlink($this->trabajador->trabajador_perfil_url);
+            //     }
+            //     $path = 'Posgrado/Usuarios/' . $this->trabajador->id_trabajador . '/Perfil' . '/';
+            //     $filename = 'foto-perfil-' . date('HisdmY') . '.' . $this->foto_perfil->getClientOriginalExtension();
+            //     $nombre_db = $path.$filename;
+            //     $this->foto_perfil->storeAs($path, $filename, 'files_publico');
+            //     $this->trabajador->trabajador_perfil_url = $nombre_db;
+            //     $this->trabajador->save();
+            // }
 
             // Creación de un nuevo docente
             $docente = new Docente();
@@ -274,6 +270,7 @@ class Index extends Component
                 $docente->docente_cv_url = $nombre_db;
             }
             $docente->id_tipo_docente = $this->tipo_docente;
+            $docente->id_categoria_docente = $this->categoria_docente;
             $docente->docente_estado = 1;
             $docente->id_trabajador = $this->trabajador->id_trabajador;
             $docente->save();
@@ -289,7 +286,7 @@ class Index extends Component
             $usuario = new Usuario();
             $usuario->usuario_nombre = 'DOCENTE - ' . $this->trabajador->trabajador_nombre_completo;
             $nombre = explode(' ', $this->trabajador->trabajador_nombre)[0];
-            $usuario->usuario_correo = strtolower($nombre) . '_' . strtolower(explode(' ', $this->apellido_paterno)[0]) . '@unu.edu.pe';
+            $usuario->usuario_correo = strtolower($nombre) . '_' . strtolower(explode(' ', $this->apellidos)[0]) . '@unu.edu.pe';
             $usuario->usuario_password = Hash::make($this->documento_identidad);
             $usuario->id_trabajador_tipo_trabajador = $trabajador_tipo_trabajador->id_trabajador_tipo_trabajador;
             $usuario->usuario_estado = 2; // 0 = Inactivo | 1 = Activo | 2 = Asignado
@@ -311,24 +308,24 @@ class Index extends Component
         {
             // editamos los datos del trabajador
             $trabajador = Trabajador::find($this->trabajador->id_trabajador);
-            $trabajador->trabajador_apellido = ucwords($this->apellido_paterno . ' ' . $this->apellido_materno);
+            $trabajador->trabajador_apellido = ucwords($this->apellidos);
             $trabajador->trabajador_nombre = ucwords($this->nombre);
-            $trabajador->trabajador_nombre_completo = ucwords($this->nombre . ' ' . $this->apellido_paterno . ' ' . $this->apellido_materno);
+            $trabajador->trabajador_nombre_completo = ucwords($this->nombre . ' ' . $this->apellidos);
             $trabajador->trabajador_numero_documento = $this->documento_identidad;
             $trabajador->trabajador_correo = $this->correo_electronico;
             $trabajador->trabajador_direccion = $this->direccion;
             $trabajador->id_grado_academico = $this->grado_academico;
-            if($this->foto_perfil)
-            {
-                if (file_exists($trabajador->trabajador_perfil_url)) {
-                    unlink($trabajador->trabajador_perfil_url);
-                }
-                $path = 'Posgrado/Usuarios/' . $trabajador->id_trabajador . '/Perfil' . '/';
-                $filename = 'foto-perfil-' . date('HisdmY') . '.' . $this->foto_perfil->getClientOriginalExtension();
-                $nombre_db = $path.$filename;
-                $this->foto_perfil->storeAs($path, $filename, 'files_publico');
-                $trabajador->trabajador_perfil_url = $nombre_db;
-            }
+            // if($this->foto_perfil)
+            // {
+            //     if (file_exists($trabajador->trabajador_perfil_url)) {
+            //         unlink($trabajador->trabajador_perfil_url);
+            //     }
+            //     $path = 'Posgrado/Usuarios/' . $trabajador->id_trabajador . '/Perfil' . '/';
+            //     $filename = 'foto-perfil-' . date('HisdmY') . '.' . $this->foto_perfil->getClientOriginalExtension();
+            //     $nombre_db = $path.$filename;
+            //     $this->foto_perfil->storeAs($path, $filename, 'files_publico');
+            //     $trabajador->trabajador_perfil_url = $nombre_db;
+            // }
             $trabajador->save();
 
             // editamos los datos del docente
@@ -349,6 +346,7 @@ class Index extends Component
                 $docente->docente_cv_url = $nombre_db;
             }
             $docente->id_tipo_docente = $this->tipo_docente;
+            $docente->id_categoria_docente = $this->categoria_docente;
             $docente->id_trabajador = $this->trabajador->id_trabajador;
             $docente->save();
 
@@ -359,7 +357,7 @@ class Index extends Component
             $usuario = Usuario::where('id_trabajador_tipo_trabajador', $trabajador_tipo_trabajador->id_trabajador_tipo_trabajador)->first();
             $usuario->usuario_nombre = 'DOCENTE - ' . $trabajador->trabajador_nombre_completo;
             $nombre = explode(' ', $this->trabajador->trabajador_nombre)[0];
-            $usuario->usuario_correo = strtolower($nombre) . '_' . strtolower(explode(' ', $this->apellido_paterno)[0]) . '@unu.edu.pe';
+            $usuario->usuario_correo = strtolower($nombre) . '_' . strtolower(explode(' ', $this->apellidos)[0]) . '@unu.edu.pe';
             $usuario->usuario_password = Hash::make($this->documento_identidad);
             $usuario->save();
 
@@ -477,13 +475,15 @@ class Index extends Component
                                 ->where('docente.id_tipo_docente', $this->tipo_docente_data == null ? '!=' : '=', $this->tipo_docente_data)
                                 ->paginate(10);
 
-        $grados_academicos = GradoAcademico::where('grado_academico_estado', 1)->get();
+        $grados_academicos = GradoAcademico::where('grado_academico_estado', 1)->orderBy('grado_academico', 'desc')->get();
         $tipos_docentes = TipoDocente::where('tipo_docente_estado', 1)->get();
+        $categoria_docentes = CategoriaDocente::where('categoria_docente_estado', 1)->get();
 
         return view('livewire.modulo-coordinador.gestion-docentes.index', [
             'docentes' => $docentes,
             'grados_academicos' => $grados_academicos,
-            'tipos_docentes' => $tipos_docentes
+            'tipos_docentes' => $tipos_docentes,
+            'categoria_docentes' => $categoria_docentes
         ]);
     }
 }

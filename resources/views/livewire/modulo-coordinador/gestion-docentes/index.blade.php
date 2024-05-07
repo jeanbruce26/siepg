@@ -344,24 +344,6 @@
                 <div class="modal-body">
                     <form autocomplete="off" class="row g-5">
                         <div class="col-md-6">
-                            <label for="tipo_documento" class="required form-label">
-                                Tipo de Documento
-                            </label>
-                            <select
-                                class="form-select @error('tipo_documento') is-invalid @enderror"
-                                wire:model="tipo_documento" id="tipo_documento" data-control="select2"
-                                data-placeholder="Seleccione su tipo de documento" data-allow-clear="true">
-                                <option></option>
-                                @foreach ($tipo_documentos as $item)
-                                    <option value="{{ $item->id_tipo_documento }}">{{ $item->tipo_documento }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('tipo_documento')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        <div class="col-md-6">
                             <label for="documento_identidad" class="required form-label">
                                 Documento de Identidad
                             </label>
