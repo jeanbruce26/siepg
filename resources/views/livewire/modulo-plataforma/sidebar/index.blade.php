@@ -115,7 +115,7 @@
                         </a>
                     </div>
                 @endif
-                @if ($constancia)
+                @if ($admitido)
                     <div class="menu-item">
                         <a class="menu-link {{ request()->routeIs('plataforma.matriculas') ? 'active' : '' }}"
                             href="{{ route('plataforma.matriculas') }}">
