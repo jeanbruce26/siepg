@@ -39,7 +39,6 @@ class Index extends Component
     {
         if($this->paso == 1) {
             $this->validateOnly($propertyName, [
-                'prefijo' => 'required',
                 'tipo_documento' => 'required|exists:tipo_documento,id_tipo_documento',
                 'documento' => 'required|numeric|unique:trabajador,trabajador_numero_documento|digits:8',
                 'nombres' => 'required',
@@ -74,7 +73,6 @@ class Index extends Component
             $this->resetErrorBag();
             $this->resetValidation();
             $this->validate([
-                'prefijo' => 'required',
                 'tipo_documento' => 'required|exists:tipo_documento,id_tipo_documento',
                 'documento' => 'required|numeric|unique:trabajador,trabajador_numero_documento|digits:8',
                 'nombres' => 'required',
