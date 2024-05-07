@@ -14,6 +14,7 @@ class GradoAcademico extends Model
     protected $fillable = [
         'id_grado_academico',
         'grado_academico',
+        'grado_academico_prefijo',
         'grado_academico_estado',
     ];
 
