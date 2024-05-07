@@ -145,7 +145,7 @@
             <div class="card shadow-sm mt-5">
                 <div class="card-header">
                     <h3 class="card-title fw-bold fs-2">
-                        Información Personal
+                        Información de Docente
                     </h3>
                 </div>
                 <div class="card-body">
