@@ -538,7 +538,7 @@
                                     :
                                 </span>
                                 <span class="col-7 fw-bold text-gray-900 fs-5">
-                                    {{ $apellido_paterno }} {{ $apellido_materno }}, {{ $nombre }}
+                                    {{ $apellidos }}, {{ $nombre }}
                                 </span>
                             </div>
                             <div class="row mb-3">
@@ -594,6 +594,17 @@
                                 </span>
                                 <span class="col-7 fw-bold text-gray-900 fs-5">
                                     {{ $tipo_docente }}
+                                </span>
+                            </div>
+                            <div class="row mb-3">
+                                <span class="col-4 fw-semibold text-gray-600 fs-5">
+                                    Categoria de Docente
+                                </span>
+                                <span class="col-1 fw-semibold text-gray-600 fs-5">
+                                    :
+                                </span>
+                                <span class="col-7 fw-bold text-gray-900 fs-5">
+                                    {{ $categoria_docente }}
                                 </span>
                             </div>
                         </div>
@@ -680,6 +691,45 @@
                 });
                 $('#tipo_docente').on('change', function() {
                     @this.set('tipo_docente', this.value);
+                });
+            });
+        });
+        // categoria_docente select2
+        $(document).ready(function() {
+            $('#categoria_docente').select2({
+                placeholder: 'Seleccione su categoria de docente',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function() {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function() {
+                        return "Buscando..";
+                    }
+                }
+            });
+            $('#categoria_docente').on('change', function() {
+                @this.set('categoria_docente', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#categoria_docente').select2({
+                    placeholder: 'Seleccione su categoria de docente',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function() {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function() {
+                            return "Buscando..";
+                        }
+                    }
+                });
+                $('#categoria_docente').on('change', function() {
+                    @this.set('categoria_docente', this.value);
                 });
             });
         });
