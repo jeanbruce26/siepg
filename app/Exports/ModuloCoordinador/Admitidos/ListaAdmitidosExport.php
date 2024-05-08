@@ -60,6 +60,7 @@ class ListaAdmitidosExport implements FromCollection, WithMapping, ShouldAutoSiz
 
         return [
             $this->item++,
+            $admitidos->admitido_codigo,
             $admitidos->numero_documento,
             $admitidos->apellido_paterno . ' ' . $admitidos->apellido_materno,
             $admitidos->nombre,
@@ -118,21 +119,21 @@ class ListaAdmitidosExport implements FromCollection, WithMapping, ShouldAutoSiz
 
                 $event->sheet->setCellValue('A1', 'LISTADO DE ADMITIDOS - ' . $this->programa_nombre);
 
-                $event->sheet->getDelegate()->getStyle('A1:H1')->applyFromArray($tamanio);
-                $event->sheet->getDelegate()->getStyle('A1:H1')->applyFromArray($negrita);
-                $event->sheet->getDelegate()->mergeCells('A1:H1');
-                $event->sheet->getDelegate()->getStyle('A1:H1')->applyFromArray($centrar);
+                $event->sheet->getDelegate()->getStyle('A1:I1')->applyFromArray($tamanio);
+                $event->sheet->getDelegate()->getStyle('A1:I1')->applyFromArray($negrita);
+                $event->sheet->getDelegate()->mergeCells('A1:I1');
+                $event->sheet->getDelegate()->getStyle('A1:I1')->applyFromArray($centrar);
 
-                $columnas = ['N°', 'DNI', 'APELLIDOS', 'NOMBRES', 'CELULAR', 'CORREO', 'ESPECIALIDAD', 'PROGRAMA ACADEMICO'];
+                $columnas = ['N°', 'CODIGO ESTUDIANTE', 'DNI', 'APELLIDOS', 'NOMBRES', 'CELULAR', 'CORREO', 'ESPECIALIDAD', 'PROGRAMA ACADEMICO'];
                 $event->sheet->getDelegate()->fromArray($columnas, NULL, 'A3');
 
                 $event->sheet->getDelegate()->getStyle('A3:H3')->applyFromArray($header);
                 $event->sheet->getDelegate()->getStyle('A3:H3')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('99a3a4');
                 for ($i = 1; $i <= $this->item; $i++) {
                     $event->sheet->getDelegate()->getStyle('A' . ($i + 2))->applyFromArray($negrita);
-                    $event->sheet->getDelegate()->getStyle('A' . ($i + 2) . ':H' . ($i + 2))->applyFromArray($border);
-                    $event->sheet->getDelegate()->getStyle('A' . ($i + 2) . ':B' . ($i + 2))->applyFromArray($centrar);
-                    $event->sheet->getDelegate()->getStyle('E' . ($i + 2) . ':E' . ($i + 2))->applyFromArray($centrar);
+                    $event->sheet->getDelegate()->getStyle('A' . ($i + 2) . ':I' . ($i + 2))->applyFromArray($border);
+                    $event->sheet->getDelegate()->getStyle('A' . ($i + 2) . ':C' . ($i + 2))->applyFromArray($centrar);
+                    $event->sheet->getDelegate()->getStyle('F' . ($i + 2) . ':F' . ($i + 2))->applyFromArray($centrar);
                 }
 
             },
