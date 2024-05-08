@@ -53,9 +53,9 @@ class ListaAdmitidosExport implements FromCollection, WithMapping, ShouldAutoSiz
     public function map($admitidos): array
     {
         if ($admitidos->mencion) {
-            $admitidos = $admitidos->programa . ' EN ' . $admitidos->subprograma . ' CON MENCION EN ' . $admitidos->mencion;
+            $programa = $admitidos->programa . ' EN ' . $admitidos->subprograma . ' CON MENCION EN ' . $admitidos->mencion;
         } else {
-            $admitidos = $admitidos->programa . ' EN ' . $admitidos->subprograma;
+            $programa = $admitidos->programa . ' EN ' . $admitidos->subprograma;
         }
 
         return [
@@ -118,10 +118,10 @@ class ListaAdmitidosExport implements FromCollection, WithMapping, ShouldAutoSiz
 
                 $event->sheet->setCellValue('A1', 'LISTADO DE ADMITIDOS - ' . $this->programa_nombre);
 
-                $event->sheet->getDelegate()->getStyle('A1:G1')->applyFromArray($tamanio);
-                $event->sheet->getDelegate()->getStyle('A1:G1')->applyFromArray($negrita);
-                $event->sheet->getDelegate()->mergeCells('A1:G1');
-                $event->sheet->getDelegate()->getStyle('A1:G1')->applyFromArray($centrar);
+                $event->sheet->getDelegate()->getStyle('A1:H1')->applyFromArray($tamanio);
+                $event->sheet->getDelegate()->getStyle('A1:H1')->applyFromArray($negrita);
+                $event->sheet->getDelegate()->mergeCells('A1:H1');
+                $event->sheet->getDelegate()->getStyle('A1:H1')->applyFromArray($centrar);
 
                 $columnas = ['N°', 'DNI', 'APELLIDOS', 'NOMBRES', 'CELULAR', 'CORREO', 'ESPECIALIDAD', 'PROGRAMA ACADEMICO'];
                 $event->sheet->getDelegate()->fromArray($columnas, NULL, 'A3');
