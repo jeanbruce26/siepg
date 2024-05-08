@@ -2,12 +2,14 @@
 
 namespace App\Http\Livewire\ModuloAdministrador\Estudiante;
 
+use App\Models\Admitido;
 use App\Models\Pago;
 use App\Models\Genero;
 use App\Models\Ubigeo;
 use App\Models\Persona;
 use Livewire\Component;
 use App\Models\Admision;
+use App\Models\Programa;
 use App\Models\Matricula;
 use App\Models\EstadoCivil;
 use App\Models\Inscripcion;
@@ -33,6 +35,7 @@ class Index extends Component
     protected $queryString = [
         'search' => ['except' => ''],
         'procesoFiltro' => ['except' => ''],
+        'filtro_programas' => ['except' => '0'],
     ];
 
     public $search = '';
@@ -85,6 +88,8 @@ class Index extends Component
     public Collection $grupos;
     public $grupo;
     public $id_matricula;
+
+    public $filtro_programas = 0;
 
     protected $listeners = [
         'render',
@@ -142,7 +147,7 @@ class Index extends Component
                 'nullable',
                 'email',
                 function ($attribute, $value, $fail) {
-                    if (!empty ($value)) {
+                    if (!empty($value)) {
                         $query = Persona::where('id_persona', '<>', $this->id_persona)
                             ->where(function ($query) use ($value) {
                                 $query->where('correo', $value)
@@ -392,7 +397,7 @@ class Index extends Component
                 'nullable',
                 'email',
                 function ($attribute, $value, $fail) {
-                    if (!empty ($value)) {
+                    if (!empty($value)) {
                         $query = Persona::where('id_persona', '<>', $this->id_persona)
                             ->where(function ($query) use ($value) {
                                 $query->where('correo', $value)
@@ -479,9 +484,9 @@ class Index extends Component
         $persona->centro_trabajo = $this->centro_trabajo;
         //Validamos que tipo de documento tiene por la cantidad de digitos, 8 = DNI, 9 = Carnet de extranjeria
         if (strlen($this->numero_documento) == 8) {
-            $persona->id_tipo_documento = 1;//DNI
+            $persona->id_tipo_documento = 1; //DNI
         } else {
-            $persona->id_tipo_documento = 2;//Carnet de extranjeria
+            $persona->id_tipo_documento = 2; //Carnet de extranjeria
         }
         $persona->id_discapacidad = $this->discapacidad;
         $persona->id_estado_civil = $this->estado_civil;
@@ -511,7 +516,6 @@ class Index extends Component
         $this->dispatchBrowserEvent('modal', [
             'titleModal' => '#modalPersona',
         ]);
-
     }
 
     public function alerta_resetear_contrasena($id_persona)
@@ -685,18 +689,32 @@ class Index extends Component
         //             ->orWhere('correo', 'like', '%' . $this->search . '%')
         //             ->orWhere('celular', 'like', '%' . $this->search . '%');
         //     })
-            // ->where('admision.id_admision', 'like', '%' . $this->procesoFiltro . '%')
-            // ->orderBy('persona.id_persona', 'desc')
-            // ->paginate(10);
+        // ->where('admision.id_admision', 'like', '%' . $this->procesoFiltro . '%')
+        // ->orderBy('persona.id_persona', 'desc')
+        // ->paginate(10);
 
-        $estudiantesModel = Persona::where(function ($query) {
-                $query->where('nombre_completo', 'like', '%' . $this->search . '%')
-                    ->orWhere('numero_documento', 'like', '%' . $this->search . '%')
-                    ->orWhere('correo', 'like', '%' . $this->search . '%')
-                    ->orWhere('celular', 'like', '%' . $this->search . '%');
+        $estudiantesModel = Admitido::join('persona', 'persona.id_persona', '=', 'admitido.id_persona')
+            ->join('programa_proceso', 'programa_proceso.id_programa_proceso', '=', 'admitido.id_programa_proceso')
+            ->join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
+            ->join('programa', 'programa.id_programa', '=', 'programa_plan.id_programa')
+            ->where(function ($query) {
+                $query->where('persona.nombre_completo', 'like', '%' . $this->search . '%')
+                    ->orWhere('persona.numero_documento', 'like', '%' . $this->search . '%')
+                    ->orWhere('persona.correo', 'like', '%' . $this->search . '%')
+                    ->orWhere('persona.celular', 'like', '%' . $this->search . '%');
             })
-            ->orderBy('id_persona', 'desc')
+            ->where(function ($query) {
+                if ($this->filtro_programas != 0) {
+                    $query->where('programa.id_programa', $this->filtro_programas);
+                }
+                if ($this->procesoFiltro) {
+                    $query->where('programa_proceso.id_admision', $this->procesoFiltro);
+                }
+            })
+            ->orderBy('persona.id_persona', 'desc')
             ->paginate(20);
+
+        $programas = Programa::where('id_modalidad', 2)->get();
 
         return view('livewire.modulo-administrador.estudiante.index', [
             "estudiantesModel" => $estudiantesModel,
@@ -707,6 +725,7 @@ class Index extends Component
             "ubigeo_model" => Ubigeo::all(),
             "grado_academico_model" => GradoAcademico::all(),
             "universidad_model" => Universidad::all(),
+            "programas" => $programas,
         ]);
     }
 }

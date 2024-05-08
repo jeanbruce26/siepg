@@ -23,10 +23,10 @@
 
         <div id="kt_app_content" class="app-content flex-column-fluid">
             <div id="kt_app_content_container" class="app-container container-fluid pt-5">
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <div class="row g-5 mb-5">
-                            <div class="col-md-6">
+                <div class="card shadow-sm mb-5">
+                    <div class="card-body py-5 px-9">
+                        <div class="row g-5">
+                            <div class="col-md-2">
                                 <a class="btn btn-sm btn-light-primary me-3 fw-bold" data-kt-menu-trigger="click"
                                     data-kt-menu-placement="bottom-start">
                                     <span class="svg-icon svg-icon-6 svg-icon-muted me-1">
@@ -73,11 +73,31 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-5">
+                                <select class="form-select @error('filtro_programas') is-invalid @enderror"
+                                    wire:model="filtro_programas" id="filtro_programas" data-control="select2"
+                                    data-placeholder="Seleccione el programa" data-allow-clear="true">
+                                    <option></option>
+                                    <option value="0">
+                                        TODOS LOS PROGRAMAS
+                                    </option>
+                                    @foreach ($programas as $item)
+                                        <option value="{{ $item->id_programa }}">
+                                            {{ $item->programa }} EN {{ $item->subprograma }} {{ $item->mencion ? ' CON MENCION EN ' . $item->mencion : '' }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="col-md-5">
                                 <input class="form-control form-control-sm text-muted" type="search"
                                     wire:model="search" placeholder="Buscar...">
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div class="card shadow-sm">
+                    <div class="card-body">
                         <div class="table-responsive">
                             <table class="table table-hover table-rounded border gy-4 gs-4 mb-0 align-middle">
                                 <thead class="bg-light-primary">
@@ -282,14 +302,14 @@
                                     @empty
                                         @if ($search != '')
                                             <tr>
-                                                <td colspan="7" class="text-center text-muted">
+                                                <td colspan="8" class="text-center text-muted">
                                                     No se encontraron resultados para la busqueda
                                                     "{{ $search }}"
                                                 </td>
                                             </tr>
                                         @else
                                             <tr>
-                                                <td colspan="7" class="text-center text-muted">
+                                                <td colspan="8" class="text-center text-muted">
                                                     No hay registros
                                                 </td>
                                             </tr>
@@ -1246,6 +1266,45 @@
                 });
                 $('#grupo').on('change', function() {
                     @this.set('grupo', this.value);
+                });
+            });
+        });
+        // filtro_programas select2
+        $(document).ready(function() {
+            $('#filtro_programas').select2({
+                placeholder: 'Seleccione su programa',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function() {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function() {
+                        return "Buscando...";
+                    }
+                }
+            });
+            $('#filtro_programas').on('change', function() {
+                @this.set('filtro_programas', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#filtro_programas').select2({
+                    placeholder: 'Seleccione su programa',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function() {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function() {
+                            return "Buscando...";
+                        }
+                    }
+                });
+                $('#filtro_programas').on('change', function() {
+                    @this.set('filtro_programas', this.value);
                 });
             });
         });
