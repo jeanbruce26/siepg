@@ -25,8 +25,8 @@
             <div id="kt_app_content_container" class="app-container container-fluid pt-5">
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center mb-5">
-                            <div class="me-1">
+                        <div class="row g-5 mb-5">
+                            <div class="col-md-6">
                                 <a class="btn btn-sm btn-light-primary me-3 fw-bold" data-kt-menu-trigger="click"
                                     data-kt-menu-placement="bottom-start">
                                     <span class="svg-icon svg-icon-6 svg-icon-muted me-1">
@@ -73,7 +73,7 @@
                                 </div>
                             </div>
 
-                            <div class="ms-2">
+                            <div class="col-md-6">
                                 <input class="form-control form-control-sm text-muted" type="search"
                                     wire:model="search" placeholder="Buscar...">
                             </div>
