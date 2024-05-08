@@ -45,6 +45,7 @@ class ListaAdmitidosExport implements FromCollection, WithMapping, ShouldAutoSiz
             ->join('programa_plan','programa_proceso.id_programa_plan','=','programa_plan.id_programa_plan')
             ->join('programa','programa_plan.id_programa','=','programa.id_programa')
             ->where('admitido.id_programa_proceso',$this->programa->id_programa_proceso)
+            ->orderByRaw('persona.apellido_paterno, persona.apellido_materno, persona.nombre')
             ->get();
         return $admitidos;
     }
