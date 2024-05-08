@@ -127,8 +127,8 @@ class ListaAdmitidosExport implements FromCollection, WithMapping, ShouldAutoSiz
                 $columnas = ['N°', 'CODIGO ESTUDIANTE', 'DNI', 'APELLIDOS', 'NOMBRES', 'CELULAR', 'CORREO', 'ESPECIALIDAD', 'PROGRAMA ACADEMICO'];
                 $event->sheet->getDelegate()->fromArray($columnas, NULL, 'A3');
 
-                $event->sheet->getDelegate()->getStyle('A3:H3')->applyFromArray($header);
-                $event->sheet->getDelegate()->getStyle('A3:H3')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('99a3a4');
+                $event->sheet->getDelegate()->getStyle('A3:I3')->applyFromArray($header);
+                $event->sheet->getDelegate()->getStyle('A3:I3')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('99a3a4');
                 for ($i = 1; $i <= $this->item; $i++) {
                     $event->sheet->getDelegate()->getStyle('A' . ($i + 2))->applyFromArray($negrita);
                     $event->sheet->getDelegate()->getStyle('A' . ($i + 2) . ':I' . ($i + 2))->applyFromArray($border);
