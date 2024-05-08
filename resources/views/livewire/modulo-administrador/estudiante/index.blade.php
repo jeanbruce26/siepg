@@ -138,6 +138,10 @@
                                                         $validarInscripcion->id_inscripcion,
                                                     )->first();
                                                 }
+                                                $es_admitido = App\Models\Admitido::where(
+                                                    'id_persona',
+                                                    $item->id_persona,
+                                                )->first();
                                             @endphp
                                             <td align="center">
                                                 @if ($validarInscripcion)
@@ -158,6 +162,8 @@
                                                         <span
                                                             class="badge badge-light-success fs-6 px-3 py-2">INSCRITO</span>
                                                     @endif
+                                                @elseif ($es_admitido)
+                                                    <span class="badge badge-light-primary fs-6 px-3 py-2">ADMITIDO</span>
                                                 @endif
                                             </td>
 

@@ -519,19 +519,27 @@ class Index extends Component
             $this->filtro_proceso = $admisionActivo->id_admision;
         }
 
-        $estudiantesModel = Inscripcion::join('persona', 'persona.id_persona', '=', 'inscripcion.id_persona')
-            ->join('programa_proceso', 'programa_proceso.id_programa_proceso', '=', 'inscripcion.id_programa_proceso')
-            ->join('admision', 'admision.id_admision', '=', 'programa_proceso.id_admision')
-            ->where(function ($query) {
+        // $estudiantesModel = Inscripcion::join('persona', 'persona.id_persona', '=', 'inscripcion.id_persona')
+        //     ->join('programa_proceso', 'programa_proceso.id_programa_proceso', '=', 'inscripcion.id_programa_proceso')
+        //     ->join('admision', 'admision.id_admision', '=', 'programa_proceso.id_admision')
+        //     ->where(function ($query) {
+        //         $query->where('nombre_completo', 'like', '%' . $this->search . '%')
+        //             ->orWhere('numero_documento', 'like', '%' . $this->search . '%')
+        //             ->orWhere('correo', 'like', '%' . $this->search . '%')
+        //             ->orWhere('celular', 'like', '%' . $this->search . '%');
+        //     })
+            // ->where('admision.id_admision', 'like', '%' . $this->procesoFiltro . '%')
+            // ->orderBy('persona.id_persona', 'desc')
+            // ->paginate(10);
+
+        $estudiantesModel = Persona::where(function ($query) {
                 $query->where('nombre_completo', 'like', '%' . $this->search . '%')
                     ->orWhere('numero_documento', 'like', '%' . $this->search . '%')
                     ->orWhere('correo', 'like', '%' . $this->search . '%')
                     ->orWhere('celular', 'like', '%' . $this->search . '%');
             })
-            ->where('admision.id_admision', 'like', '%' . $this->procesoFiltro . '%')
-            ->orderBy('persona.id_persona', 'desc')
-            ->paginate(10);
-
+            ->orderBy('id_persona', 'desc')
+            ->paginate(20);
 
         return view('livewire.modulo-administrador.estudiante.index', [
             "estudiantesModel" => $estudiantesModel,
