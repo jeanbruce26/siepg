@@ -164,6 +164,8 @@
                                                     @endif
                                                 @elseif ($es_admitido)
                                                     <span class="badge badge-light-primary fs-6 px-3 py-2">ADMITIDO</span>
+                                                @else
+                                                    <span class="badge badge-light-info fs-6 px-3 py-2">REGISTRADO</span>
                                                 @endif
                                             </td>
 
