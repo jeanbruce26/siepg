@@ -2,12 +2,14 @@
 
 namespace App\Http\Livewire\ModuloCoordinador\Inicio;
 
-use App\Models\Admision;
-use App\Models\Coordinador;
-use App\Models\Modalidad;
-use App\Models\Programa;
-use App\Models\ProgramaProceso;
 use Livewire\Component;
+use App\Models\Admision;
+use App\Models\Programa;
+use App\Models\Modalidad;
+use App\Models\Coordinador;
+use App\Models\ProgramaProceso;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ModuloCoordinador\Admitidos\ListaAdmitidosExport;
 
 class Programas extends Component
 {
@@ -52,6 +54,11 @@ class Programas extends Component
     public function resetear_filtro()
     {
         $this->mount();
+    }
+
+    public function descargar_admitidos($id_programa)
+    {
+        return Excel::download(new ListaAdmitidosExport($id_programa, $this->proceso), 'listado-admitidos.xlsx');
     }
 
     public function render()

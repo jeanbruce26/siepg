@@ -84,7 +84,7 @@
                                     ->count();
                             @endphp
                             <div class="col-md-6 col-lg-4">
-                                <div class="card shadow-sm" style="height: 270px">
+                                <div class="card shadow-sm" style="height: 300px">
                                     <div class="h-100 px-6 py-4 d-flex flex-column justify-content-center aling-items-between">
                                         <div class="mb-5 text-center">
                                             <span class="fs-2 text-gray-800 fw-bold">
@@ -101,12 +101,15 @@
                                             </span>
                                         </div>
                                         <div class="d-flex flex-column row-gap-5">
-                                            <a href="{{ route('coordinador.evaluaciones', ['id' => $item->id_programa, 'id_admision' => $proceso]) }}" class="btn btn-info w-100">
+                                            <a href="{{ route('coordinador.evaluaciones', ['id' => $item->id_programa, 'id_admision' => $proceso]) }}" class="btn btn-info btn-sm w-100">
                                                 Evaluaciones
                                             </a>
-                                            <a href="{{ route('coordinador.inscripciones', ['id' => $item->id_programa, 'id_admision' => $proceso]) }}" class="btn btn-secondary w-100">
+                                            <a href="{{ route('coordinador.inscripciones', ['id' => $item->id_programa, 'id_admision' => $proceso]) }}" class="btn btn-secondary btn-sm w-100">
                                                 Ver Inscritos
                                             </a>
+                                            <button type="button" wire:click="descargar_admitidos({{ $item->id_programa }})" class="btn btn-dark btn-sm w-100">
+                                                Descargar Admitidos
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
