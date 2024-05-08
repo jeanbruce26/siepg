@@ -279,8 +279,8 @@ class Index extends Component
         $persona->id_estado_civil = $this->estado_civil;
         $persona->id_grado_academico = $this->grado_academico;
         $persona->id_universidad = $this->universidad;
-        $persona->ubigeo_direccion = Ubigeo::find($this->ubigeo_direccion)->ubigeo;
-        $persona->ubigeo_nacimiento = Ubigeo::find($this->ubigeo_nacimiento)->ubigeo;
+        $persona->ubigeo_direccion = Ubigeo::find($this->ubigeo_direccion)->id_ubigeo;
+        $persona->ubigeo_nacimiento = Ubigeo::find($this->ubigeo_nacimiento)->id_ubigeo;
         $persona->pais_direccion = $this->pais_direccion;
         $persona->pais_nacimiento = $this->pais_nacimiento;
         $persona->save();
