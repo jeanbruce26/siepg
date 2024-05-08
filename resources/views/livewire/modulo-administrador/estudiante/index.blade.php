@@ -87,14 +87,30 @@
                                         <th scope="col">Estudiante</th>
                                         <th scope="col" class="col-md-2">Correo</th>
                                         <th scope="col" class="col-md-1">Celular</th>
-                                        <th scope="col" class="col-md-2">Dirección</th>
+                                        {{-- <th scope="col" class="col-md-2">Dirección</th> --}}
                                         <th scope="col" class="col-md-1">Estado</th>
-                                        <th scope="col" class="col-md-2">Acciones</th>
+                                        <th scope="col" class="col-md-1">Constancia</th>
+                                        <th scope="col" class="col-md-1">Matricula</th>
+                                        <th scope="col" class="col-md-1">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @forelse ($estudiantesModel as $item)
                                         <tr>
+                                            @php
+                                                $admitido = App\Models\Admitido::where('id_persona', $item->id_persona)->first();
+                                                if ($admitido) {
+                                                    $constancia = App\Models\ConstanciaIngreso::where(
+                                                        'id_admitido',
+                                                        $admitido->id_admitido,
+                                                    )->first();
+                                                    $matricula = App\Models\Matricula::where(
+                                                        'id_admitido',
+                                                        $admitido->id_admitido,
+                                                    )->orderBy('id_matricula', 'desc')
+                                                    ->first();
+                                                }
+                                            @endphp
                                             <td align="center" class="fw-bold fs-5">{{ $item->id_persona }}</td>
                                             <td>
                                                 <div class="d-flex flex-column">
@@ -105,6 +121,7 @@
                                                         {{ $item->nombre_completo }}
                                                     </a>
                                                     <span class="text-gray-600">{{ $item->numero_documento }}</span>
+                                                    <span class="text-gray-600">{{ $admitido->admitido_codigo ?? '' }}</span>
                                                 </div>
                                             </td>
                                             <td>
@@ -116,7 +133,7 @@
                                             <td align="center">
                                                 {{ $item->celular }}
                                             </td>
-                                            @php
+                                            {{-- @php
                                                 $ubigeoDireccion = App\Models\Ubigeo::where(
                                                     'id_ubigeo',
                                                     $item->ubigeo_direccion,
@@ -125,7 +142,7 @@
                                             <td align="center">
                                                 {{ $ubigeoDireccion->departamento }} -
                                                 {{ $ubigeoDireccion->provincia }} - {{ $ubigeoDireccion->distrito }}
-                                            </td>
+                                            </td> --}}
                                             @php
                                                 //Consultas para revisar los estados de los estudiantes (inscrito, admitido, matriculado)
                                                 $validarInscripcion = App\Models\Inscripcion::where(
@@ -168,7 +185,40 @@
                                                     <span class="badge badge-light-info fs-6 px-3 py-2">REGISTRADO</span>
                                                 @endif
                                             </td>
-
+                                            <td align="center">
+                                                @if ($admitido)
+                                                    @if ($constancia)
+                                                        @if ($constancia->constancia_ingreso_url)
+                                                            <a href="{{ asset($constancia->constancia_ingreso_url) }}" target="_blank" class="btn btn-outline btn-outline-info">
+                                                                Ver
+                                                            </a>
+                                                        @else
+                                                            -
+                                                        @endif
+                                                    @else
+                                                        -
+                                                    @endif
+                                                @else
+                                                    -
+                                                @endif
+                                            </td>
+                                            <td align="center">
+                                                @if ($admitido)
+                                                    @if ($matricula)
+                                                        @if ($matricula->matricula_ficha_url)
+                                                            <a href="{{ asset($matricula->matricula_ficha_url) }}" target="_blank" class="btn btn-outline btn-outline-info">
+                                                                Ver
+                                                            </a>
+                                                        @else
+                                                            -
+                                                        @endif
+                                                    @else
+                                                        -
+                                                    @endif
+                                                @else
+                                                    -
+                                                @endif
+                                            </td>
                                             <td align="center">
                                                 <a class="btn btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary btn-sm"
                                                     data-bs-toggle="dropdown">
@@ -214,6 +264,18 @@
                                                             Resetear Contraseña
                                                         </a>
                                                     </div>
+                                                    @if ($admitido)
+                                                        @if ($matricula)
+                                                            <div class="menu-item px-3">
+                                                                <a style="cursor: pointer"
+                                                                    wire:click="cargar_cambiar_grupo({{ $matricula->id_matricula }})"
+                                                                    class="menu-link px-3" data-bs-toggle="modal"
+                                                                    data-bs-target="#modal_cambiar_grupo">
+                                                                    Cambiar Grupo
+                                                                </a>
+                                                            </div>
+                                                        @endif
+                                                    @endif
                                                 </div>
                                             </td>
                                         </tr>
@@ -802,6 +864,72 @@
         </div>
     </div>
 
+    <div wire:ignore.self class="modal fade" tabindex="-1" id="modal_cambiar_grupo">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">
+                        Cambiar Grupo de Matrícula
+                    </h2>
+                    <div class="btn btn-icon btn-sm btn-active-light-danger ms-2" data-bs-dismiss="modal"
+                        aria-label="Close" wire:click="limpiar_modal_cambiar_grupo">
+                        <span class="svg-icon svg-icon-2hx">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5"
+                                    fill="currentColor" />
+                                <rect x="7" y="15.3137" width="12" height="2" rx="1"
+                                    transform="rotate(-45 7 15.3137)" fill="currentColor" />
+                                <rect x="8.41422" y="7" width="12" height="2" rx="1"
+                                    transform="rotate(45 8.41422 7)" fill="currentColor" />
+                            </svg>
+                        </span>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <form autocomplete="off" class="row g-5">
+                        <div class="col-md-12">
+                            <label for="grupo" class="required form-label">
+                                Grupo
+                            </label>
+                            <select class="form-select @error('grupo') is-invalid @enderror"
+                                wire:model="grupo" id="grupo" data-control="select2"
+                                data-placeholder="Seleccione su grupo" data-allow-clear="true"
+                                data-dropdown-parent="#modal_cambiar_grupo">
+                                <option></option>
+                                @foreach ($grupos as $item)
+                                @php
+                                    $contador_matriculados_grupos = App\Models\Matricula::where('id_programa_proceso_grupo', $item->id_programa_proceso_grupo)->where('matricula_primer_ciclo', 1)->count();
+                                @endphp
+                                <option value="{{ $item->id_programa_proceso_grupo }}" @if($item->grupo_cantidad <= $contador_matriculados_grupos) disabled @endif>
+                                    GRUPO {{ $item->grupo_detalle }} - CUPOS: {{ $item->grupo_cantidad - $contador_matriculados_grupos }}
+                                </option>
+                                @endforeach
+                            </select>
+                            @error('grupo')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal" wire:click="limpiar_modal_cambiar_grupo">
+                        Cerrar
+                    </button>
+                    <button type="button" wire:click="alerta_cambiar_grupo" class="btn btn-primary"
+                        style="width: 150px" wire:loading.attr="disabled" wire:target="alerta_cambiar_grupo">
+                        <div wire:loading.remove wire:target="alerta_cambiar_grupo">
+                            Guardar
+                        </div>
+                        <div wire:loading wire:target="alerta_cambiar_grupo">
+                            Procesando <span class="spinner-border spinner-border-sm align-middle ms-2">
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 @push('scripts')
@@ -1079,6 +1207,45 @@
                 });
                 $('#grado_academico').on('change', function() {
                     @this.set('grado_academico', this.value);
+                });
+            });
+        });
+        // grupo select2
+        $(document).ready(function() {
+            $('#grupo').select2({
+                placeholder: 'Seleccione su grupo',
+                allowClear: true,
+                width: '100%',
+                selectOnClose: true,
+                language: {
+                    noResults: function() {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function() {
+                        return "Buscando...";
+                    }
+                }
+            });
+            $('#grupo').on('change', function() {
+                @this.set('grupo', this.value);
+            });
+            Livewire.hook('message.processed', (message, component) => {
+                $('#grupo').select2({
+                    placeholder: 'Seleccione su grupo',
+                    allowClear: true,
+                    width: '100%',
+                    selectOnClose: true,
+                    language: {
+                        noResults: function() {
+                            return "No se encontraron resultados";
+                        },
+                        searching: function() {
+                            return "Buscando...";
+                        }
+                    }
+                });
+                $('#grupo').on('change', function() {
+                    @this.set('grupo', this.value);
                 });
             });
         });

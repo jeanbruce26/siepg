@@ -2,19 +2,27 @@
 
 namespace App\Http\Livewire\ModuloAdministrador\Estudiante;
 
-use App\Models\Admision;
-use App\Models\Discapacidad;
-use App\Models\EstadoCivil;
+use App\Models\Pago;
 use App\Models\Genero;
-use App\Models\GradoAcademico;
-use App\Models\Inscripcion;
-use App\Models\Persona;
 use App\Models\Ubigeo;
-use App\Models\Universidad;
-use App\Models\UsuarioEstudiante;
-use Illuminate\Support\Facades\Hash;
+use App\Models\Persona;
 use Livewire\Component;
+use App\Models\Admision;
+use App\Models\Matricula;
+use App\Models\EstadoCivil;
+use App\Models\Inscripcion;
+use App\Models\Universidad;
+use Illuminate\Support\Str;
+use App\Models\Discapacidad;
 use Livewire\WithPagination;
+use App\Models\GradoAcademico;
+use App\Models\MatriculaCurso;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\UsuarioEstudiante;
+use Illuminate\Support\Collection;
+use App\Models\ProgramaProcesoGrupo;
+use Illuminate\Support\Facades\Hash;
+use App\Jobs\ProcessEnvioFichaMatricula;
 
 class Index extends Component
 {
@@ -74,11 +82,21 @@ class Index extends Component
     public $agregar_celular = false;
     public $agregar_correo = false;
 
+    public Collection $grupos;
+    public $grupo;
+    public $id_matricula;
+
     protected $listeners = [
         'render',
         'cambiarEstado',
-        'resetear_contraseña'
+        'resetear_contraseña',
+        'cambiar_grupo',
     ];
+
+    public function mount()
+    {
+        $this->grupos = new Collection();
+    }
 
     public function updated($propertyName)
     {
@@ -508,6 +526,145 @@ class Index extends Component
         $usuario->usuario_estudiante_password = Hash::make($persona->numero_documento);
         $usuario->save();
         $this->alertaEstudiante('¡Éxito!', "La contraseña del estudiante se reseteó correctamente.", 'success', 'Aceptar', 'success');
+    }
+
+    public function cargar_cambiar_grupo($id_matricula)
+    {
+        $matricula = Matricula::findOrFail($id_matricula);
+        $this->id_matricula = $id_matricula;
+
+        $this->grupos = ProgramaProcesoGrupo::where('id_programa_proceso', $matricula->admitido->id_programa_proceso)->get();
+        $this->grupo = $matricula->id_programa_proceso_grupo ?? null;
+    }
+
+    public function limpiar_modal_cambiar_grupo()
+    {
+        $this->grupos = new Collection();
+        $this->grupo = null;
+        $this->id_matricula = null;
+    }
+
+    public function alerta_cambiar_grupo()
+    {
+        $this->alertaConfirmacion(
+            '¡Advertencia!',
+            "¿Está seguro de cambiar el grupo del estudiante?",
+            'warning',
+            'Sí, cambiar',
+            'Cancelar',
+            'warning',
+            'cancel',
+            'cambiar_grupo',
+            $this->id_matricula
+        );
+    }
+
+    public function cambiar_grupo($id_matricula)
+    {
+        $matricula = Matricula::findOrFail($id_matricula);
+        $matricula->id_programa_proceso_grupo = $this->grupo;
+        $matricula->save();
+
+        $this->alertaEstudiante('¡Éxito!', "El grupo del estudiante se cambió correctamente.", 'success', 'Aceptar', 'success');
+
+        $this->limpiar_modal_cambiar_grupo();
+
+        // generamos la ficha de matricula
+        // buscamos el admitido
+        $admitido = $matricula->admitido;
+
+        // buscamos el pago
+        $pago = Pago::where('id_pago', $matricula->id_pago)->first();
+
+        // buscamos los cursos de la matricula
+        $cursos = MatriculaCurso::join('curso_programa_plan', 'curso_programa_plan.id_curso_programa_plan', 'matricula_curso.id_curso_programa_plan')
+            ->join('curso', 'curso.id_curso', 'curso_programa_plan.id_curso')
+            ->join('ciclo', 'ciclo.id_ciclo', 'curso.id_ciclo')
+            ->where('matricula_curso.id_matricula', $matricula->id_matricula)
+            ->get();
+
+        $programa = null;
+        $subprograma = null;
+        $mencion = null;
+        if ($admitido->programa_proceso->programa_plan->programa->mencion == null) {
+            $programa = $admitido->programa_proceso->programa_plan->programa->programa;
+            $subprograma = $admitido->programa_proceso->programa_plan->programa->subprograma;
+            $mencion = null;
+        } else {
+            $programa = $admitido->programa_proceso->programa_plan->programa->programa;
+            $subprograma = $admitido->programa_proceso->programa_plan->programa->subprograma;
+            $mencion = $admitido->programa_proceso->programa_plan->programa->mencion;
+        }
+        $fecha = date('d/m/Y', strtotime($pago->pago_fecha));
+        $numero_operacion = $pago->pago_operacion;
+        $plan = $admitido->programa_proceso->programa_plan->plan->plan;
+        $codigo = $admitido->admitido_codigo;
+        $nombre = $admitido->persona->nombre_completo;
+        $domicilio = $admitido->persona->direccion;
+        $celular = $admitido->persona->celular;
+        $grupo = $matricula->programa_proceso_grupo->grupo_detalle;
+        $admision = $admitido->programa_proceso->admision->admision;
+        $modalidad = $admitido->programa_proceso->programa_plan->programa->id_modalidad == 1 ? 'PRESENCIAL' : 'DISTANCIA';
+        $matricula_codigo = $matricula->matricula_codigo;
+        // dd($programa, $subprograma, $mencion, $fecha, $numero_operacion, $plan, $ciclo, $codigo, $nombre, $domicilio, $celular, $cursos, $grupo, $admision, $modalidad);
+        $data = [
+            'programa' => $programa,
+            'subprograma' => $subprograma,
+            'mencion' => $mencion,
+            'fecha' => $fecha,
+            'numero_operacion' => $numero_operacion,
+            'plan' => $plan,
+            'codigo' => $codigo,
+            'nombre' => $nombre,
+            'domicilio' => $domicilio,
+            'celular' => $celular,
+            'cursos' => $cursos,
+            'grupo' => $grupo,
+            'admision' => $admision,
+            'modalidad' => $modalidad
+        ];
+
+        // eliminamos la ficha de matricula anterior si es que existe
+        if ($matricula->matricula_ficha_url) {
+            unlink($matricula->matricula_ficha_url);
+        }
+
+        // Crear directorios para guardar los archivos
+        $base_path = 'Posgrado/';
+        $folders = [
+            $admision,
+            $admitido->persona->numero_documento,
+            'Expedientes'
+        ];
+
+        // Asegurar que se creen los directorios con los permisos correctos
+        $path = asignarPermisoFolders($base_path, $folders);
+
+        // Nombre del archivo
+        $nombre_pdf = Str::slug($nombre) . '-ficha-matricula-' . $matricula_codigo . '.pdf';
+        $nombre_db = $path . $nombre_pdf;
+
+        // Generar el PDF
+        Pdf::loadView('modulo-plataforma.matriculas.ficha-matricula', $data)->save(public_path($path . $nombre_pdf));
+
+        // registramos la url de la ficha de matricula
+        $matricula->matricula_ficha_url = $nombre_db;
+        $matricula->save();
+
+        // Asignar todos los permisos al archivo
+        chmod($nombre_db, 0777);
+
+        // datos para el correo
+        $nombre = ucwords(strtolower($admitido->persona->nombre_completo));
+        $correo = $admitido->persona->correo;
+
+        // enviar correo la ficha de matricula
+        ProcessEnvioFichaMatricula::dispatch($data, $path, $nombre_pdf, $nombre, $correo);
+
+        //Cerramos el modal
+        $this->dispatchBrowserEvent('modal', [
+            'titleModal' => '#modal_cambiar_grupo',
+        ]);
     }
 
     public function render()
