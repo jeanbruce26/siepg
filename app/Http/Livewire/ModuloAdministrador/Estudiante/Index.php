@@ -712,7 +712,7 @@ class Index extends Component
                 }
             })
             ->orderBy('persona.id_persona', 'desc')
-            ->paginate(20);
+            ->paginate(100);
 
         $programas = Programa::where('id_modalidad', 2)->get();
 
