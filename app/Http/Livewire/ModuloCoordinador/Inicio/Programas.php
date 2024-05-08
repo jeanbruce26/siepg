@@ -7,6 +7,7 @@ use App\Models\Admision;
 use App\Models\Programa;
 use App\Models\Modalidad;
 use App\Models\Coordinador;
+use Illuminate\Support\Str;
 use App\Models\ProgramaProceso;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ModuloCoordinador\Admitidos\ListaAdmitidosExport;
@@ -58,7 +59,10 @@ class Programas extends Component
 
     public function descargar_admitidos($id_programa)
     {
-        return Excel::download(new ListaAdmitidosExport($id_programa, $this->proceso), 'listado-admitidos.xlsx');
+        $programa = Programa::find($id_programa);
+        $programa = $programa->programa . ' EN ' . $programa->subprograma . ($programa->mencion ? ' CON MENCION EN ' . $programa->mencion : '');
+        $programa = Str::slug($programa, '-');
+        return Excel::download(new ListaAdmitidosExport($id_programa, $this->proceso), 'listado-admitidos-'.$programa.'.xlsx');
     }
 
     public function render()
