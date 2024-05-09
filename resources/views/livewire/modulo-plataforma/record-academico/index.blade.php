@@ -150,12 +150,14 @@
                                         <tbody class="fw-semibold text-gray-700">
                                             @foreach ($cursos as $curso)
                                             @php
-                                                $data = App\Models\NotaMatriculaCurso::join('matricula_curso', 'matricula_curso.id_matricula_curso', '=', 'nota_matricula_curso.id_matricula_curso')
-                                                    ->join('matricula', 'matricula.id_matricula', '=', 'matricula_curso.id_matricula')
+                                                $data = App\Models\MatriculaCurso::join('matricula', 'matricula.id_matricula', '=', 'matricula_curso.id_matricula')
                                                     ->join('programa_proceso_grupo', 'programa_proceso_grupo.id_programa_proceso_grupo', '=', 'matricula.id_programa_proceso_grupo')
                                                     ->where('matricula_curso.id_curso_programa_plan', $curso->id_curso_programa_plan)
                                                     ->where('matricula.id_admitido', $admitido->id_admitido)
+                                                    ->orderBy('matricula_curso.id_matricula_curso', 'desc')
                                                     ->first();
+                                                $nota_matricula_curso = App\Models\NotaMatriculaCurso::where('id_matricula_curso', $data->id_matricula_curso)->first();
+                                                // dump($data);
                                             @endphp
                                                 <tr class="border-bottom fs-6">
                                                     <td class="text-center">
@@ -165,7 +167,7 @@
                                                         {{ $curso->curso_nombre }}
                                                     </td>
                                                     <td class="text-center">
-                                                        {{ $data ? date('d/m/Y', strtotime($data->nota_matricula_curso_fecha_creacion)) : '---' }}
+                                                        {{ $data ? date('d/m/Y', strtotime($data->created_at)) : '---' }}
                                                     </td>
                                                     <td class="text-center">
                                                         {{ $data ? $data->grupo_detalle : '---' }}
@@ -177,7 +179,7 @@
                                                         {{ $data ? $data->matricula_proceso : '---' }}
                                                     </td>
                                                     <td class="text-center">
-                                                        {{ $data ? $data->nota_promedio_final : '---' }}
+                                                        {{ $nota_matricula_curso->nota_promedio_final ?? '---' }}
                                                     </td>
                                                     <td class="text-center">
                                                         @if ($data)
