@@ -21,6 +21,7 @@ class Index extends Component
     public $filtro_proceso; // variable para filtrar por proceso de admision
     public $ingreso_total, $ingreso_inscripcion, $ingreso_constancia, $ingreso_matricula; // variables para los totales
     public $ingreso_por_dia_total, $ingreso_por_dia_inscripcion, $ingreso_por_dia_constancia, $ingreso_por_dia_matricula; // Variables para las cantidades diarias
+    public $ingreso_costo_enseñanza, $ingreso_por_dia_costo_enseñanza;
     public $programas_maestria, $programas_doctorado; // variables para almacenar los programas
     public $proceso, $programa;
 
@@ -78,7 +79,18 @@ class Index extends Component
 
         $this->ingreso_por_dia_total = Pago::whereDate('pago_fecha', Carbon::today())->sum('pago_monto');
         $this->ingreso_por_dia_constancia = Pago::where('id_concepto_pago', 2)->whereDate('pago_fecha', Carbon::today())->sum('pago_monto');
-        $this->ingreso_por_dia_inscripcion = Pago::where('id_concepto_pago', 1)->whereDate('pago_fecha', Carbon::today())->sum('pago_monto');
+        $this->ingreso_por_dia_inscripcion = Pago::where('id_concepto_pago', 1)->whereDate('pago_fecha', Carbon::today())->sum('pago_monto')
+
+        ;
+        $this->ingreso_costo_enseñanza = Pago::where('id_concepto_pago', 7)
+            ->where('pago_estado', 2)
+            ->where('pago_verificacion', 2)
+            ->sum('pago_monto');
+        $this->ingreso_por_dia_costo_enseñanza = Pago::where('id_concepto_pago', 7)
+            ->whereDate('pago_fecha', Carbon::today())
+            ->where('pago_estado', 2)
+            ->where('pago_verificacion', 2)
+            ->sum('pago_monto');
 
         $this->programas_maestria = Inscripcion::join('programa_proceso', 'programa_proceso.id_programa_proceso', '=', 'inscripcion.id_programa_proceso')
             ->join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
