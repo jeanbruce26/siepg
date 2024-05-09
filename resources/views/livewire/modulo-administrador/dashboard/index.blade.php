@@ -320,6 +320,107 @@
                 </div>
 
                 <div class="row g-5 card-maestria">
+                    <div class="col-md-12">
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-light-warning">
+                                <h3 class="card-title fw-bold">
+                                    Reporte de Matriculados por Programa del Proceso de {{ ucwords(strtolower($admision->admision)) }}
+                                </h3>
+                            </div>
+                            <div class="card-body p-0 mb-0">
+                                <div class="table-responsive" wire:loading.class="table-loading" wire:target="aplicar_filtro">
+                                    <div class="table-loading-message">
+                                        Cargando...
+                                    </div>
+                                    <table class="table table-sm table-row-bordered border mb-0 gy-4 gs-4" wire:loading.class="opacity-25" wire:target="aplicar_filtro">
+                                        <thead>
+                                            <tr class="fw-bold fs-5 text-gray-800 border-bottom-2 border-gray-200">
+                                                <th class="text-center col-md-1">#</th>
+                                                <th>Programa</th>
+                                                <th class="col-md-2 text-center">Admitidos</th>
+                                                <th class="col-md-2 text-center">Matriculados</th>
+                                                <th class="col-md-2 text-center">Con Pago / Sin Matricula</th>
+                                                <th class="col-md-2 text-center">Sin Pago</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @php
+                                                $suma_matriculados = 0;
+                                                $suma_con_pago = 0;
+                                                $suma_sin_pago = 0;
+                                            @endphp
+                                            @forelse ($matriculados_programas as $item)
+                                            @php
+                                                $matriculados = App\Models\Matricula::join('admitido', 'matricula.id_admitido', '=', 'admitido.id_admitido')
+                                                    ->where('admitido.id_programa_proceso', $item->id_programa_proceso)
+                                                    ->count();
+                                                $suma_matriculados = $suma_matriculados + $matriculados;
+
+                                                $con_pago = App\Models\Matricula::join('admitido', 'matricula.id_admitido', '=', 'admitido.id_admitido')
+                                                    ->where('admitido.id_programa_proceso', $item->id_programa_proceso)
+                                                    ->where('matricula.matricula_ficha_url', null)
+                                                    ->count();
+                                                $suma_con_pago = $suma_con_pago + $con_pago;
+
+                                                $sin_pago = $matriculados - $con_pago;
+                                                $suma_sin_pago = $suma_sin_pago + $sin_pago;
+                                            @endphp
+                                                <tr>
+                                                    <td class="text-center">
+                                                        {{ $loop->iteration }}
+                                                    </td>
+                                                    <td>
+                                                        @if ($item->mencion)
+                                                            Mencion en {{ ucwords(strtolower($item->mencion)) }}
+                                                        @else
+                                                            {{ ucwords(strtolower($item->programa)) }} en {{ ucwords(strtolower($item->subprograma)) }}
+                                                        @endif
+                                                    </td>
+                                                    <td class="fw-bold text-center">
+                                                        {{ $item->cantidad }}
+                                                    </td>
+                                                    <td class="fw-bold text-center">
+                                                        {{ $matriculados }}
+                                                    </td>
+                                                    <td class="fw-bold text-center">
+                                                        {{ $con_pago }}
+                                                    </td>
+                                                    <td class="fw-bold text-center">
+                                                        {{ $sin_pago }}
+                                                    </td>
+                                                </tr>
+                                            @empty
+                                                <tr>
+                                                    <td colspan="6" class="text-center text-muted">
+                                                        No hay registros
+                                                    </td>
+                                                </tr>
+                                            @endforelse
+                                        </tbody>
+                                        <tfoot class="bg-light-secondary">
+                                            <td colspan="2" class="text-end">
+                                                <span class="fw-bold">
+                                                    Total
+                                                </span>
+                                            </td>
+                                            <td class="fw-bold text-center">
+                                                {{ $matriculados_programas->sum('cantidad') }}
+                                            </td>
+                                            <td class="fw-bold text-center">
+                                                {{ $suma_matriculados }}
+                                            </td>
+                                            <td class="fw-bold text-center">
+                                                {{ $suma_con_pago }}
+                                            </td>
+                                            <td class="fw-bold text-center">
+                                                {{ $suma_sin_pago }}
+                                            </td>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-md-6">
                         <div class="card shadow-sm">
                             <div class="card-header bg-light-success">

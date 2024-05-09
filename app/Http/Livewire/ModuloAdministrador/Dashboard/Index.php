@@ -4,6 +4,7 @@ namespace App\Http\Livewire\ModuloAdministrador\Dashboard;
 
 use App\Exports\reporte\moduloAdministrador\matriculados\listaGruposExport;
 use App\Models\Admision;
+use App\Models\Admitido;
 use App\Models\Inscripcion;
 use App\Models\Matricula;
 use App\Models\Pago;
@@ -23,6 +24,7 @@ class Index extends Component
     public $ingreso_por_dia_total, $ingreso_por_dia_inscripcion, $ingreso_por_dia_constancia, $ingreso_por_dia_matricula; // Variables para las cantidades diarias
     public $ingreso_costo_enseñanza, $ingreso_por_dia_costo_enseñanza;
     public $programas_maestria, $programas_doctorado; // variables para almacenar los programas
+    public $matriculados_programas; // variables para almacenar los matriculados
     public $proceso, $programa;
 
     public function mount()
@@ -125,6 +127,16 @@ class Index extends Component
             ->where('inscripcion.retiro_inscripcion', 0)
             ->groupBy('inscripcion.id_programa_proceso')
             ->orderBy(Inscripcion::raw('count(inscripcion.id_programa_proceso)'), 'desc')
+            ->get();
+
+        $this->matriculados_programas = Admitido::join('programa_proceso', 'programa_proceso.id_programa_proceso', '=', 'admitido.id_programa_proceso')
+            ->join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
+            ->join('programa','programa_plan.id_programa','=','programa.id_programa')
+            ->select('admitido.id_programa_proceso', 'programa.subprograma', 'programa.mencion', 'programa.programa', Admitido::raw('count(admitido.id_programa_proceso) as cantidad'),)
+            ->where('programa.programa_estado',1)
+            ->where('programa_proceso.id_admision', $this->filtro_proceso)
+            ->groupBy('admitido.id_programa_proceso')
+            ->orderBy(Inscripcion::raw('count(admitido.id_programa_proceso)'), 'desc')
             ->get();
     }
 
