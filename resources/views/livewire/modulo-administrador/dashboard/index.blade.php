@@ -335,12 +335,12 @@
                                     <table class="table table-sm table-row-bordered border mb-0 gy-4 gs-4" wire:loading.class="opacity-25" wire:target="aplicar_filtro">
                                         <thead>
                                             <tr class="fw-bold fs-5 text-gray-800 border-bottom-2 border-gray-200">
-                                                <th class="text-center col-md-1">#</th>
+                                                <th class="text-center">#</th>
                                                 <th>Programa</th>
-                                                <th class="col-md-2 text-center">Admitidos</th>
-                                                <th class="col-md-2 text-center">Matriculados</th>
-                                                <th class="col-md-2 text-center">Con Pago / Sin Matricula</th>
-                                                <th class="col-md-2 text-center">Sin Pago</th>
+                                                <th class="text-center">Admitidos</th>
+                                                <th class="text-center">Matriculados</th>
+                                                <th class="text-center">Con Pago / Sin Matricula</th>
+                                                <th class="text-center">Sin Pago</th>
                                             </tr>
                                         </thead>
                                         <tbody>
