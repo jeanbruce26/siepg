@@ -362,7 +362,7 @@
                                                     ->count();
                                                 $suma_con_pago = $suma_con_pago + $con_pago;
 
-                                                $sin_pago = $matriculados - $con_pago;
+                                                $sin_pago = $item->cantidad - $matriculados;
                                                 $suma_sin_pago = $suma_sin_pago + $sin_pago;
                                             @endphp
                                                 <tr>
