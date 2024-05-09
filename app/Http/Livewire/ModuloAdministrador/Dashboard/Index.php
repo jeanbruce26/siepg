@@ -77,11 +77,22 @@ class Index extends Component
             ->where('pago.pago_verificacion', 2)
             ->sum('pago.pago_monto');
 
-        $this->ingreso_por_dia_total = Pago::whereDate('pago_fecha', Carbon::today())->sum('pago_monto');
-        $this->ingreso_por_dia_constancia = Pago::where('id_concepto_pago', 2)->whereDate('pago_fecha', Carbon::today())->sum('pago_monto');
-        $this->ingreso_por_dia_inscripcion = Pago::where('id_concepto_pago', 1)->whereDate('pago_fecha', Carbon::today())->sum('pago_monto')
+        $this->ingreso_por_dia_total = Pago::whereDate('pago_fecha', Carbon::today())
+            ->where('pago_estado', 2)
+            ->where('pago_verificacion', 2)
+            ->sum('pago_monto');
+        $this->ingreso_por_dia_constancia = Pago::where('id_concepto_pago', 2)
+            ->whereDate('pago_fecha', Carbon::today())
+            ->where('pago_estado', 2)
+            ->where('pago_verificacion', 2)
+            ->sum('pago_monto');
+        $this->ingreso_por_dia_inscripcion = Pago::where('id_concepto_pago', 1)
+            ->whereDate('pago_fecha', Carbon::today())
+            ->where('pago_estado', 2)
+            ->where('pago_verificacion', 2)
+            ->sum('pago_monto');
 
-        ;
+        // Se calcula el ingreso por concepto de costos de enseñanza
         $this->ingreso_costo_enseñanza = Pago::where('id_concepto_pago', 7)
             ->where('pago_estado', 2)
             ->where('pago_verificacion', 2)
