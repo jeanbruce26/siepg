@@ -302,7 +302,7 @@
                             {{-- @php
                                 $matricula = App\Models\Matricula::where('id_admitido', $admitido->id_admitido)->where('id_ciclo', $ciclo_admitido->id_ciclo)->first();
                             @endphp
-                            @if ($matricula == null)
+                            @if ($matricula == null) --}}
                                 <div class="col-12">
                                     <label for="pagos" class="required form-label">
                                         Cursos a Matricular
@@ -323,16 +323,16 @@
                                                     @forelse ($curso_prematricula as $item)
                                                         <tr class="fs-6 text-gray-700 fw-semibold">
                                                             <td>
-                                                                {{ $item->curso_programa_proceso->curso->curso_codigo }}
+                                                                {{ $item->curso_programa_plan->curso->curso_codigo }}
                                                             </td>
                                                             <td>
-                                                                {{ $item->curso_programa_proceso->curso->curso_nombre }}
+                                                                {{ $item->curso_programa_plan->curso->curso_nombre }}
                                                             </td>
                                                             <td>
-                                                                {{ $item->curso_programa_proceso->curso->curso_credito }}
+                                                                {{ $item->curso_programa_plan->curso->curso_credito }}
                                                             </td>
                                                             <td>
-                                                                CICLO {{ $item->curso_programa_proceso->curso->ciclo->ciclo }}
+                                                                CICLO {{ $item->curso_programa_plan->curso->ciclo->ciclo }}
                                                             </td>
                                                             <td class="text-end">
                                                                 <div class="form-check">
@@ -358,7 +358,7 @@
                                         </table>
                                     </div>
                                 </div>
-                            @endif --}}
+                            {{-- @endif --}}
                         @endif
                     </form>
                 </div>

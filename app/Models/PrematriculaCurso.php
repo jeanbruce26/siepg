@@ -14,7 +14,7 @@ class PrematriculaCurso extends Model
     protected $fillable = [
         'id_prematricula_curso',
         'id_prematricula',
-        'id_curso_programa_programa',
+        'id_curso_programa_plan',
         'prematricula_curso_fecha_creacion',
         'prematricula_curso_estado'
     ];
@@ -28,8 +28,8 @@ class PrematriculaCurso extends Model
     }
 
     // curso programa plan
-    public function curso_programa_proceso()
+    public function curso_programa_plan()
     {
-        return $this->belongsTo(CursoProgramaProceso::class, 'id_curso_programa_proceso');
+        return $this->belongsTo(CursoProgramaPlan::class, 'id_curso_programa_plan');
     }
 }

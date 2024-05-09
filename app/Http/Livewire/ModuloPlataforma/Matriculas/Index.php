@@ -2,21 +2,23 @@
 
 namespace App\Http\Livewire\ModuloPlataforma\Matriculas;
 
-use App\Jobs\ProcessEnvioFichaMatricula;
-use App\Models\Admitido;
-use App\Models\CostoEnseñanza;
-use App\Models\CursoProgramaPlan;
-use App\Models\Evaluacion;
-use App\Models\Inscripcion;
-use App\Models\Matricula;
-use App\Models\MatriculaCurso;
 use App\Models\Pago;
 use App\Models\Persona;
-use App\Models\ProgramaProcesoGrupo;
 use Livewire\Component;
+use App\Models\Admitido;
+use App\Models\Matricula;
+use App\Models\Evaluacion;
+use App\Models\Inscripcion;
 use Illuminate\Support\Str;
+use App\Models\Prematricula;
+use App\Models\CostoEnseñanza;
+use App\Models\MatriculaCurso;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\CursoProgramaPlan;
+use App\Models\PrematriculaCurso;
+use App\Models\ProgramaProcesoGrupo;
 use Illuminate\Support\Facades\File;
+use App\Jobs\ProcessEnvioFichaMatricula;
 
 class Index extends Component
 {
@@ -52,6 +54,13 @@ class Index extends Component
 
     public function abrir_modal()
     {
+        // buscamos el admitido tiene prematricula
+        $this->prematricula = Prematricula::where('id_admitido', $this->admitido->id_admitido)->orderBy('id_prematricula', 'desc')->where('prematricula_estado', 1)->first();
+        // dd($this->prematricula);
+        if ( $this->prematricula ) {
+            $this->curso_prematricula = PrematriculaCurso::where('id_prematricula', $this->prematricula->id_prematricula)->get();
+        }
+
         // buscamos si existen matriculas
         $matriculas_count = Matricula::where('id_admitido', $this->admitido->id_admitido)->count();
         // if ($matriculas_count > 0) {
@@ -427,6 +436,21 @@ class Index extends Component
                 $matricula_curso->matricula_curso_fecha_creacion = date('Y-m-d');
                 $matricula_curso->matricula_curso_estado = 1;
                 $matricula_curso->save();
+
+                // cambiar de estado al curso de la prematricula
+                if ($this->prematricula) {
+                    $prematricula_curso = PrematriculaCurso::where('id_prematricula', $this->prematricula->id_prematricula)->where('id_curso_programa_plan', $item)->first();
+                    $prematricula_curso->prematricula_curso_estado = 2;
+                    $prematricula_curso->save();
+                }
+            }
+        }
+
+        // cambiar de estado de la prematricula
+        if ($matriculas->count() == 0) {
+            if ($this->prematricula) {
+                $this->prematricula->prematricula_estado = 2;
+                $this->prematricula->save();
             }
         }
 
