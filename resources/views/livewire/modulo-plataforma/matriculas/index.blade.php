@@ -336,7 +336,7 @@
                                                             </td>
                                                             <td class="text-end">
                                                                 <div class="form-check">
-                                                                    <input class="form-check-input @error('check_cursos') is-invalid @enderror" type="checkbox" wire:model="check_cursos" value="{{ $item->id_curso_programa_proceso }}" />
+                                                                    <input class="form-check-input @error('check_cursos') is-invalid @enderror" type="checkbox" wire:model="check_cursos" value="{{ $item->id_curso_programa_plan }}" />
                                                                 </div>
                                                             </td>
                                                         </tr>

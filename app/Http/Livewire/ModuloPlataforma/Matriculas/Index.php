@@ -58,7 +58,9 @@ class Index extends Component
         $this->prematricula = Prematricula::where('id_admitido', $this->admitido->id_admitido)->orderBy('id_prematricula', 'desc')->where('prematricula_estado', 1)->first();
         // dd($this->prematricula);
         if ( $this->prematricula ) {
-            $this->curso_prematricula = PrematriculaCurso::where('id_prematricula', $this->prematricula->id_prematricula)->get();
+            $this->curso_prematricula = PrematriculaCurso::where('id_prematricula', $this->prematricula->id_prematricula)
+                ->where('prematricula_curso_estado', 1)
+                ->get();
         }
 
         // buscamos si existen matriculas
@@ -433,7 +435,9 @@ class Index extends Component
                 $matricula_curso = new MatriculaCurso();
                 $matricula_curso->id_matricula = $matricula->id_matricula;
                 $matricula_curso->id_curso_programa_plan = $item;
-                $matricula_curso->matricula_curso_fecha_creacion = date('Y-m-d');
+                $matricula_curso->id_admision = $admitido->programa_proceso->id_admision;
+                $matricula_curso->id_programa_proceso_grupo = $grup_antiguo;
+                $matricula_curso->matricula_curso_fecha_creacion = date('Y-m-d H:i:s');
                 $matricula_curso->matricula_curso_estado = 1;
                 $matricula_curso->save();
 
@@ -444,10 +448,6 @@ class Index extends Component
                     $prematricula_curso->save();
                 }
             }
-        }
-
-        // cambiar de estado de la prematricula
-        if ($matriculas->count() == 0) {
             if ($this->prematricula) {
                 $this->prematricula->prematricula_estado = 2;
                 $this->prematricula->save();
