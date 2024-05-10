@@ -158,7 +158,7 @@
                         data-bs-interval="5000">
                         <div class="carousel-inner">
                             <div class="carousel-item active">
-                                <img src="{{ asset('media/banner-posgrado-cronograma.jpeg') }}" alt="carousel"
+                                <img src="{{ asset('media/posgrado-banner-ampliacion-matricula.jpeg') }}" alt="carousel"
                                     class="w-100 rounded" />
                             </div>
                         </div>
@@ -176,6 +176,23 @@
                         <div class="carousel-inner">
                             <div class="carousel-item active">
                                 <img src="{{ asset('media/banner-posgrado-cuentas.jpeg') }}" alt="carousel"
+                                    class="w-100 rounded" />
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-center flex-wrap">
+                            <ol
+                                class="p-0 m-0 carousel-indicators carousel-indicators-bullet carousel-indicators-active-primary">
+                                <li data-bs-target="#slider" data-bs-slide-to="0" class="ms-1 active"></li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div id="slider" class="carousel carousel-custom slide pe-5" data-bs-ride="carousel"
+                        data-bs-interval="5000">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img src="{{ asset('media/banner-posgrado-cronograma.jpeg') }}" alt="carousel"
                                     class="w-100 rounded" />
                             </div>
                         </div>
