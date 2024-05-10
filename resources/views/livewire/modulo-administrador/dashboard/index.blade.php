@@ -395,9 +395,9 @@
                                                     <td class="fw-bold text-center">
                                                         {{ $con_pago }}
                                                     </td>
-                                                    <td class="fw-bold text-center">
+                                                    {{-- <td class="fw-bold text-center">
                                                         {{ $pagos }}
-                                                    </td>
+                                                    </td> --}}
                                                     <td class="fw-bold text-center">
                                                         {{ $sin_pago }}
                                                     </td>
