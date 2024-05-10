@@ -339,7 +339,8 @@
                                                 <th>Programa</th>
                                                 <th class="text-center">Admitidos</th>
                                                 <th class="text-center">Matriculados</th>
-                                                <th class="text-center">Con Pago / Sin Ficha de Matricula</th>
+                                                <th class="text-center">Matriculado / Sin Ficha de Matricula</th>
+                                                <th class="text-center">Con Pago / Sin Matricula</th>
                                                 <th class="text-center">Sin Pago / Sin Matricula</th>
                                             </tr>
                                         </thead>
@@ -361,6 +362,14 @@
                                                     ->where('matricula.matricula_ficha_url', null)
                                                     ->count();
                                                 $suma_con_pago = $suma_con_pago + $con_pago;
+
+                                                $pagos = App\Models\Pago::where('id_concepto_pago', 3)
+                                                    ->orWhere('id_concepto_pago', 4)
+                                                    ->orWhere('id_concepto_pago', 5)
+                                                    ->orWhere('id_concepto_pago', 6)
+                                                    ->count();
+                                                $pagos = $pagos - $matriculados;
+                                                $suma_pagos = $suma_pagos + $pagos;
 
                                                 $sin_pago = $item->cantidad - $matriculados;
                                                 $suma_sin_pago = $suma_sin_pago + $sin_pago;
@@ -386,6 +395,9 @@
                                                         {{ $con_pago }}
                                                     </td>
                                                     <td class="fw-bold text-center">
+                                                        {{ $pagos }}
+                                                    </td>
+                                                    <td class="fw-bold text-center">
                                                         {{ $sin_pago }}
                                                     </td>
                                                 </tr>
@@ -408,6 +420,9 @@
                                             </td>
                                             <td class="fw-bold text-center">
                                                 {{ $suma_matriculados }}
+                                            </td>
+                                            <td class="fw-bold text-center">
+                                                {{ $suma_con_pagos }}
                                             </td>
                                             <td class="fw-bold text-center">
                                                 {{ $suma_con_pago }}
