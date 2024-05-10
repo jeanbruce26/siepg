@@ -348,6 +348,7 @@
                                             @php
                                                 $suma_matriculados = 0;
                                                 $suma_con_pago = 0;
+                                                $suma_pagos = 0;
                                                 $suma_sin_pago = 0;
                                             @endphp
                                             @forelse ($matriculados_programas as $item)
@@ -422,10 +423,10 @@
                                                 {{ $suma_matriculados }}
                                             </td>
                                             <td class="fw-bold text-center">
-                                                {{ $suma_con_pagos }}
+                                                {{ $suma_con_pago }}
                                             </td>
                                             <td class="fw-bold text-center">
-                                                {{ $suma_con_pago }}
+                                                {{ $suma_pagos }}
                                             </td>
                                             <td class="fw-bold text-center">
                                                 {{ $suma_sin_pago }}
