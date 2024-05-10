@@ -19,6 +19,7 @@ use Livewire\WithPagination;
 class Inscripciones extends Component
 {
     use WithPagination; // para la paginacion del componente de livewire
+    protected $paginationTheme = 'bootstrap'; // para la paginacion del componente de livewire
 
     public $id_programa; // es el id del programa que se esta consultando
     public $programa; // es el programa que se esta consultando
