@@ -11,7 +11,7 @@
         * {
             font-family: Arial, Helvetica, sans-serif;
             margin: 0;
-            padding: 0;
+            padding: 1rem 0 1rem 0;
             border: 0;
         }
 
@@ -44,7 +44,7 @@
 </head>
 
 <body>
-    <table class="table" style="width:100%; padding-right: 1.4rem; padding-left: 1.4rem; padding-bottom: 1.5rem; padding-top: 2.5rem;">
+    <table class="table" style="width:100%; padding-right: 1.4rem; padding-left: 1.4rem; padding-bottom: 1.5rem; padding-top: 1.5rem;">
         <thead>
             <tr>
                 <th>
