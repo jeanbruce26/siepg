@@ -10,12 +10,13 @@
     <style>
         * {
             font-family: Arial, Helvetica, sans-serif;
-            margin: 1rem 0 1rem 0;
+            margin: 0;
             padding: 0;
             border: 0;
         }
 
         body {
+            padding: 1rem 0 1rem 0;
             font-family: Arial, Helvetica, sans-serif;
         }
 
