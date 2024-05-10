@@ -340,7 +340,7 @@
                                                 <th class="text-center">Admitidos</th>
                                                 <th class="text-center">Matriculados</th>
                                                 <th class="text-center">Matriculado / Sin Ficha de Matricula</th>
-                                                <th class="text-center">Con Pago / Sin Matricula</th>
+                                                {{-- <th class="text-center">Con Pago / Sin Matricula</th> --}}
                                                 <th class="text-center">Sin Pago / Sin Matricula</th>
                                             </tr>
                                         </thead>
@@ -425,9 +425,9 @@
                                             <td class="fw-bold text-center">
                                                 {{ $suma_con_pago }}
                                             </td>
-                                            <td class="fw-bold text-center">
+                                            {{-- <td class="fw-bold text-center">
                                                 {{ $suma_pagos }}
-                                            </td>
+                                            </td> --}}
                                             <td class="fw-bold text-center">
                                                 {{ $suma_sin_pago }}
                                             </td>
