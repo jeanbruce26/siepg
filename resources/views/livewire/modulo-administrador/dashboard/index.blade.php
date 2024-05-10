@@ -339,8 +339,8 @@
                                                 <th>Programa</th>
                                                 <th class="text-center">Admitidos</th>
                                                 <th class="text-center">Matriculados</th>
-                                                <th class="text-center">Con Pago / Sin Matricula</th>
-                                                <th class="text-center">Sin Pago</th>
+                                                <th class="text-center">Con Pago / Sin Ficha de Matricula</th>
+                                                <th class="text-center">Sin Pago / Sin Matricula</th>
                                             </tr>
                                         </thead>
                                         <tbody>
