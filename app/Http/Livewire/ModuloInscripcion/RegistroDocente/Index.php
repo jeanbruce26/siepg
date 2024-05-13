@@ -96,12 +96,12 @@ class Index extends Component
     {
         //Creamos el trabajador
         $trabajador = new Trabajador();
-        $trabajador->trabajador_nombre = $this->nombres;
-        $trabajador->trabajador_apellido = $this->apellidos;
+        $trabajador->trabajador_nombre = mb_strtoupper(this->nombres, 'UTF-8');
+        $trabajador->trabajador_apellido = mb_strtoupper(this->apellidos, 'UTF-8');
         $trabajador->trabajador_nombre_completo = $this->nombres.' '.$this->apellidos;
         $trabajador->trabajador_numero_documento = $this->documento;
-        $trabajador->trabajador_correo = $this->correo;
-        $trabajador->trabajador_direccion = $this->direccion;
+        $trabajador->trabajador_correo = strtolower($this->correo);
+        $trabajador->trabajador_direccion = mb_strtoupper($this->direccion, 'UTF-8');
         $trabajador->id_grado_academico = $this->grado;
         $trabajador->trabajador_estado = 1;
         $trabajador->save();
