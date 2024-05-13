@@ -135,6 +135,7 @@ class Index extends Component
             ->select('admitido.id_programa_proceso', 'programa.subprograma', 'programa.mencion', 'programa.programa', Admitido::raw('count(admitido.id_programa_proceso) as cantidad'),)
             ->where('programa.programa_estado',1)
             ->where('programa_proceso.id_admision', $this->filtro_proceso)
+            ->where('admitido.admitido_estado', 1)
             ->groupBy('admitido.id_programa_proceso')
             ->orderBy(Inscripcion::raw('count(admitido.id_programa_proceso)'), 'desc')
             ->get();
