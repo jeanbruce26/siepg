@@ -243,6 +243,7 @@ Route::get('/configurar-correo-docentes', function () {
         $nombre = explode(' ', $usuario->trabajador_nombre);
         $apellido = explode(' ', $usuario->trabajador_apellido);
         $correo = strtolower($nombre[0].'_'.$apellido[0].'@unu.edu.pe');
+        $usuario->usuario_nombre = $usuario->trabajador_nombre_completo;
         $usuario->usuario_correo = $correo;
         $usuario->save();
     }
