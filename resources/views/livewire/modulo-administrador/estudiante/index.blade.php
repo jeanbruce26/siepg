@@ -90,7 +90,7 @@
                             </div>
 
                             <div class="col-md-5">
-                                <input class="form-control form-control-sm text-muted" type="search"
+                                <input class="form-control text-muted" type="search"
                                     wire:model="search" placeholder="Buscar...">
                             </div>
                         </div>
