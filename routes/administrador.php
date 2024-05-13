@@ -26,6 +26,7 @@ use App\Http\Controllers\ModuloAdministrador\InscripcionPagoController;
 use App\Http\Controllers\ModuloAdministrador\TipoSeguimientoController;
 use App\Http\Controllers\ModuloAdministrador\UsuarioTrabajadorController;
 use App\Models\Docente;
+use App\Models\Trabajador;
 use App\Models\Usuario;
 
 //Vista del Dashboard. El inicio la parte administrativa del sistema
@@ -219,13 +220,14 @@ Route::get('/generar-es-traslado-externo-admitidos', function () {
 
 // convertir los nombres y apellidos de los trabajadores docentes a mayusculas
 Route::get('/convertir-nombres-docentes-mayusculas', function () {
-    $docentes = Docente::join('trabajador', 'docente.id_trabajador', '=', 'trabajador.id_trabajador')
+    $docentes = Docente::join('trabajador', 'trabajador.id_trabajador', '=', 'docente.id_trabajador')
         ->get();
-    foreach ($docentes as $docente) {
-        $docente->trabajador_apellido = mb_strtoupper($docente->trabajador_apellido, 'UTF-8');
-        $docente->trabajador_nombre = mb_strtoupper($docente->trabajador_nombre, 'UTF-8');
-        $docente->trabajador_nombre_completo = mb_strtoupper($docente->trabajador_nombre_completo, 'UTF-8');
-        $docente->save();
+    foreach ($docentes as $item) {
+        $trabajador = Trabajador::find($item->id_trabajador);
+        $trabajador->trabajador_apellido = mb_strtoupper($item->trabajador_apellido, 'UTF-8');
+        $trabajador->trabajador_nombre = mb_strtoupper($item->trabajador_nombre, 'UTF-8');
+        $trabajador->trabajador_nombre_completo = mb_strtoupper($item->trabajador_nombre_completo, 'UTF-8');
+        $trabajador->save();
     }
     return response()->json([
         'message' => 'Nombres y apellidos de los trabajadores docentes convertidos a mayusculas'
