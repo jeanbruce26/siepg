@@ -25,6 +25,8 @@ use App\Http\Controllers\ModuloAdministrador\ConceptoPagoController;
 use App\Http\Controllers\ModuloAdministrador\InscripcionPagoController;
 use App\Http\Controllers\ModuloAdministrador\TipoSeguimientoController;
 use App\Http\Controllers\ModuloAdministrador\UsuarioTrabajadorController;
+use App\Models\Docente;
+use App\Models\Usuario;
 
 //Vista del Dashboard. El inicio la parte administrativa del sistema
 Route::get('/', [DashboardController::class, 'dashboard'])->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.dashboard');
@@ -215,4 +217,37 @@ Route::get('/generar-es-traslado-externo-admitidos', function () {
     ]);
 })->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.generar-es-traslado-externo-admitidos');
 
+// convertir los nombres y apellidos de los trabajadores docentes a mayusculas
+Route::get('/convertir-nombres-docentes-mayusculas', function () {
+    $docentes = Docente::join('trabajador', 'docente.id_trabajador', '=', 'trabajador.id_trabajador')
+        ->get();
+    foreach ($docentes as $docente) {
+        $docente->trabajador_apellido = mb_strtoupper($docente->trabajador_apellido, 'UTF-8');
+        $docente->trabajador_nombre = mb_strtoupper($docente->trabajador_nombre, 'UTF-8');
+        $docente->trabajador_nombre_completo = mb_strtoupper($docente->trabajador_nombre_completo, 'UTF-8');
+        $docente->save();
+    }
+    return response()->json([
+        'message' => 'Nombres y apellidos de los trabajadores docentes convertidos a mayusculas'
+    ]);
+})->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.convertir-nombres-apellidos-trabajadores-docentes');
+
+// configurar el nombre de correo de los usuarios docentes a su primer nombre _ primer apellido
+Route::get('/configurar-correo-docentes', function () {
+    $usuarios = Usuario::join('trabajador_tipo_trabajador', 'usuario.id_trabajador_tipo_trabajador', '=', 'trabajador_tipo_trabajador.id_trabajador_tipo_trabajador')
+        ->join('trabajador', 'trabajador_tipo_trabajador.id_trabajador', '=', 'trabajador.id_trabajador')
+        ->where('trabajador_tipo_trabajador.id_tipo_trabajador', 1)
+        ->get();
+    foreach ($usuarios as $usuario) {
+        // extraemos el primer nombre, primer apellido y los dos ultimos digitos del documento para generar su correo electronico de usuario
+        $nombre = explode(' ', $usuario->trabajador_nombre);
+        $apellido = explode(' ', $usuario->trabajador_apellido);
+        $correo = strtolower($nombre[0].'_'.$apellido[0].'@unu.edu.pe');
+        $usuario->usuario_correo = $correo;
+        $usuario->save();
+    }
+    return response()->json([
+        'message' => 'Correos de los docentes configurados'
+    ]);
+})->middleware(['auth.usuario', 'verificar.usuario.administrador'])->name('administrador.configurar-correo-docentes');
 //
