@@ -109,7 +109,7 @@ class Index extends Component
         // extraemos el primer nombre, primer apellido y los dos ultimos digitos del documento para generar su correo electronico de usuario
         $nombre = explode(' ', $this->nombres);
         $apellido = explode(' ', $this->apellidos);
-        $correo = strtolower($nombre[0].$apellido[0].substr($this->documento, -2).'@unu.edu.pe');
+        $correo = strtolower($nombre[0].'_'.$apellido[0].'@unu.edu.pe');
 
         // asignamos el trabajador a la tabla docente
         $docente = new Docente();
