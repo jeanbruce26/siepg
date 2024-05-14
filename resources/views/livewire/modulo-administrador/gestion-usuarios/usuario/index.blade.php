@@ -105,12 +105,20 @@
                                                 <div class="dropdown-menu dropdown-menu-end menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
                                                     <div class="menu-item px-3">
                                                         <a href="#modalUsuario"
-                                                        wire:click="cargarUsuario({{ $item->id_usuario }})" 
-                                                        class="menu-link px-3" data-bs-toggle="modal" 
+                                                        wire:click="cargarUsuario({{ $item->id_usuario }})"
+                                                        class="menu-link px-3" data-bs-toggle="modal"
                                                         data-bs-target="#modalUsuario">
                                                             Editar
                                                         </a>
                                                     </div>
+                                                    @if ($item->trabajador_tipo_trabajador->id_tipo_trabajador == 1)
+                                                    <div class="menu-item px-3">
+                                                        <a wire:click="enviar_credenciales({{ $item->id_usuario }}, 'docente',{{ $item->enviar_credenciales->id_trabajador }})"
+                                                        class="menu-link px-3 cursor-pointer">
+                                                            Enviar Credenciales
+                                                        </a>
+                                                    </div>
+                                                    @endif
                                                 </div>
                                             </td>
                                         </tr>
@@ -229,7 +237,7 @@
                     </form>
                 </div>
                 <div class="modal-footer col-12 d-flex justify-content-between">
-                    <button type="button" wire:click="limpiar()" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button> 
+                    <button type="button" wire:click="limpiar()" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <button type="button" wire:click="guardarUsuario()" class="btn btn-primary" wire:loading.attr="disabled">
                         <div wire:loading.remove wire:target="guardarUsuario">
                             Guardar

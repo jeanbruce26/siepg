@@ -2,6 +2,8 @@
 
 namespace App\Http\Livewire\ModuloAdministrador\GestionUsuarios\Usuario;
 
+use App\Jobs\ProcessEnvioCredencialesDocentes;
+use App\Models\Docente;
 use App\Models\HistorialAdministrativo;
 use App\Models\Usuario;
 use Illuminate\Support\Facades\Hash;
@@ -191,7 +193,7 @@ class Index extends Component
                     $usuario->usuario_password = Hash::make($this->password);
                 }
                 $usuario->save();
-    
+
                 $this->dispatchBrowserEvent('alerta-usuario', [
                     'title' => '¡Éxito!',
                     'text' => 'Usuario ' . $this->username . ' ha sido actualizado satisfactoriamente',
@@ -207,6 +209,22 @@ class Index extends Component
         ]);
 
         $this->limpiar();
+    }
+
+    public function enviar_credenciales($id_usuario, $tipo_trabajador, $id_trabajador)
+    {
+        if ($tipo_trabajador == 'docente') {
+            $docente = Docente::where('id_trabajador', $id_trabajador)->first();
+            ProcessEnvioCredencialesDocentes::dispatch($docente->id_docente, 'update');
+
+            $this->dispatchBrowserEvent('alerta-usuario', [
+                'title' => '¡Éxito!',
+                'text' => 'Credenciales enviadas satisfactoriamente',
+                'icon' => 'success',
+                'confirmButtonText' => 'Aceptar',
+                'color' => 'success'
+            ]);
+        }
     }
 
     public function render()
