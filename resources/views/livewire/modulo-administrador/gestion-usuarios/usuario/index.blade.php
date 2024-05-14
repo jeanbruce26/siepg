@@ -111,13 +111,15 @@
                                                             Editar
                                                         </a>
                                                     </div>
-                                                    @if ($item->trabajador_tipo_trabajador->id_tipo_trabajador == 1)
-                                                    <div class="menu-item px-3">
-                                                        <a wire:click="enviar_credenciales({{ $item->id_usuario }}, 'docente',{{ $item->trabajador_tipo_trabajador->id_trabajador }})"
-                                                        class="menu-link px-3 cursor-pointer">
-                                                            Enviar Credenciales
-                                                        </a>
-                                                    </div>
+                                                    @if ($item->id_trabajador_tipo_trabajador != null)
+                                                        @if ($item->trabajador_tipo_trabajador->id_tipo_trabajador == 1)
+                                                        <div class="menu-item px-3">
+                                                            <a wire:click="enviar_credenciales({{ $item->id_usuario }}, 'docente',{{ $item->trabajador_tipo_trabajador->id_trabajador }})"
+                                                            class="menu-link px-3 cursor-pointer">
+                                                                Enviar Credenciales
+                                                            </a>
+                                                        </div>
+                                                        @endif
                                                     @endif
                                                 </div>
                                             </td>
