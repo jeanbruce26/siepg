@@ -113,7 +113,7 @@
                                                     </div>
                                                     @if ($item->trabajador_tipo_trabajador->id_tipo_trabajador == 1)
                                                     <div class="menu-item px-3">
-                                                        <a wire:click="enviar_credenciales({{ $item->id_usuario }}, 'docente',{{ $item->enviar_credenciales->id_trabajador }})"
+                                                        <a wire:click="enviar_credenciales({{ $item->id_usuario }}, 'docente',{{ $item->trabajador_tipo_trabajador->id_trabajador }})"
                                                         class="menu-link px-3 cursor-pointer">
                                                             Enviar Credenciales
                                                         </a>
