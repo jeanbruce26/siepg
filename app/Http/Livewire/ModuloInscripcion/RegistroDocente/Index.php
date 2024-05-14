@@ -98,7 +98,7 @@ class Index extends Component
         $trabajador = new Trabajador();
         $trabajador->trabajador_nombre = mb_strtoupper($this->nombres, 'UTF-8');
         $trabajador->trabajador_apellido = mb_strtoupper($this->apellidos, 'UTF-8');
-        $trabajador->trabajador_nombre_completo = $this->nombres.' '.$this->apellidos;
+        $trabajador->trabajador_nombre_completo = mb_strtoupper($this->nombres, 'UTF-8').' '.mb_strtoupper($this->apellidos, 'UTF-8');
         $trabajador->trabajador_numero_documento = $this->documento;
         $trabajador->trabajador_correo = strtolower($this->correo);
         $trabajador->trabajador_direccion = mb_strtoupper($this->direccion, 'UTF-8');
