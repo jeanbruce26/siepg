@@ -137,7 +137,7 @@
                                             @endphp
                                             <tr class="fs-6 text-gray-800" wire:key="{{ $item->id_matricula_curso }}">
                                                 <td class="fw-bold">
-                                                    {{ $item->id_matricula_curso }}
+                                                    {{ $loop->iteration }}
                                                 </td>
                                                 <td>
                                                     {{ $item->admitido_codigo }}
