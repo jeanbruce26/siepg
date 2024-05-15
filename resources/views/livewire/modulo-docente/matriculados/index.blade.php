@@ -57,18 +57,18 @@
             <div class="row mb-5 mb-xl-10">
                 <div class="col-md-12 mb-md-5 mb-xl-10">
                     {{-- alerta --}}
-                    <div class="alert bg-light-primary border border-3 border-primary d-flex align-items-center p-5 mb-5">
+                    <div class="alert bg-light-primary border border-4 border-primary d-flex align-items-center p-5 mb-5">
                         <i class="ki-outline ki-information-5 fs-2qx me-4 text-primary"></i>
                         <div class="d-flex flex-column">
-                            <span class="fw-bold fs-5">
+                            <span class="fw-bold fs-3">
                                 A continuación se muestran los alumnos matriculados en el curso.
                             </span>
                         </div>
                     </div>
-                    <div class="alert bg-light-warning border border-3 border-warning d-flex align-items-center p-5 mb-5">
+                    <div class="alert bg-light-warning border border-4 border-warning d-flex align-items-center p-5 mb-5">
                         <i class="ki-outline ki-information-2 fs-2qx me-4 text-warning"></i>
                         <div class="d-flex flex-column">
-                            <span class="fw-bold fs-5">
+                            <span class="fw-bold fs-3">
                                 @if ($docente_curso->docente_curso_estado == 2)
                                     El curso ya ha sido finalizado.
                                 @else
