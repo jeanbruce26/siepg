@@ -77,6 +77,17 @@
                             </span>
                         </div>
                     </div>
+                    <div class="alert bg-light-info border border-4 border-info d-flex align-items-center p-5 mb-5">
+                        <i class="ki-outline ki-information-5 fs-2qx me-4 text-info"></i>
+                        <div class="d-flex flex-column">
+                            <span class="fw-bold fs-3">
+                                Recomendaciones:
+                            </span>
+                            <span class="fw-bold fs-4">
+                                - El promedio final para aprobar el curso es de 14. (Tomar sus precauciones)
+                            </span>
+                        </div>
+                    </div>
                     {{-- card  --}}
                     <div class="card shadow-sm">
                         <div class="card-body mb-0">
