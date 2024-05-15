@@ -25,7 +25,7 @@
                         <div class="alert bg-light-primary border border-4 border-primary d-flex align-items-center p-5 mb-5">
                             <i class="ki-outline ki-information-5 fs-2qx me-4 text-primary"></i>
                             <div class="d-flex flex-column">
-                                <span class="fw-bold fs-5">
+                                <span class="fw-bold fs-3">
                                     A continuación se muestran los cursos que fueron asignados.
                                 </span>
                             </div>
