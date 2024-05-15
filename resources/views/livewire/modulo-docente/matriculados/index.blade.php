@@ -127,9 +127,9 @@
                                             <th class="text-center">Evaluación Medio Curso</th>
                                             <th class="text-center">Evaluación Final</th>
                                             <th class="text-center">Promedio Final</th>
-                                            <th>Estado</th>
+                                            <th class="text-center">Estado</th>
                                             @if ($docente_curso->docente_curso_estado != 2)
-                                                <th>Acciones</th>
+                                                <th class="text-center">Acciones</th>
                                             @endif
                                         </tr>
                                     </thead>
@@ -224,7 +224,7 @@
                                                         -
                                                     @endif
                                                 </td>
-                                                <td>
+                                                <td align="center">
                                                     @if ($nota_curso)
                                                         @if ($nota_curso->id_estado_cursos == 1)
                                                             <span class="badge badge-success fs-6 px-3 py-2">
