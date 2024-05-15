@@ -120,7 +120,7 @@
                                 <table class="table table-hover table-rounded align-middle table-row-bordered border mb-0 gy-4 gs-4">
                                     <thead class="bg-light-warning">
                                         <tr class="fw-bold fs-5 text-gray-800 border-bottom-2 border-gray-200">
-                                            <th>ID</th>
+                                            <th>Nro</th>
                                             <th>Código</th>
                                             <th>Alumno</th>
                                             <th class="text-center">Evaluación Permanente</th>
