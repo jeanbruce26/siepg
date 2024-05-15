@@ -83,8 +83,8 @@
                             <span class="fw-bold fs-3">
                                 Recomendaciones:
                             </span>
-                            <span class="fw-bold fs-4">
-                                - El promedio final para aprobar el curso es de 14. (Tomar sus precauciones)
+                            <span class="fs-4">
+                                - La nota minima para aprobar el curso es tener un promedio final de 14. (Tomar sus precauciones)
                             </span>
                         </div>
                     </div>
