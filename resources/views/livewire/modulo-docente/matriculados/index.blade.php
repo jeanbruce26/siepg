@@ -48,6 +48,12 @@
                             </div>
                         </button>
                     @endif
+                    <button type="button"
+                        wire:click="exportar_excel_lista_matriculados"
+                        class="btn btn-success fw-bold"
+                        >
+                        Lista de Matriculados (Excel)
+                    </button>
                 </div>
             </div>
         </div>

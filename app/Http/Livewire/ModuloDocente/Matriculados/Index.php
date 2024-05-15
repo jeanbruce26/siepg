@@ -2,19 +2,21 @@
 
 namespace App\Http\Livewire\ModuloDocente\Matriculados;
 
-use App\Models\ActaDocente;
 use App\Models\Curso;
-use App\Models\CursoProgramaPlan;
 use App\Models\Docente;
+use Livewire\Component;
+use App\Models\Programa;
+use App\Models\ActaDocente;
+use Illuminate\Support\Str;
 use App\Models\DocenteCurso;
 use App\Models\MatriculaCurso;
-use App\Models\NotaMatriculaCurso;
-use App\Models\Programa;
-use App\Models\ProgramaProcesoGrupo;
-use Livewire\Component;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\CursoProgramaPlan;
+use App\Models\NotaMatriculaCurso;
+use App\Models\ProgramaProcesoGrupo;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\reporte\moduloDocente\matriculados\listaMatriculadosExport;
 
 class Index extends Component
 {
@@ -25,6 +27,7 @@ class Index extends Component
     public $id_curso_programa_plan;
     public $id_admision;
     public $curso;
+    public $programa;
     public $grupo;
 
     public $id_matricula_curso;
@@ -69,6 +72,7 @@ class Index extends Component
         $this->id_programa_proceso_grupo = $this->docente_curso->id_programa_proceso_grupo;
         $this->id_admision = $this->docente_curso->id_admision;
         $this->curso = $this->curso_programa_plan->curso;
+        $this->programa = $this->curso_programa_plan->programa_plan->programa;
         $this->grupo = $this->docente_curso->programa_proceso_grupo;
     }
 
@@ -379,6 +383,24 @@ class Index extends Component
         $acta_docente->save();
 
         // return $pdf->stream('acta-evaluacion-docente-'.$fecha2.'.pdf');
+    }
+
+    public function exportar_excel_lista_matriculados()
+    {
+        $matriculados = MatriculaCurso::join('matricula', 'matricula_curso.id_matricula', 'matricula.id_matricula')
+            ->join('admitido', 'matricula.id_admitido', 'admitido.id_admitido')
+            ->join('persona', 'admitido.id_persona', 'persona.id_persona')
+            ->where('matricula_curso.id_curso_programa_plan', $this->id_curso_programa_plan)
+            ->where('matricula.id_programa_proceso_grupo', $this->id_programa_proceso_grupo)
+            ->where('matricula_curso.id_admision', $this->id_admision)
+            ->orderBy('persona.nombre_completo', 'asc')
+            ->orderBy('matricula_curso.id_matricula_curso', 'desc')
+            ->groupBy('admitido.id_admitido')
+            ->get();
+        $nombre_programa = $this->programa->programa . 'EN '. $this->programa->subprograma . ($this->programa->mencion ? ' CON MENCION EN ' . $this->programa->mencion : '');
+        $nombre_programa = Str::slug($nombre_programa, '-');
+        $nombre_file = 'listado-matriculados-'.$nombre_programa.'-'.date('dmYHis').'.xlsx';
+        return Excel::download(new listaMatriculadosExport($matriculados, $this->programa, $this->curso, $this->grupo), $nombre_file);
     }
 
     public function render()
