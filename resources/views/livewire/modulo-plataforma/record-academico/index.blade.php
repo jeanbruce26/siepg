@@ -156,8 +156,10 @@
                                                     ->where('matricula.id_admitido', $admitido->id_admitido)
                                                     ->orderBy('matricula_curso.id_matricula_curso', 'desc')
                                                     ->first();
-                                                $nota_matricula_curso = App\Models\NotaMatriculaCurso::where('id_matricula_curso', $data->id_matricula_curso)->first();
-                                                // dump($data);
+                                                if ($data) {
+                                                    $nota_matricula_curso = App\Models\NotaMatriculaCurso::where('id_matricula_curso', $data->id_matricula_curso)->first();
+                                                    // dump($data);
+                                                }
                                             @endphp
                                                 <tr class="border-bottom fs-6">
                                                     <td class="text-center">
