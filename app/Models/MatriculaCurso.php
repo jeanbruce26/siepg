@@ -20,7 +20,8 @@ class MatriculaCurso extends Model
         'id_admision',
         'id_programa_proceso_grupo',
         'matricula_curso_fecha_creacion',
-        'matricula_curso_estado'
+        'matricula_curso_estado',
+        'matricula_curso_activo'
     ];
 
     // matricula
