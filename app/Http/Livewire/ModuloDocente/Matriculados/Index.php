@@ -411,6 +411,7 @@ class Index extends Component
                         ->where('matricula_curso.id_curso_programa_plan', $this->id_curso_programa_plan)
                         ->where('matricula.id_programa_proceso_grupo', $this->id_programa_proceso_grupo)
                         ->where('matricula_curso.id_admision', $this->id_admision)
+                        ->where('matricula_curso.matricula_curso_activo', 1)
                         ->where(function ($query) {
                             $query->where('persona.nombre_completo', 'like', '%'.$this->search.'%')
                                 ->orWhere('admitido.admitido_codigo', 'like', '%'.$this->search.'%');
