@@ -193,6 +193,10 @@
                                                                 <span class="badge badge-success fs-6 px-3 py-2">
                                                                     APROBADO
                                                                 </span>
+                                                            @elseif ($data->matricula_curso_estado == 3)
+                                                                <span class="badge badge-secondary fs-6 px-3 py-2">
+                                                                    NSP
+                                                                </span>
                                                             @else
                                                                 <span class="badge badge-danger fs-6 px-3 py-2">
                                                                     DESAPROBADO
