@@ -338,24 +338,22 @@ class Index extends Component
                             return;
                         }
                     }
-                }
-            }
-
-
-            // validar si el pago a registrar pertenece a la matricula extemporanea
-            $fecha_matricula_extemporanea_inicio = Admision::where('admision_estado', 1)->first()->admision_fecha_inicio_matricula_extemporanea;
-            $fecha_matricula_extemporanea_fin = Admision::where('admision_estado', 1)->first()->admision_fecha_fin_matricula_extemporanea;
-            if ($this->concepto_pago != 5 || $this->concepto_pago != 6) {
-                if ($this->concepto_pago == 3 || $this->concepto_pago == 4) {
-                    if ($this->fecha_pago >= $fecha_matricula_extemporanea_inicio && $this->fecha_pago <= $fecha_matricula_extemporanea_fin) {
-                        $this->dispatchBrowserEvent('alerta_pago_plataforma', [
-                            'title' => '¡Error!',
-                            'text' => 'El pago que usted desea registrar pertenece a la matrícula extemporánea, por favor realice el proceso de matrícula extemporánea.',
-                            'icon' => 'error',
-                            'confirmButtonText' => 'Aceptar',
-                            'color' => 'danger'
-                        ]);
-                        return;
+                    // validar si el pago a registrar pertenece a la matricula extemporanea
+                    $fecha_matricula_extemporanea_inicio = Admision::where('admision_estado', 1)->first()->admision_fecha_inicio_matricula_extemporanea;
+                    $fecha_matricula_extemporanea_fin = Admision::where('admision_estado', 1)->first()->admision_fecha_fin_matricula_extemporanea;
+                    if ($this->concepto_pago != 5 || $this->concepto_pago != 6) {
+                        if ($this->concepto_pago == 3 || $this->concepto_pago == 4) {
+                            if ($this->fecha_pago >= $fecha_matricula_extemporanea_inicio && $this->fecha_pago <= $fecha_matricula_extemporanea_fin) {
+                                $this->dispatchBrowserEvent('alerta_pago_plataforma', [
+                                    'title' => '¡Error!',
+                                    'text' => 'El pago que usted desea registrar pertenece a la matrícula extemporánea, por favor realice el proceso de matrícula extemporánea.',
+                                    'icon' => 'error',
+                                    'confirmButtonText' => 'Aceptar',
+                                    'color' => 'danger'
+                                ]);
+                                return;
+                            }
+                        }
                     }
                 }
             }
