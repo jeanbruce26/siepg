@@ -58,6 +58,7 @@ class listaMatriculadosExport implements FromCollection, WithMapping, ShouldAuto
             ->where('programa.id_modalidad',2)
             ->where('admitido.id_programa_proceso',$this->programa->id_programa_proceso)
             ->where('matricula.id_programa_proceso_grupo',$this->id_programa_proceso_grupo)
+            ->where('matricula.matricula_estado',1)
             ->orderBy('persona.nombre_completo', 'asc')
             ->get();
 
