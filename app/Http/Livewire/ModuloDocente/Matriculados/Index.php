@@ -393,9 +393,8 @@ class Index extends Component
             ->where('matricula_curso.id_curso_programa_plan', $this->id_curso_programa_plan)
             ->where('matricula.id_programa_proceso_grupo', $this->id_programa_proceso_grupo)
             ->where('matricula_curso.id_admision', $this->id_admision)
+            ->where('matricula_curso.matricula_curso_activo', 1)
             ->orderBy('persona.nombre_completo', 'asc')
-            ->orderBy('matricula_curso.id_matricula_curso', 'desc')
-            ->groupBy('admitido.id_admitido')
             ->get();
         $nombre_programa = $this->programa->programa . 'EN '. $this->programa->subprograma . ($this->programa->mencion ? ' CON MENCION EN ' . $this->programa->mencion : '');
         $nombre_programa = Str::slug($nombre_programa, '-');
