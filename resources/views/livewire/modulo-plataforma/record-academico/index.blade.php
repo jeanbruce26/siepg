@@ -189,7 +189,7 @@
                                                                 <span class="badge badge-secondary fs-6 px-3 py-2">
                                                                     PENDIENTE
                                                                 </span>
-                                                            @elseif ($data->matricula_curso_estado == 2 && $nota_matricula_curso->nota_matricula_curso_estado == 4)
+                                                            @elseif ($data->matricula_curso_estado == 2 && $nota_matricula_curso->id_estado_cursos == 4)
                                                                 <span class="badge badge-secondary fs-6 px-3 py-2">
                                                                     NSP
                                                                 </span>
