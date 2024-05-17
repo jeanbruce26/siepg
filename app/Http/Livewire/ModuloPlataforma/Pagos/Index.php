@@ -182,33 +182,6 @@ class Index extends Component
                 return;
             }
 
-            // validamos si la fecha de pago por concepto de matricula esta dentro de las fechas establecidas
-            $admision = Admision::where('admision_estado', 1)->first();
-            if ($this->concepto_pago == 3 || $this->concepto_pago == 4) {
-                if ($this->fecha_pago < $admision->admision_fecha_inicio_matricula || $this->fecha_pago > $admision->admision_fecha_fin_matricula) {
-                    $this->dispatchBrowserEvent('alerta_pago_plataforma', [
-                        'title' => '¡Error!',
-                        'text' => 'La fecha de pago ingresada no se encuentra dentro del rango de fechas de matrícula.',
-                        'icon' => 'error',
-                        'confirmButtonText' => 'Aceptar',
-                        'color' => 'danger'
-                    ]);
-                    return;
-                }
-            }
-            if ($this->concepto_pago == 5 || $this->concepto_pago == 6) {
-                if ($this->fecha_pago < $admision->admision_fecha_inicio_matricula_extemporanea || $this->fecha_pago > $admision->admision_fecha_fin_matricula_extemporanea) {
-                    $this->dispatchBrowserEvent('alerta_pago_plataforma', [
-                        'title' => '¡Error!',
-                        'text' => 'La fecha de pago ingresada no se encuentra dentro del rango de fechas de matrícula extemporánea.',
-                        'icon' => 'error',
-                        'confirmButtonText' => 'Aceptar',
-                        'color' => 'danger'
-                    ]);
-                    return;
-                }
-            }
-
             // validar si el numero de operacion, numero de documento, fecha de operacion y concepto de pago ya se encuentran registrados
             $pago = Pago::where('pago_operacion', $this->numero_operacion)
                 ->where('pago_documento', $this->documento_identidad)
@@ -331,6 +304,32 @@ class Index extends Component
                             $this->dispatchBrowserEvent('alerta_pago_plataforma', [
                                 'title' => '¡Error!',
                                 'text' => 'Constancia de Ingreso no generada, por favor realice el proceso para generar su Constancia de Ingreso.',
+                                'icon' => 'error',
+                                'confirmButtonText' => 'Aceptar',
+                                'color' => 'danger'
+                            ]);
+                            return;
+                        }
+                    }
+                    // validamos si la fecha de pago por concepto de matricula esta dentro de las fechas establecidas
+                    $admision = Admision::where('admision_estado', 1)->first();
+                    if ($this->concepto_pago == 3 || $this->concepto_pago == 4) {
+                        if ($this->fecha_pago < $admision->admision_fecha_inicio_matricula || $this->fecha_pago > $admision->admision_fecha_fin_matricula) {
+                            $this->dispatchBrowserEvent('alerta_pago_plataforma', [
+                                'title' => '¡Error!',
+                                'text' => 'La fecha de pago ingresada no se encuentra dentro del rango de fechas de matrícula.',
+                                'icon' => 'error',
+                                'confirmButtonText' => 'Aceptar',
+                                'color' => 'danger'
+                            ]);
+                            return;
+                        }
+                    }
+                    if ($this->concepto_pago == 5 || $this->concepto_pago == 6) {
+                        if ($this->fecha_pago < $admision->admision_fecha_inicio_matricula_extemporanea || $this->fecha_pago > $admision->admision_fecha_fin_matricula_extemporanea) {
+                            $this->dispatchBrowserEvent('alerta_pago_plataforma', [
+                                'title' => '¡Error!',
+                                'text' => 'La fecha de pago ingresada no se encuentra dentro del rango de fechas de matrícula extemporánea.',
                                 'icon' => 'error',
                                 'confirmButtonText' => 'Aceptar',
                                 'color' => 'danger'
