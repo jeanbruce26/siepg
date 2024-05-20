@@ -73,7 +73,7 @@ class Index extends Component
         $procesos = Admision::where(function ($query) {
                                 $query->where('admision_año', 'like', '%'.$this->search.'%');
                             })
-                            ->orderBy('id_admision', 'desc')
+                            ->orderBy('admision', 'desc')
                             ->paginate(6); // Obtener todos los procesos de admision
 
         $modalidades = Modalidad::where('modalidad_estado', 1)->get(); // Obtener todas las modalidades
