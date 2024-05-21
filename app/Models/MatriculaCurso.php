@@ -21,7 +21,8 @@ class MatriculaCurso extends Model
         'id_programa_proceso_grupo',
         'matricula_curso_fecha_creacion',
         'matricula_curso_estado',
-        'matricula_curso_activo'
+        'matricula_curso_activo',
+        'acta_adicional'
     ];
 
     // matricula
