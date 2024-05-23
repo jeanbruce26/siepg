@@ -86,7 +86,7 @@
                         <div class="d-flex justify-content-between mt-5">
                             <div class="d-flex align-items-center text-gray-700">
                                 Mostrando {{ $procesos->firstItem() }} - {{ $procesos->lastItem() }} de
-                                {{ $cursos->total() }} registros
+                                {{ $procesos->total() }} registros
                             </div>
                             <div>
                                 {{ $procesos->links() }}
