@@ -46,7 +46,7 @@
                     {{-- card la filtro y buscador --}}
                     <div class="row g-5">
                         @forelse ($grupos as $item)
-                            <div class="@if($programa_proceso->programa_tipo == 1) col-lg-6 col-md-12 @else col-12 @endif">
+                            {{-- <div class="@if($programa_proceso->programa_tipo == 1) col-lg-6 col-md-12 @else col-12 @endif">
                                 <div class="card hover-elevate-up shadow-sm parent-hover card-bordered">
                                     <div class="card-body mb-0">
                                         <div class="d-flex flex-column gap-5">
@@ -93,6 +93,74 @@
                                                                 </div>
                                                             </td>
                                                         @endforeach
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="text-end">
+                                                <a href="#modal_buscar_programa" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modal_buscar_programa" wire:click="buscar_programa({{ $item->id_admision }})">
+                                                    Ver detalle
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> --}}
+                            <div class="@if($programa_proceso->programa_tipo == 1) col-lg-6 col-md-12 @else col-12 @endif">
+                                <div class="card hover-elevate-up shadow-sm parent-hover card-bordered">
+                                    <div class="card-body mb-0">
+                                        <div class="d-flex flex-column gap-5">
+                                            <span class="fs-1 fs-sm-2 fw-bold text-center">
+                                                GRUPO {{ $item->grupo_detalle }}
+                                            </span>
+                                            <div class="table-responsive">
+                                                <table class="table table-hover align-middle table-rounded border mb-0 gy-5 gs-5">
+                                                    <thead class="bg-light-warning">
+                                                        <tr class="fw-bold fs-5 text-gray-900 border-bottom-2 border-gray-200">
+                                                            <th class="text-center">
+                                                                CICLO
+                                                            </th>
+                                                            <th class="text-center">
+                                                                MATRICULADOS
+                                                            </th>
+                                                            <th class="text-center">
+                                                                TOTAL PAGADOS
+                                                            </th>
+                                                            <th class="text-center">
+                                                                TOTAL DEBEN
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="fw-semibold text-gray-700">
+                                                        <tr class="fs-5">
+                                                            <td>
+                                                                <div class="d-flex flex-column">
+                                                                    <div>
+                                                                        CICLO 1
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="d-flex flex-column">
+                                                                    <div>
+                                                                        Matriculados: <span class="fw-bold">10</span>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="d-flex flex-column">
+                                                                    <div>
+                                                                        Total Pagados: <span class="fw-bold">10</span>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="d-flex flex-column">
+                                                                    <div class="text-danger">
+                                                                        Total Deben: <span class="fw-bold">0</span>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
