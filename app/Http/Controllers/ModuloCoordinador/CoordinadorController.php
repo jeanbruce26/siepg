@@ -259,6 +259,14 @@ class CoordinadorController extends Controller
         ]);
     }
 
+    public function reporte_programas_grupos($id_programa_proceso, $id_grupo)
+    {
+        return view('modulo-coordinador.reporte-pagos.reporte-programa-grupos', [
+            'id_programa_proceso' => $id_programa_proceso,
+            'id_grupo' => $id_grupo
+        ]);
+    }
+
     public function matriculas()
     {
         return view('modulo-coordinador.gestion-matriculas.index');

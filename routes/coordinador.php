@@ -48,5 +48,8 @@ Route::get('/reporte-pagos', [CoordinadorController::class, 'reporte_pagos'])->m
 // ruta para ir a la pagina de reportes de pagos d3e los programas
 Route::get('/reporte-pagos/{id_programa_proceso}/programa', [CoordinadorController::class, 'reporte_programas'])->middleware(['auth.usuario', 'verificar.usuario.coordinador'])->name('coordinador.reporte-programas');
 
+// ruta para ir a la pagina de reportes de pagos de los programas y matriculados
+Route::get('/reporte-pagos/{id_programa_proceso}/programa/{id_grupo}/grupo', [CoordinadorController::class, 'reporte_programas_grupos'])->middleware(['auth.usuario', 'verificar.usuario.coordinador'])->name('coordinador.reporte-programas-grupos');
+
 // ruta para ir a la pagina de gestion de matriculas
 Route::get('/matriculas', [CoordinadorController::class, 'matriculas'])->middleware(['auth.usuario', 'verificar.usuario.coordinador'])->name('coordinador.matriculas');

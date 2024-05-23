@@ -6,6 +6,9 @@ use App\Models\ExpedienteAdmision;
 use App\Models\ExpedienteInscripcion;
 use App\Models\ExpedienteInscripcionSeguimiento;
 use App\Models\Inscripcion;
+use App\Models\Matricula;
+use App\Models\MatriculaCurso;
+use App\Models\Mensualidad;
 use App\Models\Pago;
 use App\Models\Persona;
 use App\Models\ProgramaProceso;
@@ -342,6 +345,53 @@ function finalizar_evaluacion($evaluacion, $puntaje)
         $evaluacion->evaluacion_observacion = 'No se presentó a la evaluación de entrevista.';
         $evaluacion->save();
     }
+}
+
+function dataPagoMatricula($item) {
+    // buscar ultima matricula
+    $ultima_matricula = Matricula::where('id_admitido', $item->id_admitido)->where('matricula_estado', 1)->orderBy('id_matricula', 'desc')->first();
+
+
+    // buscar cursos de la ultima matricula
+    $cursos = $ultima_matricula ?
+        MatriculaCurso::join('curso_programa_plan', 'matricula_curso.id_curso_programa_plan', '=', 'curso_programa_plan.id_curso_programa_plan')
+                            ->join('curso', 'curso_programa_plan.id_curso', '=', 'curso.id_curso')
+                            ->where('matricula_curso.id_matricula', $ultima_matricula->id_matricula)
+                            ->get() :
+        collect([]);
+
+    // sumar creditos de los cursos
+    $creditos_totales = 0;
+    foreach($cursos as $curso)
+    {
+        $creditos_totales += $curso->curso_credito;
+    }
+
+    $costo_enseñanza = App\Models\CostoEnseñanza::where('id_plan', $item->id_plan)->where('programa_tipo', $item->programa_tipo)->first();
+    $mensualidades  = Mensualidad::join('matricula', 'mensualidad.id_matricula', '=', 'matricula.id_matricula')
+        ->join('pago', 'mensualidad.id_pago', '=', 'pago.id_pago')
+        ->where('mensualidad.id_admitido', $item->id_admitido)
+        ->where('matricula.id_matricula', $ultima_matricula->id_matricula)
+        ->get();
+
+    $monto_total = $costo_enseñanza->costo_credito * $creditos_totales;
+    $monto_pagado = 0;
+
+    foreach($mensualidades as $mensualidad)
+    {
+        if ( $mensualidad->pago->pago_estado == 2 && $mensualidad->pago->pago_verificacion == 2 )
+        {
+            $monto_pagado += $mensualidad->pago->pago_monto;
+        }
+    }
+
+    $deuda = $monto_total - $monto_pagado;
+
+    return [
+        'monto_total' => $monto_total,
+        'monto_pagado' => $monto_pagado,
+        'deuda' => $deuda
+    ];
 }
 
 //

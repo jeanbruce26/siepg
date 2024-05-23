@@ -1,0 +1,46 @@
+<?php
+
+namespace App\Http\Livewire\ModuloCoordinador\ReportePagos;
+
+use App\Models\CostoEnseñanza;
+use App\Models\Matricula;
+use App\Models\ProgramaProceso;
+use Livewire\Component;
+
+class Matriculados extends Component
+{
+    public $id_programa_proceso;
+    public $id_grupo;
+
+    public $search = '';
+
+    public function render()
+    {
+        $programa_proceso = ProgramaProceso::join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
+            ->join('programa', 'programa.id_programa', '=', 'programa_plan.id_programa')
+            ->join('modalidad', 'modalidad.id_modalidad', '=', 'programa.id_modalidad')
+            ->where('programa_proceso.id_programa_proceso', $this->id_programa_proceso)
+            ->first();
+
+        $matriculados = Matricula::join('admitido','admitido.id_admitido','=','matricula.id_admitido')
+            ->join('programa_proceso','programa_proceso.id_programa_proceso','=','admitido.id_programa_proceso')
+            ->join('programa_plan','programa_plan.id_programa_plan','=','programa_proceso.id_programa_plan')
+            ->join('programa','programa.id_programa','=','programa_plan.id_programa')
+            ->join('persona','persona.id_persona','=','admitido.id_persona')
+            ->join('programa_proceso_grupo','programa_proceso_grupo.id_programa_proceso_grupo','=','matricula.id_programa_proceso_grupo')
+            ->where('admitido.id_programa_proceso',$this->id_programa_proceso)
+            ->where('matricula.id_programa_proceso_grupo',$this->id_grupo)
+            ->where('matricula.matricula_estado',1)
+            ->where(function($query){
+                $query->where('persona.nombre_completo','like','%'.$this->search.'%')
+                    ->orWhere('persona.numero_documento','like','%'.$this->search.'%')
+                    ->orWhere('admitido.admitido_codigo','like','%'.$this->search.'%');
+            })
+            ->orderBy('persona.nombre_completo','asc')
+            ->get();
+        return view('livewire.modulo-coordinador.reporte-pagos.matriculados', [
+            'programa_proceso' => $programa_proceso,
+            'matriculados' => $matriculados
+        ]);
+    }
+}
