@@ -35,6 +35,7 @@ class Index extends Component
     public $proceso;
     public $grupo;
     public $notas = [];
+    public $nsp = [];
     public $resolucion;
     public $resolucion_file;
 
@@ -274,6 +275,7 @@ class Index extends Component
             $matricula_curso->id_programa_proceso_grupo = $this->grupo;
             $matricula_curso->matricula_curso_fecha_creacion = date('Y-m-d H:i:s');
             $matricula_curso->matricula_curso_estado = 1;
+            $matricula_curso->matricula_curso_activo = 0;
             $matricula_curso->save();
         }
 
@@ -305,6 +307,37 @@ class Index extends Component
             $nota->save();
 
             $matricula_curso->save();
+        }
+
+        // registramos los cursos con nsp
+        foreach ( $this->nsp as $key => $item )
+        {
+            $matricula_curso = new MatriculaCurso();
+            $matricula_curso->id_matricula = $matricula->id_matricula;
+            $matricula_curso->id_curso_programa_plan = $key;
+            $matricula_curso->id_admision = $estudiante->programa_proceso->id_admision;
+            $matricula_curso->id_programa_proceso_grupo = $this->grupo;
+            $matricula_curso->matricula_curso_fecha_creacion = date('Y-m-d H:i:s');
+            $matricula_curso->matricula_curso_estado = 1;
+            $matricula_curso->matricula_curso_activo = 0;
+            $matricula_curso->save();
+        }
+
+        // registramos las notas de los cursos con nsp
+        foreach ( $this->nsp as $key => $item )
+        {
+            $matricula_curso = MatriculaCurso::where('id_matricula', $matricula->id_matricula)->where('id_curso_programa_plan', $key)->first();
+            $matricula_curso->matricula_curso_estado = 2; // 2 = curso finalizado
+            $matricula_curso->save();
+            $nota = new NotaMatriculaCurso();
+            $nota->id_matricula_curso = $matricula_curso->id_matricula_curso;
+            $nota->nota_promedio_final = 0;
+            $nota->nota_matricula_curso_fecha_creacion = date('Y-m-d H:i:s');
+            $nota->nota_matricula_curso_estado = 2;
+            $nota->id_estado_cursos = 4;
+            $nota->id_docente = null;
+            $nota->save();
+
         }
 
         // cerrar modal

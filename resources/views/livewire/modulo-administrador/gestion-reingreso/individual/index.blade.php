@@ -463,6 +463,7 @@
                                             <th>Cursos - Ciclo {{ $ciclo }}</th>
                                             <th></th>
                                             <th class="text-center" class="col-md-2">Nota</th>
+                                            <th class="text-center">NSP</th>
                                         </tr>
                                     </thead>
                                     <tbody class="fw-semibold text-gray-700">
@@ -483,10 +484,15 @@
                                                 <td class="fs-6">
                                                     <input type="text" class="form-control form-control-sm @error('notas.'.$item->id_curso_programa_plan) is-invalid @enderror" wire:model="notas.{{ $item->id_curso_programa_plan }}"/>
                                                 </td>
+                                                <td class="fs-6">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input @error('nsp.'.$item->id_curso_programa_plan) is-invalid @enderror" type="checkbox" wire:model="nsp.{{ $item->id_curso_programa_plan }}" value="{{ $item->id_curso_programa_plan }}" id="nsp.{{ $item->id_curso_programa_plan }}" />
+                                                    </div>
+                                                </td>
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="5" class="text-center text-muted">
+                                                <td colspan="6" class="text-center text-muted">
                                                     No hay registros
                                                 </td>
                                             </tr>
