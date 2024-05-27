@@ -157,6 +157,7 @@ class Index extends Component
 
     public function guardar_reingreso()
     {
+        dd($this->all());
         $this->validate([
             'resolucion' => 'required',
             'resolucion_file' => 'nullable|file|mimes:pdf|max:10240',
@@ -408,13 +409,16 @@ class Index extends Component
                     ->orderBy('curso.curso_codigo', 'asc')
                     ->orderBy('curso.id_ciclo', 'asc')
                     ->get();
+                $ciclos = $cursos->unique('id_ciclo')->pluck('id_ciclo');
                 $grupos = ProgramaProcesoGrupo::where('id_programa_proceso', $programa->id_programa_proceso)->get();
             } else {
                 $cursos = collect();
+                $ciclos = collect();
                 $grupos = collect();
             }
         } else {
             $cursos = collect();
+            $ciclos = collect();
             $grupos = collect();
         }
 
@@ -426,6 +430,7 @@ class Index extends Component
             'planes' => $planes,
             'procesos' => $procesos,
             'cursos' => $cursos,
+            'ciclos' => $ciclos,
             'grupos' => $grupos,
         ]);
     }

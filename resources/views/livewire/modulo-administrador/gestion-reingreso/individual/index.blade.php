@@ -445,24 +445,33 @@
                                     </span>
                                 </div>
                             </div>
-                            <div class="table-responsive">
-                                <table class="table table-hover align-middle table-rounded border mb-0 gy-5 gs-5">
+                            @foreach ($ciclos as $ciclo)
+                            {{-- @php
+                                $cursos = App\Models\CursoProgramaPlan::join('curso', 'curso_programa_plan.id_curso', 'curso.id_curso')
+                                            ->where('curso_programa_plan.id_programa_plan', $programa->id_programa_plan)
+                                            ->where('curso.id_ciclo', $ciclo)
+                                            ->orderBy('curso.curso_codigo', 'asc')
+                                            ->orderBy('curso.id_ciclo', 'asc')
+                                            ->get();
+                            @endphp --}}
+                            <div class="table-responsive mb-5">
+                                <table class="table table-hover align-middle table-rounded border mb-0 gy-1 gs-1">
                                     <thead class="bg-light-warning">
                                         <tr class="fw-bold fs-5 text-gray-900 border-bottom-2 border-gray-200">
-                                            <th>#</th>
-                                            <th>Código</th>
-                                            <th>Curso</th>
+                                            <th class="text-center">#</th>
+                                            <th class="text-center">Código</th>
+                                            <th>Cursos - Ciclo {{ $ciclo }}</th>
                                             <th></th>
-                                            <th class="col-md-2">Nota</th>
+                                            <th class="text-center" class="col-md-2">Nota</th>
                                         </tr>
                                     </thead>
                                     <tbody class="fw-semibold text-gray-700">
-                                        @forelse ($cursos as $item)
+                                        @forelse ($cursos->where('curso.id_ciclo', $ciclo) as $item)
                                             <tr wire:key="{{ $item->id_curso_programa_plan }}">
-                                                <td class="fw-bold fs-6">
+                                                <td align="center" class="fw-bold fs-6">
                                                     {{ $item->id_curso }}
                                                 </td>
-                                                <td class="fs-6">
+                                                <td align="center" class="fs-6">
                                                     {{ $item->curso_codigo }}
                                                 </td>
                                                 <td class="fs-6">
@@ -472,7 +481,7 @@
                                                     ->
                                                 </td>
                                                 <td class="fs-6">
-                                                    <input type="text" class="form-control @error('notas.'.$item->id_curso_programa_plan) is-invalid @enderror" wire:model="notas.{{ $item->id_curso_programa_plan }}"/>
+                                                    <input type="text" class="form-control form-control-sm @error('notas.'.$item->id_curso_programa_plan) is-invalid @enderror" wire:model="notas.{{ $item->id_curso_programa_plan }}"/>
                                                 </td>
                                             </tr>
                                         @empty
@@ -485,6 +494,7 @@
                                     </tbody>
                                 </table>
                             </div>
+                            @endforeach
                         </div>
                         @endif
                         @if ($paso == 3)
