@@ -157,7 +157,6 @@ class Index extends Component
 
     public function guardar_reingreso()
     {
-        dd($this->all());
         $this->validate([
             'resolucion' => 'required',
             'resolucion_file' => 'nullable|file|mimes:pdf|max:10240',
