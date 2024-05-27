@@ -139,6 +139,8 @@ class Index extends Component
             ->groupBy('admitido.id_programa_proceso')
             ->orderBy(Admitido::raw('count(admitido.id_programa_proceso)'), 'desc')
             ->get();
+
+        $this->ingreso_total = $this->ingreso_constancia + $this->ingreso_matricula + $this->ingreso_inscripcion + $this->ingreso_costo_enseñanza;
     }
 
     public function aplicar_filtro()
