@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers\ModuloPlataforma;
 
-use App\Http\Controllers\Controller;
-use App\Models\Admitido;
-use App\Models\Ciclo;
-use App\Models\CostoEnseñanza;
-use App\Models\Matricula;
-use App\Models\MatriculaCurso;
-use App\Models\Mensualidad;
-use App\Models\Persona;
+use App\Models\Pago;
 use App\Models\Plan;
-use App\Models\ProgramaProceso;
-use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\Ciclo;
+use App\Models\Persona;
+use App\Models\Admitido;
+use App\Models\Matricula;
+use App\Models\Mensualidad;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\CostoEnseñanza;
+use App\Models\MatriculaCurso;
+use App\Models\ProgramaProceso;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Http\Controllers\Controller;
 
 class PlataformaController extends Controller
 {
@@ -46,6 +47,34 @@ class PlataformaController extends Controller
     public function pago()
     {
         return view('modulo-plataforma.pagos.index');
+    }
+
+    public function comprobante($id_pago)
+    {
+        // retornar un pdf de comprobante de pago
+        $pago = Pago::where('id_pago', $id_pago)->first();
+        if ($pago == null) {
+            abort(403, 'No se encontro el registro del pago');
+        }
+        $persona = $pago->persona;
+        $concepto_pago = $pago->concepto_pago;
+        $canal_pago = $pago->canal_pago;
+
+        $admitido = Admitido::where('id_persona', $persona->id_persona)->orderBy('id_admitido', 'desc')->first(); // admitido del usuario logueado
+        $admitido = $admitido ? true : false;
+
+        $data = [
+            'pago' => $pago,
+            'persona' => $persona,
+            'concepto_pago' => $concepto_pago,
+            'canal_pago' => $canal_pago,
+            'admitido' => $admitido,
+        ];
+
+        $pdf = Pdf::loadView('modulo-plataforma.pagos.comprobante', $data);
+        $pdf->setPaper('a5', 'landscape'); // 'a6', 'landscape' | 'a6', 'portrait
+
+        return $pdf->stream('comprobante-pago.pdf');
     }
 
     public function estado_cuenta()

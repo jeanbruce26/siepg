@@ -110,6 +110,7 @@
                                         <th>Monto</th>
                                         <th>Fecha</th>
                                         <th>Estado</th>
+                                        <th>Comprobante</th>
                                         {{-- <th>Voucher</th> --}}
                                         <th class="text-end">Acciones</th>
                                     </tr>
@@ -143,6 +144,17 @@
                                                 <span class="badge badge-danger fs-6 px-3 py-2">Observado</span>
                                             @endif
                                         </td>
+                                        @if ($item->pago_verificacion == 2)
+                                            <td>
+                                                <a href="{{ route('plataforma.comprobante', $item->id_pago) }}" target="_blank" class="btn btn-sm btn-outline btn-outline-info">
+                                                    Ver Comprobante
+                                                </a>
+                                            </td>
+                                        @else
+                                            <td>
+                                                -
+                                            </td>
+                                        @endif
                                         {{-- <td>
                                             <a href="{{ asset($item->pago_voucher_url) }}" target="_blank" class="btn btn-outline btn-outline-info">
                                                 Ver Voucher
