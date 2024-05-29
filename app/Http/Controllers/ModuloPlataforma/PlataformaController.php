@@ -59,6 +59,10 @@ class PlataformaController extends Controller
         $persona = $pago->persona;
         $concepto_pago = $pago->concepto_pago;
         $canal_pago = $pago->canal_pago;
+        
+        if (auth('plataforma')->user()->id_persona != $persona->id_persona) {
+            abort(403, 'Acceso no autorizado');
+        }
 
         $admitido = Admitido::where('id_persona', $persona->id_persona)->orderBy('id_admitido', 'desc')->first(); // admitido del usuario logueado
         $admitido = $admitido ? true : false;
