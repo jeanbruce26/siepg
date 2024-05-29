@@ -92,8 +92,8 @@
         </div>
         <div class="content">
             <p><strong>Comprobante:</strong> CPS-{{ $pago->pago_documento }}-{{ $pago->pago_operacion }}</p>
-            <p><strong>Fecha:</strong> {{ convertirFechaHora($pago->created_at) }}</p>
-            <p><strong>Importe Pagado:</strong> S/. {{ number_format($pago->monto, 2) }}</p>
+            <p><strong>Fecha:</strong> {{ convertirFechaHora($pago->updated_at) }}</p>
+            <p><strong>Importe Pagado:</strong> S/. {{ number_format($pago->pago_monto, 2) }}</p>
             <p><strong>{{ $admitido ? 'Alumno' : 'Postulante' }}:</strong> {{ ucwords(strtolower($persona->nombre_completo)) }}</p>
 
             <hr style="margin: 20px 0; border: 1px solid #ccc;">
