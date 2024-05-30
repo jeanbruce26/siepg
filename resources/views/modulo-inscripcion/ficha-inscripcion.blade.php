@@ -605,7 +605,7 @@
                         <tr>
                             <th><div class="titulo3">Fecha de inscripción</div></th>
                             <th><div class="mx-2">:</div></th>
-                            <th style="text-align: initial;">{{$fecha_actual}}</th>
+                            <th style="text-align: initial;">{{ date('h:i a d/m/Y', strtotime($inscripcion->created_at)) }}</th>
                         </tr>
                         <tr>
                             <th><div class="titulo3">Programa</div></th>
