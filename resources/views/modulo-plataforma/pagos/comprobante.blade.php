@@ -100,7 +100,7 @@
 
             <p class="note">
                 Nota importante: Ud. debe imprimir y conservar este comprobante de pago. Se le
-                solicitará en caso de reclamo.
+                solicitará en caso de reclamo. 
             </p>
         </div>
         {{-- <div class="footer">
