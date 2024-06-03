@@ -280,7 +280,11 @@
                         @endif
                     </td>
                     <td style="border: 1px solid black; padding: 4px;">
-                        {{ $letras[$notas->nota_promedio_final] }}
+                        @if ($notas->id_estado_cursos == 4)
+                            NSP
+                        @else
+                            {{ $letras[$notas->nota_promedio_final] }}
+                        @endif
                     </td>
                 </tr>
             @endforeach
