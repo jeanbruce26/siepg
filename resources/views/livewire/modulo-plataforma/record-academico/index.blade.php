@@ -140,7 +140,7 @@
                                                 <th>CODIGO</th>
                                                 <th class="col-4">CURSO</th>
                                                 <th>FECHA</th>
-                                                <th>GRUPO</th>
+                                                <th>SECCION</th>
                                                 <th>CRED.</th>
                                                 <th>PERIODO</th>
                                                 <th>NOTA</th>
@@ -156,9 +156,18 @@
                                                     ->where('matricula.id_admitido', $admitido->id_admitido)
                                                     ->orderBy('matricula_curso.id_matricula_curso', 'desc')
                                                     ->first();
+                                                $docente = null;
                                                 if ($data) {
                                                     $nota_matricula_curso = App\Models\NotaMatriculaCurso::where('id_matricula_curso', $data->id_matricula_curso)->first();
-                                                    // dump($data);
+                                                    if ($nota_matricula_curso) {
+                                                        $docente = App\Models\Docente::where('id_docente', $nota_matricula_curso->id_docente)->first();
+                                                        if ($docente == null) {
+                                                            $docente = App\Models\DocenteCurso::where('id_curso_programa_plan', $data->id_curso_programa_plan)
+                                                                ->where('id_programa_proceso_grupo', $data->id_programa_proceso_grupo)
+                                                                ->first();
+                                                            $docente = $docente ? App\Models\Docente::where('id_docente', $docente->id_docente)->first() : null;
+                                                        }
+                                                    }
                                                 }
                                             @endphp
                                                 <tr class="border-bottom fs-6">
@@ -167,6 +176,14 @@
                                                     </td>
                                                     <td>
                                                         {{ $curso->curso_nombre }}
+                                                        <div class="fs-6">
+                                                            <span class="fw-bold">Docente:</span>
+                                                            @if ($docente)
+                                                                {{ $docente->trabajador->grado_academico->grado_academico_prefijo }} {{ $docente->trabajador->trabajador_nombre_completo }}
+                                                            @else
+                                                                Sin asignar
+                                                            @endif
+                                                        </div>
                                                     </td>
                                                     <td class="text-center">
                                                         {{ $data ? date('d/m/Y', strtotime($data->created_at)) : '---' }}
