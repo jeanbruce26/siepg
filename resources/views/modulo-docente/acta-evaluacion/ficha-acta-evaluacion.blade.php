@@ -273,7 +273,11 @@
                         {{ $notas->nota_evaluacion_final ? $notas->nota_evaluacion_final : '-' }}
                     </td>
                     <td style="border: 1px solid black; padding: 4px;" align="center">
-                        {{ $notas->nota_promedio_final }}
+                        @if ($notas->id_estado4_cursos == 4)
+                            NSP
+                        @else
+                            {{ $notas->nota_promedio_final }}
+                        @endif
                     </td>
                     <td style="border: 1px solid black; padding: 4px;">
                         {{ $letras[$notas->nota_promedio_final] }}

@@ -188,6 +188,7 @@ class Index extends Component
             $this->nota_matricula_curso->nota_evaluacion_final = 0;
             $this->nota_matricula_curso->nota_promedio_final = 0;
             $this->nota_matricula_curso->id_estado_cursos = 4;
+            $this->nota_matricula_curso->id_docente = $this->docente_curso->id_docente;
             $this->nota_matricula_curso->save();
         }
         else
@@ -201,6 +202,7 @@ class Index extends Component
             $this->nota_matricula_curso->nota_matricula_curso_fecha_creacion = date('Y-m-d H:i:s');
             $this->nota_matricula_curso->nota_matricula_curso_estado = 1;
             $this->nota_matricula_curso->id_estado_cursos = 4;
+            $this->nota_matricula_curso->id_docente = $this->docente_curso->id_docente;
             $this->nota_matricula_curso->save();
         }
 
@@ -230,9 +232,25 @@ class Index extends Component
 
     public function guardar_notas()
     {
+        // obtenemos los que tienen nsp
+        $matriculados_nsp = MatriculaCurso::join('matricula', 'matricula_curso.id_matricula', 'matricula.id_matricula')
+                        ->join('admitido', 'matricula.id_admitido', 'admitido.id_admitido')
+                        ->join('persona', 'admitido.id_persona', 'persona.id_persona')
+                        ->join('nota_matricula_curso', 'matricula_curso.id_matricula_curso', 'nota_matricula_curso.id_matricula_curso')
+                        ->where('matricula_curso.id_curso_programa_plan', $this->id_curso_programa_plan)
+                        ->where('matricula.id_programa_proceso_grupo', $this->id_programa_proceso_grupo)
+                        ->where('matricula_curso.id_admision', $this->id_admision)
+                        ->where('matricula_curso.matricula_curso_activo', 1)
+                        ->where('nota_matricula_curso.id_estado_cursos', 4)
+                        ->orderBy('persona.nombre_completo', 'asc')
+                        ->get();
+
+        $count_matriculados_nsp = count($matriculados_nsp);
+        $count_matriculados_sin_notas = count($this->matriculados) - $count_matriculados_nsp;
+
         // validar si todos los campos de notas están vacíos y mostrar alerta
         $this->validate([
-            'notas' => 'required|array|min:' . count($this->matriculados),
+            'notas' => 'required|array|min:' . $count_matriculados_sin_notas,
         ]);
 
         // validar todas las filas de notas
