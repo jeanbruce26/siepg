@@ -140,7 +140,7 @@
                                                 <th>CODIGO</th>
                                                 <th class="col-4">CURSO</th>
                                                 <th>FECHA</th>
-                                                <th>GRUPO</th>
+                                                <th>SECCION</th>
                                                 <th>CRED.</th>
                                                 <th>PERIODO</th>
                                                 <th>NOTA</th>
