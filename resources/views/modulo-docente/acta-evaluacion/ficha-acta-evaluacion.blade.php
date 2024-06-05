@@ -10,8 +10,8 @@
     </title>
     <style>
         body {
-            margin-top: 150px;
-            margin-bottom: 90px;
+            margin-top: 120px;
+            margin-bottom: 80px;
         }
 
         header {
