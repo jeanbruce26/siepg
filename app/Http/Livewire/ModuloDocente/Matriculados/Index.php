@@ -357,6 +357,7 @@ class Index extends Component
         $programa_model = Programa::find($curso_programa_plan->programa_plan->id_programa);
         $docente_model = Docente::find($docente_curso->id_docente);
         $trabajador = $docente_model->trabajador;
+        $grado_academico = $trabajador->grado_academico;
 
         $admision_año = $docente_curso->admision->admision_año;
 
@@ -365,7 +366,7 @@ class Index extends Component
         $mencion = $programa_model->mencion ? $programa_model->mencion : '';
         $curso = strtoupper($curso_model->curso_nombre);
         $codigo_curso = $curso_model->curso_codigo;
-        $docente = ($trabajador->id_grado_academico == 4 ? 'Dr. ' : ($trabajador->id_grado_academico == 3 ? 'Mg. ' : 'Bach. ')) . strtoupper($trabajador->trabajador_nombre_completo);
+        $docente = $grado_academico->grado_academico_prefijo . ' ' . strtoupper($trabajador->trabajador_nombre_completo);
         $codigo_docente = $trabajador->trabajador_numero_documento;
         $creditos = $curso_model->curso_credito;
         $ciclo = $curso_model->ciclo->ciclo;
