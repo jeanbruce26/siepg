@@ -272,14 +272,14 @@
                     <td style="border: 1px solid black; padding: 4px;" align="center">
                         {{ $notas->nota_evaluacion_final ? $notas->nota_evaluacion_final : '-' }}
                     </td>
-                    <td style="border: 1px solid black; padding: 4px;" align="center">
+                    <td style="border: 1px solid black; padding: 4px; {{ $notas->nota_promedio_final < 14 ? 'color: #ff0000;' : '' }}" align="center">
                         @if ($notas->id_estado_cursos == 4)
                             NSP
                         @else
                             {{ $notas->nota_promedio_final }}
                         @endif
                     </td>
-                    <td style="border: 1px solid black; padding: 4px;">
+                    <td style="border: 1px solid black; padding: 4px; {{ $notas->nota_promedio_final < 14 ? 'color: #ff0000;' : '' }}">
                         @if ($notas->id_estado_cursos == 4)
                             NSP
                         @else
