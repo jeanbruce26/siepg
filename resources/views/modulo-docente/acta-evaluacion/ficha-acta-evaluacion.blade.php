@@ -10,13 +10,13 @@
     </title>
     <style>
         body {
-            margin-top: 150px;
-            margin-bottom: 100px;
+            margin-top: 120px;
+            margin-bottom: 80px;
         }
 
         header {
             position: fixed;
-            top: -10px;
+            top: -20px;
             width: 100%;
         }
 
@@ -24,7 +24,7 @@
             position: fixed;
             left: 0px;
             right: 0px;
-            bottom: -10px;
+            bottom: -20px;
             width: 100%;
         }
     </style>
@@ -58,7 +58,7 @@
                 </tr>
             </thead>
         </table>
-        <div style="margin-top: 0.5rem; text-align: center;">
+        <div style="margin-top: 0.4rem; text-align: center;">
             <span style="text-align: center; font-weight: 700; font-size: 0.9rem">
                 REGISTRO FINAL DE EVALUACIÓN ACADÉMICA
             </span>
@@ -70,12 +70,12 @@
         </div>
     </header>
     <div id="footer">
-        <div style="margin-top: 1.9rem; text-align: right;">
+        <div style="margin-top: 1.5rem; text-align: right;">
             <span style="text-align: center; font-weight: 400; font-size: 0.7rem">
                 Fecha de emisión: ___/___/___
             </span>
         </div>
-        <div style="margin-top: 2.8rem; text-align: right;">
+        <div style="margin-top: 2.5rem; text-align: right;">
             <span style="text-align: center; font-weight: 400; font-size: 0.7rem">
                 {{ $docente }}
             </span>
@@ -253,7 +253,7 @@
                 $notas = App\Models\NotaMatriculaCurso::where('id_matricula_curso', $item->id_matricula_curso)->first();
                 $letras = array('Cero', 'Uno', 'Dos', 'Tres', 'Cuatro', 'Cinco', 'Seis', 'Siete', 'Ocho', 'Nueve', 'Diez', 'Once', 'Doce', 'Trece', 'Catorce', 'Quince', 'Dieciséis', 'Diecisiete', 'Dieciocho', 'Diecinueve', 'Veinte');
             @endphp
-                <tr style="border: 1px solid black; padding: 4px; font-size: 0.6rem">
+                <tr style="border: 1px solid black; padding: 4px; font-size: 0.5rem">
                     <td style="border: 1px solid black; padding: 4px;" align="center">
                         {{ $loop->iteration }}
                     </td>
@@ -272,11 +272,19 @@
                     <td style="border: 1px solid black; padding: 4px;" align="center">
                         {{ $notas->nota_evaluacion_final ? $notas->nota_evaluacion_final : '-' }}
                     </td>
-                    <td style="border: 1px solid black; padding: 4px;" align="center">
-                        {{ $notas->nota_promedio_final }}
+                    <td style="border: 1px solid black; padding: 4px; {{ $notas->nota_promedio_final < 14 ? 'color: #ff0000;' : '' }}" align="center">
+                        @if ($notas->id_estado_cursos == 4)
+                            NSP
+                        @else
+                            {{ $notas->nota_promedio_final }}
+                        @endif
                     </td>
-                    <td style="border: 1px solid black; padding: 4px;">
-                        {{ $letras[$notas->nota_promedio_final] }}
+                    <td style="border: 1px solid black; padding: 4px; {{ $notas->nota_promedio_final < 14 ? 'color: #ff0000;' : '' }}">
+                        @if ($notas->id_estado_cursos == 4)
+                            NSP
+                        @else
+                            {{ $letras[$notas->nota_promedio_final] }}
+                        @endif
                     </td>
                 </tr>
             @endforeach
