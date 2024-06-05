@@ -327,6 +327,7 @@ class Index extends Component
                         ->join('persona', 'admitido.id_persona', 'persona.id_persona')
                         ->where('matricula_curso.id_curso_programa_plan', $docente_curso->id_curso_programa_plan)
                         ->where('matricula.id_programa_proceso_grupo', $docente_curso->id_programa_proceso_grupo)
+                        ->where('matricula_curso.matricula_curso_activo', 1)
                         ->orderBy('persona.nombre_completo', 'asc')
                         ->get();
 
