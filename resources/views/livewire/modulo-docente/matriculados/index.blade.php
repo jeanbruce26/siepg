@@ -22,7 +22,7 @@
                     {{-- <a href="{{ route('docente.acta_evaluacion', ['id_docente_curso' => $id_docente_curso]) }}" target="_blank" class="btn btn-info fw-bold">
                         Acta de Evaluación
                     </a> --}}
-                    @if ($acta_docente)
+                    {{-- @if ($acta_docente)
                         <a
                             href="{{ asset($acta_docente->acta_url) }}"
                             download
@@ -36,7 +36,7 @@
                             wire:click="generar_acta_notas({{ $id_docente_curso }})"
                             class="btn btn-info fw-bold"
                             style="width: 240px"
-                            @if ($matriculados_count != $matriculados_finalizados_count) disabled @endif --}}
+                            @if ($matriculados_count != $matriculados_finalizados_count) disabled @endif
                             wire:loading.attr="disabled"
                             wire:target="generar_acta_notas({{ $id_docente_curso }})"
                             >
@@ -47,7 +47,7 @@
                                 Generando <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
                             </div>
                         </button>
-                    @endif
+                    @endif --}}
                     <button type="button"
                         wire:click="exportar_excel_lista_matriculados"
                         class="btn btn-success fw-bold"
