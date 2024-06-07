@@ -48,6 +48,44 @@
                             </div>
                         </button>
                     @endif --}}
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-info fw-bold dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                          Acta de Notas
+                        </button>
+                        <ul class="dropdown-menu">
+                            @if ($acta_docente)
+                                <li>
+                                    <a
+                                        href="{{ asset($acta_docente->acta_url) }}"
+                                        download
+                                        class="dropdown-item"
+                                        >
+                                        Descargar Acta de Evaluación
+                                    </a>
+                                </li>
+                            @else
+                                <li>
+                                    <a
+                                        wire:click="generar_acta_notas({{ $id_docente_curso }})"
+                                        class="dropdown-item cursor-pointer"
+                                        style="width: 240px"
+                                        @if ($matriculados_count != $matriculados_finalizados_count) disabled @endif
+                                        wire:loading.attr="disabled"
+                                        wire:target="generar_acta_notas({{ $id_docente_curso }})"
+                                        >
+                                        <div wire:loading.remove wire:target="generar_acta_notas({{ $id_docente_curso }})">
+                                            Generar Acta de Evaluación
+                                        </div>
+                                        <div wire:loading wire:target="generar_acta_notas({{ $id_docente_curso }})">
+                                            Generando <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                        </div>
+                                    </a>
+                                </li>
+                            @endif
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#">Acta Adicional</a></li>
+                        </ul>
+                      </div>
                     <button type="button"
                         wire:click="exportar_excel_lista_matriculados"
                         class="btn btn-success fw-bold"
