@@ -17,9 +17,7 @@ class ActaDocente extends Model
         'acta_url',
         'id_docente_curso',
         'acta_docente_fecha_creacion',
-        'acta_docente_estado',
-        'es_adicional',
-        'es_reingreso'
+        'acta_docente_estado'
     ];
 
     public $timestamps = false;
