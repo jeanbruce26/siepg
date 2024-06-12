@@ -413,6 +413,7 @@ class Index extends Component
             'matriculados' => $matriculados,
             'matriculados_adicional' => $matriculados_adicional,
             'matriculados_reingreso' => $matriculados_reingreso,
+            'matriculados_reincorporacion' => $matriculados_reincorporacion,
             'programa' => $programa,
             'subprograma' => $subprograma,
             'mencion' => $mencion,
