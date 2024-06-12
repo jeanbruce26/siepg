@@ -24,6 +24,7 @@ class MatriculaCurso extends Model
         'matricula_curso_activo',
         'acta_adicional',
         'acta_reingreso',
+        'acta_reincorporacion'
     ];
 
     // matricula
