@@ -511,6 +511,7 @@
                         ->where('matricula_curso.matricula_curso_activo', 1)
                         ->where('matricula_curso.acta_adicional', 0)
                         ->where('matricula_curso.acta_reingreso', 1)
+                        ->where('matricula_curso.acta_reincorporacion', 0)
                         ->where('admitido.id_admitido', $item->id_admitido)
                         ->first();
                 $reingreso = App\Models\Reingreso::where('id_admitido', $item->id_admitido)->first();
