@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Reincoporacion extends Model
 {
@@ -19,7 +20,7 @@ class Reincoporacion extends Model
         'reincorporacion_estado'
     ];
 
-    public function admitido()
+    public function admitido(): BelongsTo
     {
         return $this->belongsTo(Admitido::class, 'id_admitido', 'id_admitido');
     }
