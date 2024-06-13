@@ -10,8 +10,8 @@
     </title>
     <style>
         body {
-            margin-top: 100px;
-            margin-bottom: 20px;
+            margin-top: 20px;
+            margin-bottom: 10px;
         }
 
         header {
@@ -34,7 +34,7 @@
 </head>
 <body>
     <header>
-        <table class="table" style="width:100%; padding-right: 0rem; padding-left: 0rem; padding-bottom: 0rem; padding-top: 0rem;">
+        {{-- <table class="table" style="width:100%; padding-right: 0rem; padding-left: 0rem; padding-bottom: 0rem; padding-top: 0rem;">
             <thead>
                 <tr>
                     <th align="left">
@@ -60,20 +60,20 @@
                     </th>
                 </tr>
             </thead>
-        </table>
+        </table> --}}
         <div style="margin-top: 0.4rem; text-align: center;">
             <span style="text-align: center; font-weight: 700; font-size: 0.9rem">
                 {{ $programa }} - GRUPO {{ $grupo }}
             </span>
         </div>
     </header>
-    <div id="footer">
+    {{-- <div id="footer">
         <div style="margin-top: 1.5rem; text-align: right;">
             <span style="text-align: center; font-weight: 400; font-size: 0.7rem">
                 Fecha de emisión: ___/___/___
             </span>
         </div>
-    </div>
+    </div> --}}
     <table class="table" style="width:100%; padding-right: 0rem; padding-left: 0rem; padding-bottom: 0rem; padding-top: 1rem; border-collapse: collapse;">
         <thead>
             <tr style="border: 1px solid black; padding: 6px; font-size: 0.6rem">
@@ -103,11 +103,17 @@
                 </th>
             </tr>
             <tr style="border: 1px solid black; padding: 6px; font-size: 0.6rem">
-                @for ($i = 0; $i < $mayor; $i++)
+                @if ($mayor == 0)
                     <th style="border: 1px solid black; padding: 6px;">
-                        DN° {{ $i + 1 }}
+                        DN° 1
                     </th>
-                @endfor
+                @else
+                    @for ($i = 0; $i < $mayor; $i++)
+                        <th style="border: 1px solid black; padding: 6px;">
+                            DN° {{ $i + 1 }}
+                        </th>
+                    @endfor
+                @endif
             </tr>
         </thead>
         <tbody>
@@ -141,17 +147,23 @@
                     <td style="border: 1px solid black; padding: 4px;" align="center">
                         S/: {{ number_format($pago_matricula->pago_monto, 2, ',', '.') }}
                     </td>
-                    @foreach ($mensualidades as $mensualidad)
-                    <td style="border: 1px solid black; padding: 4px;" align="center">
-                        S/: {{ number_format($mensualidad->pago->pago_monto, 2, ',', '.') }}
-                    </td>
-                    @endforeach
-                    @if ($colspan > 0)
-                        @for ($i = 0; $i < $colspan; $i++)
-                            <td style="border: 1px solid black; padding: 4px;" align="center">
-                                -
-                            </td>
-                        @endfor
+                    @if ($mayor == 0)
+                        <td style="border: 1px solid black; padding: 4px;" align="center">
+                            -
+                        </td>
+                    @else
+                        @foreach ($mensualidades as $mensualidad)
+                        <td style="border: 1px solid black; padding: 4px;" align="center">
+                            S/: {{ number_format($mensualidad->pago->pago_monto, 2, ',', '.') }}
+                        </td>
+                        @endforeach
+                        @if ($colspan > 0)
+                            @for ($i = 0; $i < $colspan; $i++)
+                                <td style="border: 1px solid black; padding: 4px;" align="center">
+                                    -
+                                </td>
+                            @endfor
+                        @endif
                     @endif
                     <td style="border: 1px solid black; padding: 4px;" align="center">
                         S/: {{ number_format($monto_total, 2, ',', '.') }}
