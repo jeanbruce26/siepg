@@ -27,6 +27,25 @@
                     </li>
                 </ul>
             </div>
+            <div class="d-flex flex-stack">
+                <div class="d-flex align-items-center text-center gap-2 gap-lg-3 ms-5">
+                    <button type="button"
+                        wire:click="exportar_excel"
+                        class="btn btn-success fw-bold"
+                        >
+                        Descargar Reporte (Excel)
+                    </button>
+                    <a href="{{ route('coordinador.reporte-pagos-pdf', [
+                        'id_programa_proceso' => $id_programa_proceso,
+                        'id_grupo' => $id_grupo,
+                        ]) }}"
+                        target="_blank"
+                        class="btn btn-primary fw-bold"
+                        >
+                        Descargar Reporte (PDF)
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
     <div id="kt_app_content" class="app-content flex-column-fluid">

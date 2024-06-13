@@ -2,14 +2,19 @@
 
 namespace App\Http\Controllers\ModuloCoordinador;
 
-use App\Http\Controllers\Controller;
 use App\Models\Admision;
-use App\Models\Evaluacion;
-use App\Models\Modalidad;
 use App\Models\Programa;
-use App\Models\TrabajadorTipoTrabajador;
-use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\Matricula;
+use App\Models\Modalidad;
+use App\Models\Evaluacion;
 use Illuminate\Http\Request;
+use App\Models\ProgramaProceso;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Http\Controllers\Controller;
+use App\Models\Mensualidad;
+use App\Models\ProgramaProcesoGrupo;
+use App\Models\TrabajadorTipoTrabajador;
+use Illuminate\Support\Str;
 
 class CoordinadorController extends Controller
 {
@@ -285,5 +290,53 @@ class CoordinadorController extends Controller
     public function retiro()
     {
         return view('modulo-administrador.gestion-retiro.index');
+    }
+
+    public function reporte_pagos_pdf($id_programa_proceso, $id_grupo)
+    {
+        $programa_proceso = ProgramaProceso::join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
+            ->join('programa', 'programa.id_programa', '=', 'programa_plan.id_programa')
+            ->join('modalidad', 'modalidad.id_modalidad', '=', 'programa.id_modalidad')
+            ->where('programa_proceso.id_programa_proceso', $id_programa_proceso)
+            ->first();
+        $tipo_programa = $programa_proceso->programa_tipo;
+        $matriculados = Matricula::join('admitido','admitido.id_admitido','=','matricula.id_admitido')
+            ->join('programa_proceso','programa_proceso.id_programa_proceso','=','admitido.id_programa_proceso')
+            ->join('programa_plan','programa_plan.id_programa_plan','=','programa_proceso.id_programa_plan')
+            ->join('programa','programa.id_programa','=','programa_plan.id_programa')
+            ->join('persona','persona.id_persona','=','admitido.id_persona')
+            ->join('programa_proceso_grupo','programa_proceso_grupo.id_programa_proceso_grupo','=','matricula.id_programa_proceso_grupo')
+            ->where('admitido.id_programa_proceso',$id_programa_proceso)
+            ->where('matricula.id_programa_proceso_grupo',$id_grupo)
+            ->where('matricula.matricula_estado',1)
+            ->orderBy('persona.nombre_completo','asc')
+            ->get();
+        $programa = $programa_proceso->programa . ' EN ' . $programa_proceso->subprograma . ($programa_proceso->mencion ? ' CON MENCION EN ' . $programa_proceso->mencion : '');
+        $grupo = ProgramaProcesoGrupo::where('id_programa_proceso_grupo', $id_grupo)->first()->grupo_detalle;
+
+        $mayor = 0;
+        foreach ($matriculados as $matriculado) {
+            $mensualiadad = Mensualidad::where('id_matricula', $matriculado->id_matricula)
+            ->where('id_admitido', $matriculado->id_admitido)
+            ->where('mensualidad_estado', 1)
+            ->get();
+            $mayor = count($mensualiadad) > $mayor ? count($mensualiadad) : $mayor;
+        }
+
+        $mencion = $programa_proceso->mencion ? ' con mencion en ' . $programa_proceso->mencion : '';
+        $nombre = 'Reporte de pagos admitidos del ' . $programa_proceso->programa . ' en ' . $programa_proceso->subprograma . $mencion;
+        $nombre = Str::slug($nombre, '-');
+
+        // dd($programa_proceso, $tipo_programa, $matriculados, $programa, $grupo, $mayor);
+
+        $pdf = Pdf::loadView('modulo-coordinador.reporte-pagos.reporte_pagos_pdf', [
+            'programa_proceso' => $programa_proceso,
+            'matriculados' => $matriculados,
+            'programa' => $programa,
+            'grupo' => $grupo,
+            'mayor' => $mayor
+        ])->setPaper('a4', 'landscape');
+
+        return $pdf->stream('reporte-pagos-' . $programa . '-' . $grupo . '.pdf');
     }
 }
