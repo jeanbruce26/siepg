@@ -17,20 +17,20 @@ class Matriculados extends Component
 
     public $search = '';
 
-    public function exportar_excel()
-    {
-        $programa = ProgramaProceso::join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
-            ->join('programa', 'programa.id_programa', '=', 'programa_plan.id_programa')
-            ->join('modalidad', 'modalidad.id_modalidad', '=', 'programa.id_modalidad')
-            ->where('programa_proceso.id_programa_proceso', $this->id_programa_proceso)
-            ->first();
+    // public function exportar_excel()
+    // {
+    //     $programa = ProgramaProceso::join('programa_plan', 'programa_plan.id_programa_plan', '=', 'programa_proceso.id_programa_plan')
+    //         ->join('programa', 'programa.id_programa', '=', 'programa_plan.id_programa')
+    //         ->join('modalidad', 'modalidad.id_modalidad', '=', 'programa.id_modalidad')
+    //         ->where('programa_proceso.id_programa_proceso', $this->id_programa_proceso)
+    //         ->first();
 
-        $mencion = $programa->mencion ? ' con mencion en ' . $programa->mencion : '';
-        $nombre = 'Reporte de pagos admitidos del ' . $programa->programa . ' en ' . $programa->subprograma . $mencion;
-        $nombre = Str::slug($nombre, '-');
-        $nombre = $nombre . '.xlsx';
-        return Excel::download(new ListaReportePagosAdmitidosExport($this->id_programa_proceso, $this->id_grupo), $nombre);
-    }
+    //     $mencion = $programa->mencion ? ' con mencion en ' . $programa->mencion : '';
+    //     $nombre = 'Reporte de pagos admitidos del ' . $programa->programa . ' en ' . $programa->subprograma . $mencion;
+    //     $nombre = Str::slug($nombre, '-');
+    //     $nombre = $nombre . '.xlsx';
+    //     return Excel::download(new ListaReportePagosAdmitidosExport($this->id_programa_proceso, $this->id_grupo), $nombre);
+    // }
 
     public function render()
     {
