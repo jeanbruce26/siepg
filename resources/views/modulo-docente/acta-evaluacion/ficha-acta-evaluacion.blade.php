@@ -856,7 +856,7 @@
                         </td>
                         <td>
                             <div style="font-weight: 400; font-size: 0.7rem;">
-                                INCOORPORACION APROBADO CON RESOLUCIÓN N° {{ $reincorporacion->reincorporacion_resolucion ?? '___-20__-UNU-CEPG-D' }}
+                                INCORPORACION APROBADO CON RESOLUCIÓN N° {{ $reincorporacion->reincorporacion_resolucion ?? '___-20__-UNU-CEPG-D' }}
                             </div>
                         </td>
                     </tr>
