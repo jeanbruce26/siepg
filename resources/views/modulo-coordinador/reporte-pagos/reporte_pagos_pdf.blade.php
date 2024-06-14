@@ -117,6 +117,11 @@
             </tr>
         </thead>
         <tbody>
+            @php
+                $total_costo_ensenanza = 0;
+                $total_pagado = 0;
+                $total_deuda = 0;
+            @endphp
             @foreach ($matriculados as $item)
             @php
                 $monto_total = dataPagoMatricula($item)['monto_total'];
@@ -133,6 +138,10 @@
                 $pago_matricula = App\Models\Pago::query()
                     ->where('id_pago', $item->id_pago)
                     ->first();
+
+                $total_costo_ensenanza += $monto_total;
+                $total_pagado += $monto_pagado;
+                $total_deuda += $deuda;
             @endphp
                 <tr style="border: 1px solid black; padding: 4px; font-size: 0.5rem">
                     <td style="border: 1px solid black; padding: 4px;" align="center">
@@ -177,6 +186,36 @@
                 </tr>
             @endforeach
         </tbody>
+        <tfoot>
+            <tr style="border: 1px solid black; padding: 4px; font-size: 0.5rem">
+                <td colspan="{{ $mayor == 0 ? '5' : ($mayor + 4) }}" style="border: 1px solid black; padding: 4px; font-weight: 700;" align="center">
+                    TOTAL
+                </td>
+                {{-- <td style="border: 1px solid black; padding: 4px;" align="center">
+
+                </td>
+                @if ($mayor == 0)
+                    <td style="border: 1px solid black; padding: 4px;" align="center">
+
+                    </td>
+                @else
+                    @for ($i = 0; $i < $mayor; $i++)
+                        <td style="border: 1px solid black; padding: 4px;" align="center">
+
+                        </td>
+                    @endfor
+                @endif --}}
+                <td style="border: 1px solid black; padding: 4px; font-weight: 700;" align="center">
+                    S/: {{ number_format($total_costo_ensenanza, 2, ',', '.') }}
+                </td>
+                <td style="border: 1px solid black; padding: 4px; font-weight: 700;" align="center">
+                    S/: {{ number_format($total_pagado, 2, ',', '.') }}
+                </td>
+                <td style="border: 1px solid black; padding: 4px; font-weight: 700;" align="center">
+                    S/: {{ number_format($total_deuda, 2, ',', '.') }}
+                </td>
+            </tr>
+        </tfoot>
     </table>
 </body>
 </html>
