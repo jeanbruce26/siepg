@@ -340,52 +340,6 @@ class Index extends Component
     public function generar_acta_notas($id_docente_curso)
     {
         $docente_curso = DocenteCurso::find($id_docente_curso);
-        $matriculados = MatriculaCurso::join('matricula', 'matricula_curso.id_matricula', 'matricula.id_matricula')
-                        ->join('admitido', 'matricula.id_admitido', 'admitido.id_admitido')
-                        ->join('persona', 'admitido.id_persona', 'persona.id_persona')
-                        ->where('matricula_curso.id_curso_programa_plan', $docente_curso->id_curso_programa_plan)
-                        ->where('matricula.id_programa_proceso_grupo', $docente_curso->id_programa_proceso_grupo)
-                        ->where('matricula_curso.matricula_curso_activo', 1)
-                        ->where('matricula_curso.acta_adicional', 0)
-                        ->where('matricula_curso.acta_reingreso', 0)
-                        ->where('matricula_curso.acta_reincorporacion', 0)
-                        ->orderBy('persona.nombre_completo', 'asc')
-                        ->get();
-
-        $matriculados_adicional = MatriculaCurso::join('matricula', 'matricula_curso.id_matricula', 'matricula.id_matricula')
-                        ->join('admitido', 'matricula.id_admitido', 'admitido.id_admitido')
-                        ->join('persona', 'admitido.id_persona', 'persona.id_persona')
-                        ->where('matricula_curso.id_curso_programa_plan', $docente_curso->id_curso_programa_plan)
-                        ->where('matricula.id_programa_proceso_grupo', $docente_curso->id_programa_proceso_grupo)
-                        ->where('matricula_curso.matricula_curso_activo', 1)
-                        ->where('matricula_curso.acta_adicional', 1)
-                        ->where('matricula_curso.acta_reingreso', 0)
-                        ->where('matricula_curso.acta_reincorporacion', 0)
-                        ->orderBy('persona.nombre_completo', 'asc')
-                        ->get();
-        $matriculados_reingreso = MatriculaCurso::join('matricula', 'matricula_curso.id_matricula', 'matricula.id_matricula')
-                        ->join('admitido', 'matricula.id_admitido', 'admitido.id_admitido')
-                        ->join('persona', 'admitido.id_persona', 'persona.id_persona')
-                        ->where('matricula_curso.id_curso_programa_plan', $docente_curso->id_curso_programa_plan)
-                        ->where('matricula.id_programa_proceso_grupo', $docente_curso->id_programa_proceso_grupo)
-                        ->where('matricula_curso.matricula_curso_activo', 1)
-                        ->where('matricula_curso.acta_adicional', 0)
-                        ->where('matricula_curso.acta_reingreso', 1)
-                        ->where('matricula_curso.acta_reincorporacion', 0)
-                        ->orderBy('persona.nombre_completo', 'asc')
-                        ->get();
-        $matriculados_reincorporacion = MatriculaCurso::join('matricula', 'matricula_curso.id_matricula', 'matricula.id_matricula')
-                        ->join('admitido', 'matricula.id_admitido', 'admitido.id_admitido')
-                        ->join('persona', 'admitido.id_persona', 'persona.id_persona')
-                        ->where('matricula_curso.id_curso_programa_plan', $docente_curso->id_curso_programa_plan)
-                        ->where('matricula.id_programa_proceso_grupo', $docente_curso->id_programa_proceso_grupo)
-                        ->where('matricula_curso.matricula_curso_activo', 1)
-                        ->where('matricula_curso.acta_adicional', 0)
-                        ->where('matricula_curso.acta_reingreso', 0)
-                        ->where('matricula_curso.acta_reincorporacion', 1)
-                        ->orderBy('persona.nombre_completo', 'asc')
-                        ->get();
-
         $fecha2 = date('YmdHis');
 
         $curso_programa_plan = CursoProgramaPlan::find($docente_curso->id_curso_programa_plan);
@@ -409,10 +363,155 @@ class Index extends Component
         $ciclo = $curso_model->ciclo->ciclo;
         $grupo = $programa_proceso_grupo->grupo_detalle;
 
-        $data = [
+
+        $matriculados = MatriculaCurso::query()
+            ->join('matricula', 'matricula_curso.id_matricula', 'matricula.id_matricula')
+            ->join('admitido', 'matricula.id_admitido', 'admitido.id_admitido')
+            ->join('persona', 'admitido.id_persona', 'persona.id_persona')
+            ->where('matricula_curso.id_curso_programa_plan', $docente_curso->id_curso_programa_plan)
+            ->where('matricula.id_programa_proceso_grupo', $docente_curso->id_programa_proceso_grupo)
+            ->where('matricula_curso.matricula_curso_activo', 1)
+            ->where('matricula_curso.acta_adicional', 0)
+            ->where('matricula_curso.acta_reingreso', 0)
+            ->where('matricula_curso.acta_reincorporacion', 0)
+            ->orderBy('persona.nombre_completo', 'asc')
+            ->get();
+        $data_regular = [
             'matriculados' => $matriculados,
+            'programa' => $programa,
+            'subprograma' => $subprograma,
+            'mencion' => $mencion,
+            'curso' => $curso,
+            'codigo_curso' => $codigo_curso,
+            'docente' => $docente,
+            'codigo_docente' => $codigo_docente,
+            'creditos' => $creditos,
+            'ciclo' => $ciclo,
+            'grupo' => $grupo,
+            'admision_año' => $admision_año,
+            'tipo' => 'regular'
+        ];
+        if ($matriculados->count() > 0) {
+            $nombre_pdf = 'acta-notas-regular-' . date('dmYHis') . '-' . Str::slug($docente, '-') . '.pdf';
+            $path = 'Posgrado/Docente/Actas/';
+            if (!File::isDirectory(public_path($path))) {
+                File::makeDirectory(public_path($path), 0755, true, true);
+            }
+            Pdf::loadView('modulo-docente.acta-evaluacion.ficha-acta-evaluacion', $data_regular)->save(public_path($path . $nombre_pdf));
+
+            // registrar en la db el acta de notas
+            $acta_docente = new ActaDocente();
+            $acta_docente->acta_url = $path . $nombre_pdf;
+            $acta_docente->id_docente_curso = $id_docente_curso;
+            $acta_docente->acta_docente_fecha_creacion = date('Y-m-d H:i:s');
+            $acta_docente->acta_docente_estado = 1;
+            $acta_docente->es_regular = 1;
+            $acta_docente->save();
+        }
+
+        $matriculados_adicional = MatriculaCurso::query()
+            ->join('matricula', 'matricula_curso.id_matricula', 'matricula.id_matricula')
+            ->join('admitido', 'matricula.id_admitido', 'admitido.id_admitido')
+            ->join('persona', 'admitido.id_persona', 'persona.id_persona')
+            ->where('matricula_curso.id_curso_programa_plan', $docente_curso->id_curso_programa_plan)
+            ->where('matricula.id_programa_proceso_grupo', $docente_curso->id_programa_proceso_grupo)
+            ->where('matricula_curso.matricula_curso_activo', 1)
+            ->where('matricula_curso.acta_adicional', 1)
+            ->where('matricula_curso.acta_reingreso', 0)
+            ->where('matricula_curso.acta_reincorporacion', 0)
+            ->orderBy('persona.nombre_completo', 'asc')
+            ->get();
+        $data_adicional = [
             'matriculados_adicional' => $matriculados_adicional,
+            'programa' => $programa,
+            'subprograma' => $subprograma,
+            'mencion' => $mencion,
+            'curso' => $curso,
+            'codigo_curso' => $codigo_curso,
+            'docente' => $docente,
+            'codigo_docente' => $codigo_docente,
+            'creditos' => $creditos,
+            'ciclo' => $ciclo,
+            'grupo' => $grupo,
+            'admision_año' => $admision_año,
+            'tipo' => 'adicional'
+        ];
+        if ($matriculados_adicional->count() > 0) {
+            $nombre_pdf = 'acta-notas-adicional-' . date('dmYHis') . '-' . Str::slug($docente, '-') . '.pdf';
+            $path = 'Posgrado/Docente/Actas/';
+            if (!File::isDirectory(public_path($path))) {
+                File::makeDirectory(public_path($path), 0755, true, true);
+            }
+            Pdf::loadView('modulo-docente.acta-evaluacion.ficha-acta-evaluacion', $data_adicional)->save(public_path($path . $nombre_pdf));
+
+            // registrar en la db el acta de notas
+            $acta_docente = new ActaDocente();
+            $acta_docente->acta_url = $path . $nombre_pdf;
+            $acta_docente->id_docente_curso = $id_docente_curso;
+            $acta_docente->acta_docente_fecha_creacion = date('Y-m-d H:i:s');
+            $acta_docente->acta_docente_estado = 1;
+            $acta_docente->es_adicional = 1;
+            $acta_docente->save();
+        }
+
+        $matriculados_reingreso = MatriculaCurso::query()
+            ->join('matricula', 'matricula_curso.id_matricula', 'matricula.id_matricula')
+            ->join('admitido', 'matricula.id_admitido', 'admitido.id_admitido')
+            ->join('persona', 'admitido.id_persona', 'persona.id_persona')
+            ->where('matricula_curso.id_curso_programa_plan', $docente_curso->id_curso_programa_plan)
+            ->where('matricula.id_programa_proceso_grupo', $docente_curso->id_programa_proceso_grupo)
+            ->where('matricula_curso.matricula_curso_activo', 1)
+            ->where('matricula_curso.acta_adicional', 0)
+            ->where('matricula_curso.acta_reingreso', 1)
+            ->where('matricula_curso.acta_reincorporacion', 0)
+            ->orderBy('persona.nombre_completo', 'asc')
+            ->get();
+        $data_reingreso = [
             'matriculados_reingreso' => $matriculados_reingreso,
+            'programa' => $programa,
+            'subprograma' => $subprograma,
+            'mencion' => $mencion,
+            'curso' => $curso,
+            'codigo_curso' => $codigo_curso,
+            'docente' => $docente,
+            'codigo_docente' => $codigo_docente,
+            'creditos' => $creditos,
+            'ciclo' => $ciclo,
+            'grupo' => $grupo,
+            'admision_año' => $admision_año,
+            'tipo' => 'reingreso'
+        ];
+        if ($matriculados_reingreso->count() > 0) {
+            $nombre_pdf = 'acta-notas-reingreso-' . date('dmYHis') . '-' . Str::slug($docente, '-') . '.pdf';
+            $path = 'Posgrado/Docente/Actas/';
+            if (!File::isDirectory(public_path($path))) {
+                File::makeDirectory(public_path($path), 0755, true, true);
+            }
+            Pdf::loadView('modulo-docente.acta-evaluacion.ficha-acta-evaluacion', $data_reingreso)->save(public_path($path . $nombre_pdf));
+
+            // registrar en la db el acta de notas
+            $acta_docente = new ActaDocente();
+            $acta_docente->acta_url = $path . $nombre_pdf;
+            $acta_docente->id_docente_curso = $id_docente_curso;
+            $acta_docente->acta_docente_fecha_creacion = date('Y-m-d H:i:s');
+            $acta_docente->acta_docente_estado = 1;
+            $acta_docente->es_reingreso = 1;
+            $acta_docente->save();
+        }
+
+        $matriculados_reincorporacion = MatriculaCurso::query()
+            ->join('matricula', 'matricula_curso.id_matricula', 'matricula.id_matricula')
+            ->join('admitido', 'matricula.id_admitido', 'admitido.id_admitido')
+            ->join('persona', 'admitido.id_persona', 'persona.id_persona')
+            ->where('matricula_curso.id_curso_programa_plan', $docente_curso->id_curso_programa_plan)
+            ->where('matricula.id_programa_proceso_grupo', $docente_curso->id_programa_proceso_grupo)
+            ->where('matricula_curso.matricula_curso_activo', 1)
+            ->where('matricula_curso.acta_adicional', 0)
+            ->where('matricula_curso.acta_reingreso', 0)
+            ->where('matricula_curso.acta_reincorporacion', 1)
+            ->orderBy('persona.nombre_completo', 'asc')
+            ->get();
+        $data_reincorporacion = [
             'matriculados_reincorporacion' => $matriculados_reincorporacion,
             'programa' => $programa,
             'subprograma' => $subprograma,
@@ -424,25 +523,26 @@ class Index extends Component
             'creditos' => $creditos,
             'ciclo' => $ciclo,
             'grupo' => $grupo,
-            'admision_año' => $admision_año
+            'admision_año' => $admision_año,
+            'tipo' => 'incorporacion'
         ];
+        if ($matriculados_reincorporacion->count() > 0) {
+            $nombre_pdf = 'acta-notas-incorporacion-' . date('dmYHis') . '-' . Str::slug($docente, '-') . '.pdf';
+            $path = 'Posgrado/Docente/Actas/';
+            if (!File::isDirectory(public_path($path))) {
+                File::makeDirectory(public_path($path), 0755, true, true);
+            }
+            Pdf::loadView('modulo-docente.acta-evaluacion.ficha-acta-evaluacion', $data_reincorporacion)->save(public_path($path . $nombre_pdf));
 
-        $nombre_pdf = 'acta-notas-' . date('dmYHis') . '-' . Str::slug($docente, '-') . '.pdf';
-        $path = 'Posgrado/Docente/Actas/';
-        if (!File::isDirectory(public_path($path))) {
-            File::makeDirectory(public_path($path), 0755, true, true);
+            // registrar en la db el acta de notas
+            $acta_docente = new ActaDocente();
+            $acta_docente->acta_url = $path . $nombre_pdf;
+            $acta_docente->id_docente_curso = $id_docente_curso;
+            $acta_docente->acta_docente_fecha_creacion = date('Y-m-d H:i:s');
+            $acta_docente->acta_docente_estado = 1;
+            $acta_docente->es_reincorporacion = 1;
+            $acta_docente->save();
         }
-        $pdf = Pdf::loadView('modulo-docente.acta-evaluacion.ficha-acta-evaluacion', $data)->save(public_path($path . $nombre_pdf));
-
-        // registrar en la db el acta de notas
-        $acta_docente = new ActaDocente();
-        $acta_docente->acta_url = $path . $nombre_pdf;
-        $acta_docente->id_docente_curso = $id_docente_curso;
-        $acta_docente->acta_docente_fecha_creacion = date('Y-m-d H:i:s');
-        $acta_docente->acta_docente_estado = 1;
-        $acta_docente->save();
-
-        // return $pdf->stream('acta-evaluacion-docente-'.$fecha2.'.pdf');
     }
 
     public function exportar_excel_lista_matriculados()
