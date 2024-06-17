@@ -58,16 +58,11 @@ class Index extends Component
             }
         }
 
-
-        // if ($cursos_activos_matricula->count() > 0) {
-        //     $tiene_encuesta = true;
+        // if ($tiene_encuesta) {
+        //     $this->dispatchBrowserEvent('modal_encuesta_docente', [
+        //         'action' => 'show'
+        //     ]);
         // }
-
-        if ($tiene_encuesta) {
-            $this->dispatchBrowserEvent('modal_encuesta_docente', [
-                'action' => 'show'
-            ]);
-        }
     }
 
     public function updatedEncuesta($value)
