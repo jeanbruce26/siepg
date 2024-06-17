@@ -9,6 +9,8 @@ use App\Models\Encuesta;
 use App\Models\Inscripcion;
 use App\Models\LinkWhatsapp;
 use App\Models\EncuestaDetalle;
+use App\Models\Matricula;
+use App\Models\MatriculaCurso;
 use App\Models\ProgramaProceso;
 
 class Index extends Component
@@ -24,6 +26,25 @@ class Index extends Component
         $encuesta = EncuestaDetalle::where('id_persona', $id_persona)->get(); // buscamos si el usuario ya realizo la encuesta
         if($encuesta->count() == 0){
             $this->dispatchBrowserEvent('modal_encuesta', [
+                'action' => 'show'
+            ]);
+        }
+
+        // encuesta de evaluacion docente
+        $admitido = Admitido::where('id_persona', $id_persona)->orderBy('id_admitido', 'desc')->first(); // obtenemos el admitido de la inscripcion de la persona del usuario autenticado en la plataforma
+        $ultima_matricula = Matricula::where('id_admitido', $admitido->id_admitido)->orderBy('id_matricula', 'desc')->first();
+        $matricula_cursos = MatriculaCurso::query()
+            ->where('id_matricula', $ultima_matricula->id_matricula)
+            ->where('matricula_curso_estado',2)
+            ->where('matricula_curso_activo',1)
+            ->get();
+        $tiene_encuesta = false;
+        if ($matricula_cursos->count() > 0) {
+            $tiene_encuesta = true;
+        }
+
+        if ($tiene_encuesta) {
+            $this->dispatchBrowserEvent('modal_encuesta_docente', [
                 'action' => 'show'
             ]);
         }

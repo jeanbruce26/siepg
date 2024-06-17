@@ -1,17 +1,14 @@
 @extends('layouts.modulo-plataforma')
-@section('title', 'Plataforma Escuela de Posgrado')
+@section('title', 'Evaluacion_docente - Plataforma Escuela de Posgrado')
 @section('content')
-    @livewire('modulo-plataforma.inicio.index')
+    @livewire('modulo-plataforma.evaluacion-docente.index')
 @endsection
 @section('scripts')
     <script>
-        window.addEventListener('modal_encuesta', event => {
-            $('#modal_encuesta').modal(event.detail.action);
+        window.addEventListener('modal', event => {
+            $(event.detail.modal).modal(event.detail.action);
         })
-        window.addEventListener('modal_encuesta_docente', event => {
-            $('#modal_encuesta_docente').modal(event.detail.action);
-        })
-        window.addEventListener('alerta-encuesta', event => {
+        window.addEventListener('alerta', event => {
             Swal.fire({
                 title: event.detail.title,
                 text: event.detail.text,

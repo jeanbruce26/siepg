@@ -275,6 +275,38 @@
             </div>
         </div>
     </div>
+    <!-- Modal Encuesta Docente -->
+    <div wire:ignore.self class="modal fade" id="modal_encuesta_docente"
+        data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body p-5">
+                    <form autocomplete="off" class="mt-5">
+                        <h3 class="mb-3 text-center fw-bold">
+                            Encuesta Evaluación Docente
+                            </h4>
+                            <div class="my-5 text-center">
+                                <div
+                                    class="alert alert-dismissible bg-light-warning border border-3 border-warning d-flex flex-center flex-column py-10 px-10 px-lg-20">
+                                    <i class="ki-outline ki-information fs-5tx text-warning mb-5"></i>
+
+                                    <div class="text-center">
+                                        <div class="text-gray-900 fs-5">
+                                            <strong>
+                                                Estimado(a) estudiante, se le informa que tiene encuestas de evalaución docente pendientes.
+                                            </strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="{{ route('plataforma.evaluacion-docentes') }}" class="btn btn-info w-100">
+                                Ir a encuesta
+                            </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Modal alerta admitido -->
     @if ($admitido)
         @if ($admitido->admitido_alerta == 0)

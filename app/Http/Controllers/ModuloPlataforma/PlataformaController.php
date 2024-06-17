@@ -59,7 +59,7 @@ class PlataformaController extends Controller
         $persona = $pago->persona;
         $concepto_pago = $pago->concepto_pago;
         $canal_pago = $pago->canal_pago;
-        
+
         if (auth('plataforma')->user()->id_persona != $persona->id_persona) {
             abort(403, 'Acceso no autorizado');
         }
@@ -210,5 +210,10 @@ class PlataformaController extends Controller
         $pdf = Pdf::loadView('modulo-plataforma.record-academico.record-academico', $data);
 
         return $pdf->download('record-academico.pdf');
+    }
+
+    public function evaluacion_docente()
+    {
+        return view('modulo-plataforma.evaluacion-docente.index');
     }
 }

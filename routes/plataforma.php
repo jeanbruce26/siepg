@@ -41,3 +41,5 @@ Route::get('/record-academico', [PlataformaController::class, 'record_academico'
 
 // ruta para ir ver la ficha del record academico
 Route::get('/record-academico-ficha/{id_admitido}', [PlataformaController::class, 'record_academico_ficha'])->middleware(['auth.plataforma'])->name('plataforma.record-academico-ficha');
+
+Route::get('/evaluacion-docentes', [PlataformaController::class, 'evaluacion_docente'])->middleware(['auth.plataforma'])->name('plataforma.evaluacion-docentes');

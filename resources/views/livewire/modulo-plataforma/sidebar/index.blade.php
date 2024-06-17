@@ -169,6 +169,19 @@
                         </a>
                     </div>
                 @endif
+                @if ($admitido)
+                    <div class="menu-item">
+                        <a class="menu-link {{ request()->routeIs('plataforma.evaluacion-docentes') ? 'active' : '' }}"
+                            href="{{ route('plataforma.evaluacion-docentes') }}">
+                            <span class="menu-icon">
+                                <i class="ki-outline ki-notepad-edit fs-1"></i>
+                            </span>
+                            <span class="menu-title fw-semibold fs-4">
+                                Evaluación Docente
+                            </span>
+                        </a>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
