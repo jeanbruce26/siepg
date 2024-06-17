@@ -41,5 +41,16 @@
                 }
             });
         });
+        window.addEventListener('descargar_actas', event => {
+            event.detail.array_archivos.forEach(element => {
+                // console.log(element);
+                const a = document.createElement('a');
+                a.href = element.url;
+                a.download = element.nombre;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            });
+        });
     </script>
 @endsection

@@ -22,14 +22,12 @@
                     {{-- <a href="{{ route('docente.acta_evaluacion', ['id_docente_curso' => $id_docente_curso]) }}" target="_blank" class="btn btn-info fw-bold">
                         Acta de Evaluación
                     </a> --}}
-                    @if ($acta_docente)
-                        <a
-                            href="{{ asset($acta_docente->acta_url) }}"
-                            download
-                            class="btn btn-info fw-bold"
-                            >
-                            Descargar Acta de Evaluación
-                        </a>
+                    @if ($mostrar_acta)
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-info" wire:click="descargar_actas({{ $acta_docente }})">
+                          Descargar Acta de Evaluación
+                        </button>
+                      </div>
                     @else
                         <button
                             type="button"

@@ -543,6 +543,30 @@ class Index extends Component
             $acta_docente->es_reincorporacion = 1;
             $acta_docente->save();
         }
+
+        // mostrar alerta de que se generó el acta de notas
+        $this->dispatchBrowserEvent('alerta_matriculados', [
+            'title' => '¡Éxito!',
+            'text' => 'Se generó el acta de notas correctamente.',
+            'icon' => 'success',
+            'confirmButtonText' => 'Aceptar',
+            'color' => 'success'
+        ]);
+    }
+
+    public function descargar_actas($acta_docente)
+    {
+        $array_archivos = [];
+        foreach ($acta_docente as $acta) {
+            $array_archivos[] = [
+                'nombre' => str_replace('Posgrado/Docente/Actas/', '', $acta['acta_url']),
+                'url' => asset($acta['acta_url'])
+            ];
+        }
+
+        $this->dispatchBrowserEvent('descargar_actas', [
+            'array_archivos' => $array_archivos
+        ]);
     }
 
     public function exportar_excel_lista_matriculados()
@@ -601,13 +625,29 @@ class Index extends Component
         }
 
         // buscamos si el docente genero su acta de notas
-        $acta_docente = ActaDocente::where('id_docente_curso', $this->id_docente_curso)->first();
+        $mostrar_acta = false;
+        $acta_docente = ActaDocente::where('id_docente_curso', $this->id_docente_curso)->get();
+        foreach ($acta_docente as $acta) {
+            if ($acta->es_regular == 1) {
+                $mostrar_acta = true;
+            }
+            if ($acta->es_adicional == 1) {
+                $mostrar_acta = true;
+            }
+            if ($acta->es_reingreso == 1) {
+                $mostrar_acta = true;
+            }
+            if ($acta->es_reincorporacion == 1) {
+                $mostrar_acta = true;
+            }
+        }
 
         return view('livewire.modulo-docente.matriculados.index', [
             // 'matriculados' => $matriculados,
             'matriculados_count' => $matriculados_count,
             'matriculados_finalizados_count' => $matriculados_finalizados_count,
-            'acta_docente' => $acta_docente
+            'acta_docente' => $acta_docente,
+            'mostrar_acta' => $mostrar_acta
         ]);
     }
 }
