@@ -9,8 +9,10 @@ use App\Models\Encuesta;
 use App\Models\Inscripcion;
 use App\Models\LinkWhatsapp;
 use App\Models\EncuestaDetalle;
+use App\Models\EvaluacionDocente;
 use App\Models\Matricula;
 use App\Models\MatriculaCurso;
+use App\Models\NotaMatriculaCurso;
 use App\Models\ProgramaProceso;
 
 class Index extends Component
@@ -33,15 +35,33 @@ class Index extends Component
         // encuesta de evaluacion docente
         $admitido = Admitido::where('id_persona', $id_persona)->orderBy('id_admitido', 'desc')->first(); // obtenemos el admitido de la inscripcion de la persona del usuario autenticado en la plataforma
         $ultima_matricula = Matricula::where('id_admitido', $admitido->id_admitido)->orderBy('id_matricula', 'desc')->first();
-        $matricula_cursos = MatriculaCurso::query()
-            ->where('id_matricula', $ultima_matricula->id_matricula)
-            ->where('matricula_curso_estado',2)
-            ->where('matricula_curso_activo',1)
+        $cursos_activos_matricula = NotaMatriculaCurso::query()
+            ->join('matricula_curso', 'nota_matricula_curso.id_matricula_curso', '=', 'matricula_curso.id_matricula_curso')
+            ->join('matricula', 'matricula_curso.id_matricula', '=', 'matricula.id_matricula')
+            ->where('matricula_curso.id_matricula', $ultima_matricula->id_matricula)
+            ->where('matricula_curso.matricula_curso_estado', 2)
+            ->where('matricula_curso.matricula_curso_activo', 1)
+            ->groupBy('nota_matricula_curso.id_matricula_curso')
             ->get();
         $tiene_encuesta = false;
-        if ($matricula_cursos->count() > 0) {
-            $tiene_encuesta = true;
+        foreach ($cursos_activos_matricula as $item) {
+            $evaluacion_docente = EvaluacionDocente::query()
+                ->where('id_nota_matricula_curso', $item->id_nota_matricula_curso)
+                ->where('id_docente', $item->id_docente)
+                ->where('id_admitido', $item->id_admitido)
+                ->first();
+            if ($evaluacion_docente) {
+                $tiene_encuesta = false;
+            } else {
+                $tiene_encuesta = true;
+                break;
+            }
         }
+
+
+        // if ($cursos_activos_matricula->count() > 0) {
+        //     $tiene_encuesta = true;
+        // }
 
         if ($tiene_encuesta) {
             $this->dispatchBrowserEvent('modal_encuesta_docente', [
