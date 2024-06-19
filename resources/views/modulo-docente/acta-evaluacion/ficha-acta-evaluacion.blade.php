@@ -812,7 +812,7 @@
                             {{ $matriculado_reingreso_admitido->nombre_completo }}
                         </td>
                         <td style="border: 1px solid black; padding: 4px;" align="center">
-                            {{ $matriculado_reingreso_admitido->nota_evaluacion_permanente ? $notas->nota_evaluacion_permanente : '-' }}
+                            {{ $notas->nota_evaluacion_permanente ? $notas->nota_evaluacion_permanente : '-' }}
                         </td>
                         <td style="border: 1px solid black; padding: 4px;" align="center">
                             {{ $notas->nota_evaluacion_medio_curso ? $notas->nota_evaluacion_medio_curso : '-' }}
@@ -1089,7 +1089,7 @@
                             {{ $matriculado_reincorporacion_admitido->nombre_completo }}
                         </td>
                         <td style="border: 1px solid black; padding: 4px;" align="center">
-                            {{ $matriculado_reincorporacion_admitido->nota_evaluacion_permanente ? $notas->nota_evaluacion_permanente : '-' }}
+                            {{ $notas->nota_evaluacion_permanente ? $notas->nota_evaluacion_permanente : '-' }}
                         </td>
                         <td style="border: 1px solid black; padding: 4px;" align="center">
                             {{ $notas->nota_evaluacion_medio_curso ? $notas->nota_evaluacion_medio_curso : '-' }}
