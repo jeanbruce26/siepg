@@ -187,8 +187,11 @@ class Registro extends Component
         $admision = Admision::where('admision_estado', 1)->first();
 
         // si el pago tiene fecha de pago mayor al 20 de junio se valida para que ingrese un pago con fecha menor o igual al 20 de junio
-        $fecha_limite = '2021-06-20';
-        if ($this->fecha_pago > $fecha_limite) {
+        $fecha_pago = $this->fecha_pago;
+        $fecha_pago = strtotime($fecha_pago);
+        $fecha_limite = '2024-06-20';
+        $fecha_limite = strtotime($fecha_limite);
+        if ($fecha_pago > $fecha_limite) {
             // emitir evento para mostrar mensaje de alerta
             $this->dispatchBrowserEvent('registro_inscripcion', [
                 'title' => '¡Error!',
