@@ -58,11 +58,11 @@ class Index extends Component
             }
         }
 
-        // if ($tiene_encuesta) {
-        //     $this->dispatchBrowserEvent('modal_encuesta_docente', [
-        //         'action' => 'show'
-        //     ]);
-        // }
+        if ($tiene_encuesta) {
+            $this->dispatchBrowserEvent('modal_encuesta_docente', [
+                'action' => 'show'
+            ]);
+        }
     }
 
     public function updatedEncuesta($value)

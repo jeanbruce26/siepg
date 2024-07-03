@@ -169,7 +169,7 @@
                         </a>
                     </div>
                 @endif
-                {{-- @if ($admitido)
+                @if ($admitido)
                     <div class="menu-item">
                         <a class="menu-link {{ request()->routeIs('plataforma.evaluacion-docentes') ? 'active' : '' }}"
                             href="{{ route('plataforma.evaluacion-docentes') }}">
@@ -181,7 +181,7 @@
                             </span>
                         </a>
                     </div>
-                @endif --}}
+                @endif
             </div>
         </div>
     </div>
