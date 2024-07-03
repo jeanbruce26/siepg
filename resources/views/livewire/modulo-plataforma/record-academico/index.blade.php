@@ -161,12 +161,12 @@
                                                     $nota_matricula_curso = App\Models\NotaMatriculaCurso::where('id_matricula_curso', $data->id_matricula_curso)->first();
                                                     if ($nota_matricula_curso) {
                                                         $docente = App\Models\Docente::where('id_docente', $nota_matricula_curso->id_docente)->first();
-                                                        if ($docente == null) {
-                                                            $docente = App\Models\DocenteCurso::where('id_curso_programa_plan', $data->id_curso_programa_plan)
-                                                                ->where('id_programa_proceso_grupo', $data->id_programa_proceso_grupo)
-                                                                ->first();
-                                                            $docente = $docente ? App\Models\Docente::where('id_docente', $docente->id_docente)->first() : null;
-                                                        }
+                                                        // if ($docente == null) {
+                                                        //     $docente = App\Models\DocenteCurso::where('id_curso_programa_plan', $data->id_curso_programa_plan)
+                                                        //         ->where('id_programa_proceso_grupo', $data->id_programa_proceso_grupo)
+                                                        //         ->first();
+                                                        //     $docente = $docente ? App\Models\Docente::where('id_docente', $docente->id_docente)->first() : null;
+                                                        // }
                                                     }
                                                 }
                                             @endphp
