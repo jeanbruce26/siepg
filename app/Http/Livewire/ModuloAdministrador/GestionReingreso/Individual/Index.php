@@ -56,7 +56,7 @@ class Index extends Component
 
         if ($this->paso == 2) {
             $this->validateOnly($propertyName, [
-                'notas' => 'required|array|min:1',
+                // 'notas' => 'required|array|min:1',
                 'notas.*' => 'nullable|numeric|min:0|max:20',
             ]);
         }
