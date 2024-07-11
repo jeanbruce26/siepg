@@ -276,7 +276,7 @@ class Index extends Component
             {
                 $nota_matricula_curso->id_estado_cursos = 1;
             }
-            else if ( $promedio_final >= 10 && $promedio_final < 14)
+            else if ( $promedio_final >= 10 && $promedio_final < 13.5)
             {
                 $nota_matricula_curso->id_estado_cursos = 2;
             }
