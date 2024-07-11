@@ -608,6 +608,7 @@ class Index extends Component
                         ->join('persona', 'admitido.id_persona', 'persona.id_persona')
                         ->where('matricula_curso.id_curso_programa_plan', $this->id_curso_programa_plan)
                         ->where('matricula.id_programa_proceso_grupo', $this->id_programa_proceso_grupo)
+                        ->where('matricula_curso.matricula_curso_activo', 1)
                         ->count();
 
         $matriculados_finalizados_count = MatriculaCurso::join('matricula', 'matricula_curso.id_matricula', 'matricula.id_matricula')
@@ -615,6 +616,7 @@ class Index extends Component
                         ->join('persona', 'admitido.id_persona', 'persona.id_persona')
                         ->where('matricula_curso.id_curso_programa_plan', $this->id_curso_programa_plan)
                         ->where('matricula.id_programa_proceso_grupo', $this->id_programa_proceso_grupo)
+                        ->where('matricula_curso.matricula_curso_activo', 1)
                         ->where('matricula_curso.matricula_curso_estado', 2)
                         ->count();
 
