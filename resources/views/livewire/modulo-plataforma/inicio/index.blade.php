@@ -158,7 +158,7 @@
                         data-bs-interval="5000">
                         <div class="carousel-inner">
                             <div class="carousel-item active">
-                                <img src="{{ asset('media/banner-posgrado-ampliacion-matricula.jpeg.') }}" alt="carousel"
+                                <img src="{{ asset('media/banner-posgrado-ampliacion-matricula.jpeg') }}" alt="carousel"
                                     class="w-100 rounded" />
                             </div>
                         </div>
@@ -275,7 +275,7 @@
             </div>
         </div>
     </div>
-    <!-- Modal Encuesta Docente -->
+    <!-- Modal Encuesta Docente 
     <div wire:ignore.self class="modal fade" id="modal_encuesta_docente"
         data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -306,8 +306,8 @@
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Modal alerta admitido -->
+    </div>-->
+    <!-- Modal alerta admitido 
     @if ($admitido)
         @if ($admitido->admitido_alerta == 0)
             <div wire:init="alerta_admitido"></div>
@@ -339,7 +339,7 @@
             </div>
         </div>
     </div>
-</div>
+</div>-->
 @push('scripts')
     <script></script>
 @endpush
