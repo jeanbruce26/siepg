@@ -212,6 +212,7 @@
                                                                 </span>
                                                             @elseif ($nota_matricula_curso->nota_promedio_final >= 14)
                                                                 <span class="badge badge-success fs-6 px-3 py-2">
+                                                                {{$nota_matricula_curso->nota_promedio_final}}
                                                                     APROBADO
                                                                     
                                                                 </span>
