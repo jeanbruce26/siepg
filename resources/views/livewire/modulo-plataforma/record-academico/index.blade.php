@@ -215,6 +215,7 @@
                                                                 {{$nota_matricula_curso->nota_promedio_final}}
                                                                     APROBADO
                                                                     
+                                                                    
                                                                 </span>
                                                             @else
                                                                 <span class="badge badge-danger fs-6 px-3 py-2">
